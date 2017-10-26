@@ -1,0 +1,42 @@
+project_name: humio
+
+builds:
+  - binary: humio
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - amd64
+
+release:
+  # Repo in which the release will be created.
+  # Default is extracted from the origin remote URL.
+  github:
+    owner: humio
+    name: cli
+
+
+brew:
+  github:
+    owner: humio
+    name: homebrew-humio
+  folder: Formula
+  homepage:  https://humio.com/
+  description: Manage and Stream Logs to Humio
+  test: |
+    system "echo DONE"
+
+
+archive:
+  format: tar.gz
+  replacements:
+    amd64: 64-bit
+    darwin: macOS
+    linux: Linux
+  files:
+    - LICENSE.md
+    - CHANGELOG.md
+  format_overrides:
+    - goos: windows
+      format: zip
