@@ -2,7 +2,7 @@
 
 # Humio CLI
 
-A CLI for streaming logs and files to Humio.
+A CLI for searching and streaming logs to Humio.
 
 __THIS IS WORK IN PROGRESS__
 
