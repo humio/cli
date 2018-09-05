@@ -15,7 +15,7 @@ import (
 
 	"github.com/hpcloud/tail"
 	"github.com/satori/go.uuid"
-	"github.com/skratchdot/open-golang/open"
+	// "github.com/skratchdot/open-golang/open"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -220,12 +220,14 @@ func main() {
 				name = c.String("name")
 			}
 
+			u, _ := uuid.NewV4()
+
 			sessionConfig := config{
 				DataspaceID: c.String("dataspace"),
 				AuthToken:   c.String("token"),
 				ServerURL:   c.String("url"),
 				Name:        name,
-				SessionID:   uuid.NewV4().String(),
+				SessionID:   u.String() ,
 			}
 
 			if sessionConfig.AuthToken == "" {
@@ -233,13 +235,13 @@ func main() {
 			}
 
 			// Open the browser (First so it has a chance to load)
-			key := ""
-			if name == "" {
-				key = "%40session%3D" + sessionConfig.SessionID
-			} else {
-				key = "%40name%3D" + sessionConfig.Name
-			}
-			open.Run(sessionConfig.ServerURL + sessionConfig.DataspaceID + "/search?live=true&start=1d&query=" + key)
+			// key := ""
+			// if name == "" {
+			// 	key = "%40session%3D" + sessionConfig.SessionID
+			// } else {
+			// 	key = "%40name%3D" + sessionConfig.Name
+			// }
+			// open.Run(sessionConfig.ServerURL + sessionConfig.DataspaceID + "/search?live=true&start=1d&query=" + key)
 
 			startSending(sessionConfig)
 
