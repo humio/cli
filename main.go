@@ -19,10 +19,167 @@ import (
 	"gopkg.in/urfave/cli.v2"
 )
 
+
+////////////////////////////////////////////////////////////////////////////////
+///// Globals //////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 // This is set by the release script.
 var version = "master"
-
 var client = &http.Client{}
+
+
+////////////////////////////////////////////////////////////////////////////////
+///// main function ////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+func main() {
+	app := &cli.App{
+		Name:  "humio",
+		Usage: "humio [options] <filepath>",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "token",
+				Aliases: []string{"t"},
+				Usage:   "Your Humio API Token",
+				EnvVars: []string{"HUMIO_API_TOKEN"},
+			},
+			&cli.StringFlag{
+				Name:    "dataspace",
+				Aliases: []string{"d"},
+				Value:   "scratch",
+				Usage:   "The dataspace to stream to. Defaults to your scratch dataspace.",
+			},
+			&cli.StringFlag{
+				Name:    "url",
+				Aliases: []string{"u"},
+				Value:   "https://cloud.humio.com/",
+				Usage:   "URL for the Humio server to stream to. `URL` must be a valid URL and end with slash (/).",
+				EnvVars: []string{"HUMIO_URL"},
+			},
+			&cli.StringFlag{
+				Name:    "name",
+				Aliases: []string{"n"},
+				Usage:   "A name to make it easier to find results for this stream in your dataspace. e.g. @name=MyName\nIf `NAME` is not specified and you are tailing a file, the filename is used.",
+			},
+		},
+		Commands: []*cli.Command{
+			{
+				Name: "ingesttoken",
+				Subcommands: []*cli.Command{
+					{
+						Name: "create",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:    "name",
+								Aliases: []string{"n"},
+								Usage:   "Token name",
+							},
+							&cli.StringFlag{
+								Name:    "parser",
+								Aliases: []string{"p"},
+								Usage:   "Parser name",
+							},
+						},
+						Action: ingesttoken_create,
+					},
+				},
+			},
+			{
+				Name: "parser",
+				Subcommands: []*cli.Command{
+					{
+						Name: "create",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:    "name",
+								Aliases: []string{"n"},
+								Usage:   "Parser name",
+							},
+							&cli.StringSliceFlag{
+								Name:    "query",
+								Aliases: []string{"q"},
+								Usage:   "Query string",
+							},
+							&cli.BoolFlag{
+								Name:    "force",
+								Aliases: []string{"f"},
+								Usage:   "Overwrite existing parser",
+							},
+						},
+						Action: parser_create,
+					},
+				},
+			},
+			{
+				Name: "ingest",
+				Action: ingest,
+			},
+		},
+	}
+
+	app.Version = version
+
+	app.Run(os.Args)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+///// Ingest command ///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+type config struct {
+	ServerURL   string
+	AuthToken   string
+	DataspaceID string
+	SessionID   string
+	Name        string
+}
+
+func ingest(c *cli.Context) error {
+	filepath := c.Args().Get(0)
+
+	name := ""
+	if c.String("name") == "" && filepath != "" {
+		name = filepath
+	} else {
+		name = c.String("name")
+	}
+
+	u, _ := uuid.NewV4()
+
+	sessionConfig := config{
+		DataspaceID: c.String("dataspace"),
+		AuthToken:   c.String("token"),
+		ServerURL:   c.String("url"),
+		Name:        name,
+		SessionID:   u.String() ,
+	}
+
+	if sessionConfig.AuthToken == "" {
+		log.Fatal("No AuthToken provided. See the -t option.")
+	}
+
+	// Open the browser (First so it has a chance to load)
+	// key := ""
+	// if name == "" {
+	// 	key = "%40session%3D" + sessionConfig.SessionID
+	// } else {
+	// 	key = "%40name%3D" + sessionConfig.Name
+	// }
+	// open.Run(sessionConfig.ServerURL + sessionConfig.DataspaceID + "/search?live=true&start=1d&query=" + key)
+
+	startSending(sessionConfig)
+
+	if filepath != "" {
+		tailFile(sessionConfig, filepath)
+	} else {
+		streamStdin(sessionConfig)
+	}
+	return nil
+}
+
+
 var batchLimit = 500
 var events = make(chan event, 500)
 
@@ -35,14 +192,6 @@ type event struct {
 	Timestamp  string            `json:"timestamp"`
 	Attributes map[string]string `json:"attributes"`
 	RawString  string            `json:"rawstring"`
-}
-
-type config struct {
-	ServerURL   string
-	AuthToken   string
-	DataspaceID string
-	SessionID   string
-	Name        string
 }
 
 func sendBatch(config config, events []event) {
@@ -82,7 +231,6 @@ func sendBatch(config config, events []event) {
 
 func startSending(config config) {
 	go func() {
-
 		var batch []event
 		for {
 			select {
@@ -180,81 +328,114 @@ func waitForInterrupt() {
 	<-done
 }
 
-func main() {
-	app := &cli.App{
-		Name:  "humio",
-		Usage: "humio [options] <filepath>",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:    "token",
-				Aliases: []string{"t"},
-				Usage:   "Your Humio API Token",
-				EnvVars: []string{"HUMIO_API_TOKEN"},
-			},
-			&cli.StringFlag{
-				Name:    "dataspace",
-				Aliases: []string{"d"},
-				Value:   "scratch",
-				Usage:   "The dataspace to stream to. Defaults to your scratch dataspace.",
-			},
-			&cli.StringFlag{
-				Name:    "url",
-				Aliases: []string{"u"},
-				Value:   "https://cloud.humio.com/",
-				Usage:   "URL for the Humio server to stream to. `URL` must be a valid URL and end with slash (/).",
-				EnvVars: []string{"HUMIO_URL"},
-			},
-			&cli.StringFlag{
-				Name:    "name",
-				Aliases: []string{"n"},
-				Usage:   "A name to make it easier to find results for this stream in your dataspace. e.g. @name=MyName\nIf `NAME` is not specified and you are tailing a file, the filename is used.",
-			},
-		},
-		Action: func(c *cli.Context) error {
-			filepath := c.Args().Get(0)
 
-			name := ""
-			if c.String("name") == "" && filepath != "" {
-				name = filepath
-			} else {
-				name = c.String("name")
-			}
+////////////////////////////////////////////////////////////////////////////////
+///// Ingesttoken command //////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-			u, _ := uuid.NewV4()
+func ingesttoken_create(c *cli.Context) error {
+	name := c.String("name")
+	if name == "" {
+		panic("Missing name argument")
+	}
+	parser := c.String("parser")
 
-			sessionConfig := config{
-				DataspaceID: c.String("dataspace"),
-				AuthToken:   c.String("token"),
-				ServerURL:   c.String("url"),
-				Name:        name,
-				SessionID:   u.String() ,
-			}
+	body := ""
+	if parser == "" {
+		body = `{"name": "`+name+`"}`
+	}	else {
+		body = `{"name": "`+name+`", "parser": "`+parser+`"}`
+	}
+	url := "http://localhost:8080/api/v1/repositories/developer/ingesttokens"
 
-			if sessionConfig.AuthToken == "" {
-				log.Fatal("No AuthToken provided. See the -t option.")
-			}
+	resp, clientErr := postJson(url, body, "notoken")
 
-			// Open the browser (First so it has a chance to load)
-			// key := ""
-			// if name == "" {
-			// 	key = "%40session%3D" + sessionConfig.SessionID
-			// } else {
-			// 	key = "%40name%3D" + sessionConfig.Name
-			// }
-			// open.Run(sessionConfig.ServerURL + sessionConfig.DataspaceID + "/search?live=true&start=1d&query=" + key)
+	if clientErr != nil {
+		panic(clientErr)
+	}
+	if resp.StatusCode >= 400 {
+		responseData, readErr := ioutil.ReadAll(resp.Body)
+		if readErr != nil {
+			panic(readErr)
+		}
+		log.Print(resp.StatusCode)
+		log.Fatal(string(responseData))
+	}
+	resp.Body.Close()
 
-			startSending(sessionConfig)
+	return nil
+}
 
-			if filepath != "" {
-				tailFile(sessionConfig, filepath)
-			} else {
-				streamStdin(sessionConfig)
-			}
-			return nil
-		},
+
+////////////////////////////////////////////////////////////////////////////////
+///// Parser create command ////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+func parser_create(c *cli.Context) error {
+	name := c.String("name")
+	if name == "" {
+		panic("Missing name argument")
+	}
+	query := c.StringSlice("query")
+	log.Print("----->")
+	log.Print(query)
+	if len(query) != 1 {
+		panic("Missing query argument")
+	}
+	log.Print(len(query))
+	log.Print(query[0])
+
+	body := `{"parser": "`+query[0]+`", "kind": "humio", "parseKeyValues": false, "dateTimeFields": ["@timestamp"]}`
+	url := "http://localhost:8080/api/v1/repositories/developer/parsers/"+name
+
+	resp, clientErr := postJson(url, body, "notoken")
+
+	if clientErr != nil {
+		panic(clientErr)
+	}
+	if resp.StatusCode == 409 && c.Bool("force") {
+		resp, clientErr = putJson(url, body, "notoken")
 	}
 
-	app.Version = version
+	if resp.StatusCode >= 400 {
+		responseData, readErr := ioutil.ReadAll(resp.Body)
+		if readErr != nil {
+			panic(readErr)
+		}
+		log.Print(resp.StatusCode)
+		log.Fatal(string(responseData))
+	}
+	log.Print(resp)
+	resp.Body.Close()
 
-	app.Run(os.Args)
+	return nil
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+///// Utils ////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+func postJson(url string, jsonStr string, token string) (*http.Response, error) {
+	log.Print(url)
+	req, reqErr := http.NewRequest("POST", url, bytes.NewBuffer([]byte(jsonStr)))
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
+}
+
+func putJson(url string, jsonStr string, token string) (*http.Response, error) {
+	log.Print(url)
+	req, reqErr := http.NewRequest("PUT", url, bytes.NewBuffer([]byte(jsonStr)))
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
 }
