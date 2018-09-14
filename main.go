@@ -13,6 +13,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	"strconv"
 
 	"github.com/hpcloud/tail"
 	"github.com/satori/go.uuid"
@@ -100,6 +101,10 @@ func main() {
 								Name:    "query",
 								Aliases: []string{"q"},
 								Usage:   "Query string",
+							},
+							&cli.StringSliceFlag{
+								Name:    "query-file",
+								Usage:   "File containing the query",
 							},
 							&cli.BoolFlag{
 								Name:    "force",
@@ -380,34 +385,52 @@ func ingesttoken_create(c *cli.Context) error {
 ////////////////////////////////////////////////////////////////////////////////
 
 func parser_create(c *cli.Context) error {
+	server, _ := getServerConfig(c)
+
+	ensureRepo(server)
+	ensureUrl(server)
+
 	name := c.String("name")
 	if name == "" {
 		panic("Missing name argument")
 	}
-	query := c.StringSlice("query")
-	if len(query) != 1 {
-		panic("Missing query argument")
+
+	query := ""
+
+	fileNameSlices := c.StringSlice("query-file")
+	if len(fileNameSlices) != 1 {
+		querySlices := c.StringSlice("query")
+		if len(querySlices) != 1 {
+			panic("Missing query argument")
+		} else {
+			query = strconv.Quote(querySlices[0])
+		}
+	} else {
+		file, readErr := ioutil.ReadFile(fileNameSlices[0])
+		if readErr != nil {
+			exit("Could not read file: "+fileNameSlices[0])
+		}
+		query = strconv.Quote(string(file))
 	}
 
-	body := `{"parser": "`+query[0]+`", "kind": "humio", "parseKeyValues": false, "dateTimeFields": ["@timestamp"]}`
-	//url := "http://localhost:8080/api/v1/repositories/developer/parsers/"+name
-	url := "https://ops.humio.com/api/v1/repositories/unipart/parsers/"+name
-	resp, clientErr := postJson(url, body, "hPLexo2bvuLzTGg3mLTinP34iSeAcUhamgkL6G5WCzBV")
+	body := `{"parser": `+query+`, "kind": "humio", "parseKeyValues": false, "dateTimeFields": ["@timestamp"]}`
+	url := server.Url+"/api/v1/repositories/"+server.Repo+"/parsers/"+name
+	resp, clientErr := postJson(url, body, server.Token)
 
 	if clientErr != nil {
 		panic(clientErr)
 	}
 	if resp.StatusCode == 409 && c.Bool("force") {
-		resp, clientErr = putJson(url, body, "hPLexo2bvuLzTGg3mLTinP34iSeAcUhamgkL6G5WCzBV")
+		resp, clientErr = putJson(url, body, server.Token)
 	}
 
 	if resp.StatusCode >= 400 {
-		_, readErr := ioutil.ReadAll(resp.Body)
+		responseData, readErr := ioutil.ReadAll(resp.Body)
 		if readErr != nil {
 			panic(readErr)
 		}
 		fmt.Println("Error: status code =", resp.StatusCode)
-//		fmt.Println(string(responseData))
+		fmt.Println(string(responseData))
 	}
 	//fmt.Println(resp)
 	resp.Body.Close()
