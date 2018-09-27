@@ -9,20 +9,188 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/user"
 	"os/signal"
 	"syscall"
 	"time"
+	"strconv"
 
 	"github.com/hpcloud/tail"
 	"github.com/satori/go.uuid"
 	// "github.com/skratchdot/open-golang/open"
 	"gopkg.in/urfave/cli.v2"
+	"github.com/joho/godotenv"
 )
+
+
+////////////////////////////////////////////////////////////////////////////////
+///// Globals //////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 // This is set by the release script.
 var version = "master"
-
 var client = &http.Client{}
+
+type server struct {
+	Url   string
+	Token string
+	Repo  string
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+///// main function ////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+func main() {
+	app := &cli.App{
+		Name:  "humio",
+		Usage: "humio [options] <filepath>",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "token",
+				Usage:   "Your Humio API Token",
+				EnvVars: []string{"HUMIO_API_TOKEN"},
+			},
+			&cli.StringFlag{
+				Name:    "repo",
+				Aliases: []string{"r"},
+				Usage:   "The repository to stream to.",
+				EnvVars: []string{"HUMIO_REPO"},
+			},
+			&cli.StringFlag{
+				Name:    "url",
+				Usage:   "URL for the Humio server to stream to. `URL` must be a valid URL and end with slash (/).",
+				EnvVars: []string{"HUMIO_URL"},
+			},
+		},
+		Commands: []*cli.Command{
+			{
+				Name: "ingesttoken",
+				Subcommands: []*cli.Command{
+					{
+						Name: "create",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:    "name",
+								Aliases: []string{"n"},
+								Usage:   "Token name",
+							},
+							&cli.StringFlag{
+								Name:    "parser",
+								Aliases: []string{"p"},
+								Usage:   "Parser name",
+							},
+						},
+						Action: ingesttoken_create,
+					},
+//					{
+//						Name: "list",
+//						Action: ingesttoken_list,
+//					},
+				},
+			},
+			{
+				Name: "parser",
+				Subcommands: []*cli.Command{
+					{
+						Name: "create",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:    "name",
+								Aliases: []string{"n"},
+								Usage:   "Parser name",
+							},
+							&cli.StringSliceFlag{
+								Name:    "query",
+								Aliases: []string{"q"},
+								Usage:   "Query string",
+							},
+							&cli.StringSliceFlag{
+								Name:    "query-file",
+								Usage:   "File containing the query",
+							},
+							&cli.BoolFlag{
+								Name:    "force",
+								Aliases: []string{"f"},
+								Usage:   "Overwrite existing parser",
+							},
+						},
+						Action: parser_create,
+					},
+				},
+			},
+			{
+				Name: "ingest",
+				Action: ingest,
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:    "name",
+						Aliases: []string{"n"},
+						Usage:   "A name to make it easier to find results for this stream in your repository. e.g. @name=MyName\nIf `NAME` is not specified and you are tailing a file, the filename is used.",
+					},
+				},
+			},
+		},
+	}
+
+	app.Version = version
+	loadEnvFile()
+	app.Run(os.Args)
+}
+
+func loadEnvFile() {
+	user, userErr := user.Current()
+	if userErr != nil {
+		panic(userErr)
+	}
+	// Load the env file if it exists
+	godotenv.Load(user.HomeDir+"/.humio-cli.env")
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+///// Ingest command ///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+func ingest(c *cli.Context) error {
+	filepath := c.Args().Get(0)
+
+	name := ""
+	if c.String("name") == "" && filepath != "" {
+		name = filepath
+	} else {
+		name = c.String("name")
+	}
+
+	u, _ := uuid.NewV4()
+
+	sessionID := u.String()
+
+	server, _ := getServerConfig(c)
+
+	ensureToken(server)
+
+	// Open the browser (First so it has a chance to load)
+	// key := ""
+	// if name == "" {
+	// 	key = "%40session%3D" + server.SessionID
+	// } else {
+	// 	key = "%40name%3D" + server.Name
+	// }
+	// open.Run(server.ServerURL + server.RepoID + "/search?live=true&start=1d&query=" + key)
+
+	startSending(server)
+
+	if filepath != "" {
+		tailFile(server, name, sessionID, filepath)
+	} else {
+		streamStdin(server, name, sessionID)
+	}
+	return nil
+}
+
+
 var batchLimit = 500
 var events = make(chan event, 500)
 
@@ -37,15 +205,7 @@ type event struct {
 	RawString  string            `json:"rawstring"`
 }
 
-type config struct {
-	ServerURL   string
-	AuthToken   string
-	DataspaceID string
-	SessionID   string
-	Name        string
-}
-
-func sendBatch(config config, events []event) {
+func sendBatch(server server, events []event) {
 
 	lineJSON, marshalErr := json.Marshal([1]eventList{
 		eventList{
@@ -57,9 +217,9 @@ func sendBatch(config config, events []event) {
 		log.Fatal(marshalErr)
 	}
 
-	ingestURL := config.ServerURL + "api/v1/dataspaces/" + config.DataspaceID + "/ingest"
+	ingestURL := server.Url + "/api/v1/dataspaces/" + server.Repo + "/ingest"
 	lineReq, reqErr := http.NewRequest("POST", ingestURL, bytes.NewBuffer(lineJSON))
-	lineReq.Header.Set("Authorization", "Bearer "+config.AuthToken)
+	lineReq.Header.Set("Authorization", "Bearer "+server.Token)
 	lineReq.Header.Set("Content-Type", "application/json")
 
 	if reqErr != nil {
@@ -80,21 +240,20 @@ func sendBatch(config config, events []event) {
 	resp.Body.Close()
 }
 
-func startSending(config config) {
+func startSending(server server) {
 	go func() {
-
 		var batch []event
 		for {
 			select {
 			case v := <-events:
 				batch = append(batch, v)
 				if len(batch) >= batchLimit {
-					sendBatch(config, batch)
+					sendBatch(server, batch)
 					batch = batch[:0]
 				}
 			default:
 				if len(batch) > 0 {
-					sendBatch(config, batch)
+					sendBatch(server, batch)
 					batch = batch[:0]
 				}
 				// Avoid busy waiting
@@ -104,12 +263,12 @@ func startSending(config config) {
 	}()
 }
 
-func sendLine(config config, line string) {
+func sendLine(server server, name string, sessionID string, line string) {
 	theEvent := event{
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
 		Attributes: map[string]string{
-			"@session": config.SessionID,
-			"@name":    config.Name,
+			"@session": sessionID,
+			"@name":    name,
 		},
 		RawString: line,
 	}
@@ -117,7 +276,7 @@ func sendLine(config config, line string) {
 	events <- theEvent
 }
 
-func tailFile(sessionConfig config, filepath string) {
+func tailFile(server server, name string, sessionID string, filepath string) {
 
 	// Join Tail
 
@@ -128,7 +287,7 @@ func tailFile(sessionConfig config, filepath string) {
 	}
 
 	for line := range t.Lines {
-		sendLine(sessionConfig, line.Text)
+		sendLine(server, name, sessionID, line.Text)
 	}
 
 	tailError := t.Wait()
@@ -138,11 +297,11 @@ func tailFile(sessionConfig config, filepath string) {
 	}
 }
 
-func streamStdin(sessionConfig config) {
+func streamStdin(server server, name string, sessionID string) {
 	log.Println("Humio Attached to StdIn")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		sendLine(sessionConfig, scanner.Text())
+		sendLine(server, name, sessionID, scanner.Text())
 	}
 
 	if scanner.Err() != nil {
@@ -180,81 +339,209 @@ func waitForInterrupt() {
 	<-done
 }
 
-func main() {
-	app := &cli.App{
-		Name:  "humio",
-		Usage: "humio [options] <filepath>",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:    "token",
-				Aliases: []string{"t"},
-				Usage:   "Your Humio API Token",
-				EnvVars: []string{"HUMIO_API_TOKEN"},
-			},
-			&cli.StringFlag{
-				Name:    "dataspace",
-				Aliases: []string{"d"},
-				Value:   "scratch",
-				Usage:   "The dataspace to stream to. Defaults to your scratch dataspace.",
-			},
-			&cli.StringFlag{
-				Name:    "url",
-				Aliases: []string{"u"},
-				Value:   "https://cloud.humio.com/",
-				Usage:   "URL for the Humio server to stream to. `URL` must be a valid URL and end with slash (/).",
-				EnvVars: []string{"HUMIO_URL"},
-			},
-			&cli.StringFlag{
-				Name:    "name",
-				Aliases: []string{"n"},
-				Usage:   "A name to make it easier to find results for this stream in your dataspace. e.g. @name=MyName\nIf `NAME` is not specified and you are tailing a file, the filename is used.",
-			},
-		},
-		Action: func(c *cli.Context) error {
-			filepath := c.Args().Get(0)
 
-			name := ""
-			if c.String("name") == "" && filepath != "" {
-				name = filepath
-			} else {
-				name = c.String("name")
-			}
+////////////////////////////////////////////////////////////////////////////////
+///// Ingesttoken create command ///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-			u, _ := uuid.NewV4()
+func ingesttoken_create(c *cli.Context) error {
+	server, _ := getServerConfig(c)
 
-			sessionConfig := config{
-				DataspaceID: c.String("dataspace"),
-				AuthToken:   c.String("token"),
-				ServerURL:   c.String("url"),
-				Name:        name,
-				SessionID:   u.String() ,
-			}
+	ensureToken(server)
+	ensureRepo(server)
+	ensureUrl(server)
 
-			if sessionConfig.AuthToken == "" {
-				log.Fatal("No AuthToken provided. See the -t option.")
-			}
+	name := c.String("name")
+	if name == "" {
+		exit("Missing name argument")
+	}
+	parser := c.String("parser")
 
-			// Open the browser (First so it has a chance to load)
-			// key := ""
-			// if name == "" {
-			// 	key = "%40session%3D" + sessionConfig.SessionID
-			// } else {
-			// 	key = "%40name%3D" + sessionConfig.Name
-			// }
-			// open.Run(sessionConfig.ServerURL + sessionConfig.DataspaceID + "/search?live=true&start=1d&query=" + key)
-
-			startSending(sessionConfig)
-
-			if filepath != "" {
-				tailFile(sessionConfig, filepath)
-			} else {
-				streamStdin(sessionConfig)
-			}
-			return nil
-		},
+	body := ""
+	if parser == "" {
+		body = `{"name": "`+name+`"}`
+	}	else {
+		body = `{"name": "`+name+`", "parser": "`+parser+`"}`
 	}
 
-	app.Version = version
+	url := server.Url+"/api/v1/repositories/"+server.Repo+"/ingesttokens"
 
-	app.Run(os.Args)
+	resp, clientErr := postJson(url, body, server.Token)
+
+	if clientErr != nil {
+		panic(clientErr)
+	}
+	if resp.StatusCode >= 400 {
+		_, readErr := ioutil.ReadAll(resp.Body)
+		if readErr != nil {
+			panic(readErr)
+		}
+//		fmt.Println(resp.StatusCode)
+//		fmt.Println(string(responseData))
+	}
+	resp.Body.Close()
+
+	return nil
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+///// Ingesttoken list command /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+func ingesttoken_list(c *cli.Context) error {
+	server, _ := getServerConfig(c)
+
+	ensureToken(server)
+	ensureRepo(server)
+	ensureUrl(server)
+
+	url := server.Url+"/api/v1/repositories/"+server.Repo+"/ingesttokens"
+
+	resp, clientErr := getReq(url, server.Token)
+	fmt.Println(resp.Body)
+	if clientErr != nil {
+		panic(clientErr)
+	}
+	if resp.StatusCode >= 400 {
+		body, readErr := ioutil.ReadAll(resp.Body)
+		if readErr != nil {
+			panic(readErr)
+		}
+		fmt.Println(body)
+	}
+	resp.Body.Close()
+
+	return nil
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+///// Parser create command ////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+func parser_create(c *cli.Context) error {
+	server, _ := getServerConfig(c)
+
+	ensureToken(server)
+	ensureRepo(server)
+	ensureUrl(server)
+
+	name := c.String("name")
+	if name == "" {
+		panic("Missing name argument")
+	}
+
+	query := ""
+
+	fileNameSlices := c.StringSlice("query-file")
+	if len(fileNameSlices) != 1 {
+		querySlices := c.StringSlice("query")
+		if len(querySlices) != 1 {
+			panic("Missing query argument")
+		} else {
+			query = strconv.Quote(querySlices[0])
+		}
+	} else {
+		file, readErr := ioutil.ReadFile(fileNameSlices[0])
+		if readErr != nil {
+			exit("Could not read file: "+fileNameSlices[0])
+		}
+		query = strconv.Quote(string(file))
+	}
+
+	body := `{"parser": `+query+`, "kind": "humio", "parseKeyValues": false, "dateTimeFields": ["@timestamp"]}`
+	url := server.Url+"/api/v1/repositories/"+server.Repo+"/parsers/"+name
+	resp, clientErr := postJson(url, body, server.Token)
+
+	if clientErr != nil {
+		panic(clientErr)
+	}
+	if resp.StatusCode == 409 && c.Bool("force") {
+		resp, clientErr = putJson(url, body, server.Token)
+	}
+
+	if resp.StatusCode >= 400 {
+		responseData, readErr := ioutil.ReadAll(resp.Body)
+		if readErr != nil {
+			panic(readErr)
+		}
+		fmt.Println("Error: status code =", resp.StatusCode)
+		fmt.Println(string(responseData))
+	}
+	//fmt.Println(resp)
+	resp.Body.Close()
+
+	return nil
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+///// Utils ////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+func postJson(url string, jsonStr string, token string) (*http.Response, error) {
+	req, reqErr := http.NewRequest("POST", url, bytes.NewBuffer([]byte(jsonStr)))
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
+}
+
+func putJson(url string, jsonStr string, token string) (*http.Response, error) {
+	req, reqErr := http.NewRequest("PUT", url, bytes.NewBuffer([]byte(jsonStr)))
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
+}
+
+func getReq(url string, token string) (*http.Response, error) {
+	req, reqErr := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "*/*")
+	fmt.Println(req)
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
+}
+
+func getServerConfig(c *cli.Context) (server, error) {
+	server := server{
+		Repo:  c.String("repo"),
+		Token: c.String("token"),
+		Url:   c.String("url"),
+	}
+	return server, nil
+}
+
+func ensureRepo(server server){
+	if server.Repo == "" {
+		exit("Missing repository argument")
+	}
+}
+
+func ensureUrl(server server){
+	if server.Url == "" {
+		exit("Missing url argument")
+	}
+}
+
+func ensureToken(server server){
+	if server.Token == "" {
+		exit("Missing API token argument")
+	}
+}
+
+func exit(msg string) {
+	fmt.Println(msg)
+	os.Exit(1)
 }
