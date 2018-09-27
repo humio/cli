@@ -84,6 +84,10 @@ func main() {
 						},
 						Action: ingesttoken_create,
 					},
+//					{
+//						Name: "list",
+//						Action: ingesttoken_list,
+//					},
 				},
 			},
 			{
@@ -337,12 +341,13 @@ func waitForInterrupt() {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-///// Ingesttoken command //////////////////////////////////////////////////////
+///// Ingesttoken create command ///////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 func ingesttoken_create(c *cli.Context) error {
 	server, _ := getServerConfig(c)
 
+	ensureToken(server)
 	ensureRepo(server)
 	ensureUrl(server)
 
@@ -381,12 +386,44 @@ func ingesttoken_create(c *cli.Context) error {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+///// Ingesttoken list command /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+func ingesttoken_list(c *cli.Context) error {
+	server, _ := getServerConfig(c)
+
+	ensureToken(server)
+	ensureRepo(server)
+	ensureUrl(server)
+
+	url := server.Url+"/api/v1/repositories/"+server.Repo+"/ingesttokens"
+
+	resp, clientErr := getReq(url, server.Token)
+	fmt.Println(resp.Body)
+	if clientErr != nil {
+		panic(clientErr)
+	}
+	if resp.StatusCode >= 400 {
+		body, readErr := ioutil.ReadAll(resp.Body)
+		if readErr != nil {
+			panic(readErr)
+		}
+		fmt.Println(body)
+	}
+	resp.Body.Close()
+
+	return nil
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 ///// Parser create command ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 func parser_create(c *cli.Context) error {
 	server, _ := getServerConfig(c)
 
+	ensureToken(server)
 	ensureRepo(server)
 	ensureUrl(server)
 
@@ -459,6 +496,18 @@ func putJson(url string, jsonStr string, token string) (*http.Response, error) {
 	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("Content-Type", "application/json")
 
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
+}
+
+func getReq(url string, token string) (*http.Response, error) {
+	req, reqErr := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "*/*")
+	fmt.Println(req)
 	if reqErr != nil {
 		return nil, reqErr
 	}
