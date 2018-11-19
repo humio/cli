@@ -9,19 +9,18 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/user"
 	"os/signal"
+	"os/user"
+	"strconv"
 	"syscall"
 	"time"
-	"strconv"
 
 	"github.com/hpcloud/tail"
 	"github.com/satori/go.uuid"
 	// "github.com/skratchdot/open-golang/open"
-	"gopkg.in/urfave/cli.v2"
 	"github.com/joho/godotenv"
+	"gopkg.in/urfave/cli.v2"
 )
-
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Globals //////////////////////////////////////////////////////////////////
@@ -32,11 +31,10 @@ var version = "master"
 var client = &http.Client{}
 
 type server struct {
-	Url   string
+	URL   string
 	Token string
 	Repo  string
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// main function ////////////////////////////////////////////////////////////
@@ -82,12 +80,12 @@ func main() {
 								Usage:   "Parser name",
 							},
 						},
-						Action: ingesttoken_create,
+						Action: createIngestToken,
 					},
-//					{
-//						Name: "list",
-//						Action: ingesttoken_list,
-//					},
+					//					{
+					//						Name: "list",
+					//						Action: listIngestTokens,
+					//					},
 				},
 			},
 			{
@@ -107,8 +105,8 @@ func main() {
 								Usage:   "Query string",
 							},
 							&cli.StringSliceFlag{
-								Name:    "query-file",
-								Usage:   "File containing the query",
+								Name:  "query-file",
+								Usage: "File containing the query",
 							},
 							&cli.BoolFlag{
 								Name:    "force",
@@ -116,12 +114,12 @@ func main() {
 								Usage:   "Overwrite existing parser",
 							},
 						},
-						Action: parser_create,
+						Action: createParser,
 					},
 				},
 			},
 			{
-				Name: "ingest",
+				Name:   "ingest",
 				Action: ingest,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -145,9 +143,8 @@ func loadEnvFile() {
 		panic(userErr)
 	}
 	// Load the env file if it exists
-	godotenv.Load(user.HomeDir+"/.humio-cli.env")
+	godotenv.Load(user.HomeDir + "/.humio-cli.env")
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Ingest command ///////////////////////////////////////////////////////////
@@ -167,9 +164,9 @@ func ingest(c *cli.Context) error {
 
 	sessionID := u.String()
 
-	server, _ := getServerConfig(c)
+	config, _ := getServerConfig(c)
 
-	ensureToken(server)
+	ensureToken(config)
 
 	// Open the browser (First so it has a chance to load)
 	// key := ""
@@ -180,16 +177,15 @@ func ingest(c *cli.Context) error {
 	// }
 	// open.Run(server.ServerURL + server.RepoID + "/search?live=true&start=1d&query=" + key)
 
-	startSending(server)
+	startSending(config)
 
 	if filepath != "" {
-		tailFile(server, name, sessionID, filepath)
+		tailFile(config, name, sessionID, filepath)
 	} else {
-		streamStdin(server, name, sessionID)
+		streamStdin(config, name, sessionID)
 	}
 	return nil
 }
-
 
 var batchLimit = 500
 var events = make(chan event, 500)
@@ -217,7 +213,7 @@ func sendBatch(server server, events []event) {
 		log.Fatal(marshalErr)
 	}
 
-	ingestURL := server.Url + "/api/v1/dataspaces/" + server.Repo + "/ingest"
+	ingestURL := server.URL + "/api/v1/dataspaces/" + server.Repo + "/ingest"
 	lineReq, reqErr := http.NewRequest("POST", ingestURL, bytes.NewBuffer(lineJSON))
 	lineReq.Header.Set("Authorization", "Bearer "+server.Token)
 	lineReq.Header.Set("Content-Type", "application/json")
@@ -339,17 +335,16 @@ func waitForInterrupt() {
 	<-done
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 ///// Ingesttoken create command ///////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-func ingesttoken_create(c *cli.Context) error {
-	server, _ := getServerConfig(c)
+func createIngestToken(c *cli.Context) error {
+	config, _ := getServerConfig(c)
 
-	ensureToken(server)
-	ensureRepo(server)
-	ensureUrl(server)
+	ensureToken(config)
+	ensureRepo(config)
+	ensureURL(config)
 
 	name := c.String("name")
 	if name == "" {
@@ -359,14 +354,14 @@ func ingesttoken_create(c *cli.Context) error {
 
 	body := ""
 	if parser == "" {
-		body = `{"name": "`+name+`"}`
-	}	else {
-		body = `{"name": "`+name+`", "parser": "`+parser+`"}`
+		body = `{"name": "` + name + `"}`
+	} else {
+		body = `{"name": "` + name + `", "parser": "` + parser + `"}`
 	}
 
-	url := server.Url+"/api/v1/repositories/"+server.Repo+"/ingesttokens"
+	url := config.URL + "/api/v1/repositories/" + config.Repo + "/ingesttokens"
 
-	resp, clientErr := postJson(url, body, server.Token)
+	resp, clientErr := postJSON(url, body, config.Token)
 
 	if clientErr != nil {
 		panic(clientErr)
@@ -376,29 +371,28 @@ func ingesttoken_create(c *cli.Context) error {
 		if readErr != nil {
 			panic(readErr)
 		}
-//		fmt.Println(resp.StatusCode)
-//		fmt.Println(string(responseData))
+		//		fmt.Println(resp.StatusCode)
+		//		fmt.Println(string(responseData))
 	}
 	resp.Body.Close()
 
 	return nil
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 ///// Ingesttoken list command /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-func ingesttoken_list(c *cli.Context) error {
-	server, _ := getServerConfig(c)
+func listIngestTokens(c *cli.Context) error {
+	config, _ := getServerConfig(c)
 
-	ensureToken(server)
-	ensureRepo(server)
-	ensureUrl(server)
+	ensureToken(config)
+	ensureRepo(config)
+	ensureURL(config)
 
-	url := server.Url+"/api/v1/repositories/"+server.Repo+"/ingesttokens"
+	url := config.URL + "/api/v1/repositories/" + config.Repo + "/ingesttokens"
 
-	resp, clientErr := getReq(url, server.Token)
+	resp, clientErr := getReq(url, config.Token)
 	fmt.Println(resp.Body)
 	if clientErr != nil {
 		panic(clientErr)
@@ -415,17 +409,16 @@ func ingesttoken_list(c *cli.Context) error {
 	return nil
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 ///// Parser create command ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-func parser_create(c *cli.Context) error {
-	server, _ := getServerConfig(c)
+func createParser(c *cli.Context) error {
+	config, _ := getServerConfig(c)
 
-	ensureToken(server)
-	ensureRepo(server)
-	ensureUrl(server)
+	ensureToken(config)
+	ensureRepo(config)
+	ensureURL(config)
 
 	name := c.String("name")
 	if name == "" {
@@ -445,20 +438,20 @@ func parser_create(c *cli.Context) error {
 	} else {
 		file, readErr := ioutil.ReadFile(fileNameSlices[0])
 		if readErr != nil {
-			exit("Could not read file: "+fileNameSlices[0])
+			exit("Could not read file: " + fileNameSlices[0])
 		}
 		query = strconv.Quote(string(file))
 	}
 
-	body := `{"parser": `+query+`, "kind": "humio", "parseKeyValues": false, "dateTimeFields": ["@timestamp"]}`
-	url := server.Url+"/api/v1/repositories/"+server.Repo+"/parsers/"+name
-	resp, clientErr := postJson(url, body, server.Token)
+	body := `{"parser": ` + query + `, "kind": "humio", "parseKeyValues": false, "dateTimeFields": ["@timestamp"]}`
+	url := config.URL + "/api/v1/repositories/" + config.Repo + "/parsers/" + name
+	resp, clientErr := postJSON(url, body, config.Token)
 
 	if clientErr != nil {
 		panic(clientErr)
 	}
 	if resp.StatusCode == 409 && c.Bool("force") {
-		resp, clientErr = putJson(url, body, server.Token)
+		resp, _ = putJSON(url, body, config.Token)
 	}
 
 	if resp.StatusCode >= 400 {
@@ -475,12 +468,11 @@ func parser_create(c *cli.Context) error {
 	return nil
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 ///// Utils ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-func postJson(url string, jsonStr string, token string) (*http.Response, error) {
+func postJSON(url string, jsonStr string, token string) (*http.Response, error) {
 	req, reqErr := http.NewRequest("POST", url, bytes.NewBuffer([]byte(jsonStr)))
 	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("Content-Type", "application/json")
@@ -491,7 +483,7 @@ func postJson(url string, jsonStr string, token string) (*http.Response, error) 
 	return client.Do(req)
 }
 
-func putJson(url string, jsonStr string, token string) (*http.Response, error) {
+func putJSON(url string, jsonStr string, token string) (*http.Response, error) {
 	req, reqErr := http.NewRequest("PUT", url, bytes.NewBuffer([]byte(jsonStr)))
 	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("Content-Type", "application/json")
@@ -515,27 +507,27 @@ func getReq(url string, token string) (*http.Response, error) {
 }
 
 func getServerConfig(c *cli.Context) (server, error) {
-	server := server{
+	config := server{
 		Repo:  c.String("repo"),
 		Token: c.String("token"),
-		Url:   c.String("url"),
+		URL:   c.String("url"),
 	}
-	return server, nil
+	return config, nil
 }
 
-func ensureRepo(server server){
+func ensureRepo(server server) {
 	if server.Repo == "" {
 		exit("Missing repository argument")
 	}
 }
 
-func ensureUrl(server server){
-	if server.Url == "" {
+func ensureURL(server server) {
+	if server.URL == "" {
 		exit("Missing url argument")
 	}
 }
 
-func ensureToken(server server){
+func ensureToken(server server) {
 	if server.Token == "" {
 		exit("Missing API token argument")
 	}
