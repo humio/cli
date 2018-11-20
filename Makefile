@@ -3,8 +3,12 @@ GOPATH=$(shell pwd)/vendor:$(shell pwd)
 GOBIN=$(shell pwd)/bin
 GOFILES=$(wildcard *.go)
 BIN_NAME=humio
+BIN_PATH=bin/$(BIN_NAME)
+CLI_COMMAND ?= ""
 
-build:
+$(BIN_PATH): $(GOFILES)
+
+build: $(BIN_PATH)
 	@echo "--> Building Humio CLI"
 	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go build -o bin/$(BIN_NAME) $(GOFILES)
 
@@ -21,4 +25,8 @@ dist: clean
 	@echo "--> Tagging Git & Releasing"
 	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) ./scripts/dist.sh
 
-.PHONY: build get clean dist
+run:
+	$(MAKE) build
+	$(BIN_PATH) $(CLI_COMMAND)
+
+.PHONY: build get clean dist run

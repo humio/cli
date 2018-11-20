@@ -1,23 +1,13 @@
 package main
 
 import (
-	"bufio"
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
-	"os/signal"
 	"os/user"
-	"strconv"
-	"syscall"
-	"time"
 
-	"github.com/hpcloud/tail"
-	"github.com/satori/go.uuid"
 	// "github.com/skratchdot/open-golang/open"
+	"github.com/humio/cli/command"
 	"github.com/joho/godotenv"
 	"gopkg.in/urfave/cli.v2"
 )
@@ -58,41 +48,41 @@ func main() {
 			},
 			&cli.StringFlag{
 				Name:    "url",
-				Usage:   "URL for the Humio server to stream to. `URL` must be a valid URL and end with slash (/).",
+				Usage:   "URL for the Humio server. `URL` must be a valid URL and end with slash (/).",
 				EnvVars: []string{"HUMIO_URL"},
 			},
 		},
 		Commands: []*cli.Command{
 			{
-				Name: "ingesttoken",
+				Name: "token",
 				Subcommands: []*cli.Command{
 					{
-						Name: "create",
+						Name: "add",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:    "name",
 								Aliases: []string{"n"},
-								Usage:   "Token name",
+								Usage:   "The name to assign to the token.",
 							},
 							&cli.StringFlag{
 								Name:    "parser",
 								Aliases: []string{"p"},
-								Usage:   "Parser name",
+								Usage:   "The name of the parser to assign to the ingest token.",
 							},
 						},
-						Action: createIngestToken,
+						Action: command.TokenAdd,
 					},
-					//					{
-					//						Name: "list",
-					//						Action: listIngestTokens,
-					//					},
+					{
+						Name:   "list",
+						Action: command.TokenList,
+					},
 				},
 			},
 			{
 				Name: "parser",
 				Subcommands: []*cli.Command{
 					{
-						Name: "create",
+						Name: "push",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:    "name",
@@ -114,13 +104,13 @@ func main() {
 								Usage:   "Overwrite existing parser",
 							},
 						},
-						Action: createParser,
+						Action: command.ParserPush,
 					},
 				},
 			},
 			{
 				Name:   "ingest",
-				Action: ingest,
+				Action: command.Ingest,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:    "name",
@@ -147,391 +137,8 @@ func loadEnvFile() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-///// Ingest command ///////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-func ingest(c *cli.Context) error {
-	filepath := c.Args().Get(0)
-
-	name := ""
-	if c.String("name") == "" && filepath != "" {
-		name = filepath
-	} else {
-		name = c.String("name")
-	}
-
-	u, _ := uuid.NewV4()
-
-	sessionID := u.String()
-
-	config, _ := getServerConfig(c)
-
-	ensureToken(config)
-
-	// Open the browser (First so it has a chance to load)
-	// key := ""
-	// if name == "" {
-	// 	key = "%40session%3D" + server.SessionID
-	// } else {
-	// 	key = "%40name%3D" + server.Name
-	// }
-	// open.Run(server.ServerURL + server.RepoID + "/search?live=true&start=1d&query=" + key)
-
-	startSending(config)
-
-	if filepath != "" {
-		tailFile(config, name, sessionID, filepath)
-	} else {
-		streamStdin(config, name, sessionID)
-	}
-	return nil
-}
-
-var batchLimit = 500
-var events = make(chan event, 500)
-
-type eventList struct {
-	Tags   map[string]string `json:"tags"`
-	Events []event           `json:"events"`
-}
-
-type event struct {
-	Timestamp  string            `json:"timestamp"`
-	Attributes map[string]string `json:"attributes"`
-	RawString  string            `json:"rawstring"`
-}
-
-func sendBatch(server server, events []event) {
-
-	lineJSON, marshalErr := json.Marshal([1]eventList{
-		eventList{
-			Tags:   map[string]string{},
-			Events: events,
-		}})
-
-	if marshalErr != nil {
-		log.Fatal(marshalErr)
-	}
-
-	ingestURL := server.URL + "/api/v1/dataspaces/" + server.Repo + "/ingest"
-	lineReq, reqErr := http.NewRequest("POST", ingestURL, bytes.NewBuffer(lineJSON))
-	lineReq.Header.Set("Authorization", "Bearer "+server.Token)
-	lineReq.Header.Set("Content-Type", "application/json")
-
-	if reqErr != nil {
-		panic(reqErr)
-	}
-
-	resp, clientErr := client.Do(lineReq)
-	if clientErr != nil {
-		panic(clientErr)
-	}
-	if resp.StatusCode > 400 {
-		responseData, readErr := ioutil.ReadAll(resp.Body)
-		if readErr != nil {
-			panic(readErr)
-		}
-		log.Fatal(string(responseData))
-	}
-	resp.Body.Close()
-}
-
-func startSending(server server) {
-	go func() {
-		var batch []event
-		for {
-			select {
-			case v := <-events:
-				batch = append(batch, v)
-				if len(batch) >= batchLimit {
-					sendBatch(server, batch)
-					batch = batch[:0]
-				}
-			default:
-				if len(batch) > 0 {
-					sendBatch(server, batch)
-					batch = batch[:0]
-				}
-				// Avoid busy waiting
-				batch = append(batch, <-events)
-			}
-		}
-	}()
-}
-
-func sendLine(server server, name string, sessionID string, line string) {
-	theEvent := event{
-		Timestamp: time.Now().UTC().Format(time.RFC3339),
-		Attributes: map[string]string{
-			"@session": sessionID,
-			"@name":    name,
-		},
-		RawString: line,
-	}
-
-	events <- theEvent
-}
-
-func tailFile(server server, name string, sessionID string, filepath string) {
-
-	// Join Tail
-
-	t, err := tail.TailFile(filepath, tail.Config{Follow: true})
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for line := range t.Lines {
-		sendLine(server, name, sessionID, line.Text)
-	}
-
-	tailError := t.Wait()
-
-	if tailError != nil {
-		log.Fatal(tailError)
-	}
-}
-
-func streamStdin(server server, name string, sessionID string) {
-	log.Println("Humio Attached to StdIn")
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		sendLine(server, name, sessionID, scanner.Text())
-	}
-
-	if scanner.Err() != nil {
-		log.Fatal(scanner.Err())
-	}
-
-	waitForInterrupt()
-}
-
-func waitForInterrupt() {
-	// Go signal notification works by sending `os.Signal`
-	// values on a channel. We'll create a channel to
-	// receive these notifications (we'll also make one to
-	// notify us when the program can exit).
-	sigs := make(chan os.Signal, 1)
-	done := make(chan bool, 1)
-
-	// `signal.Notify` registers the given channel to
-	// receive notifications of the specified signals.
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-
-	// This goroutine executes a blocking receive for
-	// signals. When it gets one it'll print it out
-	// and then notify the program that it can finish.
-	go func() {
-		sig := <-sigs
-		fmt.Println()
-		fmt.Println(sig)
-		done <- true
-	}()
-
-	// The program will wait here until it gets the
-	// expected signal (as indicated by the goroutine
-	// above sending a value on `done`) and then exit.
-	<-done
-}
-
-////////////////////////////////////////////////////////////////////////////////
-///// Ingesttoken create command ///////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-func createIngestToken(c *cli.Context) error {
-	config, _ := getServerConfig(c)
-
-	ensureToken(config)
-	ensureRepo(config)
-	ensureURL(config)
-
-	name := c.String("name")
-	if name == "" {
-		exit("Missing name argument")
-	}
-	parser := c.String("parser")
-
-	body := ""
-	if parser == "" {
-		body = `{"name": "` + name + `"}`
-	} else {
-		body = `{"name": "` + name + `", "parser": "` + parser + `"}`
-	}
-
-	url := config.URL + "/api/v1/repositories/" + config.Repo + "/ingesttokens"
-
-	resp, clientErr := postJSON(url, body, config.Token)
-
-	if clientErr != nil {
-		panic(clientErr)
-	}
-	if resp.StatusCode >= 400 {
-		_, readErr := ioutil.ReadAll(resp.Body)
-		if readErr != nil {
-			panic(readErr)
-		}
-		//		fmt.Println(resp.StatusCode)
-		//		fmt.Println(string(responseData))
-	}
-	resp.Body.Close()
-
-	return nil
-}
-
-////////////////////////////////////////////////////////////////////////////////
-///// Ingesttoken list command /////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-func listIngestTokens(c *cli.Context) error {
-	config, _ := getServerConfig(c)
-
-	ensureToken(config)
-	ensureRepo(config)
-	ensureURL(config)
-
-	url := config.URL + "/api/v1/repositories/" + config.Repo + "/ingesttokens"
-
-	resp, clientErr := getReq(url, config.Token)
-	fmt.Println(resp.Body)
-	if clientErr != nil {
-		panic(clientErr)
-	}
-	if resp.StatusCode >= 400 {
-		body, readErr := ioutil.ReadAll(resp.Body)
-		if readErr != nil {
-			panic(readErr)
-		}
-		fmt.Println(body)
-	}
-	resp.Body.Close()
-
-	return nil
-}
-
-////////////////////////////////////////////////////////////////////////////////
-///// Parser create command ////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-func createParser(c *cli.Context) error {
-	config, _ := getServerConfig(c)
-
-	ensureToken(config)
-	ensureRepo(config)
-	ensureURL(config)
-
-	name := c.String("name")
-	if name == "" {
-		panic("Missing name argument")
-	}
-
-	query := ""
-
-	fileNameSlices := c.StringSlice("query-file")
-	if len(fileNameSlices) != 1 {
-		querySlices := c.StringSlice("query")
-		if len(querySlices) != 1 {
-			panic("Missing query argument")
-		} else {
-			query = strconv.Quote(querySlices[0])
-		}
-	} else {
-		file, readErr := ioutil.ReadFile(fileNameSlices[0])
-		if readErr != nil {
-			exit("Could not read file: " + fileNameSlices[0])
-		}
-		query = strconv.Quote(string(file))
-	}
-
-	body := `{"parser": ` + query + `, "kind": "humio", "parseKeyValues": false, "dateTimeFields": ["@timestamp"]}`
-	url := config.URL + "/api/v1/repositories/" + config.Repo + "/parsers/" + name
-	resp, clientErr := postJSON(url, body, config.Token)
-
-	if clientErr != nil {
-		panic(clientErr)
-	}
-	if resp.StatusCode == 409 && c.Bool("force") {
-		resp, _ = putJSON(url, body, config.Token)
-	}
-
-	if resp.StatusCode >= 400 {
-		responseData, readErr := ioutil.ReadAll(resp.Body)
-		if readErr != nil {
-			panic(readErr)
-		}
-		fmt.Println("Error: status code =", resp.StatusCode)
-		fmt.Println(string(responseData))
-	}
-	//fmt.Println(resp)
-	resp.Body.Close()
-
-	return nil
-}
-
-////////////////////////////////////////////////////////////////////////////////
 ///// Utils ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
-func postJSON(url string, jsonStr string, token string) (*http.Response, error) {
-	req, reqErr := http.NewRequest("POST", url, bytes.NewBuffer([]byte(jsonStr)))
-	req.Header.Set("Authorization", "Bearer "+token)
-	req.Header.Set("Content-Type", "application/json")
-
-	if reqErr != nil {
-		return nil, reqErr
-	}
-	return client.Do(req)
-}
-
-func putJSON(url string, jsonStr string, token string) (*http.Response, error) {
-	req, reqErr := http.NewRequest("PUT", url, bytes.NewBuffer([]byte(jsonStr)))
-	req.Header.Set("Authorization", "Bearer "+token)
-	req.Header.Set("Content-Type", "application/json")
-
-	if reqErr != nil {
-		return nil, reqErr
-	}
-	return client.Do(req)
-}
-
-func getReq(url string, token string) (*http.Response, error) {
-	req, reqErr := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
-	req.Header.Set("Authorization", "Bearer "+token)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "*/*")
-	fmt.Println(req)
-	if reqErr != nil {
-		return nil, reqErr
-	}
-	return client.Do(req)
-}
-
-func getServerConfig(c *cli.Context) (server, error) {
-	config := server{
-		Repo:  c.String("repo"),
-		Token: c.String("token"),
-		URL:   c.String("url"),
-	}
-	return config, nil
-}
-
-func ensureRepo(server server) {
-	if server.Repo == "" {
-		exit("Missing repository argument")
-	}
-}
-
-func ensureURL(server server) {
-	if server.URL == "" {
-		exit("Missing url argument")
-	}
-}
-
-func ensureToken(server server) {
-	if server.Token == "" {
-		exit("Missing API token argument")
-	}
-}
 
 func exit(msg string) {
 	fmt.Println(msg)

@@ -3,3 +3,7 @@
 /bin/
 /pkg/
 /vendor
+
+*.exe
+*.test
+*.prof
