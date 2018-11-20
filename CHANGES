@@ -1,3 +1,19 @@
+Version 0.2.1:
+ - Fix compile error
+ - Add commands for parsers and root management
+ - WIP
+ - Fix linter errors
+ - Merge pull request #4 from humio/add-humio-parsers
+ - Updated the README
+ - Enhance arg validation + started on an ingesttoken list command
+ - Add query-file parameter to parsers
+ - Add env file support
+ - Add ingesttokens and parser subcommands
+ - Remove .gitkeep from removed vendor dir
+ - Remove vendor folder
+ - Mention that we plan for search functionality as well.
+ - Improve Logo
+
 Version 0.15.0:
  - Add makefile
 
