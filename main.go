@@ -54,6 +54,19 @@ func main() {
 		},
 		Commands: []*cli.Command{
 			{
+				Name: "users",
+				Subcommands: []*cli.Command{
+					{
+						Name:   "add-root",
+						Action: command.UsersAddRoot,
+					},
+					{
+						Name:   "remove-root",
+						Action: command.UsersRemoveRoot,
+					},
+				},
+			},
+			{
 				Name: "token",
 				Subcommands: []*cli.Command{
 					{
@@ -82,29 +95,28 @@ func main() {
 				Name: "parser",
 				Subcommands: []*cli.Command{
 					{
-						Name: "push",
+						Name: "add",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:    "name",
 								Aliases: []string{"n"},
-								Usage:   "Parser name",
-							},
-							&cli.StringSliceFlag{
-								Name:    "query",
-								Aliases: []string{"q"},
-								Usage:   "Query string",
-							},
-							&cli.StringSliceFlag{
-								Name:  "query-file",
-								Usage: "File containing the query",
+								Usage:   "Override the name in the parser file.",
 							},
 							&cli.BoolFlag{
-								Name:    "force",
-								Aliases: []string{"f"},
-								Usage:   "Overwrite existing parser",
+								Name:    "update",
+								Aliases: []string{"u"},
+								Usage:   "If a parser exists with the same name update it.",
 							},
 						},
-						Action: command.ParserPush,
+						Action: command.ParserAdd,
+					},
+					{
+						Name:   "remove",
+						Action: command.ParserRemove,
+					},
+					{
+						Name:   "list",
+						Action: command.ParserList,
 					},
 				},
 			},

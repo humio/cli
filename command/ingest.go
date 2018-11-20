@@ -18,23 +18,6 @@ import (
 	cli "gopkg.in/urfave/cli.v2"
 )
 
-var client = &http.Client{}
-
-type server struct {
-	URL   string
-	Token string
-	Repo  string
-}
-
-func getServerConfig(c *cli.Context) (server, error) {
-	config := server{
-		Repo:  c.String("repo"),
-		Token: c.String("token"),
-		URL:   c.String("url"),
-	}
-	return config, nil
-}
-
 var batchLimit = 500
 var events = make(chan event, 500)
 

@@ -2,16 +2,16 @@ package command
 
 import (
 	"bytes"
-	"fmt"
 	"net/http"
 )
+
+var client = &http.Client{}
 
 func getReq(url string, token string) (*http.Response, error) {
 	req, reqErr := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
 	req.Header.Set("Authorization", "Bearer "+token)
-	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "*/*")
-	fmt.Println(req)
+
 	if reqErr != nil {
 		return nil, reqErr
 	}

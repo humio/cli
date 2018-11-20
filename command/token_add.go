@@ -15,7 +15,7 @@ func TokenAdd(c *cli.Context) error {
 
 	name := c.String("name")
 	if name == "" {
-		exit("Missing name argument")
+		exit("Name cannot be empty.")
 	}
 	parser := c.String("parser")
 
