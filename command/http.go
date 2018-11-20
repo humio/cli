@@ -2,7 +2,11 @@ package command
 
 import (
 	"bytes"
+	"context"
 	"net/http"
+
+	"github.com/shurcooL/graphql"
+	"golang.org/x/oauth2"
 )
 
 var client = &http.Client{}
@@ -38,4 +42,13 @@ func putJSON(url string, jsonStr string, token string) (*http.Response, error) {
 		return nil, reqErr
 	}
 	return client.Do(req)
+}
+
+func newGraphQLClient(config server) *graphql.Client {
+	src := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: config.Token},
+	)
+
+	httpClient := oauth2.NewClient(context.Background(), src)
+	return graphql.NewClient(config.URL+"graphql", httpClient)
 }

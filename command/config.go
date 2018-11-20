@@ -3,7 +3,6 @@ package command
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	cli "gopkg.in/urfave/cli.v2"
@@ -24,32 +23,21 @@ func getServerConfig(c *cli.Context) (server, error) {
 	return config, nil
 }
 
-func newPostRequest(config server, path string) {
-
-	req, err := http.NewRequest("POST", config.URL+path, nil)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	req.Header.Add("Authorization", "Bearer "+config.Token)
-}
-
 func ensureRepo(server server) {
 	if server.Repo == "" {
-		exit("Missing repository argument")
+		log.Fatal("The command requires the repository to be specified.")
 	}
 }
 
 func ensureURL(server server) {
 	if server.URL == "" {
-		exit("Missing url argument")
+		log.Fatal("You must specify the URL of the Humio server.")
 	}
 }
 
 func ensureToken(server server) {
 	if server.Token == "" {
-		exit("Missing API token argument")
+		exit("API Token not set.")
 	}
 }
 

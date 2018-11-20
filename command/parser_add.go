@@ -7,23 +7,9 @@ import (
 	"strings"
 
 	"github.com/shurcooL/graphql"
-	"golang.org/x/oauth2"
 	cli "gopkg.in/urfave/cli.v2"
 	"gopkg.in/yaml.v2"
 )
-
-type testCase struct {
-	Input  string
-	Output map[string]string
-}
-
-type parserConfig struct {
-	Name        string
-	Description string
-	Tests       []testCase
-	Example     string
-	Script      string
-}
 
 func ParserAdd(c *cli.Context) error {
 	config, _ := getServerConfig(c)
@@ -34,24 +20,14 @@ func ParserAdd(c *cli.Context) error {
 
 	filePath := c.Args().First()
 	file, readErr := ioutil.ReadFile(filePath)
-
-	if readErr != nil {
-		log.Fatalf("Could not read file: %v", filePath)
-	}
+	check(readErr)
 
 	t := parserConfig{}
 
 	err := yaml.Unmarshal(file, &t)
-	if err != nil {
-		log.Fatalf("error: %v", err)
-	}
+	check(err)
 
-	src := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: config.Token},
-	)
-
-	httpClient := oauth2.NewClient(context.Background(), src)
-	client := graphql.NewClient(config.URL+"graphql", httpClient)
+	client := newGraphQLClient(config)
 
 	var m struct {
 		CreateParser struct {

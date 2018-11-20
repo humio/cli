@@ -43,7 +43,7 @@ func main() {
 			&cli.StringFlag{
 				Name:    "repo",
 				Aliases: []string{"r"},
-				Usage:   "The repository to stream to.",
+				Usage:   "The repository to interact with.",
 				EnvVars: []string{"HUMIO_REPO"},
 			},
 			&cli.StringFlag{
@@ -56,6 +56,10 @@ func main() {
 			{
 				Name: "users",
 				Subcommands: []*cli.Command{
+					{
+						Name:   "show",
+						Action: command.UsersShow,
+					},
 					{
 						Name:   "add-root",
 						Action: command.UsersAddRoot,
@@ -94,6 +98,10 @@ func main() {
 			{
 				Name: "parser",
 				Subcommands: []*cli.Command{
+					{
+						Name:   "get",
+						Action: command.ParserGet,
+					},
 					{
 						Name: "add",
 						Flags: []cli.Flag{
@@ -149,7 +157,7 @@ func loadEnvFile() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-///// Utils ////////////////////////////////////////////////////////////////////
+// Utils
 ////////////////////////////////////////////////////////////////////////////////
 
 func exit(msg string) {

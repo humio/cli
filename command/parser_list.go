@@ -3,11 +3,8 @@ package command
 import (
 	"context"
 	"fmt"
-	"log"
 
-	"github.com/ryanuber/columnize"
 	"github.com/shurcooL/graphql"
-	"golang.org/x/oauth2"
 	cli "gopkg.in/urfave/cli.v2"
 )
 
@@ -17,13 +14,6 @@ func ParserList(c *cli.Context) error {
 	ensureToken(config)
 	ensureRepo(config)
 	ensureURL(config)
-
-	src := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: config.Token},
-	)
-
-	httpClient := oauth2.NewClient(context.Background(), src)
-	client := graphql.NewClient(config.URL+"graphql", httpClient)
 
 	var q struct {
 		Repository struct {
@@ -38,11 +28,9 @@ func ParserList(c *cli.Context) error {
 		"repositoryName": graphql.String(config.Repo),
 	}
 
+	client := newGraphQLClient(config)
 	graphqlErr := client.Query(context.Background(), &q, variables)
-
-	if graphqlErr != nil {
-		log.Fatal(graphqlErr)
-	}
+	check(graphqlErr)
 
 	var output []string
 	output = append(output, "Name | Custom")
@@ -51,11 +39,7 @@ func ParserList(c *cli.Context) error {
 		output = append(output, fmt.Sprintf("%v | %v", parser.Name, checkmark(!parser.IsBuiltIn)))
 	}
 
-	table := columnize.SimpleFormat(output)
-
-	fmt.Println()
-	fmt.Println(table)
-	fmt.Println()
+	printTable(output)
 
 	return nil
 }

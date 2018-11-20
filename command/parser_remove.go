@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/shurcooL/graphql"
-	"golang.org/x/oauth2"
 	cli "gopkg.in/urfave/cli.v2"
 )
 
@@ -18,12 +17,7 @@ func ParserRemove(c *cli.Context) error {
 
 	parserName := c.Args().First()
 
-	src := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: config.Token},
-	)
-
-	httpClient := oauth2.NewClient(context.Background(), src)
-	client := graphql.NewClient(config.URL+"graphql", httpClient)
+	client := newGraphQLClient(config)
 
 	var m struct {
 		CreateParser struct {
