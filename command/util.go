@@ -7,3 +7,11 @@ func check(err error) {
 		log.Fatal(err)
 	}
 }
+
+func Map(vs []string, f func(string) testCase) []testCase {
+	vsm := make([]testCase, len(vs))
+	for i, v := range vs {
+		vsm[i] = f(v)
+	}
+	return vsm
+}

@@ -7,8 +7,8 @@ type testCase struct {
 
 type parserConfig struct {
 	Name        string
-	Description string
-	Tests       []testCase
-	Example     string
-	Script      string
+	Description string     `yaml:",omitempty"`
+	Tests       []testCase `yaml:",omitempty"`
+	Example     string     `yaml:",omitempty"`
+	Script      string     `yaml:",flow"`
 }

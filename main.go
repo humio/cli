@@ -107,9 +107,16 @@ func main() {
 					{
 						Name:   "get",
 						Action: command.ParserGet,
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:    "output",
+								Aliases: []string{"out", "o"},
+								Usage:   "The file path where the parser file should be stored.",
+							},
+						},
 					},
 					{
-						Name: "add",
+						Name: "push",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:    "name",
@@ -122,7 +129,7 @@ func main() {
 								Usage:   "If a parser exists with the same name update it.",
 							},
 						},
-						Action: command.ParserAdd,
+						Action: command.ParserPush,
 					},
 					{
 						Name:   "remove",

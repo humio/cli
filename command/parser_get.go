@@ -19,6 +19,13 @@ func ParserGet(c *cli.Context) error {
 
 	parserName := c.Args().First()
 
+	var outFilePath string
+	if c.IsSet("out") {
+		outFilePath = c.String("out")
+	} else {
+		outFilePath = parserName + ".yaml"
+	}
+
 	src := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: config.Token},
 	)
@@ -29,7 +36,9 @@ func ParserGet(c *cli.Context) error {
 	var q struct {
 		Repository struct {
 			Parser struct {
+				Name       string
 				SourceCode string
+				TestData   []string
 			} `graphql:"parser(name: $parserName)"`
 		} `graphql:"repository(name: $repositoryName)"`
 	}
@@ -42,10 +51,22 @@ func ParserGet(c *cli.Context) error {
 	graphqlErr := client.Query(context.Background(), &q, variables)
 	check(graphqlErr)
 
-	d, yamlErr := yaml.Marshal(&q)
-	check(yamlErr)
+	yamlContent := parserConfig{
+		Name:   q.Repository.Parser.Name,
+		Tests:  Map(q.Repository.Parser.TestData, toTestCase),
+		Script: q.Repository.Parser.SourceCode,
+	}
 
-	ioutil.WriteFile(parserName+".yaml", d, 0644)
+	yamlData, yamlErr := yaml.Marshal(&yamlContent)
+	check(yamlErr)
+	ioutil.WriteFile(outFilePath, yamlData, 0644)
 
 	return nil
+}
+
+func toTestCase(line string) testCase {
+	return testCase{
+		Input:  line,
+		Output: map[string]string{},
+	}
 }
