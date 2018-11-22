@@ -1,0 +1,13 @@
+name: slack-test-1
+
+type: slack
+
+slackURL: https://hooks.slack.com/services/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
+
+fields:
+  - name: Query
+    template: {query_string}
+  - name: Repo Name
+    template: {repo_name}
+  - name: Time Interval
+    template: {query_time_interval}

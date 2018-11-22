@@ -1,0 +1,11 @@
+name: "accesslog2"
+
+description: "A simple parser for the AccessLog log format."
+
+start: 24h
+frequency: 1h
+
+notifier: slack-test-1
+
+query: |
+  loglevel = ERROR | count > 100

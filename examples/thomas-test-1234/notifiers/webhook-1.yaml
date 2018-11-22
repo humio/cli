@@ -1,0 +1,31 @@
+name: webhook-1
+
+type: webhook
+
+url: https://example.com/hooks/do-stuff
+
+httpMethod: PUT
+
+httpHeaders:
+  - "Content-Type: application/json"
+  - "Link: http://google.com/"
+  - "Link: http://twitter.com/"
+
+bodyTemplate: |
+  {
+    "attachments": [
+      {
+        "mrkdwn_in": [
+          "text",
+          "pretext"
+        ],
+        "title_link": "{url}",
+        "fallback": "(alert_name)",
+        "text": "{alert_description}",
+        "color": "#382365",
+        "author_name": "Humio Alert",
+        "author_icon": "https://cloud.humio.com/static/favicon-16x16.png",
+        "title": "{alert_name} - Click to Open in Humio"
+      }
+    ]
+  }
