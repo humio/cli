@@ -12,7 +12,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func ParserPush(c *cli.Context) error {
+func ParserInstall(c *cli.Context) error {
 	config, _ := getServerConfig(c)
 
 	ensureToken(config)

@@ -116,7 +116,7 @@ func main() {
 						},
 					},
 					{
-						Name: "push",
+						Name: "install",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:    "name",
@@ -129,7 +129,7 @@ func main() {
 								Usage:   "If a parser exists with the same name update it.",
 							},
 						},
-						Action: command.ParserPush,
+						Action: command.ParserInstall,
 					},
 					{
 						Name:   "remove",
