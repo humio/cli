@@ -61,17 +61,23 @@ func main() {
 						Action: command.UsersShow,
 					},
 					{
-						Name:   "add-root",
-						Action: command.UsersAddRoot,
+						Name: "update",
+						Flags: []cli.Flag{
+							&cli.BoolFlag{
+								Name:  "root",
+								Usage: "Grant root permission to the user.",
+							},
+						},
+						Action: command.UpdateUser,
 					},
 					{
-						Name:   "remove-root",
-						Action: command.UsersRemoveRoot,
+						Name:   "list",
+						Action: command.UsersList,
 					},
 				},
 			},
 			{
-				Name: "token",
+				Name: "tokens",
 				Subcommands: []*cli.Command{
 					{
 						Name: "add",
@@ -96,7 +102,7 @@ func main() {
 				},
 			},
 			{
-				Name: "parser",
+				Name: "parsers",
 				Subcommands: []*cli.Command{
 					{
 						Name:   "get",
@@ -136,6 +142,11 @@ func main() {
 						Name:    "name",
 						Aliases: []string{"n"},
 						Usage:   "A name to make it easier to find results for this stream in your repository. e.g. @name=MyName\nIf `NAME` is not specified and you are tailing a file, the filename is used.",
+					},
+					&cli.StringFlag{
+						Name:    "parser",
+						Aliases: []string{"p"},
+						Usage:   "The name of the parser to use for ingest. This will have no effect if you have assigned parser to the ingest token used.",
 					},
 				},
 			},

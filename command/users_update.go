@@ -2,23 +2,13 @@ package command
 
 import (
 	"context"
-	"log"
 
 	"github.com/shurcooL/graphql"
 	cli "gopkg.in/urfave/cli.v2"
 )
 
-func UsersAddRoot(c *cli.Context) error {
-	return updateUser(c, true)
-}
-
-func UsersRemoveRoot(c *cli.Context) error {
-	return updateUser(c, false)
-}
-
-func updateUser(c *cli.Context, isRoot bool) error {
+func UpdateUser(c *cli.Context) error {
 	config, _ := getServerConfig(c)
-
 	ensureToken(config)
 	ensureURL(config)
 
@@ -34,18 +24,21 @@ func updateUser(c *cli.Context, isRoot bool) error {
 
 	variables := map[string]interface{}{
 		"username": graphql.String(username),
-		"isRoot":   graphql.Boolean(isRoot),
+		"isRoot":   optBoolFlag(c, "root"),
 	}
 
 	graphqlErr := client.Mutate(context.Background(), &m, variables)
+	check(graphqlErr)
 
-	if graphqlErr != nil {
-		log.Fatal(graphqlErr)
-	} else if isRoot {
-		log.Println(username + " now has root access to " + config.URL)
-	} else {
-		log.Println(username + " no longer has root access to " + config.URL)
-	}
+	UsersShow(c)
 
 	return nil
+}
+
+func optBoolFlag(c *cli.Context, flag string) *graphql.Boolean {
+	var isRootOpt *graphql.Boolean
+	if c.IsSet(flag) {
+		isRootOpt = graphql.NewBoolean(graphql.Boolean(c.Bool(flag)))
+	}
+	return isRootOpt
 }

@@ -11,7 +11,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/hpcloud/tail"
 	uuid "github.com/satori/go.uuid"
@@ -19,20 +18,19 @@ import (
 )
 
 var batchLimit = 500
-var events = make(chan event, 500)
+var events = make(chan string, batchLimit)
 
 type eventList struct {
-	Tags   map[string]string `json:"tags"`
-	Events []event           `json:"events"`
+	Type     string            `json:"type"`
+	Fields   map[string]string `json:"fields"`
+	Messages []string          `json:"messages"`
 }
 
 type event struct {
-	Timestamp  string            `json:"timestamp"`
-	Attributes map[string]string `json:"attributes"`
-	RawString  string            `json:"rawstring"`
+	RawString string `json:"rawstring"`
 }
 
-func tailFile(server server, name string, sessionID string, filepath string) {
+func tailFile(server server, filepath string) {
 
 	// Join Tail
 
@@ -43,7 +41,7 @@ func tailFile(server server, name string, sessionID string, filepath string) {
 	}
 
 	for line := range t.Lines {
-		sendLine(server, name, sessionID, line.Text)
+		sendLine(server, line.Text)
 	}
 
 	tailError := t.Wait()
@@ -53,11 +51,13 @@ func tailFile(server server, name string, sessionID string, filepath string) {
 	}
 }
 
-func streamStdin(server server, name string, sessionID string) {
+func streamStdin(server server) {
 	log.Println("Humio Attached to StdIn")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		sendLine(server, name, sessionID, scanner.Text())
+		text := scanner.Text()
+		sendLine(server, text)
+		fmt.Println(text)
 	}
 
 	if scanner.Err() != nil {
@@ -105,6 +105,13 @@ func Ingest(c *cli.Context) error {
 		name = c.String("name")
 	}
 
+	var parserName string
+	if c.String("parser") != "" {
+		parserName = c.String("parser")
+	} else {
+		parserName = "default"
+	}
+
 	u, _ := uuid.NewV4()
 
 	sessionID := u.String()
@@ -122,30 +129,38 @@ func Ingest(c *cli.Context) error {
 	// }
 	// open.Run(server.ServerURL + server.RepoID + "/search?live=true&start=1d&query=" + key)
 
-	startSending(config)
+	fields := map[string]string{
+		"@session": sessionID,
+	}
+
+	if name != "" {
+		fields["@name"] = name
+	}
+
+	startSending(config, fields, parserName)
 
 	if filepath != "" {
-		tailFile(config, name, sessionID, filepath)
+		tailFile(config, filepath)
 	} else {
-		streamStdin(config, name, sessionID)
+		streamStdin(config)
 	}
 	return nil
 }
 
-func startSending(server server) {
+func startSending(server server, fields map[string]string, parserName string) {
 	go func() {
-		var batch []event
+		var batch []string
 		for {
 			select {
 			case v := <-events:
 				batch = append(batch, v)
 				if len(batch) >= batchLimit {
-					sendBatch(server, batch)
+					sendBatch(server, batch, fields, parserName)
 					batch = batch[:0]
 				}
 			default:
 				if len(batch) > 0 {
-					sendBatch(server, batch)
+					sendBatch(server, batch, fields, parserName)
 					batch = batch[:0]
 				}
 				// Avoid busy waiting
@@ -155,50 +170,37 @@ func startSending(server server) {
 	}()
 }
 
-func sendLine(server server, name string, sessionID string, line string) {
-	theEvent := event{
-		Timestamp: time.Now().UTC().Format(time.RFC3339),
-		Attributes: map[string]string{
-			"@session": sessionID,
-			"@name":    name,
-		},
-		RawString: line,
-	}
-
-	events <- theEvent
+func sendLine(server server, line string) {
+	events <- line
 }
 
-func sendBatch(server server, events []event) {
+func sendBatch(server server, messages []string, fields map[string]string, parserName string) {
 
 	lineJSON, marshalErr := json.Marshal([1]eventList{
 		eventList{
-			Tags:   map[string]string{},
-			Events: events,
+			Type:     parserName,
+			Fields:   fields,
+			Messages: messages,
 		}})
 
 	if marshalErr != nil {
 		log.Fatal(marshalErr)
 	}
 
-	ingestURL := server.URL + "/api/v1/dataspaces/" + server.Repo + "/ingest"
+	ingestURL := server.URL + "api/v1/repositories/" + server.Repo + "/ingest-messages"
 	lineReq, reqErr := http.NewRequest("POST", ingestURL, bytes.NewBuffer(lineJSON))
 	lineReq.Header.Set("Authorization", "Bearer "+server.Token)
 	lineReq.Header.Set("Content-Type", "application/json")
-
-	if reqErr != nil {
-		panic(reqErr)
-	}
+	check(reqErr)
 
 	resp, clientErr := client.Do(lineReq)
-	if clientErr != nil {
-		panic(clientErr)
-	}
+	check(clientErr)
+
 	if resp.StatusCode > 400 {
 		responseData, readErr := ioutil.ReadAll(resp.Body)
-		if readErr != nil {
-			panic(readErr)
-		}
+		check(readErr)
 		log.Fatal(string(responseData))
 	}
+
 	resp.Body.Close()
 }
