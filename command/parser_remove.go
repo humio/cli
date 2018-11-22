@@ -1,40 +1,65 @@
 package command
 
 import (
-	"context"
-	"log"
-
-	"github.com/shurcooL/graphql"
-	cli "gopkg.in/urfave/cli.v2"
+	"fmt"
+	"strings"
 )
 
-func ParserRemove(c *cli.Context) error {
-	config, _ := getServerConfig(c)
+type ParsersRemoveCommand struct {
+	Meta
+}
 
-	ensureToken(config)
-	ensureRepo(config)
-	ensureURL(config)
+func (f *ParsersRemoveCommand) Help() string {
+	helpText := `
+Usage: humio parsers rm <repo> <parser>
 
-	parserName := c.Args().First()
+  Removes (uninstalls) the parser <parser> from <repo>.
 
-	client := newGraphQLClient(config)
+  General Options:
 
-	var m struct {
-		CreateParser struct {
-			Type string `graphql:"__typename"`
-		} `graphql:"removeParser(input: { name: $name, repositoryName: $repositoryName })"`
+  ` + generalOptionsUsage() + `
+`
+	return strings.TrimSpace(helpText)
+}
+
+func (f *ParsersRemoveCommand) Synopsis() string {
+	return "Remove a parser from a repository"
+}
+
+func (f *ParsersRemoveCommand) Name() string { return "parsers rm" }
+
+func (f *ParsersRemoveCommand) Run(args []string) int {
+
+	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
+	flags.Usage = func() { f.Ui.Output(f.Help()) }
+	if err := flags.Parse(args); err != nil {
+		return 1
 	}
 
-	variables := map[string]interface{}{
-		"repositoryName": graphql.String(config.Repo),
-		"name":           graphql.String(parserName),
+	// Check that we got two argument
+	args = flags.Args()
+	if l := len(args); l != 2 {
+		f.Ui.Error("This command takes two arguments: <repo> <parser>")
+		f.Ui.Error(commandErrorText(f))
+		return 1
 	}
 
-	graphqlErr := client.Mutate(context.Background(), &m, variables)
+	repo := args[0]
+	parser := args[1]
 
-	if graphqlErr != nil {
-		log.Fatal(graphqlErr)
+	// Get the HTTP client
+	client, err := f.Meta.Client()
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error initializing client: %s", err))
+		return 1
 	}
 
-	return nil
+	err = client.Parsers().Remove(repo, parser)
+
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error removing parser: %s", err))
+		return 1
+	}
+
+	return 0
 }

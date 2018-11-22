@@ -1,15 +1,19 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
-	"os/user"
+	"sort"
+	"strings"
+	"text/tabwriter"
 
 	// "github.com/skratchdot/open-golang/open"
 	"github.com/humio/cli/command"
-	"github.com/joho/godotenv"
-	"gopkg.in/urfave/cli.v2"
+	mit "github.com/mitchellh/cli"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -26,152 +30,165 @@ type server struct {
 	Repo  string
 }
 
+var (
+	// Hidden hides the commands from both help and autocomplete. Commands that
+	// users should not be running should be placed here, versus hiding
+	// subcommands from the main help, which should be filtered out of the
+	// commands above.
+	hidden = []string{}
+
+	// aliases is the list of aliases we want users to be aware of. We hide
+	// these form the help output but autocomplete them.
+	aliases = []string{}
+
+	// Common commands are grouped separately to call them out to operators.
+	commonCommands = []string{
+		"parsers",
+	}
+)
+
 ////////////////////////////////////////////////////////////////////////////////
 ///// main function ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 func main() {
-	app := &cli.App{
-		Name:  "humio",
-		Usage: "humio [options] <filepath>",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:    "token",
-				Usage:   "Your Humio API Token",
-				EnvVars: []string{"HUMIO_API_TOKEN"},
-			},
-			&cli.StringFlag{
-				Name:    "repo",
-				Aliases: []string{"r"},
-				Usage:   "The repository to interact with.",
-				EnvVars: []string{"HUMIO_REPO"},
-			},
-			&cli.StringFlag{
-				Name:    "url",
-				Usage:   "URL for the Humio server. `URL` must be a valid URL and end with slash (/).",
-				EnvVars: []string{"HUMIO_URL"},
-			},
-		},
-		Commands: []*cli.Command{
-			{
-				Name: "users",
-				Subcommands: []*cli.Command{
-					{
-						Name:   "show",
-						Action: command.UsersShow,
-					},
-					{
-						Name: "update",
-						Flags: []cli.Flag{
-							&cli.BoolFlag{
-								Name:  "root",
-								Usage: "Grant root permission to the user.",
-							},
-						},
-						Action: command.UpdateUser,
-					},
-					{
-						Name:   "list",
-						Action: command.UsersList,
-					},
-				},
-			},
-			{
-				Name: "tokens",
-				Subcommands: []*cli.Command{
-					{
-						Name: "add",
-						Flags: []cli.Flag{
-							&cli.StringFlag{
-								Name:    "name",
-								Aliases: []string{"n"},
-								Usage:   "The name to assign to the token.",
-							},
-							&cli.StringFlag{
-								Name:    "parser",
-								Aliases: []string{"p"},
-								Usage:   "The name of the parser to assign to the ingest token.",
-							},
-						},
-						Action: command.TokenAdd,
-					},
-					{
-						Name:   "list",
-						Action: command.TokenList,
-					},
-				},
-			},
-			{
-				Name: "parsers",
-				Subcommands: []*cli.Command{
-					{
-						Name:   "get",
-						Action: command.ParserGet,
-						Flags: []cli.Flag{
-							&cli.StringFlag{
-								Name:    "output",
-								Aliases: []string{"out", "o"},
-								Usage:   "The file path where the parser file should be stored.",
-							},
-						},
-					},
-					{
-						Name: "install",
-						Flags: []cli.Flag{
-							&cli.StringFlag{
-								Name:    "name",
-								Aliases: []string{"n"},
-								Usage:   "Override the name in the parser file.",
-							},
-							&cli.BoolFlag{
-								Name:    "update",
-								Aliases: []string{"u"},
-								Usage:   "If a parser exists with the same name update it.",
-							},
-						},
-						Action: command.ParserInstall,
-					},
-					{
-						Name:   "remove",
-						Action: command.ParserRemove,
-					},
-					{
-						Name:   "list",
-						Action: command.ParserList,
-					},
-				},
-			},
-			{
-				Name:   "ingest",
-				Action: command.Ingest,
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:    "name",
-						Aliases: []string{"n"},
-						Usage:   "A name to make it easier to find results for this stream in your repository. e.g. @name=MyName\nIf `NAME` is not specified and you are tailing a file, the filename is used.",
-					},
-					&cli.StringFlag{
-						Name:    "parser",
-						Aliases: []string{"p"},
-						Usage:   "The name of the parser to use for ingest. This will have no effect if you have assigned parser to the ingest token used.",
-					},
-				},
-			},
-		},
-	}
-
-	app.Version = version
-	loadEnvFile()
-	app.Run(os.Args)
+	os.Exit(Run(os.Args[1:]))
 }
 
-func loadEnvFile() {
-	user, userErr := user.Current()
-	if userErr != nil {
-		panic(userErr)
+func Run(args []string) int {
+	// Parse flags into env vars for global use
+	args = setupEnv(args)
+
+	// Create the meta object
+	metaPtr := new(command.Meta)
+
+	// Don't use color if disabled
+	color := true
+	if os.Getenv(command.EnvHumioCLINoColor) != "" {
+		color = false
 	}
-	// Load the env file if it exists
-	godotenv.Load(user.HomeDir + "/.humio-cli.env")
+
+	isTerminal := terminal.IsTerminal(int(os.Stdout.Fd()))
+	metaPtr.Ui = &mit.BasicUi{
+		Reader:      os.Stdin,
+		Writer:      os.Stdout,
+		ErrorWriter: os.Stderr,
+	}
+
+	// The Nomad agent never outputs color
+	agentUi := &mit.BasicUi{
+		Reader:      os.Stdin,
+		Writer:      os.Stdout,
+		ErrorWriter: os.Stderr,
+	}
+
+	// Only use colored UI if stdout is a tty, and not disabled
+	if isTerminal && color {
+		metaPtr.Ui = &mit.ColoredUi{
+			ErrorColor: mit.UiColorRed,
+			WarnColor:  mit.UiColorYellow,
+			InfoColor:  mit.UiColorGreen,
+			Ui:         metaPtr.Ui,
+		}
+	}
+
+	commands := command.Commands(metaPtr, agentUi)
+	cli := &mit.CLI{
+		Name:     "humio",
+		Version:  version,
+		Args:     args,
+		Commands: commands,
+		// HiddenCommands:             hidden,
+		Autocomplete:               true,
+		AutocompleteNoDefaultFlags: true,
+		HelpFunc: groupedHelpFunc(
+			mit.BasicHelpFunc("humio"),
+		),
+		HelpWriter: os.Stdout,
+	}
+
+	exitCode, err := cli.Run()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error executing CLI: %s\n", err.Error())
+		return 1
+	}
+
+	return exitCode
+}
+
+func groupedHelpFunc(f mit.HelpFunc) mit.HelpFunc {
+	return func(commands map[string]mit.CommandFactory) string {
+		var b bytes.Buffer
+		tw := tabwriter.NewWriter(&b, 0, 2, 6, ' ', 0)
+
+		fmt.Fprintf(tw, "Usage: humio [-version] [-help] [-autocomplete-(un)install] <command> [args]\n\n")
+		fmt.Fprintf(tw, "Common commands:\n")
+		for _, v := range commonCommands {
+			printCommand(tw, v, commands[v])
+		}
+
+		// Filter out common commands and aliased commands from the other
+		// commands output
+		otherCommands := make([]string, 0, len(commands))
+		for k := range commands {
+			found := false
+			for _, v := range commonCommands {
+				if k == v {
+					found = true
+					break
+				}
+			}
+
+			for _, v := range aliases {
+				if k == v {
+					found = true
+					break
+				}
+			}
+
+			if !found {
+				otherCommands = append(otherCommands, k)
+			}
+		}
+		sort.Strings(otherCommands)
+
+		fmt.Fprintf(tw, "\n")
+		fmt.Fprintf(tw, "Other commands:\n")
+		for _, v := range otherCommands {
+			printCommand(tw, v, commands[v])
+		}
+
+		tw.Flush()
+
+		return strings.TrimSpace(b.String())
+	}
+}
+
+func printCommand(w io.Writer, name string, cmdFn mit.CommandFactory) {
+	cmd, err := cmdFn()
+	if err != nil {
+		panic(fmt.Sprintf("failed to load %q command: %s", name, err))
+	}
+	fmt.Fprintf(w, "    %s\t%s\n", name, cmd.Synopsis())
+}
+
+// setupEnv parses args and may replace them and sets some env vars to known
+// values based on format options
+func setupEnv(args []string) []string {
+	noColor := false
+	for _, arg := range args {
+		// Check if color is set
+		if arg == "-no-color" || arg == "--no-color" {
+			noColor = true
+		}
+	}
+
+	// Put back into the env for later
+	if noColor {
+		os.Setenv(command.EnvHumioCLINoColor, "true")
+	}
+
+	return args
 }
 
 ////////////////////////////////////////////////////////////////////////////////

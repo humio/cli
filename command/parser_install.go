@@ -1,81 +1,110 @@
 package command
 
 import (
-	"context"
+	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
-	"github.com/shurcooL/graphql"
-	cli "gopkg.in/urfave/cli.v2"
+	"github.com/humio/cli/api"
 	"gopkg.in/yaml.v2"
 )
 
-func ParserInstall(c *cli.Context) error {
-	config, _ := getServerConfig(c)
+type ParsersInstallCommand struct {
+	Meta
+}
 
-	ensureToken(config)
-	ensureURL(config)
+func (f *ParsersInstallCommand) Help() string {
+	helpText := `
+Usage: humio parsers rm <repo> <parser>
 
+  Removes (uninstalls) the parser <parser> from <repo>.
+
+  General Options:
+
+  ` + generalOptionsUsage() + `
+`
+	return strings.TrimSpace(helpText)
+}
+
+func (f *ParsersInstallCommand) Synopsis() string {
+	return "Remove a parser from a repository"
+}
+
+func (f *ParsersInstallCommand) Name() string { return "parsers rm" }
+
+func (f *ParsersInstallCommand) Run(args []string) int {
 	var content []byte
 	var readErr error
+	var verbose, force bool
+	var filePath, url string
 
-	repoName := c.Args().Get(0)
+	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
+	flags.Usage = func() { f.Ui.Output(f.Help()) }
+	flags.BoolVar(&verbose, "verbose", false, "")
+	flags.BoolVar(&force, "force", false, "")
 
-	if c.IsSet("file") {
-		filePath := c.String("file")
-		content, readErr = getParserFromFile(filePath)
-	} else if c.IsSet("url") {
-		url := c.String("url")
-		content, readErr = getUrlParser(url)
+	if err := flags.Parse(args); err != nil {
+		return 1
+	}
+
+	args = flags.Args()
+
+	// Check that we got the right number of argument
+	if l := len(args); l == 1 {
+		flags.StringVar(&filePath, "file", "", "")
+		flags.StringVar(&url, "url", "", "")
+
+		if filePath != "" {
+			content, readErr = getParserFromFile(filePath)
+		} else if url != "" {
+			content, readErr = getUrlParser(url)
+		} else {
+			return 1
+		}
+	} else if l := len(args); l != 2 {
+		f.Ui.Error("This command takes two arguments: <repo> <parser>")
+		f.Ui.Error(commandErrorText(f))
+		return 1
 	} else {
-		parserName := c.Args().Get(1)
+		parserName := args[1]
 		content, readErr = getGithubParser(parserName)
 	}
 
-	check(readErr)
-
-	t := parserConfig{}
-
-	err := yaml.Unmarshal(content, &t)
-	check(err)
-
-	client := newGraphQLClient(config)
-
-	var m struct {
-		CreateParser struct {
-			Type string `graphql:"__typename"`
-		} `graphql:"createParser(input: { name: $name, repositoryName: $repositoryName, testData: $testData, tagFields: $tagFields, sourceCode: $sourceCode, force: $force})"`
+	if readErr != nil {
+		f.Ui.Error(fmt.Sprintf("Failed to get parser: %s", readErr))
+		f.Ui.Error(commandErrorText(f))
 	}
 
-	tagFields := make([]graphql.String, 0)
+	parser := api.Parser{}
+	err := yaml.Unmarshal(content, &parser)
 
-	var effectiveName string
-	if c.IsSet("name") {
-		effectiveName = c.String("name")
-	} else {
-		effectiveName = t.Name
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("The parser's format was invalid: %s", readErr))
+		f.Ui.Error(commandErrorText(f))
 	}
 
-	log.Println("NAME:" + effectiveName)
-
-	variables := map[string]interface{}{
-		"name":           graphql.String(effectiveName),
-		"sourceCode":     graphql.String(t.Script),
-		"repositoryName": graphql.String(repoName),
-		"testData":       testCasesToStrings(t),
-		"tagFields":      tagFields,
-		"force":          graphql.Boolean(true),
+	if flags.Lookup("name") != nil {
+		parser.Name = *flags.String("name", "", "")
 	}
 
-	graphqlErr := client.Mutate(context.Background(), &m, variables)
-
-	if graphqlErr != nil {
-		log.Fatal(graphqlErr)
+	// Get the HTTP client
+	client, err := f.Meta.Client()
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error initializing client: %s", err))
+		return 1
 	}
 
-	return nil
+	reposistoryName := args[0]
+
+	err = client.Parsers().Add(reposistoryName, &parser, force)
+
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error installing parser: %s", err))
+		return 1
+	}
+
+	return 0
 }
 
 func getParserFromFile(filePath string) ([]byte, error) {
@@ -96,22 +125,4 @@ func getUrlParser(url string) ([]byte, error) {
 
 	defer response.Body.Close()
 	return ioutil.ReadAll(response.Body)
-}
-
-func testCasesToStrings(parser parserConfig) []graphql.String {
-
-	lines := strings.Split(parser.Example, "\n")
-
-	result := make([]graphql.String, 0)
-	for _, item := range parser.Tests {
-		result = append(result, graphql.String(item.Input))
-	}
-
-	for i, item := range lines {
-		if i != len(lines)-1 {
-			result = append(result, graphql.String(item))
-		}
-	}
-
-	return result
 }

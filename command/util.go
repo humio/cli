@@ -1,6 +1,9 @@
 package command
 
-import "log"
+import (
+	"fmt"
+	"log"
+)
 
 func check(err error) {
 	if err != nil {
@@ -14,4 +17,10 @@ func Map(vs []string, f func(string) testCase) []testCase {
 		vsm[i] = f(v)
 	}
 	return vsm
+}
+
+// commandErrorText is used to easily render the same messaging across commads
+// when an error is printed.
+func commandErrorText(cmd NamedCommand) string {
+	return fmt.Sprintf("For additional help try 'humio %s -help'", cmd.Name())
 }
