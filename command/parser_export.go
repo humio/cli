@@ -36,6 +36,7 @@ func (f *ParsersExportCommand) Run(args []string) int {
 
 	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
 	flags.Usage = func() { f.Ui.Output(f.Help()) }
+	flags.StringVar(&outputName, "output", "", "")
 
 	if err := flags.Parse(args); err != nil {
 		return 1
@@ -52,9 +53,7 @@ func (f *ParsersExportCommand) Run(args []string) int {
 	repo := args[0]
 	parserName := args[1]
 
-	if flags.Lookup("output") != nil {
-		flags.StringVar(&outputName, "output", "", "")
-	} else {
+	if len(outputName) == 0 {
 		outputName = parserName
 	}
 
