@@ -110,3 +110,49 @@ func testCasesToStrings(parser *Parser) []graphql.String {
 
 	return result
 }
+
+func (p *Parsers) Get(reposistoryName string, parserName string) (*Parser, error) {
+
+	var query struct {
+		Repository struct {
+			Parser struct {
+				Name       string
+				SourceCode string
+				TestData   []string
+			} `graphql:"parser(name: $parserName)"`
+		} `graphql:"repository(name: $repositoryName)"`
+	}
+
+	variables := map[string]interface{}{
+		"parserName":     graphql.String(parserName),
+		"repositoryName": graphql.String(reposistoryName),
+	}
+
+	graphqlErr := p.client.Query(&query, variables)
+
+	var parser Parser
+	if graphqlErr == nil {
+		parser = Parser{
+			Name:   query.Repository.Parser.Name,
+			Tests:  mapTests(query.Repository.Parser.TestData, toTestCase),
+			Script: query.Repository.Parser.SourceCode,
+		}
+	}
+
+	return &parser, graphqlErr
+}
+
+func mapTests(vs []string, f func(string) ParserTestCase) []ParserTestCase {
+	vsm := make([]ParserTestCase, len(vs))
+	for i, v := range vs {
+		vsm[i] = f(v)
+	}
+	return vsm
+}
+
+func toTestCase(line string) ParserTestCase {
+	return ParserTestCase{
+		Input:  line,
+		Output: map[string]string{},
+	}
+}

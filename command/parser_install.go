@@ -16,9 +16,9 @@ type ParsersInstallCommand struct {
 
 func (f *ParsersInstallCommand) Help() string {
 	helpText := `
-Usage: humio parsers rm <repo> <parser>
+Usage: humio parsers install <repo> <group/parser>
 
-  Removes (uninstalls) the parser <parser> from <repo>.
+  Installs a parser <parser> in <repo>.
 
   General Options:
 
@@ -28,20 +28,19 @@ Usage: humio parsers rm <repo> <parser>
 }
 
 func (f *ParsersInstallCommand) Synopsis() string {
-	return "Remove a parser from a repository"
+	return "Installs a parser in a repository"
 }
 
-func (f *ParsersInstallCommand) Name() string { return "parsers rm" }
+func (f *ParsersInstallCommand) Name() string { return "parsers install" }
 
 func (f *ParsersInstallCommand) Run(args []string) int {
 	var content []byte
 	var readErr error
-	var verbose, force bool
+	var force bool
 	var filePath, url string
 
 	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
 	flags.Usage = func() { f.Ui.Output(f.Help()) }
-	flags.BoolVar(&verbose, "verbose", false, "")
 	flags.BoolVar(&force, "force", false, "")
 
 	if err := flags.Parse(args); err != nil {

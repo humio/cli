@@ -48,6 +48,11 @@ func Commands(metaPtr *Meta, agentUi cli.Ui) map[string]cli.CommandFactory {
 				Meta: meta,
 			}, nil
 		},
+		"parsers export": func() (cli.Command, error) {
+			return &ParsersExportCommand{
+				Meta: meta,
+			}, nil
+		},
 	}
 
 	return all
