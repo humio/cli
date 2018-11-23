@@ -3,11 +3,15 @@ package api
 import (
 	"bytes"
 	"context"
+	"fmt"
+	"log"
 	"net/http"
 	"os"
 
 	"github.com/shurcooL/graphql"
 	"golang.org/x/oauth2"
+
+	homedir "github.com/mitchellh/go-homedir"
 )
 
 type Client struct {
@@ -25,12 +29,28 @@ func DefaultConfig() Config {
 		Token:   "",
 	}
 
+	settingsFile, expandErr := homedir.Expand("~/.humioconfig")
+
+	if expandErr != nil {
+		log.Println(fmt.Sprintf("error loading .humioconfig file: %s", expandErr))
+	}
+
+	props, propsErr := ReadPropertiesFile(settingsFile)
+
+	if propsErr != nil {
+		log.Println(fmt.Sprintf("error loading .humioconfig file: %s", propsErr))
+	}
+
 	if addr := os.Getenv("HUMIO_ADDR"); addr != "" {
 		config.Address = addr
+	} else if propsErr == nil && props["HUMIO_ADDR"] != "" {
+		config.Address = props["HUMIO_ADDR"]
 	}
 
 	if token := os.Getenv("HUMIO_API_TOKEN"); token != "" {
 		config.Token = token
+	} else if propsErr == nil && props["HUMIO_API_TOKEN"] != "" {
+		config.Token = props["HUMIO_API_TOKEN"]
 	}
 
 	return config
@@ -71,7 +91,8 @@ func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) 
 	return graphqlErr
 }
 
-func (c *Client) httpGET(url string) (*http.Response, error) {
+func (c *Client) httpGET(path string) (*http.Response, error) {
+	url := c.Address() + path
 	req, reqErr := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
 	req.Header.Set("Authorization", "Bearer "+c.Token())
 	req.Header.Set("Accept", "application/json")

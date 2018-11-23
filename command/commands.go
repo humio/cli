@@ -9,8 +9,6 @@ import (
 const (
 	// EnvHumioCLINoColor is an env var that toggles colored UI output.
 	EnvHumioCLINoColor = `HUMIO_CLI_NO_COLOR`
-	// EnvHumioFormat is the output format
-	EnvHumioFormat = `HUMIO_FORMAT`
 )
 
 func Commands(metaPtr *Meta, agentUi cli.Ui) map[string]cli.CommandFactory {
@@ -28,6 +26,11 @@ func Commands(metaPtr *Meta, agentUi cli.Ui) map[string]cli.CommandFactory {
 	}
 
 	all := map[string]cli.CommandFactory{
+		"login": func() (cli.Command, error) {
+			return &LoginCommand{
+				Meta: meta,
+			}, nil
+		},
 		"parsers": func() (cli.Command, error) {
 			return &ParsersCommand{
 				Meta: meta,
