@@ -119,12 +119,14 @@ func generalOptionsUsage() string {
     The address of the Humio server.
     Overrides the HUMIO_ADDR environment variable if set.
     Default = http://localhost:8080/
+
+  -token=<api-token>
+    The API token to use to authenticate API requests with.
+    Overrides the HUMIO_API_TOKEN environment variable if set.
+
   -no-color
     Disables colored command output. Alternatively, HUMIO_CLI_NO_COLOR may be
     set.
-  -token
-    The API token to use to authenticate API requests with.
-    Overrides the HUMIO_API_TOKEN environment variable if set.
 `
 	return strings.TrimSpace(helpText)
 }

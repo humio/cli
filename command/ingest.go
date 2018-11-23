@@ -113,7 +113,6 @@ Usage: humio ingest [-token=<ingest-token>] [-parser=<parser>] [<repo>]
 
 	It can be handy to specify the parser to be used to ingest the
 	data on arrival - i.e. the type of data you are sending.
-
 	The value of -parser will take precedence over any parser that
 	is associated with the ingest token set by -token.
 
@@ -124,9 +123,33 @@ Usage: humio ingest [-token=<ingest-token>] [-parser=<parser>] [<repo>]
 	Alternatively, you can use the -tail=<file> argument, which
 	has the same effect.
 
-  General Options:
+General Options:
 
   ` + generalOptionsUsage() + `
+
+Ingest Options:
+
+  -tail=<file>
+   Tails a file instead of listening to stdin.
+
+  -parser=<name>
+	 Explicitly specify which parser to use for ingestion.
+	 The value of -parser will take precedence over any parser that
+	 is associated with the ingest token e.g. set by -token.
+
+  -token=<token>
+	 The ingest token to use. This defaults to HUMIO_API_TOKEN.
+
+  -label=<label>
+	 Adds a @label=<lavel> field to each event. This can help you
+	 find specific data send by the CLI when searching in the UI.
+
+  -no-session
+	 No @session field will be added to each event. @session assigns
+	 a new UUID to each executing of the Humio CLI.
+
+	-open
+	 Opens the search view in a browser for the data you are streaming.
 `
 	return strings.TrimSpace(helpText)
 }

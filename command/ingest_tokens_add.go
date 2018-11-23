@@ -17,9 +17,15 @@ Usage: humio ingest-tokens add <repo> <token name>
 
   Adds a new ingest token with name <token name> to a repository <repo>.
 
-  General Options:
+General Options:
 
   ` + generalOptionsUsage() + `
+
+Add Options:
+
+  -parser=<name>
+    The parser to use for ingestion when new token is used
+    to send data to Humio.
 `
 	return strings.TrimSpace(helpText)
 }
@@ -35,7 +41,7 @@ func (f *TokensAddCommand) Run(args []string) int {
 
 	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
 	flags.Usage = func() { f.Ui.Output(f.Help()) }
-	flags.Var(&parserName, "parser", "Assign a parser to the token.")
+	flags.Var(&parserName, "parser", "")
 
 	if err := flags.Parse(args); err != nil {
 		return 1
