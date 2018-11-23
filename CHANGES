@@ -1,3 +1,18 @@
+Version 0.3.0:
+ - Improve docs
+ - Fix bugs
+ - Align file names with commands
+ - Convert users
+ - Tokens converted
+ - Align export command
+ - WIP
+ - Convert to hashicorp cli
+ - Rename push -> install
+ - Implement installing parsers from github
+ - Work on dashboards and parsers in files
+ - Add list users
+ - Add user command
+
 Version 0.2.1:
  - Fix compile error
  - Add commands for parsers and root management
