@@ -109,3 +109,11 @@ func (c *Client) httpDELETE(path string) (*http.Response, error) {
 	}
 	return client.Do(req)
 }
+
+func optBoolArg(v *bool) *graphql.Boolean {
+	var argPtr *graphql.Boolean
+	if v != nil {
+		argPtr = graphql.NewBoolean(graphql.Boolean(*v))
+	}
+	return argPtr
+}

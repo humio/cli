@@ -1,15 +1,12 @@
 package command
 
-import "strings"
+import (
+	"strings"
 
-type simpleAccount struct {
-	Username  string
-	FullName  string
-	IsRoot    bool
-	CreatedAt string
-}
+	"github.com/humio/cli/api"
+)
 
-func formatSimpleAccount(account simpleAccount) string {
+func formatSimpleAccount(account api.User) string {
 	columns := []string{account.Username, account.FullName, yesNo(account.IsRoot), account.CreatedAt}
 	return strings.Join(columns, " | ")
 }

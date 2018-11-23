@@ -1,29 +1,70 @@
 package command
 
 import (
-	"context"
-
-	cli "gopkg.in/urfave/cli.v2"
+	"fmt"
+	"strings"
 )
 
-func UsersList(c *cli.Context) error {
-	config, _ := getServerConfig(c)
+type UsersListCommand struct {
+	Meta
+}
 
-	ensureToken(config)
-	ensureURL(config)
+func (f *UsersListCommand) Help() string {
+	helpText := `
+Usage: humio users list
 
-	var q struct {
-		Accounts []simpleAccount `graphql:"accounts"`
+  Lists all users. This command requires root permissions on your access token.
+
+  To see members in a repository or view use:
+
+    $ humio members list <repo>
+
+  General Options:
+
+  ` + generalOptionsUsage() + `
+`
+	return strings.TrimSpace(helpText)
+}
+
+func (f *UsersListCommand) Synopsis() string {
+	return "List all user in the cluster."
+}
+
+func (f *UsersListCommand) Name() string { return "users list" }
+
+func (f *UsersListCommand) Run(args []string) int {
+	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
+	flags.Usage = func() { f.Ui.Output(f.Help()) }
+
+	if err := flags.Parse(args); err != nil {
+		return 1
 	}
 
-	variables := map[string]interface{}{}
+	// Check that we got one argument
+	args = flags.Args()
+	if l := len(args); l != 0 {
+		f.Ui.Error("This command takes no arguments")
+		f.Ui.Error(commandErrorText(f))
+		return 1
+	}
 
-	graphqlErr := newGraphQLClient(config).Query(context.Background(), &q, variables)
-	check(graphqlErr)
+	// Get the HTTP client
+	client, err := f.Meta.Client()
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error initializing client: %s", err))
+		return 1
+	}
 
-	rows := make([]string, len(q.Accounts))
-	for i, account := range q.Accounts {
-		rows[i] = formatSimpleAccount(account)
+	users, err := client.Users().List()
+
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error fetching token list: %s", err))
+		return 1
+	}
+
+	rows := make([]string, len(users))
+	for i, user := range users {
+		rows[i] = formatSimpleAccount(user)
 	}
 
 	printTable(append([]string{
@@ -31,5 +72,5 @@ func UsersList(c *cli.Context) error {
 		rows...,
 	))
 
-	return nil
+	return 0
 }

@@ -1,6 +1,7 @@
 package command
 
 import (
+	"errors"
 	"fmt"
 	"log"
 )
@@ -39,4 +40,31 @@ func (sf *stringPtrFlag) String() string {
 		return ""
 	}
 	return *sf.value
+}
+
+type boolPtrFlag struct {
+	value *bool
+}
+
+func (sf *boolPtrFlag) Set(v string) error {
+	var val bool
+	if v == "true" {
+		val = true
+	} else if v == "false" {
+		val = false
+	} else {
+		return errors.New("a boolean flag must be set to 'true' or 'false'")
+	}
+	sf.value = &val
+	return nil
+}
+
+func (sf *boolPtrFlag) String() string {
+	if sf.value == nil {
+		return ""
+	}
+	if *sf.value {
+		return "true"
+	}
+	return "false"
 }

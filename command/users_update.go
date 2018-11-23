@@ -1,44 +1,75 @@
 package command
 
 import (
-	"context"
+	"fmt"
+	"strings"
 
-	"github.com/shurcooL/graphql"
-	cli "gopkg.in/urfave/cli.v2"
+	"github.com/humio/cli/api"
 )
 
-func UpdateUser(c *cli.Context) error {
-	config, _ := getServerConfig(c)
-	ensureToken(config)
-	ensureURL(config)
-
-	username := c.Args().First()
-
-	client := newGraphQLClient(config)
-
-	var m struct {
-		UpdateUser struct {
-			Type string `graphql:"__typename"`
-		} `graphql:"updateUser(input: { username: $username, isRoot: $isRoot })"`
-	}
-
-	variables := map[string]interface{}{
-		"username": graphql.String(username),
-		"isRoot":   optBoolFlag(c, "root"),
-	}
-
-	graphqlErr := client.Mutate(context.Background(), &m, variables)
-	check(graphqlErr)
-
-	UsersShow(c)
-
-	return nil
+type UsersUpdateCommand struct {
+	Meta
 }
 
-func optBoolFlag(c *cli.Context, flag string) *graphql.Boolean {
-	var isRootOpt *graphql.Boolean
-	if c.IsSet(flag) {
-		isRootOpt = graphql.NewBoolean(graphql.Boolean(c.Bool(flag)))
+func (f *UsersUpdateCommand) Help() string {
+	helpText := `
+Usage: humio users show <username>
+
+  Shows details about a users. This command requires root access.
+
+  To see members in a repository or view use:
+
+    $ humio members show <repo> <username>
+
+  General Options:
+
+  ` + generalOptionsUsage() + `
+`
+	return strings.TrimSpace(helpText)
+}
+
+func (f *UsersUpdateCommand) Synopsis() string {
+	return "Shows details about a user."
+}
+
+func (f *UsersUpdateCommand) Name() string { return "users update" }
+
+func (f *UsersUpdateCommand) Run(args []string) int {
+	var root boolPtrFlag
+
+	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
+	flags.Usage = func() { f.Ui.Output(f.Help()) }
+	flags.Var(&root, "root", "If true grants root access to the user.")
+
+	if err := flags.Parse(args); err != nil {
+		return 1
 	}
-	return isRootOpt
+
+	// Check that we got one argument
+	args = flags.Args()
+	if l := len(args); l != 1 {
+		f.Ui.Error("This command takes one argument: <username>")
+		f.Ui.Error(commandErrorText(f))
+		return 1
+	}
+
+	username := args[0]
+
+	// Get the HTTP client
+	client, err := f.Meta.Client()
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error initializing client: %s", err))
+		return 1
+	}
+
+	user, err := client.Users().Update(username, api.UserChangeSet{IsRoot: root.value})
+
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error updating user: %s", err))
+		return 1
+	}
+
+	printUserTable(user)
+
+	return 0
 }

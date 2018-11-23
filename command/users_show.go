@@ -1,43 +1,81 @@
 package command
 
 import (
-	"context"
+	"fmt"
 	"strings"
 
-	"github.com/shurcooL/graphql"
-	cli "gopkg.in/urfave/cli.v2"
+	"github.com/humio/cli/api"
 )
 
-func UsersShow(c *cli.Context) error {
-	config, _ := getServerConfig(c)
+type UsersShowCommand struct {
+	Meta
+}
 
-	ensureToken(config)
-	ensureURL(config)
+func (f *UsersShowCommand) Help() string {
+	helpText := `
+Usage: humio users show <username>
 
-	username := c.Args().First()
+  Shows details about a users. This command requires root access.
 
-	var q struct {
-		Account struct {
-			Username  string
-			FullName  string
-			IsRoot    bool
-			CreatedAt string
-		} `graphql:"account(username: $username)"`
+  To see members in a repository or view use:
+
+    $ humio members show <repo> <username>
+
+  General Options:
+
+  ` + generalOptionsUsage() + `
+`
+	return strings.TrimSpace(helpText)
+}
+
+func (f *UsersShowCommand) Synopsis() string {
+	return "Shows details about a user."
+}
+
+func (f *UsersShowCommand) Name() string { return "users show" }
+
+func (f *UsersShowCommand) Run(args []string) int {
+	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
+	flags.Usage = func() { f.Ui.Output(f.Help()) }
+
+	if err := flags.Parse(args); err != nil {
+		return 1
 	}
 
-	variables := map[string]interface{}{
-		"username": graphql.String(username),
+	// Check that we got one argument
+	args = flags.Args()
+	if l := len(args); l != 1 {
+		f.Ui.Error("This command takes one argument: <username>")
+		f.Ui.Error(commandErrorText(f))
+		return 1
 	}
 
-	graphqlErr := newGraphQLClient(config).Query(context.Background(), &q, variables)
-	check(graphqlErr)
+	username := args[0]
 
-	userData := []string{q.Account.Username, q.Account.FullName, q.Account.CreatedAt, yesNo(q.Account.IsRoot)}
+	// Get the HTTP client
+	client, err := f.Meta.Client()
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error initializing client: %s", err))
+		return 1
+	}
+
+	user, err := client.Users().Get(username)
+
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error fetching token list: %s", err))
+		return 1
+	}
+
+	printUserTable(user)
+
+	return 0
+}
+
+func printUserTable(user api.User) {
+	userData := []string{user.Username, user.FullName, user.CreatedAt, yesNo(user.IsRoot)}
 
 	printTable([]string{
 		"Username | Name | Created At | Is Root",
 		strings.Join(userData, "|"),
 	})
-
-	return nil
 }

@@ -68,6 +68,21 @@ func Commands(metaPtr *Meta, agentUi cli.Ui) map[string]cli.CommandFactory {
 				Meta: meta,
 			}, nil
 		},
+		"users list": func() (cli.Command, error) {
+			return &UsersListCommand{
+				Meta: meta,
+			}, nil
+		},
+		"users show": func() (cli.Command, error) {
+			return &UsersShowCommand{
+				Meta: meta,
+			}, nil
+		},
+		"users update": func() (cli.Command, error) {
+			return &UsersUpdateCommand{
+				Meta: meta,
+			}, nil
+		},
 	}
 
 	return all

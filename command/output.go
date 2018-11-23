@@ -19,5 +19,5 @@ func yesNo(isTrue bool) string {
 	if isTrue {
 		return "yes"
 	}
-	return ""
+	return "no"
 }
