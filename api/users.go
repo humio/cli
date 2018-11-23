@@ -59,3 +59,18 @@ func (c *Users) Update(username string, changeset UserChangeSet) (User, error) {
 
 	return mutation.Result.User, graphqlErr
 }
+
+func (c *Users) Remove(username string, changeset UserChangeSet) error {
+	var mutation struct {
+		Result struct {
+			// We have to make a selection, so just take __typename
+			Type string `graphql:"__typename"`
+		} `graphql:"removeUser(username: $username)"`
+	}
+
+	variables := map[string]interface{}{
+		"username": graphql.String(username),
+	}
+
+	return c.client.Mutate(&mutation, variables)
+}
