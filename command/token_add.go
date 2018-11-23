@@ -1,47 +1,80 @@
 package command
 
 import (
-	"io/ioutil"
+	"fmt"
+	"strings"
 
-	cli "gopkg.in/urfave/cli.v2"
+	"github.com/ryanuber/columnize"
 )
 
-func TokenAdd(c *cli.Context) error {
-	config, _ := getServerConfig(c)
+type TokensAddCommand struct {
+	Meta
+}
 
-	ensureToken(config)
-	ensureRepo(config)
-	ensureURL(config)
+func (f *TokensAddCommand) Help() string {
+	helpText := `
+Usage: humio ingest-tokens add <repo> <token name>
 
-	name := c.String("name")
-	if name == "" {
-		exit("Name cannot be empty.")
+  Adds a new ingest token with name <token name> to a repository <repo>.
+
+  General Options:
+
+  ` + generalOptionsUsage() + `
+`
+	return strings.TrimSpace(helpText)
+}
+
+func (f *TokensAddCommand) Synopsis() string {
+	return "Adds a new ingest token to a repository."
+}
+
+func (f *TokensAddCommand) Name() string { return "ingest-tokens add" }
+
+func (f *TokensAddCommand) Run(args []string) int {
+	var parserName stringPtrFlag
+
+	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
+	flags.Usage = func() { f.Ui.Output(f.Help()) }
+	flags.Var(&parserName, "parser", "Assign a parser to the token.")
+
+	if err := flags.Parse(args); err != nil {
+		return 1
 	}
-	parser := c.String("parser")
 
-	body := ""
-	if parser == "" {
-		body = `{"name": "` + name + `"}`
-	} else {
-		body = `{"name": "` + name + `", "parser": "` + parser + `"}`
+	// Check that we got one argument
+	args = flags.Args()
+	if l := len(args); l != 2 {
+		f.Ui.Error("This command takes two arguments: <repo> <token name>")
+		f.Ui.Error(commandErrorText(f))
+		return 1
 	}
 
-	url := config.URL + "/api/v1/repositories/" + config.Repo + "/ingesttokens"
+	repo := args[0]
+	name := args[1]
 
-	resp, clientErr := postJSON(url, body, config.Token)
-
-	if clientErr != nil {
-		panic(clientErr)
+	// Get the HTTP client
+	client, err := f.Meta.Client()
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error initializing client: %s", err))
+		return 1
 	}
-	if resp.StatusCode >= 400 {
-		_, readErr := ioutil.ReadAll(resp.Body)
-		if readErr != nil {
-			panic(readErr)
-		}
-		//		fmt.Println(resp.StatusCode)
-		//		fmt.Println(string(responseData))
-	}
-	resp.Body.Close()
 
-	return nil
+	token, err := client.IngestTokens().Add(repo, name, parserName.value)
+
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error adding ingest token: %s", err))
+		return 1
+	}
+
+	var output []string
+	output = append(output, "Name | Token | Assigned Parser")
+	output = append(output, fmt.Sprintf("%v | %v | %v", token.Name, token.Token, valueOrEmpty(token.AssignedParser)))
+
+	table := columnize.SimpleFormat(output)
+
+	fmt.Println()
+	fmt.Println(table)
+	fmt.Println()
+
+	return 0
 }

@@ -24,3 +24,19 @@ func Map(vs []string, f func(string) testCase) []testCase {
 func commandErrorText(cmd NamedCommand) string {
 	return fmt.Sprintf("For additional help try 'humio %s -help'", cmd.Name())
 }
+
+type stringPtrFlag struct {
+	value *string
+}
+
+func (sf *stringPtrFlag) Set(x string) error {
+	sf.value = &x
+	return nil
+}
+
+func (sf *stringPtrFlag) String() string {
+	if sf.value == nil {
+		return ""
+	}
+	return *sf.value
+}

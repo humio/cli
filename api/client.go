@@ -1,7 +1,9 @@
 package api
 
 import (
+	"bytes"
 	"context"
+	"net/http"
 	"os"
 
 	"github.com/shurcooL/graphql"
@@ -38,6 +40,10 @@ func (c *Client) Address() string {
 	return c.config.Address
 }
 
+func (c *Client) Token() string {
+	return c.config.Token
+}
+
 func NewClient(config Config) (*Client, error) {
 	return &Client{
 		config: config,
@@ -63,4 +69,43 @@ func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) 
 	client := c.newGraphQLClient()
 	graphqlErr := client.Mutate(context.Background(), mutation, variables)
 	return graphqlErr
+}
+
+func (c *Client) httpGET(url string) (*http.Response, error) {
+	req, reqErr := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
+	req.Header.Set("Authorization", "Bearer "+c.Token())
+	req.Header.Set("Accept", "application/json")
+	var client = &http.Client{}
+
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
+}
+
+func (c *Client) httpPOST(path string, jsonStr string) (*http.Response, error) {
+	url := c.Address() + path
+	req, reqErr := http.NewRequest("POST", url, bytes.NewBuffer([]byte(jsonStr)))
+	req.Header.Set("Authorization", "Bearer "+c.config.Token)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+	var client = &http.Client{}
+
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
+}
+
+func (c *Client) httpDELETE(path string) (*http.Response, error) {
+	url := c.Address() + path
+	req, reqErr := http.NewRequest("DELETE", url, nil)
+	req.Header.Set("Authorization", "Bearer "+c.config.Token)
+	req.Header.Set("Accept", "application/json")
+	var client = &http.Client{}
+
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
 }

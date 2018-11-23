@@ -53,6 +53,21 @@ func Commands(metaPtr *Meta, agentUi cli.Ui) map[string]cli.CommandFactory {
 				Meta: meta,
 			}, nil
 		},
+		"ingest-tokens list": func() (cli.Command, error) {
+			return &TokensListCommand{
+				Meta: meta,
+			}, nil
+		},
+		"ingest-tokens add": func() (cli.Command, error) {
+			return &TokensAddCommand{
+				Meta: meta,
+			}, nil
+		},
+		"ingest-tokens rm": func() (cli.Command, error) {
+			return &TokensRemoveCommand{
+				Meta: meta,
+			}, nil
+		},
 	}
 
 	return all

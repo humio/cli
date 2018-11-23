@@ -52,11 +52,12 @@ type Meta struct {
 func (m *Meta) FlagSet(n string, fs FlagSetFlags) *flag.FlagSet {
 	f := flag.NewFlagSet(n, flag.ContinueOnError)
 
+	f.BoolVar(&m.noColor, "no-color", false, "")
+
 	// FlagSetClient is used to enable the settings for specifying
 	// client connectivity options.
 	if fs&FlagSetClient != 0 {
 		f.StringVar(&m.flagAddress, "address", "", "")
-		f.BoolVar(&m.noColor, "no-color", false, "")
 		f.StringVar(&m.token, "token", "", "")
 	}
 

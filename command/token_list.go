@@ -1,52 +1,66 @@
 package command
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
+	"strings"
 
 	"github.com/ryanuber/columnize"
-
-	cli "gopkg.in/urfave/cli.v2"
 )
 
-type token struct {
-	Name           string `json:"name"`
-	Token          string `json:"token"`
-	AssignedParser string `json:"parser"`
+type TokensListCommand struct {
+	Meta
 }
 
-func TokenList(c *cli.Context) error {
-	config, _ := getServerConfig(c)
+func (f *TokensListCommand) Help() string {
+	helpText := `
+Usage: humio tokens list <repo>
 
-	ensureToken(config)
-	ensureRepo(config)
-	ensureURL(config)
+  List ingest tokens in a repository.
 
-	url := config.URL + "api/v1/repositories/" + config.Repo + "/ingesttokens"
+  General Options:
 
-	resp, clientErr := getReq(url, config.Token)
-	defer resp.Body.Close()
+  ` + generalOptionsUsage() + `
+`
+	return strings.TrimSpace(helpText)
+}
 
-	if clientErr != nil {
-		log.Fatal(clientErr)
+func (f *TokensListCommand) Synopsis() string {
+	return "List ingest tokens in a repository."
+}
+
+func (f *TokensListCommand) Name() string { return "tokens list" }
+
+func (f *TokensListCommand) Run(args []string) int {
+
+	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
+	flags.Usage = func() { f.Ui.Output(f.Help()) }
+
+	if err := flags.Parse(args); err != nil {
+		return 1
 	}
 
-	if resp.StatusCode >= 400 {
-		log.Fatal(resp)
+	// Check that we got one argument
+	args = flags.Args()
+	if l := len(args); l != 1 {
+		f.Ui.Error("This command takes one arguments: <repo>")
+		f.Ui.Error(commandErrorText(f))
+		return 1
 	}
 
-	body, readErr := ioutil.ReadAll(resp.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
+	repo := args[0]
+
+	// Get the HTTP client
+	client, err := f.Meta.Client()
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error initializing client: %s", err))
+		return 1
 	}
 
-	tokens := make([]token, 0)
-	jsonErr := json.Unmarshal(body, &tokens)
+	tokens, err := client.IngestTokens().List(repo)
 
-	if jsonErr != nil {
-		log.Fatalf("Could not parser JSON: %#v", string(body))
+	if err != nil {
+		f.Ui.Error(fmt.Sprintf("Error fetching token list: %s", err))
+		return 1
 	}
 
 	var output []string
@@ -62,7 +76,7 @@ func TokenList(c *cli.Context) error {
 	fmt.Println(table)
 	fmt.Println()
 
-	return nil
+	return 0
 }
 
 func valueOrEmpty(v string) string {
