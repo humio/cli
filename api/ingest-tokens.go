@@ -1,10 +1,6 @@
 package api
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"log"
-
 	"github.com/shurcooL/graphql"
 )
 
@@ -20,40 +16,56 @@ type IngestToken struct {
 
 func (c *Client) IngestTokens() *IngestTokens { return &IngestTokens{client: c} }
 
-func (p *IngestTokens) List(reposistoryName string) ([]IngestToken, error) {
-	url := p.client.Address() + "api/v1/repositories/" + reposistoryName + "/ingesttokens"
+type ingestTokenData struct {
+	Name   string
+	Token  string
+	Parser *struct {
+		Name string
+	}
+}
 
-	resp, clientErr := p.client.httpGET(url)
-	defer resp.Body.Close()
-
-	if clientErr != nil {
-		log.Fatal(clientErr)
+func (p *IngestTokens) List(repo string) ([]IngestToken, error) {
+	var query struct {
+		Result struct {
+			IngestTokens []ingestTokenData
+		} `graphql:"repository(name: $repositoryName)"`
 	}
 
-	if resp.StatusCode >= 400 {
-		log.Fatal(resp)
+	variables := map[string]interface{}{
+		"repositoryName": graphql.String(repo),
 	}
 
-	body, readErr := ioutil.ReadAll(resp.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
+	err := p.client.Query(&query, variables)
+
+	if err != nil {
+		return nil, err
 	}
 
-	tokens := make([]IngestToken, 0)
-	jsonErr := json.Unmarshal(body, &tokens)
-	return tokens, jsonErr
+	tokens := make([]IngestToken, len(query.Result.IngestTokens))
+	for i, tokenData := range query.Result.IngestTokens {
+		tokens[i] = *toIngestToken(tokenData)
+	}
+
+	return tokens, nil
+}
+
+func toIngestToken(data ingestTokenData) *IngestToken {
+	var parser string
+	if data.Parser != nil {
+		parser = data.Parser.Name
+	}
+
+	return &IngestToken{
+		Name:           data.Name,
+		Token:          data.Token,
+		AssignedParser: parser,
+	}
 }
 
 func (p *IngestTokens) Add(repo string, name string, parserName *string) (*IngestToken, error) {
 	var mutation struct {
 		Result struct {
-			IngestToken struct {
-				Name   string
-				Token  string
-				Parser *struct {
-					Name string
-				}
-			}
+			IngestToken ingestTokenData
 		} `graphql:"addIngestToken(repositoryName: $repositoryName, name: $name, parser: $parser)"`
 	}
 
@@ -69,21 +81,11 @@ func (p *IngestTokens) Add(repo string, name string, parserName *string) (*Inges
 
 	err := p.client.Mutate(&mutation, variables)
 
-	var result IngestToken
-	if err == nil {
-		var parser string
-		if mutation.Result.IngestToken.Parser != nil {
-			parser = mutation.Result.IngestToken.Parser.Name
-		}
-
-		result = IngestToken{
-			Name:           mutation.Result.IngestToken.Name,
-			Token:          mutation.Result.IngestToken.Token,
-			AssignedParser: parser,
-		}
+	if err != nil {
+		return nil, err
 	}
 
-	return &result, err
+	return toIngestToken(mutation.Result.IngestToken), err
 }
 
 func (p *IngestTokens) Remove(repo string, tokenName string) error {

@@ -30,7 +30,9 @@ func (f *UsersListCommand) Synopsis() string {
 	return "List all user in the cluster."
 }
 
-func (f *UsersListCommand) Name() string { return "users list" }
+func (f *UsersListCommand) Name() string {
+	return "users list"
+}
 
 func (f *UsersListCommand) Run(args []string) int {
 	flags := f.Meta.FlagSet(f.Name(), FlagSetClient)
