@@ -3,8 +3,6 @@ package api
 import (
 	"bytes"
 	"context"
-	"fmt"
-	"log"
 	"net/http"
 	"os"
 
@@ -29,28 +27,19 @@ func DefaultConfig() Config {
 		Token:   "",
 	}
 
-	settingsFile, expandErr := homedir.Expand("~/.humioconfig")
-
-	if expandErr != nil {
-		log.Println(fmt.Sprintf("error loading .humioconfig file: %s", expandErr))
-	}
-
-	props, propsErr := ReadPropertiesFile(settingsFile)
-
-	if propsErr != nil {
-		log.Println(fmt.Sprintf("error loading .humioconfig file: %s", propsErr))
-	}
+	settingsFile, _ := homedir.Expand("~/.humioconfig")
+	props, _ := ReadPropertiesFile(settingsFile)
 
 	if addr := os.Getenv("HUMIO_ADDR"); addr != "" {
 		config.Address = addr
-	} else if propsErr == nil && props["HUMIO_ADDR"] != "" {
-		config.Address = props["HUMIO_ADDR"]
+	} else if addr := props["HUMIO_ADDR"]; addr != "" {
+		config.Address = addr
 	}
 
 	if token := os.Getenv("HUMIO_API_TOKEN"); token != "" {
 		config.Token = token
-	} else if propsErr == nil && props["HUMIO_API_TOKEN"] != "" {
-		config.Token = props["HUMIO_API_TOKEN"]
+	} else if token := props["HUMIO_API_TOKEN"]; token != "" {
+		config.Token = token
 	}
 
 	return config
