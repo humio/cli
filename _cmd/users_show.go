@@ -3,8 +3,6 @@ package command
 import (
 	"fmt"
 	"strings"
-
-	"github.com/humio/cli/api"
 )
 
 type UsersShowCommand struct {
@@ -69,13 +67,4 @@ func (f *UsersShowCommand) Run(args []string) int {
 	printUserTable(user)
 
 	return 0
-}
-
-func printUserTable(user api.User) {
-	userData := []string{user.Username, user.FullName, user.CreatedAt, yesNo(user.IsRoot)}
-
-	printTable([]string{
-		"Username | Name | Created At | Is Root",
-		strings.Join(userData, "|"),
-	})
 }

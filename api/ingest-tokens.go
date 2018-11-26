@@ -62,7 +62,7 @@ func toIngestToken(data ingestTokenData) *IngestToken {
 	}
 }
 
-func (p *IngestTokens) Add(repo string, name string, parserName *string) (*IngestToken, error) {
+func (p *IngestTokens) Add(repo string, name string, parserName string) (*IngestToken, error) {
 	var mutation struct {
 		Result struct {
 			IngestToken ingestTokenData
@@ -70,8 +70,8 @@ func (p *IngestTokens) Add(repo string, name string, parserName *string) (*Inges
 	}
 
 	var parserNameVar graphql.String
-	if parserName != nil {
-		parserNameVar = graphql.String(*parserName)
+	if parserName != "" {
+		parserNameVar = graphql.String(parserName)
 	}
 	variables := map[string]interface{}{
 		"name":           graphql.String(name),

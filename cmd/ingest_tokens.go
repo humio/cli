@@ -12,10 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cmd
 
-import "github.com/humio/cli/cmd"
+import (
+	"github.com/spf13/cobra"
+)
 
-func main() {
-	cmd.Execute()
+func newIngestTokensCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "ingest-tokens [flags]",
+		Short: "Manage ingest tokens",
+		Long: `Ingest tokens, unlike the more general API tokens, can only be used for ingestion of data.
+
+You can also assign a parser to an ingest token, allowing you to configure how Humio parses incoming data
+without having to change anything on sender/client.`,
+	}
+
+	cmd.AddCommand(newIngestTokensAddCmd())
+	cmd.AddCommand(newIngestTokensRemoveCmd())
+	cmd.AddCommand(newIngestTokensListCmd())
+
+	return cmd
 }

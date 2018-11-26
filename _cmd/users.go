@@ -40,3 +40,12 @@ func (f *UsersCommand) Name() string { return "users" }
 func (f *UsersCommand) Run(args []string) int {
 	return cli.RunResultHelp
 }
+
+func printUserTable(user api.User) {
+	userData := []string{user.Username, user.FullName, user.CreatedAt, yesNo(user.IsRoot)}
+
+	printTable([]string{
+		"Username | Name | Created At | Is Root",
+		strings.Join(userData, "|"),
+	})
+}

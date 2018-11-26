@@ -1,4 +1,4 @@
-Copyright 2017 Humio ApS and contributors.
+Copyright 2018 Humio Ltd. and contributors.
 <http://humio.com/>
 
 Licensed under the Apache License, Version 2.0 (the "License");

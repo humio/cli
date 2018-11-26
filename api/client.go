@@ -4,12 +4,9 @@ import (
 	"bytes"
 	"context"
 	"net/http"
-	"os"
 
 	"github.com/shurcooL/graphql"
 	"golang.org/x/oauth2"
-
-	homedir "github.com/mitchellh/go-homedir"
 )
 
 type Client struct {
@@ -25,21 +22,6 @@ func DefaultConfig() Config {
 	config := Config{
 		Address: "",
 		Token:   "",
-	}
-
-	settingsFile, _ := homedir.Expand("~/.humioconfig")
-	props, _ := ReadPropertiesFile(settingsFile)
-
-	if addr := os.Getenv("HUMIO_ADDR"); addr != "" {
-		config.Address = addr
-	} else if addr := props["HUMIO_ADDR"]; addr != "" {
-		config.Address = addr
-	}
-
-	if token := os.Getenv("HUMIO_API_TOKEN"); token != "" {
-		config.Token = token
-	} else if token := props["HUMIO_API_TOKEN"]; token != "" {
-		config.Token = token
 	}
 
 	return config

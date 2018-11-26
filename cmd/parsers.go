@@ -12,10 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cmd
 
-import "github.com/humio/cli/cmd"
+import (
+	"github.com/spf13/cobra"
+)
 
-func main() {
-	cmd.Execute()
+// usersCmd represents the users command
+func newParsersCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "parsers",
+		Short: "Manage parsers",
+	}
+
+	cmd.AddCommand(newParsersInstallCmd())
+	cmd.AddCommand(newParsersListCmd())
+	cmd.AddCommand(newParsersRemoveCmd())
+	cmd.AddCommand(newParsersExportCmd())
+
+	return cmd
 }
