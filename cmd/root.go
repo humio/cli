@@ -65,6 +65,7 @@ or
 Common commands:
   users <subcommand>
   parsers <subcommand>
+	views <subcommand>
 		`,
 	}
 
@@ -85,6 +86,7 @@ Common commands:
 	rootCmd.AddCommand(newIngestCmd())
 	rootCmd.AddCommand(newLoginCmd())
 	rootCmd.AddCommand(newIngestTokensCmd())
+	rootCmd.AddCommand(newViewsCmd())
 }
 
 // initConfig reads in config file and ENV variables if set.

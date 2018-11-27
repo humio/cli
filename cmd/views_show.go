@@ -20,24 +20,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newUsersShowCmd() *cobra.Command {
+func newViewsShowCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "show [flags] <username>",
-		Short: "Show details about a user.",
+		Use:   "show [flags] <view>",
+		Short: "Show details about a view.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			username := args[0]
+			viewName := args[0]
 
 			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			user, err := client.Users().Get(username)
+			view, err := client.Views().Get(viewName)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching user: %s", err)
+				return fmt.Errorf("Error fetching view: %s", err)
 			}
 
-			printUserTable(user)
+			printViewTable(view)
+
+			printViewRoleTable(view)
 
 			return nil
 		},
