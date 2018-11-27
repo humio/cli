@@ -1,3 +1,6 @@
+Version 0.4.1:
+ - Add changelog to make build happy
+
 Version 0.4.0:
  - WIP for update users
  - Convert to Cobra yay
