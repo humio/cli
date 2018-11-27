@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/humio/cli/api"
 	"github.com/humio/cli/prompt"
@@ -26,16 +27,23 @@ In the config file already exists, the settings will be merged into the existing
 			var addr, token string
 			var err error
 
-			fmt.Println("This will guide you through setting up the Humio CLI.")
-			fmt.Println("")
+			prompt.Output("")
+			owl := "[purple]" + prompt.Owl() + "[reset]"
+			fmt.Print((prompt.Colorize(owl)))
+			prompt.Output("")
+			prompt.Title("Welcome to Humio")
+			prompt.Output("")
+			prompt.Description("This will guide you through setting up the Humio CLI.")
+			prompt.Output("")
+
+			prompt.Info("Which Humio instance should we talk to?") // INFO
+			prompt.Output("")
+			prompt.Description("If you are not using Humio Cloud enter the address of your Humio installation,")
+			prompt.Description("e.g. http://localhost:8080/ or https://humio.example.com/")
 
 			for true {
-				fmt.Println("1. Which Humio instance should we talk to?") // INFO
-				fmt.Println("")
-				fmt.Println("If you are not using Humio Cloud enter the address out your Humio installation,")
-				fmt.Println("e.g. http://localhost:8080/ or https://humio.example.com/")
-				fmt.Println("")
-				fmt.Println("Default: https://cloud.humio.com/ [Hit Enter]")
+				prompt.Output("")
+				prompt.Output("Default: https://cloud.humio.com/ [Hit Enter]")
 				addr, err = prompt.Ask("Humio Address")
 
 				if addr == "" {
@@ -48,13 +56,16 @@ In the config file already exists, the settings will be merged into the existing
 
 				// Make sure it is a valid URL and that
 				// we always end in a slash.
-				addrUrl, urlErr := url.Parse(addr)
+				_, urlErr := url.ParseRequestURI(addr)
 
 				if urlErr != nil {
-					fmt.Println("The valus must be a valid URL.") // ERROR
+					prompt.Error("The valus must be a valid URL.")
+					continue
 				}
 
-				addr = fmt.Sprintf("%v", addrUrl)
+				if !strings.HasSuffix(addr, "/") {
+					addr = addr + "/"
+				}
 
 				clientConfig := api.DefaultConfig()
 				clientConfig.Address = addr
@@ -64,38 +75,44 @@ In the config file already exists, the settings will be merged into the existing
 					return (fmt.Errorf("error initializing the http client: %s", apiErr))
 				}
 
+				prompt.Output("")
+				fmt.Print("==> Testing Connection...")
+
 				status, statusErr := client.Status()
 
 				if statusErr != nil {
-					fmt.Println(fmt.Errorf("Could not connect to the Humio server: %s\nIs the address connect and reachable?", statusErr)) // ERROR
+					fmt.Println(prompt.Colorize("[[red]Failed[reset]]"))
+					prompt.Output("")
+					prompt.Error(fmt.Sprintf("Could not connect to the Humio server: %s\nIs the address connect and reachable?", statusErr))
 					continue
 				}
 
 				if status.Status != "ok" {
+					fmt.Println(prompt.Colorize("[[red]Failed[reset]]"))
 					return (fmt.Errorf("The server reported that is is malfunctioning, status: %s", status.Status))
+				} else {
+					fmt.Println(prompt.Colorize("[[green]Ok[reset]]"))
 				}
 
-				fmt.Println("")
-				fmt.Println("==> Connection Successful") // INFO
 				fmt.Println("")
 				break
 			}
 
-			fmt.Println("")
-			fmt.Println("2. Paste in your API Token") // INFO
-			fmt.Println("")
-			fmt.Println("To use Humio's CLI you will need to get a copy of your API Token.")
-			fmt.Println("The API token can be found in your 'Account Settings' section of the UI.")
-			fmt.Println("If you are running Humio without authorization just leave the API Token field empty.")
-			fmt.Println("")
-			prompt.Ask("We will now open the account page in a browser window. [Hit Any Key]")
+			prompt.Info("Paste in your Personal API Token")
+			prompt.Description("")
+			prompt.Description("To use Humio's CLI you will need to get a copy of your API Token.")
+			prompt.Description("The API token can be found in your 'Account Settings' section of the UI.")
+			prompt.Description("If you are running Humio without authorization just leave the API Token field empty.")
+			prompt.Description("")
 
-			open.Start(fmt.Sprintf("%ssettings", addr))
+			if prompt.Confirm("Would you like us to open a browser on the account page?") {
+				open.Start(fmt.Sprintf("%ssettings", addr))
 
-			fmt.Println("")
-			fmt.Println(fmt.Sprintf("If the browser did not open, you can manually visit:"))
-			fmt.Println(fmt.Sprintf("%ssettings", addr))
-			fmt.Println("")
+				prompt.Description("")
+				prompt.Description(fmt.Sprintf("If the browser did not open, you can manually visit:"))
+				prompt.Description(fmt.Sprintf("%ssettings", addr))
+				prompt.Description("")
+			}
 
 			for true {
 				token, err = prompt.AskSecret("API Token")
@@ -117,12 +134,13 @@ In the config file already exists, the settings will be merged into the existing
 				username, apiErr := client.Viewer().Username()
 
 				if apiErr != nil {
-					fmt.Println(fmt.Errorf("authorization failed, try another token")) // ERROR
+					prompt.Error("authorization failed, try another token")
 					continue
 				}
 
 				fmt.Println("")
-				fmt.Println(fmt.Sprintf("==> Login successful '%s' 🎉", username)) // INFO
+				fmt.Println("")
+				fmt.Println(prompt.Colorize(fmt.Sprintf("==> Logged in as: [purple]%s[reset]", username)))
 				fmt.Println("")
 				break
 			}
@@ -130,15 +148,11 @@ In the config file already exists, the settings will be merged into the existing
 			viper.Set("address", addr)
 			viper.Set("token", token)
 
-			// viper.BindPFlag("author", rootCmd.PersistentFlags().Lookup("author"))
-			// viper.BindPFlag("projectbase", rootCmd.PersistentFlags().Lookup("projectbase"))
-			// viper.BindPFlag("useViper", rootCmd.PersistentFlags().Lookup("viper"))
-
 			configFile := viper.ConfigFileUsed()
 
-			fmt.Println("==> Writing settings to: " + configFile) // INFO
+			fmt.Println(prompt.Colorize("==> Writing settings to: [purple]" + configFile + "[reset]"))
 
-			if writeErr := viper.MergeInConfig(); writeErr != nil {
+			if writeErr := viper.WriteConfig(); writeErr != nil {
 				if os.IsNotExist(writeErr) {
 					dirName := filepath.Dir(configFile)
 					if dirErr := os.MkdirAll(dirName, 0700); dirErr != nil {
@@ -151,7 +165,7 @@ In the config file already exists, the settings will be merged into the existing
 			}
 
 			fmt.Println("")
-			fmt.Println("Bye bye now!")
+			prompt.Output("Bye bye now! 🎉")
 			fmt.Println("")
 
 			return nil

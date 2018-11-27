@@ -20,6 +20,7 @@ import (
 	"path"
 
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/prompt"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -45,14 +46,16 @@ func init() {
 	rootCmd = &cobra.Command{
 		Use:   "humio [subcommand] [flags] [arguments]",
 		Short: "A management CLI for Humio.",
-		Long: `To set up your environment run:
+		Long: `
+Environment Setup:
 
   $ humio login
 
 Sending Data:
+
   Humio's CLI is not a replacement for fully-featured data-shippers like
-	LogStash, FileBeat or MetricBeat. It can be handy to easily send logs
-	to Humio to, e.g examine a local log file or test a parser on test input.
+  LogStash, FileBeat or MetricBeat. It can be handy to easily send logs
+  to Humio, e.g examine a local log file or test a parser on test input.
 
 To stream the content of "/var/log/system.log" data to Humio:
 
@@ -62,11 +65,23 @@ or
 
   $ humio ingest -o --tail=/var/log/system.log
 
-Common commands:
+Common Management Commands:
   users <subcommand>
   parsers <subcommand>
-	views <subcommand>
+  views <subcommand>
 		`,
+		Run: func(cmd *cobra.Command, args []string) {
+			// If no token or address flags are passed
+			// and no configuration file exists, run login.
+			if viper.GetString("token") == "" && viper.GetString("address") == "" {
+				newLoginCmd().Execute()
+			} else {
+				err := cmd.Help()
+				if err != nil {
+					fmt.Println(fmt.Errorf("error printing help: %s", err))
+				}
+			}
+		},
 	}
 
 	cobra.OnInitialize(initConfig)
@@ -76,7 +91,7 @@ Common commands:
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.humio/config.yaml)")
 	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "The API token to user when talking to Humio. Overrides the value in your config file.")
-	rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "http://localhost:8080/", "The HTTP address of the Humio cluster. Overrides the value in your config file. (default http://localhost:8080/)")
+	rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "", "The HTTP address of the Humio cluster. Overrides the value in your config file.")
 
 	viper.BindPFlag("address", rootCmd.PersistentFlags().Lookup("address"))
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
@@ -113,12 +128,9 @@ func initConfig() {
 	// If a config file is found, read it in.
 	err := viper.ReadInConfig()
 	if err == nil {
-		fmt.Println("Cluster Address:", viper.Get("address"))
-	} else {
-		fmt.Println(err)
+		prompt.Output("Using config file: " + cfgFile)
+		prompt.Output("Cluster address: " + viper.GetString("address"))
 	}
-
-	fmt.Println("Using config file:", cfgFile)
 }
 
 func NewApiClient(cmd *cobra.Command) *api.Client {
