@@ -1,3 +1,9 @@
+Version 0.4.0:
+ - WIP for update users
+ - Convert to Cobra yay
+ - Read from config
+ - Introduce humio login command
+
 Version 0.3.0:
  - Improve docs
  - Fix bugs
