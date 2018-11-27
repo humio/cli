@@ -6,11 +6,20 @@ type Users struct {
 	client *Client
 }
 
+type Role struct {
+	Name string
+}
+
 type User struct {
-	Username  string
-	FullName  string
-	IsRoot    bool
-	CreatedAt string
+	Username    string
+	FullName    string
+	Email       string
+	Company     string
+	CountryCode string
+	Picture     string
+	IsRoot      bool
+	CreatedAt   string
+	Roles       []Role
 }
 
 type UserChangeSet struct {

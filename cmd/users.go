@@ -15,9 +15,12 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
 	"strings"
 
 	"github.com/humio/cli/api"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -42,10 +45,32 @@ func formatSimpleAccount(account api.User) string {
 }
 
 func printUserTable(user api.User) {
-	userData := []string{user.Username, user.FullName, user.CreatedAt, yesNo(user.IsRoot)}
 
-	printTable([]string{
-		"Username | Name | Created At | Is Root",
-		strings.Join(userData, "|"),
-	})
+	data := [][]string{
+		[]string{"Username", user.Username},
+		[]string{"Name", user.FullName},
+		[]string{"Is Root", yesNo(user.IsRoot)},
+		[]string{"Roles", strings.Join(userRoleNames(user), ", ")},
+		[]string{"Created At", user.CreatedAt},
+		[]string{"Country Code", user.CountryCode},
+		[]string{"Company", user.Company},
+	}
+
+	w := tablewriter.NewWriter(os.Stdout)
+	w.AppendBulk(data)
+	w.SetBorder(false)
+	w.SetColumnSeparator(":")
+	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
+
+	fmt.Println()
+	w.Render()
+	fmt.Println()
+}
+
+func userRoleNames(user api.User) []string {
+	names := make([]string, len(user.Roles))
+	for i, r := range user.Roles {
+		names[i] = r.Name
+	}
+	return names
 }
