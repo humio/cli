@@ -95,3 +95,11 @@ func optBoolArg(v *bool) *graphql.Boolean {
 	}
 	return argPtr
 }
+
+func optStringArg(v *string) *graphql.String {
+	var argPtr *graphql.String
+	if v != nil {
+		argPtr = graphql.NewString(graphql.String(*v))
+	}
+	return argPtr
+}

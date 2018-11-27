@@ -42,6 +42,10 @@ func (sf *stringPtrFlag) String() string {
 	return *sf.value
 }
 
+func (sf *stringPtrFlag) Type() string {
+	return "string"
+}
+
 type boolPtrFlag struct {
 	value *bool
 }

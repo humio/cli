@@ -14,7 +14,12 @@ type User struct {
 }
 
 type UserChangeSet struct {
-	IsRoot *bool
+	IsRoot      *bool
+	FullName    *string
+	Company     *string
+	CountryCode *string
+	Picture     *string
+	Email       *string
 }
 
 func (c *Client) Users() *Users { return &Users{client: c} }
@@ -47,15 +52,10 @@ func (c *Users) Get(username string) (User, error) {
 
 func (c *Users) Update(username string, changeset UserChangeSet) (User, error) {
 	var mutation struct {
-		Result struct{ User User } `graphql:"updateUser(input: {username: $username, isRoot: $isRoot})"`
+		Result struct{ User User } `graphql:"updateUser(input: {username: $username, isRoot: $isRoot, fullName: $fullName, company: $company, countryCode: $countryCode, email: $email, picture: $picture})"`
 	}
 
-	variables := map[string]interface{}{
-		"username": graphql.String(username),
-		"isRoot":   optBoolArg(changeset.IsRoot),
-	}
-
-	graphqlErr := c.client.Mutate(&mutation, variables)
+	graphqlErr := c.client.Mutate(&mutation, userChangesetToVars(username, changeset))
 
 	return mutation.Result.User, graphqlErr
 }
@@ -68,9 +68,17 @@ func (c *Users) Remove(username string, changeset UserChangeSet) error {
 		} `graphql:"removeUser(username: $username)"`
 	}
 
-	variables := map[string]interface{}{
-		"username": graphql.String(username),
-	}
+	return c.client.Mutate(&mutation, userChangesetToVars(username, changeset))
+}
 
-	return c.client.Mutate(&mutation, variables)
+func userChangesetToVars(username string, changeset UserChangeSet) map[string]interface{} {
+	return map[string]interface{}{
+		"username":    graphql.String(username),
+		"isRoot":      optBoolArg(changeset.IsRoot),
+		"fullName":    optStringArg(changeset.FullName),
+		"company":     optStringArg(changeset.Company),
+		"countryCode": optStringArg(changeset.CountryCode),
+		"email":       optStringArg(changeset.Email),
+		"picture":     optStringArg(changeset.Picture),
+	}
 }

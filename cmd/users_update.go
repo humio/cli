@@ -22,25 +22,23 @@ import (
 )
 
 func newUsersUpdateCmd() *cobra.Command {
-	var root boolPtrFlag
+	var rootFlag boolPtrFlag
+	var nameFlag stringPtrFlag
 
 	cmd := cobra.Command{
 		Use:   "update",
-		Short: "A brief description of your command",
-		Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-		ValidArgs: []string{"username"},
+		Short: "Updates a user's settings and global permissions.",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			username := args[0]
 
 			client := NewApiClient(cmd)
 
-			user, err := client.Users().Update(username, api.UserChangeSet{IsRoot: root.value})
+			user, err := client.Users().Update(username, api.UserChangeSet{
+				IsRoot:   rootFlag.value,
+				FullName: nameFlag.value,
+			})
 
 			if err != nil {
 				return fmt.Errorf("Error updating user: %s", err)
@@ -57,7 +55,8 @@ to quickly create a Cobra application.`,
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// updateCmd.PersistentFlags().String("foo", "", "A help for foo")
-	cmd.Flags().Var(&root, "root", "If true grants root access to the user.")
+	cmd.Flags().Var(&rootFlag, "root", "If true grants root access to the user.")
+	cmd.Flags().Var(&nameFlag, "name", "The full name of the user.")
 	// updateCmd.Flags().VarP("name", false, "Sets the full name of the user.")
 	// updateCmd.Flags().VarP("email", false, "Sets the email of the user (this will not change the username if email is used).")
 
