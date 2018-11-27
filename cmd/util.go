@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"log"
+	"net/url"
 )
 
 func check(err error) {
@@ -75,4 +76,27 @@ func (sf *boolPtrFlag) String() string {
 
 func (sf *boolPtrFlag) Type() string {
 	return "bool"
+}
+
+type urlPtrFlag struct {
+	value *string
+}
+
+func (sf *urlPtrFlag) Set(v string) error {
+	_, err := url.Parse(v)
+	if err == nil {
+		sf.value = &v
+	}
+	return err
+}
+
+func (sf *urlPtrFlag) String() string {
+	if sf.value == nil {
+		return ""
+	}
+	return *sf.value
+}
+
+func (sf *urlPtrFlag) Type() string {
+	return "url"
 }

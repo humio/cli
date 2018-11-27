@@ -21,14 +21,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newUsersUpdateCmd() *cobra.Command {
+func newUsersAddCmd() *cobra.Command {
 	var rootFlag boolPtrFlag
 	var nameFlag, companyFlag, emailFlag, countryCodeFlag stringPtrFlag
 	var pictureFlag urlPtrFlag
 
 	cmd := cobra.Command{
-		Use:   "update",
-		Short: "Updates a user's settings and global permissions.",
+		Use:   "add",
+		Short: "Adds a user.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
@@ -36,7 +36,7 @@ func newUsersUpdateCmd() *cobra.Command {
 
 			client := NewApiClient(cmd)
 
-			user, err := client.Users().Update(username, api.UserChangeSet{
+			user, err := client.Users().Add(username, api.UserChangeSet{
 				IsRoot:      rootFlag.value,
 				FullName:    nameFlag.value,
 				Company:     companyFlag.value,
@@ -46,7 +46,7 @@ func newUsersUpdateCmd() *cobra.Command {
 			})
 
 			if err != nil {
-				return fmt.Errorf("Error updating user: %s", err)
+				return fmt.Errorf("Error creating the user: %s", err)
 			}
 
 			printUserTable(user)

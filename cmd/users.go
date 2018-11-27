@@ -27,6 +27,8 @@ func newUsersCmd() *cobra.Command {
 		Short: "Manage users [Root Only]",
 	}
 
+	cmd.AddCommand(newUsersAddCmd())
+	cmd.AddCommand(newUsersRemoveCmd())
 	cmd.AddCommand(newUsersUpdateCmd())
 	cmd.AddCommand(newUsersListCmd())
 	cmd.AddCommand(newUsersShowCmd())
