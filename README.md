@@ -23,9 +23,9 @@ Will print all the different options and commands currently supported.
 
 You need to some environment variables
 
-```
+```bash
 export HUMIO_API_TOKEN=<token>
-export HUMIO_ADDR=<humio-url> // E.g. https://cloud.humio.com/
+export HUMIO_ADDR=<humio-url> # E.g. https://cloud.humio.com/
 ```
 
 ## Sending Logs
@@ -87,7 +87,7 @@ into `.humioconfig` in your home dir.
 The CLI will always have environment variables take precedence over
 values form your `~/.humioconfig` file.
 
-```
+```bash
 # Your account API token. You can find your token in Humio's UI under
 # 'Your Account' in the account menu.
 HUMIO_API_TOKEN=<token>
