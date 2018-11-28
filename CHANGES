@@ -1,3 +1,12 @@
+Version 0.5.0:
+ - Add token-file flag
+ - Make autocomplete work
+ - Nicify login experience
+ - Remove old iteration
+ - Basic support for views
+ - Support showing roles
+ - Implement remove user
+
 Version 0.4.1:
  - Add changelog to make build happy
 
