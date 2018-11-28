@@ -35,7 +35,7 @@ $ tail -f /var/log/system.log | humio ingest
 
 # or
 
-$ humio ingest -tail=/var/log/system.log
+$ humio ingest --tail=/var/log/system.log
 ```
 
 You can have Humio's UI open and tail the newly imported data using the `-open`
