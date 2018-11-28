@@ -1,3 +1,6 @@
+Version 0.8.0:
+ - Add --quiet flag to not print to stdout on ingest
+
 Version 0.7.0:
  - Fix docs string
  - Version bump to 0.6.0
