@@ -31,7 +31,7 @@ type event struct {
 	RawString string `json:"rawstring"`
 }
 
-func tailFile(client *api.Client, repo string, filepath string) {
+func tailFile(client *api.Client, repo string, filepath string, quiet bool) {
 
 	// Join Tail
 
@@ -43,7 +43,9 @@ func tailFile(client *api.Client, repo string, filepath string) {
 
 	for line := range t.Lines {
 		sendLine(line.Text)
-		fmt.Println(line.Text)
+		if !quiet {
+			fmt.Println(line.Text)
+		}
 	}
 
 	tailError := t.Wait()
@@ -53,7 +55,7 @@ func tailFile(client *api.Client, repo string, filepath string) {
 	}
 }
 
-func streamStdin(repo string) {
+func streamStdin(repo string, quiet bool) {
 	log.Println("Humio Attached to StdIn, Forwarding to '" + repo + "'")
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -61,7 +63,9 @@ func streamStdin(repo string) {
 		sendLine(text)
 		// TODO: We should be able to do this more efficiently.
 		// Somehow connecting Stdin to Stdout
-		fmt.Println(text)
+		if !quiet {
+			fmt.Println(text)
+		}
 	}
 
 	if scanner.Err() != nil {
@@ -161,7 +165,7 @@ func sendBatch(client *api.Client, repo string, messages []string, fields map[st
 
 func newIngestCmd() *cobra.Command {
 	var parserName, filepath, label string
-	var openBrowser, noSession bool
+	var openBrowser, noSession, quiet bool
 
 	cmd := cobra.Command{
 		Use:   "ingest [flags] [<repo>]",
@@ -220,9 +224,9 @@ has the same effect.`,
 			startSending(client, repo, fields, parserName)
 
 			if filepath != "" {
-				tailFile(client, repo, filepath)
+				tailFile(client, repo, filepath, quiet)
 			} else {
-				streamStdin(repo)
+				streamStdin(repo, quiet)
 			}
 
 			return nil
@@ -235,6 +239,7 @@ has the same effect.`,
 	cmd.Flags().BoolVarP(&openBrowser, "open", "o", false, "Open the browser with live tail of the stream.")
 	cmd.Flags().StringVarP(&label, "label", "l", "", "Adds a @label=<lavel> field to each event. This can help you find specific data send by the CLI when searching in the UI.")
 	cmd.Flags().BoolVarP(&noSession, "no-session", "n", false, "No @session field will be added to each event. @session assigns a new UUID to each executing of the Humio CLI.")
+	cmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Don't print ingested data to stdout.")
 
 	return &cmd
 }
