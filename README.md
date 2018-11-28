@@ -23,8 +23,10 @@ Will print all the different options and commands currently supported.
 
 You need to some environment variables
 
+```
 export HUMIO_API_TOKEN=<token>
 export HUMIO_ADDR=<humio-url> // E.g. https://cloud.humio.com/
+```
 
 ## Sending Logs
 
