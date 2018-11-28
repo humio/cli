@@ -24,7 +24,7 @@ func newUsersRemoveCmd() *cobra.Command {
 
 	cmd := cobra.Command{
 		Use:   "remove",
-		Short: "Remove a user",
+		Short: "Remove a user [Root Only]",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 

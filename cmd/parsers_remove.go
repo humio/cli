@@ -22,10 +22,9 @@ import (
 
 func newParsersRemoveCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:     "remove [flags] <repo> <parser>",
-		Aliases: []string{"rm", "uninstall"},
-		Short:   "Remove (uninstall) a parser from a repository.",
-		Args:    cobra.ExactArgs(2),
+		Use:   "remove [flags] <repo> <parser>",
+		Short: "Remove (uninstall) a parser from a repository.",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			repo := args[0]
 			parser := args[1]

@@ -22,7 +22,7 @@ import (
 
 func newParsersListCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "list",
+		Use:   "list [flags] <repo>",
 		Short: "List all installed parsers in a repository.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

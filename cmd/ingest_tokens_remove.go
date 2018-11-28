@@ -23,7 +23,6 @@ import (
 func newIngestTokensRemoveCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       "remove [flags] <repo> <token-name>",
-		Aliases:   []string{"rm"},
 		Short:     "Removes an ingest token.",
 		Long:      `Removes the ingest token with name '<token-name>' from the repository with name '<repo>'.`,
 		ValidArgs: []string{"repo", "token-name"},

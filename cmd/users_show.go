@@ -23,7 +23,7 @@ import (
 func newUsersShowCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "show [flags] <username>",
-		Short: "Show details about a user.",
+		Short: "Show details about a user [Root Only]",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			username := args[0]

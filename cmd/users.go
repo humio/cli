@@ -51,6 +51,7 @@ func printUserTable(user api.User) {
 		[]string{"Name", user.FullName},
 		[]string{"Is Root", yesNo(user.IsRoot)},
 		[]string{"Roles", strings.Join(userRoleNames(user), ", ")},
+		[]string{"Email", user.Email},
 		[]string{"Created At", user.CreatedAt},
 		[]string{"Country Code", user.CountryCode},
 		[]string{"Company", user.Company},

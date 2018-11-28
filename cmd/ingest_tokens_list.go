@@ -23,10 +23,9 @@ import (
 
 func newIngestTokensListCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "list [flags] <repo>",
-		Aliases: []string{"ls"},
-		Short:   "List all ingest tokens in a repository.",
-		Args:    cobra.ExactArgs(1),
+		Use:   "list [flags] <repo>",
+		Short: "List all ingest tokens in a repository.",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			repo := args[0]

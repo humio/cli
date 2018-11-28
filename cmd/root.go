@@ -20,7 +20,6 @@ import (
 	"path"
 
 	"github.com/humio/cli/api"
-	"github.com/humio/cli/prompt"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -102,6 +101,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newLoginCmd())
 	rootCmd.AddCommand(newIngestTokensCmd())
 	rootCmd.AddCommand(newViewsCmd())
+	rootCmd.AddCommand(newCompletionCmd())
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -126,11 +126,7 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	err := viper.ReadInConfig()
-	if err == nil {
-		prompt.Output("Using config file: " + cfgFile)
-		prompt.Output("Cluster address: " + viper.GetString("address"))
-	}
+	viper.ReadInConfig()
 }
 
 func NewApiClient(cmd *cobra.Command) *api.Client {

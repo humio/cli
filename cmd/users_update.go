@@ -28,7 +28,7 @@ func newUsersUpdateCmd() *cobra.Command {
 
 	cmd := cobra.Command{
 		Use:   "update",
-		Short: "Updates a user's settings and global permissions.",
+		Short: "Updates a user's settings [Root Only]",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
