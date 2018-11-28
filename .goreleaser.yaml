@@ -34,9 +34,6 @@ archive:
     amd64: 64-bit
     darwin: macOS
     linux: Linux
-  files:
-    - LICENSE.md
-    - CHANGELOG.md
   format_overrides:
     - goos: windows
       format: zip

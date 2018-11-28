@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 
@@ -25,9 +26,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
-var token string
-var address string
+var cfgFile, tokenFile, token, address string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd *cobra.Command
@@ -90,10 +89,12 @@ Common Management Commands:
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.humio/config.yaml)")
 	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "The API token to user when talking to Humio. Overrides the value in your config file.")
+	rootCmd.PersistentFlags().StringVar(&tokenFile, "token-file", "", "File path to a file containing the API token. Overrides the value in your config file and the value of --token.")
 	rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "", "The HTTP address of the Humio cluster. Overrides the value in your config file.")
 
 	viper.BindPFlag("address", rootCmd.PersistentFlags().Lookup("address"))
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
+	viper.BindPFlag("token-file", rootCmd.PersistentFlags().Lookup("token-file"))
 
 	rootCmd.AddCommand(newUsersCmd())
 	rootCmd.AddCommand(newParsersCmd())
@@ -127,6 +128,15 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	viper.ReadInConfig()
+
+	if tokenFile != "" {
+		tokenFileContent, tokenFileErr := ioutil.ReadFile(tokenFile)
+		if tokenFileErr != nil {
+			fmt.Println(fmt.Sprintf("error loading token file: %s", tokenFileErr))
+			os.Exit(1)
+		}
+		viper.Set("token", string(tokenFileContent))
+	}
 }
 
 func NewApiClient(cmd *cobra.Command) *api.Client {
