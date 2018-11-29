@@ -80,6 +80,13 @@ Common Management Commands:
 				}
 			}
 		},
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			if cmd.Name() != "login" {
+				cmd.Println()
+				cmd.Println("Humio Address:", viper.GetString("address"))
+				cmd.Println()
+			}
+		},
 	}
 
 	cobra.OnInitialize(initConfig)
@@ -141,11 +148,7 @@ func initConfig() {
 }
 
 func NewApiClient(cmd *cobra.Command) *api.Client {
-	config := api.DefaultConfig()
-	config.Address = viper.GetString("address")
-	config.Token = viper.GetString("token")
-
-	client, err := api.NewClient(config)
+	client, err := NewApiClientE(cmd)
 
 	if err != nil {
 		fmt.Println(fmt.Errorf("Error creating HTTP client: %s", err))
@@ -153,4 +156,12 @@ func NewApiClient(cmd *cobra.Command) *api.Client {
 	}
 
 	return client
+}
+
+func NewApiClientE(cmd *cobra.Command) (*api.Client, error) {
+	config := api.DefaultConfig()
+	config.Address = viper.GetString("address")
+	config.Token = viper.GetString("token")
+
+	return api.NewClient(config)
 }
