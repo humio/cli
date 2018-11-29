@@ -103,6 +103,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newIngestTokensCmd())
 	rootCmd.AddCommand(newViewsCmd())
 	rootCmd.AddCommand(newCompletionCmd())
+	rootCmd.AddCommand(newLicenseCmd())
 }
 
 // initConfig reads in config file and ENV variables if set.
