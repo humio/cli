@@ -15,8 +15,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -25,21 +23,14 @@ func newUsersShowCmd() *cobra.Command {
 		Use:   "show [flags] <username>",
 		Short: "Show details about a user [Root Only]",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			username := args[0]
 
-			// Get the HTTP client
 			client := NewApiClient(cmd)
-
 			user, err := client.Users().Get(username)
+			exitOnError(cmd, err, "Error fetching user")
 
-			if err != nil {
-				return fmt.Errorf("Error fetching user: %s", err)
-			}
-
-			printUserTable(user)
-
-			return nil
+			printUserTable(cmd, user)
 		},
 	}
 

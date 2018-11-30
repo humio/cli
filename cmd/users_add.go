@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
@@ -30,7 +31,7 @@ func newUsersAddCmd() *cobra.Command {
 		Use:   "add",
 		Short: "Adds a user.",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 
 			username := args[0]
 
@@ -46,12 +47,11 @@ func newUsersAddCmd() *cobra.Command {
 			})
 
 			if err != nil {
-				return fmt.Errorf("Error creating the user: %s", err)
+				cmd.Println(fmt.Errorf("Error creating the user: %s", err))
+				os.Exit(1)
 			}
 
-			printUserTable(user)
-
-			return nil
+			printUserTable(cmd, user)
 		},
 	}
 

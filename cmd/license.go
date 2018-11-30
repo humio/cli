@@ -15,7 +15,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/humio/cli/api"
@@ -36,7 +35,7 @@ func newLicenseCmd() *cobra.Command {
 	return cmd
 }
 
-func printLicenseInfo(license api.LicenseData) {
+func printLicenseInfo(cmd *cobra.Command, license api.LicenseData) {
 
 	data := [][]string{
 		[]string{"Issued At", license.IssuedAt},
@@ -49,7 +48,7 @@ func printLicenseInfo(license api.LicenseData) {
 	w.SetColumnSeparator(":")
 	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
 
-	fmt.Println()
+	cmd.Println()
 	w.Render()
-	fmt.Println()
+	cmd.Println()
 }

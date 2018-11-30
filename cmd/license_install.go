@@ -35,7 +35,7 @@ func newLicenseInstallCmd() *cobra.Command {
 
 				licenseBytes, readErr := ioutil.ReadFile(filepath)
 				if readErr != nil {
-					fmt.Println(fmt.Errorf("error reading license file: %s", readErr))
+					cmd.Println(fmt.Errorf("error reading license file: %s", readErr))
 					os.Exit(1)
 				}
 
@@ -43,7 +43,7 @@ func newLicenseInstallCmd() *cobra.Command {
 			} else if license != "" {
 				// License set from flag
 			} else {
-				fmt.Println("Expected either an argument <filename> or flag --license=<license>.")
+				cmd.Println("Expected either an argument <filename> or flag --license=<license>.")
 				cmd.Help()
 				os.Exit(1)
 			}
@@ -52,11 +52,11 @@ func newLicenseInstallCmd() *cobra.Command {
 			installErr := client.License().Install(license)
 
 			if installErr != nil {
-				fmt.Println(fmt.Errorf("error installing license: %s", installErr))
+				cmd.Println(fmt.Errorf("error installing license: %s", installErr))
 				os.Exit(1)
 			}
 
-			fmt.Println("License installed")
+			cmd.Println("License installed")
 		},
 	}
 

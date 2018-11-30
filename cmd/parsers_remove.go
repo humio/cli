@@ -15,8 +15,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -25,19 +23,14 @@ func newParsersRemoveCmd() *cobra.Command {
 		Use:   "remove [flags] <repo> <parser>",
 		Short: "Remove (uninstall) a parser from a repository.",
 		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
 			parser := args[1]
 
-			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			err := client.Parsers().Remove(repo, parser)
-			if err != nil {
-				return fmt.Errorf("Error removing parser: %s", err)
-			}
-
-			return nil
+			apiError := client.Parsers().Remove(repo, parser)
+			exitOnError(cmd, apiError, "Error removing parser: %s")
 		},
 	}
 

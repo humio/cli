@@ -44,7 +44,7 @@ func formatSimpleAccount(account api.User) string {
 	return strings.Join(columns, " | ")
 }
 
-func printUserTable(user api.User) {
+func printUserTable(cmd *cobra.Command, user api.User) {
 
 	data := [][]string{
 		[]string{"Username", user.Username},

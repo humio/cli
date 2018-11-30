@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
@@ -26,8 +27,7 @@ func newIngestTokensListCmd() *cobra.Command {
 		Use:   "list [flags] <repo>",
 		Short: "List all ingest tokens in a repository.",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-
+		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
 
 			// Get the HTTP client
@@ -36,7 +36,8 @@ func newIngestTokensListCmd() *cobra.Command {
 			tokens, err := client.IngestTokens().List(repo)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching token list: %s", err)
+				cmd.Println(fmt.Errorf("Error fetching token list: %s", err))
+				os.Exit(1)
 			}
 
 			var output []string
@@ -48,11 +49,9 @@ func newIngestTokensListCmd() *cobra.Command {
 
 			table := columnize.SimpleFormat(output)
 
-			fmt.Println()
-			fmt.Println(table)
-			fmt.Println()
-
-			return nil
+			cmd.Println()
+			cmd.Println(table)
+			cmd.Println()
 		},
 	}
 

@@ -15,9 +15,6 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
@@ -30,12 +27,8 @@ func newViewsListCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
-			views, err := client.Views().List()
-
-			if err != nil {
-				cmd.Println(fmt.Errorf("error fetching view list: %s", err))
-				os.Exit(1)
-			}
+			views, apiErr := client.Views().List()
+			exitOnError(cmd, apiErr, "Error while fetching view list")
 
 			rows := make([][]string, len(views))
 			for i, view := range views {
@@ -46,9 +39,9 @@ func newViewsListCmd() *cobra.Command {
 			w.AppendBulk(rows)
 			w.SetBorder(false)
 
-			fmt.Println()
+			cmd.Println()
 			w.Render()
-			fmt.Println()
+			cmd.Println()
 		},
 	}
 }

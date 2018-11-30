@@ -15,8 +15,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -25,23 +23,17 @@ func newViewsShowCmd() *cobra.Command {
 		Use:   "show [flags] <view>",
 		Short: "Show details about a view.",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			viewName := args[0]
 
-			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			view, err := client.Views().Get(viewName)
-
-			if err != nil {
-				return fmt.Errorf("Error fetching view: %s", err)
-			}
+			view, apiErr := client.Views().Get(viewName)
+			exitOnError(cmd, apiErr, "Error fetching view")
 
 			printViewTable(view)
 
 			printViewRoleTable(view)
-
-			return nil
 		},
 	}
 

@@ -52,9 +52,9 @@ use the assigned parser at ingest time.`,
 
 			table := columnize.SimpleFormat(output)
 
-			fmt.Println()
-			fmt.Println(table)
-			fmt.Println()
+			cmd.Println()
+			cmd.Println(table)
+			cmd.Println()
 
 			return nil
 		},

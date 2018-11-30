@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
@@ -29,7 +30,7 @@ func newParsersExportCmd() *cobra.Command {
 		Use:   "export [flags] <repo> <parser>",
 		Short: "Export a parser <parser> in <repo> to a file.",
 		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
 			parserName := args[1]
 
@@ -42,21 +43,22 @@ func newParsersExportCmd() *cobra.Command {
 
 			parser, apiErr := client.Parsers().Get(repo, parserName)
 			if apiErr != nil {
-				return fmt.Errorf("Error fetching parsers: %s", apiErr)
+				cmd.Println(fmt.Errorf("Error fetching parsers: %s", apiErr))
+				os.Exit(1)
 			}
 
 			yamlData, yamlErr := yaml.Marshal(&parser)
 			if yamlErr != nil {
-				return (fmt.Errorf("Failed to serialize the parser: %s", yamlErr))
+				cmd.Println(fmt.Errorf("Failed to serialize the parser: %s", yamlErr))
+				os.Exit(1)
 			}
 			outFilePath := outputName + ".yaml"
 
 			writeErr := ioutil.WriteFile(outFilePath, yamlData, 0644)
 			if writeErr != nil {
-				return (fmt.Errorf("Error saving the parser file: %s", writeErr))
+				cmd.Println(fmt.Errorf("Error saving the parser file: %s", writeErr))
+				os.Exit(1)
 			}
-
-			return nil
 		},
 	}
 

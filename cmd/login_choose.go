@@ -34,10 +34,11 @@ func newLoginChooseCmd() *cobra.Command {
 			viper.Set("token", token)
 
 			if saveErr := saveConfig(); saveErr != nil {
-				fmt.Println(fmt.Errorf("error saving config: %s", saveErr))
-				os.Exit(1)
+				exitOnError(cmd, saveErr, "error saving config")
 			}
+
 			prompt.Info(fmt.Sprintf("Switched to account: '%s'", accountName))
+
 			cmd.Println()
 			prompt.Output("Address: " + address)
 			if username != "" {

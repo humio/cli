@@ -44,7 +44,7 @@ func newParsersListCmd() *cobra.Command {
 				output = append(output, fmt.Sprintf("%v | %v", parser.Name, checkmark(!parser.IsBuiltIn)))
 			}
 
-			printTable(output)
+			printTable(cmd, output)
 
 			return nil
 		},

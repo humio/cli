@@ -41,7 +41,7 @@ In the config file already exists, the settings will be merged into the existing
 			} else {
 				prompt.Output("")
 				owl := "[purple]" + prompt.Owl() + "[reset]"
-				fmt.Print((prompt.Colorize(owl)))
+				cmd.Print((prompt.Colorize(owl)))
 				prompt.Output("")
 				prompt.Title("Welcome to Humio")
 				prompt.Output("")
@@ -129,22 +129,22 @@ In the config file already exists, the settings will be merged into the existing
 				}
 
 				prompt.Output("")
-				fmt.Print("==> Testing Connection...")
+				cmd.Print("==> Testing Connection...")
 
 				status, statusErr := client.Status()
 
 				if statusErr != nil {
-					fmt.Println(prompt.Colorize("[[red]Failed[reset]]"))
+					cmd.Println(prompt.Colorize("[[red]Failed[reset]]"))
 					prompt.Output("")
 					prompt.Error(fmt.Sprintf("Could not connect to the Humio server: %s\nIs the address connect and reachable?", statusErr))
 					continue
 				}
 
 				if status.Status != "ok" {
-					fmt.Println(prompt.Colorize("[[red]Failed[reset]]"))
+					cmd.Println(prompt.Colorize("[[red]Failed[reset]]"))
 					return (fmt.Errorf("The server reported that is is malfunctioning, status: %s", status.Status))
 				} else {
-					fmt.Println(prompt.Colorize("[[green]Ok[reset]]"))
+					cmd.Println(prompt.Colorize("[[green]Ok[reset]]"))
 				}
 
 				fmt.Println("")

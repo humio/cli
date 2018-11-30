@@ -15,8 +15,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -25,26 +23,21 @@ func newUsersListCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "list",
 		Short: "Lists all users. [Root Only]",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
 			users, err := client.Users().List()
-
-			if err != nil {
-				return fmt.Errorf("error fetching user list: %s", err)
-			}
+			exitOnError(cmd, err, "error fetching user list")
 
 			rows := make([]string, len(users))
 			for i, user := range users {
 				rows[i] = formatSimpleAccount(user)
 			}
 
-			printTable(append([]string{
+			printTable(cmd, append([]string{
 				"Username | Name | Root | Created"},
 				rows...,
 			))
-
-			return nil
 		},
 	}
 }

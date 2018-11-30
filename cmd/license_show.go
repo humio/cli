@@ -32,11 +32,11 @@ func newLicenseShowCmd() *cobra.Command {
 			license, apiErr := client.License().Get()
 
 			if apiErr != nil {
-				fmt.Println(fmt.Errorf("error fetching the license: %s", apiErr))
+				cmd.Println(fmt.Errorf("error fetching the license: %s", apiErr))
 				os.Exit(1)
 			}
 
-			printLicenseInfo(license)
+			printLicenseInfo(cmd, license)
 		},
 	}
 
