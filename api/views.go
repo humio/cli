@@ -36,3 +36,19 @@ func (c *Views) Get(name string) (View, error) {
 
 	return q.View, graphqlErr
 }
+
+type ViewListItem struct {
+	Name string
+}
+
+func (c *Views) List() ([]ViewListItem, error) {
+	var q struct {
+		View []ViewListItem `graphql:"searchDomains"`
+	}
+
+	variables := map[string]interface{}{}
+
+	graphqlErr := c.client.Query(&q, variables)
+
+	return q.View, graphqlErr
+}
