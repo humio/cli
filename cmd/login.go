@@ -34,19 +34,20 @@ In the config file already exists, the settings will be merged into the existing
 			var addr, token string
 			var err error
 			accounts := viper.GetStringMap("accounts")
+			out := prompt.NewPrompt(cmd.OutOrStdout())
 
 			if len(accounts) > 0 {
-				prompt.Output("")
-				prompt.Title("Add another account")
+				out.Output("")
+				out.Title("Add another account")
 			} else {
-				prompt.Output("")
+				out.Output("")
 				owl := "[purple]" + prompt.Owl() + "[reset]"
-				cmd.Print((prompt.Colorize(owl)))
-				prompt.Output("")
-				prompt.Title("Welcome to Humio")
-				prompt.Output("")
-				prompt.Description("This will guide you through setting up the Humio CLI.")
-				prompt.Output("")
+				out.Print((prompt.Colorize(owl)))
+				out.Output("")
+				out.Title("Welcome to Humio")
+				out.Output("")
+				out.Description("This will guide you through setting up the Humio CLI.")
+				out.Output("")
 			}
 
 			if currentAddr := viper.GetString("address"); currentAddr != "" {
@@ -62,57 +63,54 @@ In the config file already exists, the settings will be merged into the existing
 					}
 
 					if currentName == "" {
-						prompt.Output("")
-						prompt.Output("You are currently logged in an unnamed account (address/token).")
-						prompt.Output("Would you like to name the account before logging in with another?")
-						prompt.Output("This way you can quickly switch between accounts and servers.")
-						prompt.Output("")
+						out.Output()
+						out.Output("You are currently logged in an unnamed account (address/token).")
+						out.Output("Would you like to name the account before logging in with another?")
+						out.Output("This way you can quickly switch between accounts and servers.")
+						out.Output()
 
 						client := NewApiClient(cmd)
 						username, usernameErr := client.Viewer().Username()
 
-						prompt.Output("Server: " + currentAddr)
+						out.Output("Server: " + currentAddr)
 
 						if usernameErr != nil {
-							prompt.Output(prompt.Colorize("Username: [red][Error] - Invalid token or bad network connection.[reset]"))
+							out.Output(prompt.Colorize("Username: [red][Error] - Invalid token or bad network connection.[reset]"))
 						} else {
-							prompt.Output("Username: " + username)
+							out.Output("Username: " + username)
 						}
 
-						prompt.Output("")
-						if prompt.Confirm("Do you want to save this account?") {
-							prompt.Output("")
-							addAccount(cmd, currentAddr, currentToken, username)
+						out.Output()
+						if out.Confirm("Do you want to save this account?") {
+							out.Output()
+							addAccount(out, currentAddr, currentToken, username)
 						}
 					}
 				}
-				prompt.Output("")
+				out.Output()
 			}
 
-			prompt.Info("Which Humio instance should we talk to?")
-			prompt.Output("")
-			prompt.Description("If you are not using Humio Cloud enter the address of your Humio installation,")
-			prompt.Description("e.g. http://localhost:8080/ or https://humio.example.com/")
+			out.Info("Which Humio instance should we talk to?")
+			out.Output()
+			out.Description("If you are not using Humio Cloud enter the address of your Humio installation,")
+			out.Description("e.g. http://localhost:8080/ or https://humio.example.com/")
 
 			for true {
-				prompt.Output("")
-				prompt.Output("Default: https://cloud.humio.com/ [Hit Enter]")
-				addr, err = prompt.Ask("Humio Address")
+				out.Output("")
+				addr, err = out.Ask("Address (default: https://cloud.humio.com/ [Hit Enter])")
 
 				if addr == "" {
 					addr = "https://cloud.humio.com/"
 				}
 
-				if err != nil {
-					return fmt.Errorf("error reading humio server address: %s", err)
-				}
+				exitOnError(cmd, err, "error reading humio server address")
 
 				// Make sure it is a valid URL and that
 				// we always end in a slash.
 				_, urlErr := url.ParseRequestURI(addr)
 
 				if urlErr != nil {
-					prompt.Error("The valus must be a valid URL.")
+					out.Error("The valus must be a valid URL.")
 					continue
 				}
 
@@ -128,21 +126,22 @@ In the config file already exists, the settings will be merged into the existing
 					return (fmt.Errorf("error initializing the http client: %s", apiErr))
 				}
 
-				prompt.Output("")
+				out.Output("")
 				cmd.Print("==> Testing Connection...")
 
 				status, statusErr := client.Status()
 
 				if statusErr != nil {
 					cmd.Println(prompt.Colorize("[[red]Failed[reset]]"))
-					prompt.Output("")
-					prompt.Error(fmt.Sprintf("Could not connect to the Humio server: %s\nIs the address connect and reachable?", statusErr))
+					out.Output()
+					out.Error(fmt.Sprintf("Could not connect to the Humio server: %s\nIs the address connect and reachable?", statusErr))
 					continue
 				}
 
 				if status.Status != "ok" {
 					cmd.Println(prompt.Colorize("[[red]Failed[reset]]"))
-					return (fmt.Errorf("The server reported that is is malfunctioning, status: %s", status.Status))
+					cmd.Println(fmt.Errorf("The server reported that is is malfunctioning, status: %s", status.Status))
+					os.Exit(1)
 				} else {
 					cmd.Println(prompt.Colorize("[[green]Ok[reset]]"))
 				}
@@ -151,29 +150,28 @@ In the config file already exists, the settings will be merged into the existing
 				break
 			}
 
-			prompt.Info("Paste in your Personal API Token")
-			prompt.Description("")
-			prompt.Description("To use Humio's CLI you will need to get a copy of your API Token.")
-			prompt.Description("The API token can be found in your 'Account Settings' section of the UI.")
-			prompt.Description("If you are running Humio without authorization just leave the API Token field empty.")
-			prompt.Description("")
+			out.Info("Paste in your Personal API Token")
+			out.Output()
+			out.Description("To use Humio's CLI you will need to get a copy of your API Token.")
+			out.Description("The API token can be found in your 'Account Settings' section of the UI.")
+			out.Description("If you are running Humio without authorization just leave the API Token field empty.")
+			out.Output()
 
-			if prompt.Confirm("Would you like us to open a browser on the account page?") {
+			if out.Confirm("Would you like us to open a browser on the account page?") {
 				open.Start(fmt.Sprintf("%ssettings", addr))
 
-				prompt.Description("")
-				prompt.Description(fmt.Sprintf("If the browser did not open, you can manually visit:"))
-				prompt.Description(fmt.Sprintf("%ssettings", addr))
-				prompt.Description("")
+				out.Output()
+				out.Description(fmt.Sprintf("If the browser did not open, you can manually visit:"))
+				out.Description(fmt.Sprintf("%ssettings", addr))
+				out.Output()
 			}
+
+			out.Output()
 
 			var username string
 			for true {
-				token, err = prompt.AskSecret("API Token")
-
-				if err != nil {
-					return (fmt.Errorf("error reading token: %s", err))
-				}
+				token, err = out.AskSecret("API Token")
+				exitOnError(cmd, err, "error reading token")
 
 				// Create a new API client with the token
 				config := api.DefaultConfig()
@@ -189,16 +187,16 @@ In the config file already exists, the settings will be merged into the existing
 				username, apiErr = client.Viewer().Username()
 
 				if apiErr != nil {
-					prompt.Error("Authentication failed, invalid token")
+					out.Error("Authentication failed, invalid token")
 
-					if prompt.Confirm("Do you want to use another token?") {
+					if out.Confirm("Do you want to use another token?") {
 						continue
 					}
 				}
 
 				if username != "" {
-					cmd.Println()
-					cmd.Println()
+					out.Output()
+					out.Output()
 					cmd.Println(prompt.Colorize(fmt.Sprintf("==> Logged in as: [purple]%s[reset]", username)))
 				}
 
@@ -209,8 +207,9 @@ In the config file already exists, the settings will be merged into the existing
 			viper.Set("address", addr)
 			viper.Set("token", token)
 
-			if len(accounts) > 0 && prompt.Confirm("Would you like to give this account a name?") {
-				addAccount(cmd, addr, token, username)
+			if len(accounts) > 0 && out.Confirm("Would you like to give this account a name?") {
+				out.Output()
+				addAccount(out, addr, token, username)
 			}
 
 			configFile := viper.ConfigFileUsed()
@@ -222,7 +221,7 @@ In the config file already exists, the settings will be merged into the existing
 			}
 
 			cmd.Println()
-			prompt.Output("Bye bye now! 🎉")
+			out.Output("Bye bye now! 🎉")
 			cmd.Println("")
 
 			return nil
@@ -253,21 +252,21 @@ func saveConfig() error {
 	return nil
 }
 
-func addAccount(cmd *cobra.Command, address string, token string, username string) {
-	prompt.Description("Example names: dev, prod, cloud, root")
+func addAccount(out *prompt.Prompt, address string, token string, username string) {
+	out.Description("Example names: dev, prod, cloud, root")
 
 	for true {
-		newName, chooseErr := prompt.Ask("Choose a name for the account")
+		newName, chooseErr := out.Ask("Choose a name for the account")
 		if chooseErr != nil {
-			cmd.Println(fmt.Errorf("error reading input %s", chooseErr))
+			out.Output(fmt.Errorf("error reading input %s", chooseErr))
 			os.Exit(1)
 		}
 		newName = strings.TrimSpace(newName)
 		if newName == "" {
-			prompt.Error("Name cannot be blank.")
+			out.Error("Name cannot be blank.")
 			continue
 		} else if newName == "list" || newName == "add" || newName == "remove" {
-			prompt.Error("The names `list`, `add`, and `remove` are reserved. Choose another.")
+			out.Error("The names `list`, `add`, and `remove` are reserved. Choose another.")
 			continue
 		}
 
@@ -281,9 +280,9 @@ func addAccount(cmd *cobra.Command, address string, token string, username strin
 
 		viper.Set("accounts", accounts)
 
-		prompt.Output("")
-		prompt.Info("Account Saved")
-		prompt.Output("")
+		out.Output("")
+		out.Info("Account Saved")
+		out.Output("")
 		break
 	}
 }

@@ -18,6 +18,7 @@ func newLoginChooseCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			accounts := viper.GetStringMap("accounts")
 			accountName := args[0]
+			out := prompt.NewPrompt(cmd.OutOrStdout())
 
 			account := accounts[accountName]
 
@@ -37,12 +38,12 @@ func newLoginChooseCmd() *cobra.Command {
 				exitOnError(cmd, saveErr, "error saving config")
 			}
 
-			prompt.Info(fmt.Sprintf("Switched to account: '%s'", accountName))
+			out.Info(fmt.Sprintf("Switched to account: '%s'", accountName))
 
 			cmd.Println()
-			prompt.Output("Address: " + address)
+			out.Output("Address: " + address)
 			if username != "" {
-				prompt.Output("Username: " + username)
+				out.Output("Username: " + username)
 			}
 			cmd.Println()
 		},

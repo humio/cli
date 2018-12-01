@@ -3,6 +3,7 @@ package prompt
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -10,9 +11,17 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-func Ask(question string) (string, error) {
+type Prompt struct {
+	Out io.Writer
+}
+
+func NewPrompt(out io.Writer) *Prompt {
+	return &Prompt{Out: out}
+}
+
+func (p *Prompt) Ask(question string) (string, error) {
 	var answer string
-	fmt.Print("   " + question + ": ")
+	fmt.Fprint(p.Out, "  "+question+": ")
 	n, err := fmt.Scanln(&answer)
 
 	if n == 0 {
@@ -26,8 +35,8 @@ func Ask(question string) (string, error) {
 	return answer, nil
 }
 
-func Confirm(text string) bool {
-	fmt.Print("   " + text + " [Y/n]: ")
+func (p *Prompt) Confirm(text string) bool {
+	p.Print(text + " [Y/n]: ")
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -47,40 +56,45 @@ func Confirm(text string) bool {
 	}
 }
 
-func AskSecret(question string) (string, error) {
-	fmt.Print("   " + question + ": ")
+func (p *Prompt) AskSecret(question string) (string, error) {
+	p.Print(question + ": ")
 	bytes, err := terminal.ReadPassword(0)
 
 	if err != nil {
 		return "", err
 	}
 
-	fmt.Print("***********************\n")
+	fmt.Fprint(p.Out, "***********************\n")
 	return string(bytes), nil
 }
 
-func Output(text string) {
-	fmt.Println("  ", text)
+func (c *Prompt) Print(i ...interface{}) {
+	fmt.Fprint(c.Out, "  ")
+	fmt.Fprint(c.Out, i...)
 }
 
-func Title(text string) {
+func (p *Prompt) Output(i ...interface{}) {
+	p.Print(fmt.Sprintln(i...))
+}
+
+func (p *Prompt) Title(text string) {
 	c := "[underline][bold]" + text + "[reset]"
-	Output(Colorize(c))
+	p.Output(Colorize(c))
 }
 
-func Description(text string) {
+func (p *Prompt) Description(text string) {
 	c := "[gray]" + text + "[reset]"
-	Output(Colorize(c))
+	p.Output(Colorize(c))
 }
 
-func Error(text string) {
+func (p *Prompt) Error(text string) {
 	c := "[red]" + text + "[reset]"
-	Output(Colorize(c))
+	p.Output(Colorize(c))
 }
 
-func Info(text string) {
+func (p *Prompt) Info(text string) {
 	c := "[purple]" + text + "[reset]"
-	Output(Colorize(c))
+	p.Output(Colorize(c))
 }
 
 func Colorize(text string) string {
