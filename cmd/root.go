@@ -111,6 +111,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newViewsCmd())
 	rootCmd.AddCommand(newCompletionCmd())
 	rootCmd.AddCommand(newLicenseCmd())
+	rootCmd.AddCommand(newReposCmd())
 }
 
 // initConfig reads in config file and ENV variables if set.
