@@ -30,7 +30,7 @@ func newLoginCmd() *cobra.Command {
 You can also specify a differant config file to initialize by setting the --config flag.
 In the config file already exists, the settings will be merged into the existing.`,
 		Args: cobra.ExactArgs(0),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			var addr, token string
 			var err error
 			accounts := viper.GetStringMap("accounts")
@@ -121,10 +121,7 @@ In the config file already exists, the settings will be merged into the existing
 				clientConfig := api.DefaultConfig()
 				clientConfig.Address = addr
 				client, apiErr := api.NewClient(clientConfig)
-
-				if apiErr != nil {
-					return (fmt.Errorf("error initializing the http client: %s", apiErr))
-				}
+				exitOnError(cmd, apiErr, "error initializing the API client")
 
 				out.Output("")
 				cmd.Print("==> Testing Connection...")
@@ -179,9 +176,7 @@ In the config file already exists, the settings will be merged into the existing
 				config.Token = token
 				client, clientErr := api.NewClient(config)
 
-				if clientErr != nil {
-					return fmt.Errorf("error initializing the http client: %s", clientErr)
-				}
+				exitOnError(cmd, clientErr, "error initializing the http client")
 
 				var apiErr error
 				username, apiErr = client.Viewer().Username()
@@ -222,9 +217,7 @@ In the config file already exists, the settings will be merged into the existing
 
 			cmd.Println()
 			out.Output("Bye bye now! 🎉")
-			cmd.Println("")
-
-			return nil
+			cmd.Println()
 		},
 	}
 
