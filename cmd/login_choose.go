@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-// usersCmd represents the users command
 func newLoginChooseCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "choose <account-name>",

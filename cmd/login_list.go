@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-// usersCmd represents the users command
 func newLoginListCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list [flags]",

@@ -18,7 +18,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// usersCmd represents the users command
 func newParsersCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "parsers",

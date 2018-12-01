@@ -18,7 +18,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// listCmd represents the list command
 func newUsersListCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "list",
