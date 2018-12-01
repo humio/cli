@@ -49,12 +49,8 @@ func newLicenseInstallCmd() *cobra.Command {
 			}
 
 			client := NewApiClient(cmd)
-			installErr := client.License().Install(license)
-
-			if installErr != nil {
-				cmd.Println(fmt.Errorf("error installing license: %s", installErr))
-				os.Exit(1)
-			}
+			installErr := client.Licenses().Install(license)
+			exitOnError(cmd, installErr, "error installing license")
 
 			cmd.Println("License installed")
 		},

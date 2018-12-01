@@ -4,18 +4,57 @@ import (
 	"github.com/shurcooL/graphql"
 )
 
-type License struct {
+type Licenses struct {
 	client *Client
 }
 
-type LicenseData struct {
-	ExpiresAt string
-	IssuedAt  string
+type License interface {
+	ExpiresAt() string
+	IssuedAt() string
+	LicenseType() string
 }
 
-func (c *Client) License() *License { return &License{client: c} }
+type TrialLicense struct {
+	ExpiresAtVal string
+	IssuedAtVal  string
+}
 
-func (p *License) Install(license string) error {
+func (l TrialLicense) LicenseType() string {
+	return "trial"
+}
+
+func (l TrialLicense) IssuedAt() string {
+	return l.IssuedAtVal
+}
+
+func (l TrialLicense) ExpiresAt() string {
+	return l.ExpiresAtVal
+}
+
+type OnPremLicense struct {
+	ID            string
+	ExpiresAtVal  string
+	IssuedAtVal   string
+	IssuedTo      string
+	NumberOfSeats int
+	Fingerprint   string
+}
+
+func (l OnPremLicense) IssuedAt() string {
+	return l.IssuedAtVal
+}
+
+func (l OnPremLicense) ExpiresAt() string {
+	return l.ExpiresAtVal
+}
+
+func (l OnPremLicense) LicenseType() string {
+	return "onprem"
+}
+
+func (c *Client) Licenses() *Licenses { return &Licenses{client: c} }
+
+func (p *Licenses) Install(license string) error {
 
 	var mutation struct {
 		CreateParser struct {
@@ -29,13 +68,43 @@ func (p *License) Install(license string) error {
 	return p.client.Mutate(&mutation, variables)
 }
 
-func (c *License) Get() (LicenseData, error) {
+func (c *Licenses) Get() (License, error) {
 	var query struct {
-		License LicenseData
+		License struct {
+			ExpiresAt string
+			IssuedAt  string
+			OnPrem    struct {
+				ID          string `graphql:"uid"`
+				Owner       string
+				MaxUsers    int
+				Fingerprint string
+			} `graphql:"... on OnPremLicense"`
+		}
 	}
 	variables := map[string]interface{}{}
 
 	err := c.client.Query(&query, variables)
 
-	return query.License, err
+	if err != nil {
+		return nil, err
+	}
+
+	var license License
+	if query.License.OnPrem.ID == "" {
+		license = TrialLicense{
+			ExpiresAtVal: query.License.ExpiresAt,
+			IssuedAtVal:  query.License.IssuedAt,
+		}
+	} else {
+		license = OnPremLicense{
+			ID:            query.License.OnPrem.ID,
+			ExpiresAtVal:  query.License.ExpiresAt,
+			IssuedAtVal:   query.License.IssuedAt,
+			IssuedTo:      query.License.OnPrem.Owner,
+			NumberOfSeats: query.License.OnPrem.MaxUsers,
+			Fingerprint:   query.License.OnPrem.Fingerprint,
+		}
+	}
+
+	return license, nil
 }

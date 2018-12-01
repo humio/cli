@@ -15,9 +15,6 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 )
 
@@ -29,14 +26,10 @@ func newLicenseShowCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
-			license, apiErr := client.License().Get()
-
-			if apiErr != nil {
-				cmd.Println(fmt.Errorf("error fetching the license: %s", apiErr))
-				os.Exit(1)
-			}
-
+			license, apiErr := client.Licenses().Get()
+			exitOnError(cmd, apiErr, "error fetching the license")
 			printLicenseInfo(cmd, license)
+			cmd.Println()
 		},
 	}
 

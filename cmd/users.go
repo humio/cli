@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/humio/cli/api"
@@ -57,7 +56,7 @@ func printUserTable(cmd *cobra.Command, user api.User) {
 		[]string{"Company", user.Company},
 	}
 
-	w := tablewriter.NewWriter(os.Stdout)
+	w := tablewriter.NewWriter(cmd.OutOrStdout())
 	w.AppendBulk(data)
 	w.SetBorder(false)
 	w.SetColumnSeparator(":")

@@ -35,7 +35,7 @@ func newViewsListCmd() *cobra.Command {
 				rows[i] = []string{view.Name}
 			}
 
-			w := tablewriter.NewWriter(cmd.OutOrStderr())
+			w := tablewriter.NewWriter(cmd.OutOrStdout())
 			w.AppendBulk(rows)
 			w.SetBorder(false)
 

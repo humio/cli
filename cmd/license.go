@@ -15,7 +15,7 @@
 package cmd
 
 import (
-	"os"
+	"fmt"
 
 	"github.com/humio/cli/api"
 	"github.com/olekukonko/tablewriter"
@@ -35,20 +35,27 @@ func newLicenseCmd() *cobra.Command {
 	return cmd
 }
 
-func printLicenseInfo(cmd *cobra.Command, license api.LicenseData) {
+func printLicenseInfo(cmd *cobra.Command, license api.License) {
 
-	data := [][]string{
-		[]string{"Issued At", license.IssuedAt},
-		[]string{"Expires At", license.ExpiresAt},
+	var data [][]string
+
+	data = append(data, []string{"License Type", license.LicenseType()})
+
+	if onprem, ok := license.(api.OnPremLicense); ok {
+		data = append(data, []string{"License ID", onprem.ID})
+		data = append(data, []string{"Issued To", onprem.IssuedTo})
+		data = append(data, []string{"Number Of Seats", fmt.Sprintf("%d", onprem.NumberOfSeats)})
+		data = append(data, []string{"Fingerprint (SHA-1)", onprem.Fingerprint})
 	}
 
-	w := tablewriter.NewWriter(os.Stdout)
+	data = append(data, []string{"Issued At", license.IssuedAt()})
+	data = append(data, []string{"Expires At", license.ExpiresAt()})
+
+	w := tablewriter.NewWriter(cmd.OutOrStdout())
 	w.AppendBulk(data)
 	w.SetBorder(false)
 	w.SetColumnSeparator(":")
 	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
 
-	cmd.Println()
 	w.Render()
-	cmd.Println()
 }
