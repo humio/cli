@@ -1,3 +1,8 @@
+Version 0.13.0:
+ - Redo profiles implementation
+ - Better listing of repos
+ - cleanup
+
 Version 0.12.0:
  - Show more license info
  - Don't show help on fatal error
