@@ -112,7 +112,7 @@ func Colorize(text string) string {
 }
 
 func Owl() string {
-	return `    , ,
+	return `  , ,
    (O,o)
    |)__)
    -”-”-

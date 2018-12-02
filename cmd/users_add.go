@@ -29,7 +29,7 @@ func newUsersAddCmd() *cobra.Command {
 
 	cmd := cobra.Command{
 		Use:   "add",
-		Short: "Adds a user.",
+		Short: "Adds a user. [Root Only]",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 

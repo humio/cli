@@ -45,10 +45,6 @@ func init() {
 		Use:   "humio [subcommand] [flags] [arguments]",
 		Short: "A management CLI for Humio.",
 		Long: `
-Environment Setup:
-
-  $ humio login
-
 Sending Data:
 
   Humio's CLI is not a replacement for fully-featured data-shippers like
@@ -72,7 +68,7 @@ Common Management Commands:
 			// If no token or address flags are passed
 			// and no configuration file exists, run login.
 			if viper.GetString("token") == "" && viper.GetString("address") == "" {
-				newLoginCmd().Execute()
+				newWelcomeCmd().Execute()
 			} else {
 				err := cmd.Help()
 				if err != nil {
@@ -81,7 +77,7 @@ Common Management Commands:
 			}
 		},
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			if cmd.Name() != "login" {
+			if cmd.Name() != "welcome" && cmd.Name() != "humio" {
 				cmd.Println()
 				cmd.Println("Humio Address:", viper.GetString("address"))
 				cmd.Println()
@@ -106,12 +102,15 @@ Common Management Commands:
 	rootCmd.AddCommand(newUsersCmd())
 	rootCmd.AddCommand(newParsersCmd())
 	rootCmd.AddCommand(newIngestCmd())
-	rootCmd.AddCommand(newLoginCmd())
+	rootCmd.AddCommand(newProfilesCmd())
 	rootCmd.AddCommand(newIngestTokensCmd())
 	rootCmd.AddCommand(newViewsCmd())
 	rootCmd.AddCommand(newCompletionCmd())
 	rootCmd.AddCommand(newLicenseCmd())
 	rootCmd.AddCommand(newReposCmd())
+
+	// Hidden Commands
+	rootCmd.AddCommand(newWelcomeCmd())
 }
 
 // initConfig reads in config file and ENV variables if set.
