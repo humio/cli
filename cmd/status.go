@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/humio/cli/prompt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -30,14 +31,14 @@ func newStatusCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 			serverStatus, serverErr := client.Status()
-			exitOnError(cmd, serverErr, "error connecting to server")
+			exitOnError(cmd, serverErr, "error getting server status")
 
 			username, usernameErr := client.Viewer().Username()
 			exitOnError(cmd, usernameErr, "error getting the current user")
 
 			data := [][]string{
+				[]string{"Status", formatStatusText(serverStatus.Status)},
 				[]string{"Address", viper.GetString("address")},
-				[]string{"Status", serverStatus.Status},
 				[]string{"Version", serverStatus.Version},
 				[]string{"Username", username},
 			}
@@ -57,4 +58,11 @@ func newStatusCmd() *cobra.Command {
 	cmd.AddCommand(newLicenseShowCmd())
 
 	return cmd
+}
+
+func formatStatusText(statusText string) string {
+	if statusText == "ok" {
+		return prompt.Colorize("[green]ok[reset]")
+	}
+	return prompt.Colorize(fmt.Sprintf("[red]%s[reset]", statusText))
 }
