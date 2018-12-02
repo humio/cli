@@ -1,3 +1,6 @@
+Version 0.14.0:
+ - Allow specifying profile name as a flag
+
 Version 0.13.0:
  - Redo profiles implementation
  - Better listing of repos
