@@ -138,6 +138,7 @@ func initConfig() {
 	// If a config file is found, read it in.
 	viper.ReadInConfig()
 
+	// If the user has specified a profile flag, load it.
 	if profileFlag != "" {
 		profile, loadErr := loadProfile(profileFlag)
 		if loadErr != nil {
