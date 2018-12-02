@@ -63,6 +63,7 @@ Common Management Commands:
   users <subcommand>
   parsers <subcommand>
   views <subcommand>
+	status
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// If no token or address flags are passed
@@ -109,6 +110,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newCompletionCmd())
 	rootCmd.AddCommand(newLicenseCmd())
 	rootCmd.AddCommand(newReposCmd())
+	rootCmd.AddCommand(newStatusCmd())
 
 	// Hidden Commands
 	rootCmd.AddCommand(newWelcomeCmd())
