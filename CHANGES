@@ -1,3 +1,6 @@
+Version 0.15.1:
+ - style status output
+
 Version 0.15.0:
  - Add status command
  - Improve view listing
