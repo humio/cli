@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
@@ -15,21 +14,13 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 		Short: "Choose one of your profiles to be the default.",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			profiles := viper.GetStringMap("profiles")
 			profileName := args[0]
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 
-			profile := profiles[profileName]
-
-			if profile == nil {
-				cmd.Println(fmt.Errorf("unknown profile %s", profileName))
-				os.Exit(1)
-			}
-
-			address := getMapKey(profile, "address")
-			token := getMapKey(profile, "token")
-			viper.Set("address", address)
-			viper.Set("token", token)
+			profile, loadErr := loadProfile(profileName)
+			exitOnError(cmd, loadErr, "profile not found")
+			viper.Set("address", profile.address)
+			viper.Set("token", profile.token)
 
 			saveErr := saveConfig()
 			exitOnError(cmd, saveErr, "error saving config")
@@ -37,10 +28,23 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 			out.Info(fmt.Sprintf("Default profile set to '%s'", profileName))
 
 			cmd.Println()
-			out.Output("Address: " + address)
+			out.Output("Address: " + viper.GetString("address"))
 			cmd.Println()
 		},
 	}
 
 	return cmd
+}
+
+func loadProfile(profileName string) (*Login, error) {
+	profiles := viper.GetStringMap("profiles")
+	profileData := profiles[profileName]
+
+	if profileData == nil {
+		return nil, fmt.Errorf("unknown profile %s", profileName)
+	}
+
+	profile := Login{address: getMapKey(profileData, "address"), token: getMapKey(profileData, "token")}
+
+	return &profile, nil
 }

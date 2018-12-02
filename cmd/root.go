@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile, tokenFile, token, address string
+var cfgFile, tokenFile, token, address, profileFlag string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd *cobra.Command
@@ -90,6 +90,7 @@ Common Management Commands:
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
+	rootCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "p", "", "name of the config profile to use")
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.humio/config.yaml)")
 	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "The API token to user when talking to Humio. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().StringVar(&tokenFile, "token-file", "", "File path to a file containing the API token. Overrides the value in your config file and the value of --token.")
@@ -137,6 +138,22 @@ func initConfig() {
 	// If a config file is found, read it in.
 	viper.ReadInConfig()
 
+	if profileFlag != "" {
+		profile, loadErr := loadProfile(profileFlag)
+		if loadErr != nil {
+			fmt.Println(fmt.Errorf("failed to load profile: %s", loadErr))
+			os.Exit(1)
+		}
+
+		// Explicitly bound address or token have precedence
+		if address == "" {
+			viper.Set("address", profile.address)
+		}
+		if token == "" {
+			viper.Set("token", profile.token)
+		}
+	}
+
 	if tokenFile != "" {
 		tokenFileContent, tokenFileErr := ioutil.ReadFile(tokenFile)
 		if tokenFileErr != nil {
@@ -148,7 +165,7 @@ func initConfig() {
 }
 
 func NewApiClient(cmd *cobra.Command) *api.Client {
-	client, err := NewApiClientE(cmd)
+	client, err := newApiClientE(cmd)
 
 	if err != nil {
 		fmt.Println(fmt.Errorf("Error creating HTTP client: %s", err))
@@ -158,7 +175,7 @@ func NewApiClient(cmd *cobra.Command) *api.Client {
 	return client
 }
 
-func NewApiClientE(cmd *cobra.Command) (*api.Client, error) {
+func newApiClientE(cmd *cobra.Command) (*api.Client, error) {
 	config := api.DefaultConfig()
 	config.Address = viper.GetString("address")
 	config.Token = viper.GetString("token")
