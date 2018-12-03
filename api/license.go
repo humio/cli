@@ -37,7 +37,6 @@ type OnPremLicense struct {
 	IssuedAtVal   string
 	IssuedTo      string
 	NumberOfSeats int
-	Fingerprint   string
 }
 
 func (l OnPremLicense) IssuedAt() string {
@@ -74,10 +73,9 @@ func (c *Licenses) Get() (License, error) {
 			ExpiresAt string
 			IssuedAt  string
 			OnPrem    struct {
-				ID          string `graphql:"uid"`
-				Owner       string
-				MaxUsers    int
-				Fingerprint string
+				ID       string `graphql:"uid"`
+				Owner    string
+				MaxUsers int
 			} `graphql:"... on OnPremLicense"`
 		}
 	}
@@ -102,7 +100,6 @@ func (c *Licenses) Get() (License, error) {
 			IssuedAtVal:   query.License.IssuedAt,
 			IssuedTo:      query.License.OnPrem.Owner,
 			NumberOfSeats: query.License.OnPrem.MaxUsers,
-			Fingerprint:   query.License.OnPrem.Fingerprint,
 		}
 	}
 

@@ -44,7 +44,6 @@ func printLicenseInfo(cmd *cobra.Command, license api.License) {
 		data = append(data, []string{"License ID", onprem.ID})
 		data = append(data, []string{"Issued To", onprem.IssuedTo})
 		data = append(data, []string{"Number Of Seats", fmt.Sprintf("%d", onprem.NumberOfSeats)})
-		data = append(data, []string{"Fingerprint (SHA-1)", onprem.Fingerprint})
 	}
 
 	data = append(data, []string{"Issued At", license.IssuedAt()})
