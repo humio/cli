@@ -1,3 +1,6 @@
+Version 0.17.0:
+ - Add support for distributing on snap
+
 Version 0.16.0:
  - Remove SHA1 Hash of license, ID does the job
 
