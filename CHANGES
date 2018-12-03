@@ -1,3 +1,6 @@
+Version 0.17.1:
+ - Fix grade for snap
+
 Version 0.17.0:
  - Add support for distributing on snap
 
