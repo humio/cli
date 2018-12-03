@@ -67,8 +67,7 @@ snapcraft:
   # store. `stable` will let you release also to the `candidate` and `stable`
   # channels. More info about channels here:
   # https://snapcraft.io/docs/reference/channels
-  grade: devel
-  channel: beta
+  grade: stable
 
   # Snaps can be setup to follow three different confinement policies:
   # `strict`, `devmode` and `classic`. A strict confinement where the snap
@@ -76,7 +75,7 @@ snapcraft:
   # permissions for strict snaps can be declared as `plugs` for the app, which
   # are explained later. More info about confinement here:
   # https://snapcraft.io/docs/reference/confinement
-  confinement: devmode
+  confinement: strict
 
   # Each binary built by GoReleaser is an app inside the snap. In this section
   # you can declare extra details for those binaries. It is optional.
