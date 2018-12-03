@@ -68,6 +68,7 @@ snapcraft:
   # channels. More info about channels here:
   # https://snapcraft.io/docs/reference/channels
   grade: devel
+  channel: beta
 
   # Snaps can be setup to follow three different confinement policies:
   # `strict`, `devmode` and `classic`. A strict confinement where the snap
