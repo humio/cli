@@ -67,7 +67,7 @@ snapcraft:
   # store. `stable` will let you release also to the `candidate` and `stable`
   # channels. More info about channels here:
   # https://snapcraft.io/docs/reference/channels
-  grade: beta
+  grade: devel
 
   # Snaps can be setup to follow three different confinement policies:
   # `strict`, `devmode` and `classic`. A strict confinement where the snap
