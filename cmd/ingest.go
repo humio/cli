@@ -233,7 +233,7 @@ has the same effect.`,
 		},
 	}
 
-	cmd.Flags().StringVarP(&parserName, "parser", "r", "default", "Use a specific parser for ingestion.")
+	cmd.Flags().StringVarP(&parserName, "parser", "p", "default", "Use a specific parser for ingestion.")
 	cmd.Flags().StringVarP(&filepath, "tail", "f", "", "A file to tail instead of listening to stdin.")
 	cmd.Flags().StringP("ingest-token", "i", "", "The ingest token to use. Fefaults to your Account API token.")
 	cmd.Flags().BoolVarP(&openBrowser, "open", "o", false, "Open the browser with live tail of the stream.")

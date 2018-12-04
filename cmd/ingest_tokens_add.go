@@ -60,7 +60,7 @@ use the assigned parser at ingest time.`,
 		},
 	}
 
-	cmd.Flags().StringVarP(&parserName, "parser", "p", "", "")
+	cmd.Flags().StringVarP(&parserName, "parser", "p", "", "Assigns the a parser to the ingest token.")
 
 	return cmd
 }

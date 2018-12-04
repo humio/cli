@@ -91,7 +91,7 @@ Common Management Commands:
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	rootCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "p", "", "name of the config profile to use")
+	rootCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "u", "", "name of the config profile to use")
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.humio/config.yaml)")
 	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "The API token to user when talking to Humio. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().StringVar(&tokenFile, "token-file", "", "File path to a file containing the API token. Overrides the value in your config file and the value of --token.")
