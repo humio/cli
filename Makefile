@@ -6,17 +6,21 @@ CLI_COMMAND ?= ""
 
 $(BIN_PATH): $(GOFILES)
 
-build: $(BIN_PATH)
+all: build
+
+$(BIN_PATH): $(GOFILES)
 	@echo "--> Building Humio CLI"
-	go build -o bin/$(BIN_NAME) $(GOFILES)
+	go build -o $(BIN_PATH) main.go
+
+build: $(BIN_PATH)
 
 get:
 	@echo "--> Fetching dependencies"
-	govendor get
+	go get
 
 test:
 	@echo "--> Testing"
-	govendor test +local
+	go test
 
 clean:
 	@echo "--> Cleaning"
@@ -27,8 +31,7 @@ dist: clean
 	@echo "--> Tagging Git & Releasing"
 	./scripts/dist.sh
 
-run:
-	$(MAKE) build
+run: $(BIN_PATH)
 	$(BIN_PATH) $(CLI_COMMAND)
 
 .PHONY: build get clean dist run

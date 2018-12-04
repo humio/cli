@@ -233,9 +233,9 @@ has the same effect.`,
 		},
 	}
 
-	cmd.Flags().StringVarP(&parserName, "parser", "p", "default", "Use a specific parser for ingestion.")
+	cmd.Flags().StringVarP(&parserName, "parser", "r", "default", "Use a specific parser for ingestion.")
 	cmd.Flags().StringVarP(&filepath, "tail", "f", "", "A file to tail instead of listening to stdin.")
-	cmd.Flags().StringP("ingest-token", "i", "", "The ingest token to use. This defaults to HUMIO_API_TOKEN.")
+	cmd.Flags().StringP("ingest-token", "i", "", "The ingest token to use. Fefaults to your Account API token.")
 	cmd.Flags().BoolVarP(&openBrowser, "open", "o", false, "Open the browser with live tail of the stream.")
 	cmd.Flags().StringVarP(&label, "label", "l", "", "Adds a @label=<lavel> field to each event. This can help you find specific data send by the CLI when searching in the UI.")
 	cmd.Flags().BoolVarP(&noSession, "no-session", "n", false, "No @session field will be added to each event. @session assigns a new UUID to each executing of the Humio CLI.")
