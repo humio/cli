@@ -1,7 +1,7 @@
-project_name: humio
+project_name: humioctl
 
 builds:
-  - binary: humio
+  - binary: humioctl
     goos:
       - windows
       - darwin
@@ -41,7 +41,7 @@ archive:
 snapcraft:
   # The name of the snap. This is optional.
   # Default is project name.
-  name: humio-cli
+  name: humioctl
 
   # Wether to publish the snap to the snapcraft store.
   # Remember you need to `snapcraft login` first.
@@ -82,7 +82,7 @@ snapcraft:
   apps:
 
     # The name of the app must be the same name as the binary built or the snapcraft name.
-    humio-cli:
+    humioctl:
 
       # If your app requires extra permissions to work outside of its default
       # confined space, declare them here.

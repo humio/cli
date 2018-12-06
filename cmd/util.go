@@ -23,6 +23,18 @@ func exitOnError(cmd *cobra.Command, err error, message string) {
 	}
 }
 
+var (
+	commit  = "none"
+	date    = "unknown"
+	version = "master"
+)
+
+func SetVersion(v, c, d string) {
+	version = v
+	commit = c
+	date = d
+}
+
 type stringPtrFlag struct {
 	value *string
 }

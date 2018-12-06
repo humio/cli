@@ -12,17 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cmd
 
-import "github.com/humio/cli/cmd"
+import (
+	"fmt"
 
-var (
-	version = "master"
-	commit  = "none"
-	date    = "unknown"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	cmd.SetVersion(version, commit, date)
-	cmd.Execute()
+func newVersionCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "version",
+		Short: "Show cli version information.",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println(version)
+		},
+	}
+
+	return cmd
 }

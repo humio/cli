@@ -28,6 +28,8 @@ import (
 
 var cfgFile, tokenFile, token, address, profileFlag string
 
+var printVersion bool
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd *cobra.Command
 
@@ -66,6 +68,12 @@ Common Management Commands:
 	status
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
+
+			if printVersion {
+				fmt.Println("humioctl ", version)
+				os.Exit(0)
+			}
+
 			// If no token or address flags are passed
 			// and no configuration file exists, run login.
 			if viper.GetString("token") == "" && viper.GetString("address") == "" {
@@ -100,6 +108,8 @@ Common Management Commands:
 	viper.BindPFlag("address", rootCmd.PersistentFlags().Lookup("address"))
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 	viper.BindPFlag("token-file", rootCmd.PersistentFlags().Lookup("token-file"))
+
+	rootCmd.Flags().BoolVarP(&printVersion, "version", "v", false, "Print the client version")
 
 	rootCmd.AddCommand(newUsersCmd())
 	rootCmd.AddCommand(newParsersCmd())

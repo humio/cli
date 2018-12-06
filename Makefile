@@ -1,6 +1,6 @@
 SHELL=bash
 GOFILES=$(wildcard *.go)
-BIN_NAME=humio
+BIN_NAME=humioctl
 BIN_PATH=bin/$(BIN_NAME)
 CLI_COMMAND ?= ""
 
