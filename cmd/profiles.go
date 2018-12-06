@@ -26,11 +26,11 @@ If called without a subcommand this command will list saved profiles.
 
 Adding a profile:
 
-  $ humio profiles add <name>
+  $ humioctl profiles add <name>
 
 You can change the default profile using:
 
-  $ humio profiles set-default <name>
+  $ humioctl profiles set-default <name>
     `,
 		Args: cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {

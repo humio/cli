@@ -41,21 +41,21 @@ To find all available parsers visit: https://github.com/humio/community/parsers
 
 For instance if you wanted to install an AccessLog parser you could use.
 
-  $ humio parsers install accesslog
+  $ humioctl parsers install accesslog
 
 This would install the parser at: humio/comminity/parsers/accesslog/default.yaml
 Since log formats can vary slightly you can install one of the other variations:
 
-  $ humio parsers install accesslog/utc
+  $ humioctl parsers install accesslog/utc
 
 Which would install the humio/community/parsers/accesslog/utc.yaml parser.
 
 The install command will pull parser from GitHub by default. But you can also
 install from a local file or a URL, e.g.
 
-  $ humio parsers install --url=https://example.com/acme/parser.yaml
+  $ humioctl parsers install --url=https://example.com/acme/parser.yaml
 
-  $ humio parsers install --file=./parser.yaml
+  $ humioctl parsers install --file=./parser.yaml
 
 By default 'install' will not override existing parsers with the same name.
 Use the --force flag to update existing parsers with conflicting names.

@@ -44,7 +44,7 @@ func Execute() {
 
 func init() {
 	rootCmd = &cobra.Command{
-		Use:   "humio [subcommand] [flags] [arguments]",
+		Use:   "humioctl [subcommand] [flags] [arguments]",
 		Short: "A management CLI for Humio.",
 		Long: `
 Sending Data:
@@ -55,11 +55,11 @@ Sending Data:
 
 To stream the content of "/var/log/system.log" data to Humio:
 
-  $ tail -f /var/log/system.log | humio ingest -o
+  $ tail -f /var/log/system.log | humioctl ingest -o
 
 or
 
-  $ humio ingest -o --tail=/var/log/system.log
+  $ humioctl ingest -o --tail=/var/log/system.log
 
 Common Management Commands:
   users <subcommand>

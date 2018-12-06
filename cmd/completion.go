@@ -35,7 +35,7 @@ Generate autocompletions script for Humio for the specified shell (bash or zsh).
 
 This command can generate shell autocompletions. e.g.
 
-	$ humio completion bash
+	$ humioctl completion bash
 
 Can be sourced as such
 

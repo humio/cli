@@ -14,7 +14,7 @@ use to build your own tools._
 ## Usage
 
 ```bash
-$ humio help
+$ humioctl help
 ```
 
 Will print all the different options and commands currently supported.
@@ -35,7 +35,7 @@ $ tail -f /var/log/system.log | humio ingest
 
 # or
 
-$ humio ingest --tail=/var/log/system.log
+$ humioctl ingest --tail=/var/log/system.log
 ```
 
 You can have Humio's UI open and tail the newly imported data using the `-open`
@@ -69,7 +69,7 @@ will be annotated with `@label` and `@session` attributes.  `@label`
 gives you a way to tag your streams to easily find them again e.g.:
 
 ```bash
-$ humio ingest -label=work-related -tail=/var/log/mysql.log
+$ humioctl ingest -label=work-related -tail=/var/log/mysql.log
 ```
 
 ```java
