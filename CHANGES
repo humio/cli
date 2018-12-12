@@ -1,3 +1,6 @@
+Version 0.21.0:
+ - Fix issue so the default output is not stderr
+
 Version 0.20.0:
  - Rename examples
  - Change name to humioctl
