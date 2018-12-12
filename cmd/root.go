@@ -86,6 +86,8 @@ Common Management Commands:
 			}
 		},
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			cmd.SetOutput(os.Stdout)
+
 			if cmd.Name() != "welcome" && cmd.Name() != "humio" {
 				cmd.Println()
 				cmd.Println("Humio Address:", viper.GetString("address"))
