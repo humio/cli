@@ -28,7 +28,7 @@ func newUsersAddCmd() *cobra.Command {
 	var pictureFlag urlPtrFlag
 
 	cmd := cobra.Command{
-		Use:   "add",
+		Use:   "add [flags] <username>",
 		Short: "Adds a user. [Root Only]",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
