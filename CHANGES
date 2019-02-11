@@ -1,3 +1,6 @@
+Version 0.23.0:
+ - Update usage string
+
 Version 0.22.0:
  - Don't print the Humio Address on every command.
 
