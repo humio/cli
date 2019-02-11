@@ -4,29 +4,41 @@
 
 A CLI for managing and sending data to Humio.
 
-Visit [humio/community](https://github.com/humio/community) to find parsers
-that you can install with the CLI. We plan on adding dashboards to the community
-repo as well.
-
 _This repository also contains Humio GoLang API client you can
 use to build your own tools._
 
+## Installation
+
+### MacOS
+
+```bash
+$ brew tap humio/humio
+$ brew install humioctl
+```
+
+### Linux (via Snapcraft)
+
+```bash
+$ sudo snap install humioctl
+```
+
+
 ## Usage
+
+To get started just write:
+
+```bash
+$ humioctl
+```
+
+and you will be asked to connect to your Humio cluster.
+To list all commands use:
 
 ```bash
 $ humioctl help
 ```
 
 Will print all the different options and commands currently supported.
-
-## Setup
-
-You need to some environment variables
-
-```bash
-export HUMIO_API_TOKEN=<token>
-export HUMIO_ADDR=<humio-url> # E.g. https://cloud.humio.com/
-```
 
 ## Sending Logs
 
