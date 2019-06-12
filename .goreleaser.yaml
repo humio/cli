@@ -90,3 +90,8 @@ snapcraft:
       # things they allow:
       # https://snapcraft.io/docs/reference/interfaces.
       plugs: ["home", "network"]
+
+dockers:
+  - image_templates:
+    - humio/cli:latest
+    - humio/cli:{{ .Tag }}
