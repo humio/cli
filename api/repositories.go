@@ -1,6 +1,10 @@
 package api
 
-import "github.com/shurcooL/graphql"
+import (
+	"fmt"
+
+	"github.com/shurcooL/graphql"
+)
 
 type Repositories struct {
 	client *Client
@@ -44,4 +48,25 @@ func (c *Repositories) List() ([]RepoListItem, error) {
 	graphqlErr := c.client.Query(&q, variables)
 
 	return q.Repositories, graphqlErr
+}
+
+func (c *Repositories) Create(name string) error {
+	var m struct {
+		CreateRepository struct {
+			Repository Repository
+		} `graphql:"createRepository(name: $name)"`
+	}
+
+	variables := map[string]interface{}{
+		"name": graphql.String(name),
+	}
+
+	graphqlErr := c.client.Mutate(&m, variables)
+
+	if graphqlErr != nil {
+		// The graphql error message is vague if the repo already exists, so add a hint.
+		return fmt.Errorf("%+v. Does the repo already exist?", graphqlErr)
+	}
+
+	return nil
 }
