@@ -16,11 +16,17 @@ build: $(BIN_PATH)
 
 get:
 	@echo "--> Fetching dependencies"
-	go get
+	go get -v
 
-test:
+test: get
 	@echo "--> Testing"
-	go test
+	go test -v ./...
+
+clean-integration:
+	docker-compose down -v
+
+test-integration: clean-integration
+	docker-compose up --abort-on-container-exit --exit-code-from cli
 
 clean:
 	@echo "--> Cleaning"

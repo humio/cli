@@ -1,0 +1,22 @@
+version: '3'
+services:
+  humio:
+    image: humio/humio
+    expose:
+      - "8080"
+    volumes:
+      - humio-data:/data/humio-data
+  cli:
+    command: ["./scripts/wait-for-it.sh", "-t", "300", "humio:8080", "--", "make", "test"]
+    working_dir: /go/src/github.com/humio/cli
+    image: golang:1.12.6
+    volumes:
+      - humio-data:/data/humio-data/
+      - .:/go/src/github.com/humio/cli
+    environment:
+      HUMIO_TOKEN_FILE: /data/humio-data/local-admin-token.txt
+      HUMIO_ADDRESS: "http://humio:8080/"
+    depends_on:
+      - "humio"
+volumes:
+  humio-data:

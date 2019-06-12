@@ -116,3 +116,10 @@ HUMIO_ADDR=<url>
 # Disable color in terminal output
 HUMIO_CLI_NO_COLOR=<bool>
 ```
+
+## Testing
+
+Run all integration tests
+```
+make test-integration
+```
