@@ -1,4 +1,7 @@
 Version 0.24.0:
+
+
+Version 0.24.0:
  - Merge pull request #8 from humio/add_docker
  - Merge pull request #7 from humio/add_repo_create
  - Publish docker image
