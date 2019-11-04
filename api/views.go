@@ -87,9 +87,7 @@ func (c *Views) List() ([]ViewListItem, error) {
 		View []ViewListItem `graphql:"searchDomains"`
 	}
 
-	variables := map[string]interface{}{}
-
-	graphqlErr := c.client.Query(&q, variables)
+	graphqlErr := c.client.Query(&q, nil)
 
 	sort.Slice(q.View, func(i, j int) bool {
 		return strings.ToLower(q.View[i].Name) < strings.ToLower(q.View[j].Name)

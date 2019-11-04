@@ -14,8 +14,6 @@ func (c *Viewer) Username() (string, error) {
 		}
 	}
 
-	variables := map[string]interface{}{}
-
-	graphqlErr := c.client.Query(&query, variables)
+	graphqlErr := c.client.Query(&query, nil)
 	return query.Viewer.Username, graphqlErr
 }

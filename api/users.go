@@ -38,9 +38,7 @@ func (c *Users) List() ([]User, error) {
 		Users []User `graphql:"accounts"`
 	}
 
-	variables := map[string]interface{}{}
-
-	graphqlErr := c.client.Query(&q, variables)
+	graphqlErr := c.client.Query(&q, nil)
 
 	return q.Users, graphqlErr
 }
