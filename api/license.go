@@ -56,7 +56,7 @@ func (c *Client) Licenses() *Licenses { return &Licenses{client: c} }
 func (p *Licenses) Install(license string) error {
 
 	var mutation struct {
-		CreateParser struct {
+		UpdateLicenseKey struct {
 			Type string `graphql:"__typename"`
 		} `graphql:"updateLicenseKey(license: $license)"`
 	}
@@ -79,9 +79,8 @@ func (c *Licenses) Get() (License, error) {
 			} `graphql:"... on OnPremLicense"`
 		}
 	}
-	variables := map[string]interface{}{}
 
-	err := c.client.Query(&query, variables)
+	err := c.client.Query(&query, nil)
 
 	if err != nil {
 		return nil, err

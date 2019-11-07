@@ -11,9 +11,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/gofrs/uuid"
 	"github.com/hpcloud/tail"
 	"github.com/humio/cli/api"
-	uuid "github.com/satori/go.uuid"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/spf13/cobra"
 )

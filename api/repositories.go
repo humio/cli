@@ -43,9 +43,7 @@ func (c *Repositories) List() ([]RepoListItem, error) {
 		Repositories []RepoListItem `graphql:"repositories"`
 	}
 
-	variables := map[string]interface{}{}
-
-	graphqlErr := c.client.Query(&q, variables)
+	graphqlErr := c.client.Query(&q, nil)
 
 	return q.Repositories, graphqlErr
 }
