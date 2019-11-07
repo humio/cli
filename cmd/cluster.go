@@ -25,6 +25,7 @@ func newClusterCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(newClusterShowCmd())
+	cmd.AddCommand(newClusterNodesCmd())
 
 	return cmd
 }

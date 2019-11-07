@@ -23,17 +23,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newNodesListCmd() *cobra.Command {
+func newClusterNodesListCmd() *cobra.Command {
 
 	cmd := cobra.Command{
 		Use:   "list [flags]",
-		Short: "List nodes.",
+		Short: "List cluster nodes [Root Only]",
 		Args:  cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
-			nodes, apiErr := client.Nodes().List()
-			exitOnError(cmd, apiErr, "error fetching nodes")
+			nodes, apiErr := client.ClusterNodes().List()
+			exitOnError(cmd, apiErr, "error fetching cluster nodes")
 
 			sort.Slice(nodes, func(i, j int) bool {
 				var a, b api.ClusterNode

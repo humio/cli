@@ -117,7 +117,6 @@ Common Management Commands:
 	rootCmd.AddCommand(newLicenseCmd())
 	rootCmd.AddCommand(newReposCmd())
 	rootCmd.AddCommand(newStatusCmd())
-	rootCmd.AddCommand(newNodesCmd())
 	rootCmd.AddCommand(newClusterCmd())
 
 	// Hidden Commands

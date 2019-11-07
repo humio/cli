@@ -23,10 +23,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newNodesShowCmd() *cobra.Command {
+func newClusterNodesShowCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show",
-		Short: "Show the information about the a Humio node",
+		Short: "Show the information about the a Humio node [Root Only]",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			nodeID := args[0]
@@ -34,9 +34,9 @@ func newNodesShowCmd() *cobra.Command {
 			exitOnError(cmd, parseErr, "could not parse node id")
 
 			client := NewApiClient(cmd)
-			node, apiErr := client.Nodes().Get(id)
+			node, apiErr := client.ClusterNodes().Get(id)
 			exitOnError(cmd, apiErr, "error fetching node information")
-			printNodeInfo(cmd, node)
+			printClusterNodeInfo(cmd, node)
 			cmd.Println()
 		},
 	}
@@ -44,7 +44,7 @@ func newNodesShowCmd() *cobra.Command {
 	return cmd
 }
 
-func printNodeInfo(cmd *cobra.Command, node api.ClusterNode) {
+func printClusterNodeInfo(cmd *cobra.Command, node api.ClusterNode) {
 	data := [][]string{
 		[]string{"ID", strconv.Itoa(node.Id)},
 		[]string{"Name", node.Name},
