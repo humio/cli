@@ -77,11 +77,13 @@ Common Management Commands:
 			// If no token or address flags are passed
 			// and no configuration file exists, run login.
 			if viper.GetString("token") == "" && viper.GetString("address") == "" {
-				newWelcomeCmd().Execute()
+				if err := newWelcomeCmd().Execute(); err != nil {
+					fmt.Println(fmt.Errorf("error printing welcome message: %v", err))
+				}
+
 			} else {
-				err := cmd.Help()
-				if err != nil {
-					fmt.Println(fmt.Errorf("error printing help: %s", err))
+				if err := cmd.Help(); err != nil {
+					fmt.Println(fmt.Errorf("error printing help: %v", err))
 				}
 			}
 		},
@@ -95,8 +97,8 @@ Common Management Commands:
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	rootCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "u", "", "name of the config profile to use")
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.humio/config.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "u", "", "Name of the config profile to use")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "Config file (default is $HOME/.humio/config.yaml)")
 	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "The API token to user when talking to Humio. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().StringVar(&tokenFile, "token-file", "", "File path to a file containing the API token. Overrides the value in your config file and the value of --token.")
 	rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "", "The HTTP address of the Humio cluster. Overrides the value in your config file.")
@@ -118,6 +120,8 @@ Common Management Commands:
 	rootCmd.AddCommand(newReposCmd())
 	rootCmd.AddCommand(newStatusCmd())
 	rootCmd.AddCommand(newClusterCmd())
+	rootCmd.AddCommand(newNotifiersCmd())
+	rootCmd.AddCommand(newAlertsCmd())
 
 	// Hidden Commands
 	rootCmd.AddCommand(newWelcomeCmd())

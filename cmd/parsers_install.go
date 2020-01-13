@@ -67,9 +67,9 @@ Use the --force flag to update existing parsers with conflicting names.
 				if filePath != "" {
 					content, readErr = getParserFromFile(filePath)
 				} else if url != "" {
-					content, readErr = getUrlParser(url)
+					content, readErr = getURLParser(url)
 				} else {
-					cmd.Println(fmt.Errorf("if you only provide repo you must specify --file or --url."))
+					cmd.Println(fmt.Errorf("if you only provide repo you must specify --file or --url"))
 					os.Exit(1)
 				}
 			} else if l := len(args); l != 2 {
@@ -114,10 +114,10 @@ func getParserFromFile(filePath string) ([]byte, error) {
 
 func getGithubParser(parserName string) ([]byte, error) {
 	url := "https://raw.githubusercontent.com/humio/community/master/parsers/" + parserName + ".yaml"
-	return getUrlParser(url)
+	return getURLParser(url)
 }
 
-func getUrlParser(url string) ([]byte, error) {
+func getURLParser(url string) ([]byte, error) {
 	response, err := http.Get(url)
 
 	if err != nil {

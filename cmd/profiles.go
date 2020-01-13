@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Login struct {
+type login struct {
 	address  string
 	token    string
 	username string

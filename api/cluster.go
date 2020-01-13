@@ -167,7 +167,7 @@ type ClusterNodes struct {
 	client *Client
 }
 
-func (n *Client) ClusterNodes() *ClusterNodes { return &ClusterNodes{client: n} }
+func (c *Client) ClusterNodes() *ClusterNodes { return &ClusterNodes{client: c} }
 
 func (n *ClusterNodes) List() ([]ClusterNode, error) {
 	var q struct {

@@ -62,9 +62,9 @@ func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) 
 	return graphqlErr
 }
 
-func (c *Client) httpGET(path string) (*http.Response, error) {
+func (c *Client) HttpGET(path string) (*http.Response, error) {
 	url := c.Address() + path
-	req, reqErr := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
+	req, reqErr := http.NewRequest(http.MethodGet, url, bytes.NewBuffer([]byte("")))
 	req.Header.Set("Authorization", "Bearer "+c.Token())
 	req.Header.Set("Accept", "application/json")
 	var client = &http.Client{}
@@ -77,8 +77,34 @@ func (c *Client) httpGET(path string) (*http.Response, error) {
 
 func (c *Client) HttpPOST(path string, jsonStr *bytes.Buffer) (*http.Response, error) {
 	url := c.Address() + path
-	req, reqErr := http.NewRequest("POST", url, jsonStr)
-	req.Header.Set("Authorization", "Bearer "+c.config.Token)
+	req, reqErr := http.NewRequest(http.MethodPost, url, jsonStr)
+	req.Header.Set("Authorization", "Bearer "+c.Token())
+	req.Header.Set("Content-Type", "application/json")
+	var client = &http.Client{}
+
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
+}
+
+func (c *Client) HttpPUT(path string, jsonStr *bytes.Buffer) (*http.Response, error) {
+	url := c.Address() + path
+	req, reqErr := http.NewRequest(http.MethodPut, url, jsonStr)
+	req.Header.Set("Authorization", "Bearer "+c.Token())
+	req.Header.Set("Content-Type", "application/json")
+	var client = &http.Client{}
+
+	if reqErr != nil {
+		return nil, reqErr
+	}
+	return client.Do(req)
+}
+
+func (c *Client) HttpDELETE(path string) (*http.Response, error) {
+	url := c.Address() + path
+	req, reqErr := http.NewRequest(http.MethodDelete, url, bytes.NewBuffer([]byte("")))
+	req.Header.Set("Authorization", "Bearer "+c.Token())
 	req.Header.Set("Content-Type", "application/json")
 	var client = &http.Client{}
 

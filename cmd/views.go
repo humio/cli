@@ -94,11 +94,3 @@ func printViewConnectionsTable(view *api.View) {
 	w.Render()
 	fmt.Println()
 }
-
-func viewRoleNames(user api.User) []string {
-	names := make([]string, len(user.Roles))
-	for i, r := range user.Roles {
-		names[i] = r.Name
-	}
-	return names
-}

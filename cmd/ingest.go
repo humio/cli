@@ -27,10 +27,6 @@ type eventList struct {
 	Messages []string          `json:"messages"`
 }
 
-type event struct {
-	RawString string `json:"rawstring"`
-}
-
 func tailFile(client *api.Client, repo string, filepath string, quiet bool) {
 
 	// Join Tail
@@ -218,7 +214,10 @@ has the same effect.`,
 
 			// Open the browser (First so it has a chance to load)
 			if openBrowser {
-				open.Start(client.Address() + repo + "/search?live=true&start=1d&query=" + key)
+				err := open.Start(client.Address() + repo + "/search?live=true&start=1d&query=" + key)
+				if err != nil {
+					fmt.Println(fmt.Errorf("could not open browser: %v", err))
+				}
 			}
 
 			startSending(client, repo, fields, parserName)
@@ -235,7 +234,7 @@ has the same effect.`,
 
 	cmd.Flags().StringVarP(&parserName, "parser", "p", "default", "Use a specific parser for ingestion.")
 	cmd.Flags().StringVarP(&filepath, "tail", "f", "", "A file to tail instead of listening to stdin.")
-	cmd.Flags().StringP("ingest-token", "i", "", "The ingest token to use. Fefaults to your Account API token.")
+	cmd.Flags().StringP("ingest-token", "i", "", "The ingest token to use. Defaults to your Account API token.")
 	cmd.Flags().BoolVarP(&openBrowser, "open", "o", false, "Open the browser with live tail of the stream.")
 	cmd.Flags().StringVarP(&label, "label", "l", "", "Adds a @label=<lavel> field to each event. This can help you find specific data send by the CLI when searching in the UI.")
 	cmd.Flags().BoolVarP(&noSession, "no-session", "n", false, "No @session field will be added to each event. @session assigns a new UUID to each executing of the Humio CLI.")

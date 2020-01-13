@@ -12,12 +12,11 @@ type ParserTestCase struct {
 }
 
 type Parser struct {
-	Name        string
-	Description string           `yaml:",omitempty"`
-	Tests       []ParserTestCase `yaml:",omitempty"`
-	Example     string           `yaml:",omitempty"`
-	Script      string           `yaml:",flow"`
-	TagFields   []string         `yaml:",omitempty"`
+	Name      string
+	Tests     []ParserTestCase `yaml:",omitempty"`
+	Example   string           `yaml:",omitempty"`
+	Script    string           `yaml:",flow"`
+	TagFields []string         `yaml:",omitempty"`
 }
 
 type Parsers struct {
@@ -119,6 +118,7 @@ func (p *Parsers) Get(reposistoryName string, parserName string) (*Parser, error
 				Name       string
 				SourceCode string
 				TestData   []string
+				TagFields  []string
 			} `graphql:"parser(name: $parserName)"`
 		} `graphql:"repository(name: $repositoryName)"`
 	}
@@ -133,9 +133,10 @@ func (p *Parsers) Get(reposistoryName string, parserName string) (*Parser, error
 	var parser Parser
 	if graphqlErr == nil {
 		parser = Parser{
-			Name:   query.Repository.Parser.Name,
-			Tests:  mapTests(query.Repository.Parser.TestData, toTestCase),
-			Script: query.Repository.Parser.SourceCode,
+			Name:      query.Repository.Parser.Name,
+			Tests:     mapTests(query.Repository.Parser.TestData, toTestCase),
+			Script:    query.Repository.Parser.SourceCode,
+			TagFields: query.Repository.Parser.TagFields,
 		}
 	}
 

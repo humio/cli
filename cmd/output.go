@@ -37,6 +37,7 @@ func valueOrEmpty(v string) string {
 	return v
 }
 
+// ByteCountDecimal returns a human-readable size of a byte count
 func ByteCountDecimal(b int64) string {
 	const unit = 1000
 	if b < unit {
