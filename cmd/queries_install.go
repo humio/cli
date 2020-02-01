@@ -74,27 +74,7 @@ func newQueryInstallCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&sourceFile, "source-file", "", "The local file path to the source yaml.")
+	cmd.Flags().StringVar(&sourceFile, "source-file", "", "The local file path to the source json.")
 
 	return &cmd
 }
-
-// // func getDashboardFromFile(filepath string) ([]byte, error) {
-// // 	return ioutil.readfile(filepath)
-// // }
-
-// // func getGithubParser(dashboardName string) ([]byte, error) {
-// // 	url := "https://raw.githubusercontent.com/humio/community/master/dashboards/" + dashboardName + ".yaml"
-// // 	return getUrlParser(url)
-// // }
-
-// // func getIUrlParser(url string) ([]byte, error) {
-// // 	response, err := http.Get(url)
-
-// // 	if err != nil {
-// // 		return nil, err
-// // 	}
-
-// // 	defer response.Body.Close()
-// // 	return ioutil.ReadAll(response.Body)
-// // }
