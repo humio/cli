@@ -118,6 +118,8 @@ Common Management Commands:
 	rootCmd.AddCommand(newReposCmd())
 	rootCmd.AddCommand(newStatusCmd())
 	rootCmd.AddCommand(newClusterCmd())
+	rootCmd.AddCommand(newDashboardsCmd())
+	rootCmd.AddCommand(newQueriesCmd())
 
 	// Hidden Commands
 	rootCmd.AddCommand(newWelcomeCmd())
