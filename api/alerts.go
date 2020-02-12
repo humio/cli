@@ -42,18 +42,7 @@ func (a *Alerts) List(view string) ([]Alert, error) {
 		log.Fatal(err)
 	}
 
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
-	}
-
-	alerts := []Alert{}
-	jsonErr := json.Unmarshal(body, &alerts)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
-	}
-
-	return alerts, nil
+	return a.unmarshalToAlertList(res)
 }
 
 func (a *Alerts) Update(viewName string, alert *Alert) (*Alert, error) {
@@ -62,32 +51,18 @@ func (a *Alerts) Update(viewName string, alert *Alert) (*Alert, error) {
 		return nil, fmt.Errorf("could not convert alert name to id: %v", err)
 	}
 
-	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, existingID)
-
-	jsonStr, err := json.Marshal(alert)
+	jsonStr, err := a.marshalToJSON(alert)
 	if err != nil {
 		return nil, fmt.Errorf("unable to convert alert to json string: %v", err)
 	}
-	// Humio requires notifiers to be specified even if no notifier is desired
-	if alert.Notifiers == nil {
-		alert.Notifiers = []string{}
-	}
+
+	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, existingID)
+
 	res, postErr := a.client.HTTPRequest(http.MethodPut, url, bytes.NewBuffer(jsonStr))
 	if postErr != nil {
 		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %v", viewName, alert.Name, postErr)
 	}
-
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
-	}
-
-	resAlert := Alert{}
-	jsonErr := json.Unmarshal(body, &resAlert)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
-	}
-	return &resAlert, nil
+	return a.unmarshalToAlert(res)
 }
 
 func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert, error) {
@@ -95,6 +70,7 @@ func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert
 	if err != nil {
 		return nil, fmt.Errorf("could not determine if alert name is in use: %v", err)
 	}
+
 	if nameAlreadyInUse {
 		if updateExisting == false {
 			return nil, fmt.Errorf("alert with name %s already exists", alert.Name)
@@ -102,31 +78,19 @@ func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert
 		return a.Update(viewName, alert)
 	}
 
-	url := fmt.Sprintf("api/v1/repositories/%s/alerts/", viewName)
-	jsonStr, err := json.Marshal(alert)
+	jsonStr, err := a.marshalToJSON(alert)
 	if err != nil {
 		return nil, fmt.Errorf("unable to convert alert to json string: %v", err)
 	}
-	// Humio requires notifiers to be specified even if no notifier is desired
-	if alert.Notifiers == nil {
-		alert.Notifiers = []string{}
-	}
-	res, postErr := a.client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(jsonStr))
-	if postErr != nil {
-		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %v", viewName, alert.Name, postErr)
+
+	url := fmt.Sprintf("api/v1/repositories/%s/alerts/", viewName)
+
+	res, err := a.client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(jsonStr))
+	if err != nil {
+		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %v", viewName, alert.Name, err)
 	}
 
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
-	}
-
-	resAlert := Alert{}
-	jsonErr := json.Unmarshal(body, &resAlert)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
-	}
-	return &resAlert, nil
+	return a.unmarshalToAlert(res)
 }
 
 func (a *Alerts) Get(view, name string) (*Alert, error) {
@@ -142,23 +106,7 @@ func (a *Alerts) Get(view, name string) (*Alert, error) {
 		return nil, fmt.Errorf("could not get alert with id %s, got: %v", alertID, err)
 	}
 
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
-	}
-
-	resAlert := Alert{}
-	jsonErr := json.Unmarshal(body, &resAlert)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
-	}
-
-	// Humio requires notifiers to be specified even if no notifier is desired
-	if resAlert.Notifiers == nil {
-		resAlert.Notifiers = []string{}
-	}
-
-	return &resAlert, nil
+	return a.unmarshalToAlert(res)
 }
 
 func (a *Alerts) Delete(viewName, name string) error {
@@ -178,6 +126,47 @@ func (a *Alerts) Delete(viewName, name string) error {
 		return fmt.Errorf("could not delete alert in view %s with id %s, got: %v", viewName, alertID, err)
 	}
 	return nil
+}
+
+func (a *Alerts) marshalToJSON(alert *Alert) ([]byte, error) {
+	// Humio requires notifiers to be specified even if no notifier is desired
+	if alert.Notifiers == nil {
+		alert.Notifiers = []string{}
+	}
+
+	jsonStr, err := json.Marshal(alert)
+	if err != nil {
+		return nil, fmt.Errorf("unable to convert alert to json string: %v", err)
+	}
+	return jsonStr, nil
+}
+
+func (a *Alerts) unmarshalToAlertList(res *http.Response) ([]Alert, error) {
+	body, readErr := ioutil.ReadAll(res.Body)
+	if readErr != nil {
+		log.Fatal(readErr)
+	}
+
+	alertList := []Alert{}
+	jsonErr := json.Unmarshal(body, &alertList)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+	return alertList, nil
+}
+
+func (a *Alerts) unmarshalToAlert(res *http.Response) (*Alert, error) {
+	body, readErr := ioutil.ReadAll(res.Body)
+	if readErr != nil {
+		log.Fatal(readErr)
+	}
+
+	alert := Alert{}
+	jsonErr := json.Unmarshal(body, &alert)
+	if jsonErr != nil {
+		log.Fatal(jsonErr)
+	}
+	return &alert, nil
 }
 
 func (a *Alerts) convertAlertNameToID(viewName, alertName string) (string, error) {
