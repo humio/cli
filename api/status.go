@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 )
 
 type StatusResponse struct {
@@ -12,7 +13,7 @@ type StatusResponse struct {
 }
 
 func (c *Client) Status() (*StatusResponse, error) {
-	resp, err := c.HttpGET("api/v1/status")
+	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/status", nil)
 
 	if err != nil {
 		return nil, err

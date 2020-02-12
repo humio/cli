@@ -32,7 +32,7 @@ func (c *Client) Notifiers() *Notifiers { return &Notifiers{client: c} }
 func (n *Notifiers) List(view string) ([]Notifier, error) {
 	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers", view)
 
-	res, err := n.client.HttpGET(url)
+	res, err := n.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +63,7 @@ func (n *Notifiers) Update(viewName string, notifier *Notifier) (*Notifier, erro
 		return nil, fmt.Errorf("unable to convert notifier to json string: %v", err)
 	}
 
-	res, err := n.client.HttpPUT(url, bytes.NewBuffer(jsonStr))
+	res, err := n.client.HTTPRequest(http.MethodPut, url, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -84,7 +84,7 @@ func (n *Notifiers) Update(viewName string, notifier *Notifier) (*Notifier, erro
 }
 
 func (n *Notifiers) Add(viewName string, notifier *Notifier, force bool) (*Notifier, error) {
-	url := fmt.Sprintf("%sapi/v1/repositories/%s/alertnotifiers/", n.client.Address(), viewName)
+	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/", viewName)
 
 	nameAlreadyInUse, err := n.notifierNameInUse(viewName, notifier.Name)
 	if err != nil {
@@ -102,7 +102,7 @@ func (n *Notifiers) Add(viewName string, notifier *Notifier, force bool) (*Notif
 		return nil, fmt.Errorf("unable to convert notifier to json string: %v", err)
 	}
 
-	res, err := n.client.HttpPOST(url, bytes.NewBuffer(jsonStr))
+	res, err := n.client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(jsonStr))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -130,7 +130,7 @@ func (n *Notifiers) Get(view, name string) (*Notifier, error) {
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", view, notifierID)
 
-	res, err := n.client.HttpGET(url)
+	res, err := n.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -152,7 +152,7 @@ func (n *Notifiers) Get(view, name string) (*Notifier, error) {
 func (n *Notifiers) GetByID(view, notifierID string) (*Notifier, error) {
 	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", view, notifierID)
 
-	res, err := n.client.HttpGET(url)
+	res, err := n.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -179,7 +179,7 @@ func (n *Notifiers) Delete(viewName, name string) error {
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", viewName, notifierID)
 
-	res, err := n.client.HttpDELETE(url)
+	res, err := n.client.HTTPRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

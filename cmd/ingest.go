@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -140,7 +141,7 @@ func sendBatch(client *api.Client, repo string, messages []string, fields map[st
 	}
 
 	url := "api/v1/repositories/" + repo + "/ingest-messages"
-	resp, err := client.HttpPOST(url, bytes.NewBuffer(lineJSON))
+	resp, err := client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(lineJSON))
 
 	if err != nil {
 		fmt.Println((fmt.Errorf("error while sending data: %v", err)))

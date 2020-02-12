@@ -37,7 +37,7 @@ func (c *Client) Alerts() *Alerts { return &Alerts{client: c} }
 func (a *Alerts) List(view string) ([]Alert, error) {
 	url := fmt.Sprintf("api/v1/repositories/%s/alerts", view)
 
-	res, err := a.client.HttpGET(url)
+	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -72,7 +72,7 @@ func (a *Alerts) Update(viewName string, alert *Alert) (*Alert, error) {
 	if alert.Notifiers == nil {
 		alert.Notifiers = []string{}
 	}
-	res, postErr := a.client.HttpPUT(url, bytes.NewBuffer(jsonStr))
+	res, postErr := a.client.HTTPRequest(http.MethodPut, url, bytes.NewBuffer(jsonStr))
 	if postErr != nil {
 		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %v", viewName, alert.Name, postErr)
 	}
@@ -111,7 +111,7 @@ func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert
 	if alert.Notifiers == nil {
 		alert.Notifiers = []string{}
 	}
-	res, postErr := a.client.HttpPOST(url, bytes.NewBuffer(jsonStr))
+	res, postErr := a.client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(jsonStr))
 	if postErr != nil {
 		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %v", viewName, alert.Name, postErr)
 	}
@@ -137,7 +137,7 @@ func (a *Alerts) Get(view, name string) (*Alert, error) {
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", view, alertID)
 
-	res, err := a.client.HttpGET(url)
+	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("could not get alert with id %s, got: %v", alertID, err)
 	}
@@ -169,7 +169,7 @@ func (a *Alerts) Delete(viewName, name string) error {
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, alertID)
 
-	res, err := a.client.HttpDELETE(url)
+	res, err := a.client.HTTPRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
