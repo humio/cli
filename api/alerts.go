@@ -34,8 +34,8 @@ type Alerts struct {
 
 func (c *Client) Alerts() *Alerts { return &Alerts{client: c} }
 
-func (a *Alerts) List(view string) ([]Alert, error) {
-	url := fmt.Sprintf("api/v1/repositories/%s/alerts", view)
+func (a *Alerts) List(viewName string) ([]Alert, error) {
+	url := fmt.Sprintf("api/v1/repositories/%s/alerts", viewName)
 
 	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -93,13 +93,13 @@ func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert
 	return a.unmarshalToAlert(res)
 }
 
-func (a *Alerts) Get(view, name string) (*Alert, error) {
-	alertID, err := a.convertAlertNameToID(view, name)
+func (a *Alerts) Get(viewName, alertName string) (*Alert, error) {
+	alertID, err := a.convertAlertNameToID(viewName, alertName)
 	if err != nil {
-		return nil, fmt.Errorf("could not find a notifier in view %s with name: %s", view, name)
+		return nil, fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, alertName)
 	}
 
-	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", view, alertID)
+	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, alertID)
 
 	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -109,10 +109,10 @@ func (a *Alerts) Get(view, name string) (*Alert, error) {
 	return a.unmarshalToAlert(res)
 }
 
-func (a *Alerts) Delete(viewName, name string) error {
-	alertID, err := a.convertAlertNameToID(viewName, name)
+func (a *Alerts) Delete(viewName, alertName string) error {
+	alertID, err := a.convertAlertNameToID(viewName, alertName)
 	if err != nil {
-		return fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, name)
+		return fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, alertName)
 	}
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, alertID)

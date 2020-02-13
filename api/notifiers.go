@@ -29,8 +29,8 @@ type Notifier struct {
 
 func (c *Client) Notifiers() *Notifiers { return &Notifiers{client: c} }
 
-func (n *Notifiers) List(view string) ([]Notifier, error) {
-	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers", view)
+func (n *Notifiers) List(viewName string) ([]Notifier, error) {
+	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers", viewName)
 
 	res, err := n.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -88,13 +88,13 @@ func (n *Notifiers) Add(viewName string, notifier *Notifier, force bool) (*Notif
 	return n.unmarshalToNotifier(res)
 }
 
-func (n *Notifiers) Get(view, name string) (*Notifier, error) {
-	notifierID, err := n.convertNotifierNameToID(view, name)
+func (n *Notifiers) Get(viewName, notifierName string) (*Notifier, error) {
+	notifierID, err := n.convertNotifierNameToID(viewName, notifierName)
 	if err != nil {
-		return nil, fmt.Errorf("could not find a notifier in view %s with name: %s", view, name)
+		return nil, fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, notifierName)
 	}
 
-	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", view, notifierID)
+	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", viewName, notifierID)
 
 	res, err := n.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -104,8 +104,8 @@ func (n *Notifiers) Get(view, name string) (*Notifier, error) {
 	return n.unmarshalToNotifier(res)
 }
 
-func (n *Notifiers) GetByID(view, notifierID string) (*Notifier, error) {
-	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", view, notifierID)
+func (n *Notifiers) GetByID(viewName, notifierID string) (*Notifier, error) {
+	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", viewName, notifierID)
 
 	res, err := n.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -115,10 +115,10 @@ func (n *Notifiers) GetByID(view, notifierID string) (*Notifier, error) {
 	return n.unmarshalToNotifier(res)
 }
 
-func (n *Notifiers) Delete(viewName, name string) error {
-	notifierID, err := n.convertNotifierNameToID(viewName, name)
+func (n *Notifiers) Delete(viewName, notifierName string) error {
+	notifierID, err := n.convertNotifierNameToID(viewName, notifierName)
 	if err != nil {
-		return fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, name)
+		return fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, notifierName)
 	}
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", viewName, notifierID)
