@@ -61,14 +61,14 @@ install it using the CLI.
 For instance if you wanted to install an AccessLog parser you could use.
 
 ```bash
-humio parsers install accesslog
+humioctl parsers install accesslog
 ```
 
 This would install the parser at: `humio/comminity/parsers/accesslog/default.yaml`.
 Since log formats can vary slightly you can install one of the other variations:
 
 ```bash
-humio parsers install accesslog/utc
+humioctl parsers install accesslog/utc
 ```
 
 Which would install the `humio/comminity/parsers/accesslog/utc.yaml` parser.
