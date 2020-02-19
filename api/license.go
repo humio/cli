@@ -53,7 +53,7 @@ func (l OnPremLicense) LicenseType() string {
 
 func (c *Client) Licenses() *Licenses { return &Licenses{client: c} }
 
-func (p *Licenses) Install(license string) error {
+func (l *Licenses) Install(license string) error {
 
 	var mutation struct {
 		UpdateLicenseKey struct {
@@ -64,10 +64,10 @@ func (p *Licenses) Install(license string) error {
 		"license": graphql.String(license),
 	}
 
-	return p.client.Mutate(&mutation, variables)
+	return l.client.Mutate(&mutation, variables)
 }
 
-func (c *Licenses) Get() (License, error) {
+func (l *Licenses) Get() (License, error) {
 	var query struct {
 		License struct {
 			ExpiresAt string
@@ -80,7 +80,7 @@ func (c *Licenses) Get() (License, error) {
 		}
 	}
 
-	err := c.client.Query(&query, nil)
+	err := l.client.Query(&query, nil)
 
 	if err != nil {
 		return nil, err

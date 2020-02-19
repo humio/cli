@@ -56,7 +56,7 @@ func saveConfig() error {
 	return nil
 }
 
-func addAccount(out *prompt.Prompt, newName string, profile *Login) {
+func addAccount(out *prompt.Prompt, newName string, profile *login) {
 	profiles := viper.GetStringMap("profiles")
 
 	profiles[newName] = map[string]string{
@@ -68,8 +68,8 @@ func addAccount(out *prompt.Prompt, newName string, profile *Login) {
 	viper.Set("profiles", profiles)
 }
 
-func mapToLogin(data interface{}) *Login {
-	return &Login{
+func mapToLogin(data interface{}) *login {
+	return &login{
 		address:  getMapKey(data, "address"),
 		username: getMapKey(data, "username"),
 		token:    getMapKey(data, "token"),
@@ -90,7 +90,7 @@ func getMapKey(data interface{}, key string) string {
 	return ""
 }
 
-func collectProfileInfo(cmd *cobra.Command) (*Login, error) {
+func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 	var addr, token, username string
 
 	out := prompt.NewPrompt(cmd.OutOrStdout())
@@ -99,7 +99,7 @@ func collectProfileInfo(cmd *cobra.Command) (*Login, error) {
 	out.Description("If you are not using Humio Cloud enter the address of your Humio installation,")
 	out.Description("e.g. http://localhost:8080/ or https://humio.example.com/")
 
-	for true {
+	for {
 		var err error
 		out.Output("")
 		addr, err = out.Ask("Address (default: https://cloud.humio.com/ [Hit Enter])")
@@ -169,7 +169,7 @@ func collectProfileInfo(cmd *cobra.Command) (*Login, error) {
 
 	out.Output()
 
-	for true {
+	for {
 		var err error
 		token, err = out.AskSecret("API Token")
 		exitOnError(cmd, err, "error reading token")
@@ -203,7 +203,7 @@ func collectProfileInfo(cmd *cobra.Command) (*Login, error) {
 		break
 	}
 
-	return &Login{address: addr, token: token, username: username}, nil
+	return &login{address: addr, token: token, username: username}, nil
 }
 
 func isCurrentAccount(addr string, token string) bool {

@@ -33,17 +33,17 @@ type UserChangeSet struct {
 
 func (c *Client) Users() *Users { return &Users{client: c} }
 
-func (c *Users) List() ([]User, error) {
+func (u *Users) List() ([]User, error) {
 	var q struct {
 		Users []User `graphql:"accounts"`
 	}
 
-	graphqlErr := c.client.Query(&q, nil)
+	graphqlErr := u.client.Query(&q, nil)
 
 	return q.Users, graphqlErr
 }
 
-func (c *Users) Get(username string) (User, error) {
+func (u *Users) Get(username string) (User, error) {
 	var q struct {
 		User User `graphql:"account(username: $username)"`
 	}
@@ -52,32 +52,32 @@ func (c *Users) Get(username string) (User, error) {
 		"username": graphql.String(username),
 	}
 
-	graphqlErr := c.client.Query(&q, variables)
+	graphqlErr := u.client.Query(&q, variables)
 
 	return q.User, graphqlErr
 }
 
-func (c *Users) Update(username string, changeset UserChangeSet) (User, error) {
+func (u *Users) Update(username string, changeset UserChangeSet) (User, error) {
 	var mutation struct {
 		Result struct{ User User } `graphql:"updateUser(input: {username: $username, isRoot: $isRoot, fullName: $fullName, company: $company, countryCode: $countryCode, email: $email, picture: $picture})"`
 	}
 
-	graphqlErr := c.client.Mutate(&mutation, userChangesetToVars(username, changeset))
+	graphqlErr := u.client.Mutate(&mutation, userChangesetToVars(username, changeset))
 
 	return mutation.Result.User, graphqlErr
 }
 
-func (c *Users) Add(username string, changeset UserChangeSet) (User, error) {
+func (u *Users) Add(username string, changeset UserChangeSet) (User, error) {
 	var mutation struct {
 		Result struct{ User User } `graphql:"addUser(input: {username: $username, isRoot: $isRoot, fullName: $fullName, company: $company, countryCode: $countryCode, email: $email, picture: $picture})"`
 	}
 
-	graphqlErr := c.client.Mutate(&mutation, userChangesetToVars(username, changeset))
+	graphqlErr := u.client.Mutate(&mutation, userChangesetToVars(username, changeset))
 
 	return mutation.Result.User, graphqlErr
 }
 
-func (c *Users) Remove(username string) (User, error) {
+func (u *Users) Remove(username string) (User, error) {
 	var mutation struct {
 		Result struct {
 			// We have to make a selection, so just take __typename
@@ -89,7 +89,7 @@ func (c *Users) Remove(username string) (User, error) {
 		"username": graphql.String(username),
 	}
 
-	graphqlErr := c.client.Mutate(&mutation, variables)
+	graphqlErr := u.client.Mutate(&mutation, variables)
 
 	return mutation.Result.User, graphqlErr
 }

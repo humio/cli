@@ -36,7 +36,7 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 	return cmd
 }
 
-func loadProfile(profileName string) (*Login, error) {
+func loadProfile(profileName string) (*login, error) {
 	profiles := viper.GetStringMap("profiles")
 	profileData := profiles[profileName]
 
@@ -44,7 +44,7 @@ func loadProfile(profileName string) (*Login, error) {
 		return nil, fmt.Errorf("unknown profile %s", profileName)
 	}
 
-	profile := Login{address: getMapKey(profileData, "address"), token: getMapKey(profileData, "token")}
+	profile := login{address: getMapKey(profileData, "address"), token: getMapKey(profileData, "token")}
 
 	return &profile, nil
 }

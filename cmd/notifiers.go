@@ -1,4 +1,4 @@
-// Copyright © 2018 Humio Ltd.
+// Copyright © 2020 Humio Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,20 +18,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newIngestTokensCmd() *cobra.Command {
+func newNotifiersCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "ingest-tokens [flags]",
-		Short: "Manage ingest tokens",
-		Long: `Ingest tokens, unlike the more general API tokens, can only be used for ingestion of data.
-
-You can also assign a parser to an ingest token, allowing you to configure how Humio parses incoming data
-without having to change anything on sender/client.`,
+		Use:   "notifiers",
+		Short: "Manage notifiers",
 	}
 
-	cmd.AddCommand(newIngestTokensAddCmd())
-	cmd.AddCommand(newIngestTokensRemoveCmd())
-	cmd.AddCommand(newIngestTokensListCmd())
-	cmd.AddCommand(newIngestTokensShowCmd())
+	cmd.AddCommand(newNotifiersListCmd())
+	cmd.AddCommand(newNotifiersShowCmd())
+	cmd.AddCommand(newNotifiersRemoveCmd())
+	cmd.AddCommand(newNotifiersInstallCmd())
+	cmd.AddCommand(newNotifiersExportCmd())
 
 	return cmd
 }

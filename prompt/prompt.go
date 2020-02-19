@@ -68,9 +68,9 @@ func (p *Prompt) AskSecret(question string) (string, error) {
 	return string(bytes), nil
 }
 
-func (c *Prompt) Print(i ...interface{}) {
-	fmt.Fprint(c.Out, "  ")
-	fmt.Fprint(c.Out, i...)
+func (p *Prompt) Print(i ...interface{}) {
+	fmt.Fprint(p.Out, "  ")
+	fmt.Fprint(p.Out, i...)
 }
 
 func (p *Prompt) Output(i ...interface{}) {

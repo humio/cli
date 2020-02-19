@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/shurcooL/graphql"
 )
 
@@ -24,7 +26,7 @@ type ingestTokenData struct {
 	}
 }
 
-func (p *IngestTokens) List(repo string) ([]IngestToken, error) {
+func (i *IngestTokens) List(repo string) ([]IngestToken, error) {
 	var query struct {
 		Result struct {
 			IngestTokens []ingestTokenData
@@ -35,18 +37,33 @@ func (p *IngestTokens) List(repo string) ([]IngestToken, error) {
 		"repositoryName": graphql.String(repo),
 	}
 
-	err := p.client.Query(&query, variables)
+	err := i.client.Query(&query, variables)
 
 	if err != nil {
 		return nil, err
 	}
 
 	tokens := make([]IngestToken, len(query.Result.IngestTokens))
-	for i, tokenData := range query.Result.IngestTokens {
-		tokens[i] = *toIngestToken(tokenData)
+	for idx, tokenData := range query.Result.IngestTokens {
+		tokens[idx] = *toIngestToken(tokenData)
 	}
 
 	return tokens, nil
+}
+
+func (i *IngestTokens) Get(repoName, tokenName string) (*IngestToken, error) {
+	tokensInRepo, err := i.List(repoName)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, token := range tokensInRepo {
+		if token.Name == tokenName {
+			return &token, nil
+		}
+	}
+
+	return nil, fmt.Errorf("could not find an ingest token with name '%s' in repo '%s'", tokenName, repoName)
 }
 
 func toIngestToken(data ingestTokenData) *IngestToken {
@@ -62,7 +79,7 @@ func toIngestToken(data ingestTokenData) *IngestToken {
 	}
 }
 
-func (p *IngestTokens) Add(repo string, name string, parserName string) (*IngestToken, error) {
+func (i *IngestTokens) Add(repo string, name string, parserName string) (*IngestToken, error) {
 	var mutation struct {
 		Result struct {
 			IngestToken ingestTokenData
@@ -79,7 +96,7 @@ func (p *IngestTokens) Add(repo string, name string, parserName string) (*Ingest
 		"parser":         parserNameVar,
 	}
 
-	err := p.client.Mutate(&mutation, variables)
+	err := i.client.Mutate(&mutation, variables)
 
 	if err != nil {
 		return nil, err
@@ -88,7 +105,7 @@ func (p *IngestTokens) Add(repo string, name string, parserName string) (*Ingest
 	return toIngestToken(mutation.Result.IngestToken), err
 }
 
-func (p *IngestTokens) Remove(repo string, tokenName string) error {
+func (i *IngestTokens) Remove(repo string, tokenName string) error {
 	var mutation struct {
 		Result struct {
 			Type string `graphql:"__typename"`
@@ -100,5 +117,5 @@ func (p *IngestTokens) Remove(repo string, tokenName string) error {
 		"repositoryName": graphql.String(repo),
 	}
 
-	return p.client.Mutate(&mutation, variables)
+	return i.client.Mutate(&mutation, variables)
 }

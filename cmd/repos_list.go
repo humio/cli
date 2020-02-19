@@ -42,14 +42,13 @@ func newReposListCmd() *cobra.Command {
 					b = repos[j]
 				} else {
 					a = repos[j]
-					b = repos[j]
+					b = repos[i]
 				}
 
-				if !orderBySize {
-					return a.Name < b.Name
-				} else {
+				if orderBySize {
 					return a.SpaceUsed > b.SpaceUsed
 				}
+				return a.Name < b.Name
 			})
 
 			rows := make([][]string, len(repos))

@@ -1,4 +1,4 @@
-// Copyright © 2018 Humio Ltd.
+// Copyright © 2020 Humio Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,23 +15,34 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/spf13/cobra"
 )
 
-func newIngestTokensCmd() *cobra.Command {
+func newAlertsRemoveCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "ingest-tokens [flags]",
-		Short: "Manage ingest tokens",
-		Long: `Ingest tokens, unlike the more general API tokens, can only be used for ingestion of data.
+		Use:   "remove [flags] <view> <name>",
+		Short: "Removes an alert.",
+		Long:  `Removes the alert with name '<name>' in the view with name '<view>'.`,
+		Args:  cobra.ExactArgs(2),
+		Run: func(cmd *cobra.Command, args []string) {
+			view := args[0]
+			name := args[1]
 
-You can also assign a parser to an ingest token, allowing you to configure how Humio parses incoming data
-without having to change anything on sender/client.`,
+			// Get the HTTP client
+			client := NewApiClient(cmd)
+
+			err := client.Alerts().Delete(view, name)
+			if err != nil {
+				cmd.Println(fmt.Errorf("error removing ingest token: %s", err))
+				os.Exit(1)
+			}
+
+			cmd.Println("Alert removed")
+		},
 	}
-
-	cmd.AddCommand(newIngestTokensAddCmd())
-	cmd.AddCommand(newIngestTokensRemoveCmd())
-	cmd.AddCommand(newIngestTokensListCmd())
-	cmd.AddCommand(newIngestTokensShowCmd())
 
 	return cmd
 }

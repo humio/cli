@@ -2,9 +2,9 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 )
 
 type StatusResponse struct {
@@ -13,7 +13,7 @@ type StatusResponse struct {
 }
 
 func (c *Client) Status() (*StatusResponse, error) {
-	resp, err := c.httpGET("api/v1/status")
+	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/status", nil)
 
 	if err != nil {
 		return nil, err
@@ -22,7 +22,7 @@ func (c *Client) Status() (*StatusResponse, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 400 {
-		return nil, errors.New(fmt.Sprintf("error getting server status: %s", resp.Status))
+		return nil, fmt.Errorf("error getting server status: %s", resp.Status)
 	}
 
 	jsonData, err := ioutil.ReadAll(resp.Body)
