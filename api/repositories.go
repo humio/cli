@@ -68,3 +68,32 @@ func (r *Repositories) Create(name string) error {
 
 	return nil
 }
+
+type Member struct {
+	User                 User `graphql:"user"`
+	CanAdministrateUsers bool `graphql:"canAdministrateUsers"`
+	CanDeleteData        bool `graphql:"canDeleteData"`
+}
+
+func (r *Repositories) AddMember(name, username string, adminRights, deleteRights bool) (Member, error) {
+	var mutation struct {
+		Result struct {
+			Member Member
+		} `graphql:"addMember(searchDomainName: $name, username: $username, hasMembershipAdminRights: $adminRights, hasDeletionRights: $deleteRights)"`
+	}
+	variables := map[string]interface{}{
+		"name":         graphql.String(name),
+		"username":     graphql.String(username),
+		"adminRights":  graphql.Boolean(adminRights),
+		"deleteRights": graphql.Boolean(deleteRights),
+	}
+
+	graphqlErr := r.client.Mutate(&mutation, variables)
+
+	if graphqlErr != nil {
+		// The graphql error message is vague if the user already is a member, so add a hint.
+		return mutation.Result.Member, fmt.Errorf("%+v. Does the user already have access to the repo?", graphqlErr)
+	}
+
+	return mutation.Result.Member, nil
+}
