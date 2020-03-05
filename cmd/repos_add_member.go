@@ -32,7 +32,7 @@ func newReposAddMemberCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			_, apiErr := client.Repositories().AddMember(repoName, userName, adminRights, deleteRights)
-			exitOnError(cmd, apiErr, "error creating repository")
+			exitOnError(cmd, apiErr, "error adding member")
 		},
 	}
 
