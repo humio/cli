@@ -139,7 +139,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 			continue
 		}
 
-		if status.Status != "ok" {
+		if status.Status != "OK" {
 			cmd.Println(prompt.Colorize("[[red]Failed[reset]]"))
 			cmd.Println(fmt.Errorf("The server reported that is is malfunctioning, status: %s", status.Status))
 			os.Exit(1)
