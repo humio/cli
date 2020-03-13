@@ -17,3 +17,15 @@ func (c *Viewer) Username() (string, error) {
 	graphqlErr := c.client.Query(&query, nil)
 	return query.Viewer.Username, graphqlErr
 }
+
+// ApiToken fetches the api token for the user who is currently authenticated.
+func (c *Viewer) ApiToken() (string, error) {
+	var query struct {
+		Viewer struct {
+			ApiToken string
+		}
+	}
+
+	graphqlErr := c.client.Query(&query, nil)
+	return query.Viewer.ApiToken, graphqlErr
+}
