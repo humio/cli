@@ -49,7 +49,6 @@ func printUserTable(cmd *cobra.Command, user api.User) {
 		[]string{"Username", user.Username},
 		[]string{"Name", user.FullName},
 		[]string{"Is Root", yesNo(user.IsRoot)},
-		[]string{"Roles", strings.Join(userRoleNames(user), ", ")},
 		[]string{"Email", user.Email},
 		[]string{"Created At", user.CreatedAt},
 		[]string{"Country Code", user.CountryCode},
@@ -65,12 +64,4 @@ func printUserTable(cmd *cobra.Command, user api.User) {
 	fmt.Println()
 	w.Render()
 	fmt.Println()
-}
-
-func userRoleNames(user api.User) []string {
-	names := make([]string, len(user.Roles))
-	for i, r := range user.Roles {
-		names[i] = r.Name
-	}
-	return names
 }
