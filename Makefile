@@ -8,7 +8,7 @@ $(BIN_PATH): $(GOFILES)
 
 all: build
 
-$(BIN_PATH): $(GOFILES)
+$(BIN_PATH): FORCE
 	@echo "--> Building Humio CLI"
 	go build -o $(BIN_PATH) main.go
 
@@ -34,4 +34,6 @@ dist: clean
 run: $(BIN_PATH)
 	$(BIN_PATH) $(CLI_COMMAND)
 
-.PHONY: build get clean dist run
+.PHONY: build get clean dist run FORCE
+
+FORCE:
