@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/signal"
 	"regexp"
+	"sort"
 	"strings"
 	"syscall"
 	"time"
@@ -17,11 +18,10 @@ import (
 
 func newSearchCmd() *cobra.Command {
 	var (
-		start    string
-		end      string
-		live     bool
-		complete bool
-		fmt      string
+		start string
+		end   string
+		live  bool
+		fmt   string
 	)
 
 	cmd := &cobra.Command{
@@ -32,11 +32,6 @@ func newSearchCmd() *cobra.Command {
 			repository := args[0]
 			queryString := args[1]
 			client := NewApiClient(cmd)
-
-			if live && complete {
-				cmd.Println("Cannot use both --live and --complete at the same time.")
-				os.Exit(1)
-			}
 
 			ctx := contextCancelledOnInterrupt(context.Background())
 
@@ -80,23 +75,24 @@ func newSearchCmd() *cobra.Command {
 					printer = newEventListPrinter(cmd.OutOrStdout(), fmt)
 				}
 
-				for {
-					if !complete && len(result.Events) > 0 {
-						printer.print(result)
-					}
-
-					if result.Done && !live {
-						break
-					}
-
+				for !result.Done {
 					result, err = poller.WaitAndPollContext(ctx)
 					if err != nil {
 						return err
 					}
 				}
 
-				if complete {
-					printer.print(result)
+				printer.print(result)
+
+				if live {
+					for {
+						result, err = poller.WaitAndPollContext(ctx)
+						if err != nil {
+							return err
+						}
+
+						printer.print(result)
+					}
 				}
 
 				return nil
@@ -110,10 +106,9 @@ func newSearchCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&start, "start", "10m", "Query start time [default 10m]")
-	cmd.Flags().StringVar(&end, "end", "", "Query end time")
-	cmd.Flags().BoolVar(&live, "live", false, "Run a live search and keep outputting until interrupted.")
-	cmd.Flags().BoolVar(&complete, "complete", false, "Wait for query to complete before printing result. Mostly useful for aggregates.")
+	cmd.Flags().StringVarP(&start, "start", "s", "10m", "Query start time [default 10m]")
+	cmd.Flags().StringVarP(&end, "end", "e", "", "Query end time")
+	cmd.Flags().BoolVarP(&live, "live", "l", false, "Run a live search and keep outputting until interrupted.")
 	cmd.Flags().StringVarP(&fmt, "fmt", "f", "{@timestamp} {@rawstring}", "Format string if the result is an event list\n"+
 		"Insert fields by wrapping field names in brackets, e.g. {@timestamp} [default: '{@timestamp} {@rawstring}']\n"+
 		"Limited format modifiers are supported such as {@timestamp:40} which will right align and left pad @timestamp to 40 characters.\n"+
@@ -238,6 +233,22 @@ func (p *eventListPrinter) initPrintFunc() {
 }
 
 func (p *eventListPrinter) print(result api.QueryResult) {
+	sort.Slice(result.Events, func(i, j int) bool {
+		tsI, hasTsI := result.Events[i]["@timestamp"].(float64)
+		tsJ, hasTsJ := result.Events[j]["@timestamp"].(float64)
+
+		switch {
+		case hasTsI && hasTsJ:
+			return tsI < tsJ
+		case !hasTsJ:
+			return false
+		case !hasTsI:
+			return true
+		default:
+			return false
+		}
+	})
+
 	for _, e := range result.Events {
 		id, hasID := e["@id"].(string)
 		if hasID && !p.printedIds[id] {
@@ -261,13 +272,17 @@ func newAggregatePrinter(w io.Writer) *aggregatePrinter {
 }
 
 func (p *aggregatePrinter) print(result api.QueryResult) {
-	if p.columns == nil {
-		var f []string
-		for k := range result.Events[0] {
-			f = append(f, k)
+	f := p.columns
+	m := map[string]bool{}
+	for _, e := range result.Events {
+		for k := range e {
+			if !m[k] {
+				f = append(f, k)
+				m[k] = true
+			}
 		}
-		p.columns = f
 	}
+	p.columns = f
 
 	if len(p.columns) == 0 {
 		return
@@ -286,11 +301,16 @@ func (p *aggregatePrinter) print(result api.QueryResult) {
 	t.SetHeaderLine(false)
 
 	for _, e := range result.Events {
-		var v []string
+		var r []string
 		for _, i := range p.columns {
-			v = append(v, fmt.Sprint(e[i]))
+			v, hasField := e[i]
+			if hasField {
+				r = append(r, fmt.Sprint(v))
+			} else {
+				r = append(r, "")
+			}
 		}
-		t.Append(v)
+		t.Append(r)
 	}
 
 	t.Render()
