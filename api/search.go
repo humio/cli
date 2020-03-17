@@ -25,11 +25,19 @@ type Query struct {
 }
 
 type QueryResultMetadata struct {
-	EventCount  uint64 `json:"eventCount"`
-	IsAggregate bool   `json:"isAggregate"`
-	PollAfter   int    `json:"pollAfter"`
-	QueryStart  uint64 `json:"queryStart"`
-	QueryEnd    uint64 `json:"queryEnd"`
+	EventCount       uint64                 `json:"eventCount"`
+	ExtraData        map[string]interface{} `json:"extraData"`
+	FieldOrder       []string               `json:"fieldOrder"`
+	IsAggregate      bool                   `json:"isAggregate"`
+	PollAfter        int                    `json:"pollAfter"`
+	ProcessedBytes   uint64                 `json:"processedBytes"`
+	ProcessedEvents  uint64                 `json:"processedEvents"`
+	QueryStart       uint64                 `json:"queryStart"`
+	QueryEnd         uint64                 `json:"queryEnd"`
+	ResultBufferSize uint64                 `json:"resultBufferSize"`
+	TimeMillis       uint64                 `json:"timeMillis"`
+	TotalWork        uint64                 `json:"totalWork"`
+	WorkDone         uint64                 `json:"workDone"`
 }
 
 type QueryResult struct {
@@ -88,6 +96,7 @@ func (q *QueryJobs) PollContext(ctx context.Context, repository string, id strin
 	var result QueryResult
 
 	err = json.NewDecoder(resp.Body).Decode(&result)
+	//err = json.NewDecoder(io.TeeReader(resp.Body, os.Stderr)).Decode(&result)
 
 	return result, err
 }

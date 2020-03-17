@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/humio/cli/api"
 	"github.com/olekukonko/tablewriter"
+	"github.com/schollz/progressbar/v2"
 	"github.com/spf13/cobra"
 	"io"
 	"os"
@@ -18,10 +19,11 @@ import (
 
 func newSearchCmd() *cobra.Command {
 	var (
-		start string
-		end   string
-		live  bool
-		fmt   string
+		start      string
+		end        string
+		live       bool
+		fmtStr     string
+		noProgress bool
 	)
 
 	cmd := &cobra.Command{
@@ -37,6 +39,11 @@ func newSearchCmd() *cobra.Command {
 
 			// run in lambda func to be able to defer and delete the query job
 			err := func() error {
+				var progress queryResultProgressBar
+				if !noProgress {
+					progress = newQueryResultProgressBar()
+				}
+
 				id, err := client.QueryJobs().Create(repository, api.Query{
 					QueryString: queryString,
 					Start:       start,
@@ -72,15 +79,19 @@ func newSearchCmd() *cobra.Command {
 				if result.Metadata.IsAggregate {
 					printer = newAggregatePrinter(cmd.OutOrStdout())
 				} else {
-					printer = newEventListPrinter(cmd.OutOrStdout(), fmt)
+					printer = newEventListPrinter(cmd.OutOrStdout(), fmtStr)
 				}
 
+
 				for !result.Done {
+					progress.Update(result)
 					result, err = poller.WaitAndPollContext(ctx)
 					if err != nil {
 						return err
 					}
 				}
+
+				progress.Finish()
 
 				printer.print(result)
 
@@ -109,10 +120,11 @@ func newSearchCmd() *cobra.Command {
 	cmd.Flags().StringVarP(&start, "start", "s", "10m", "Query start time [default 10m]")
 	cmd.Flags().StringVarP(&end, "end", "e", "", "Query end time")
 	cmd.Flags().BoolVarP(&live, "live", "l", false, "Run a live search and keep outputting until interrupted.")
-	cmd.Flags().StringVarP(&fmt, "fmt", "f", "{@timestamp} {@rawstring}", "Format string if the result is an event list\n"+
+	cmd.Flags().StringVarP(&fmtStr, "fmt", "f", "{@timestamp} {@rawstring}", "Format string if the result is an event list\n"+
 		"Insert fields by wrapping field names in brackets, e.g. {@timestamp} [default: '{@timestamp} {@rawstring}']\n"+
 		"Limited format modifiers are supported such as {@timestamp:40} which will right align and left pad @timestamp to 40 characters.\n"+
 		"{@timestamp:-40} left aligns and right pads to 40 characters.")
+	cmd.Flags().BoolVar(&noProgress, "no-progress", false, "Do not should progress information.")
 
 	return cmd
 }
@@ -129,6 +141,41 @@ func contextCancelledOnInterrupt(ctx context.Context) context.Context {
 	}()
 
 	return ctx
+}
+
+type queryResultProgressBar struct {
+	bar *progressbar.ProgressBar
+}
+
+func newQueryResultProgressBar() queryResultProgressBar {
+	b := queryResultProgressBar{
+		bar: progressbar.NewOptions(
+			0,
+			progressbar.OptionSetPredictTime(false),
+			progressbar.OptionSetDescription("Searching..."),
+			progressbar.OptionClearOnFinish(),
+		),
+	}
+	return b
+}
+
+func (b queryResultProgressBar) Update(result api.QueryResult) {
+	if b.bar == nil {
+		return
+	}
+
+	if result.Metadata.TotalWork > 0 {
+		b.bar.ChangeMax64(int64(result.Metadata.TotalWork))
+		b.bar.Set64(int64(result.Metadata.WorkDone))
+	}
+}
+
+func (b queryResultProgressBar) Finish() {
+	if b.bar == nil {
+		return
+	}
+
+	b.bar.Finish()
 }
 
 type queryJobPoller struct {

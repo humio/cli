@@ -9,6 +9,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/olekukonko/tablewriter v0.0.1
 	github.com/ryanuber/columnize v2.1.0+incompatible
+	github.com/schollz/progressbar/v2 v2.15.0
 	github.com/shurcooL/graphql v0.0.0-20181231061246-d48a9a75455f
 	github.com/skratchdot/open-golang v0.0.0-20190402232053-79abb63cd66e
 	github.com/spf13/cobra v0.0.5
