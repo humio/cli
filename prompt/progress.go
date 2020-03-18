@@ -46,6 +46,12 @@ func ProgressOptionAppendAdditionalInfo(f func() string) ProgressOption {
 	}
 }
 
+func ProgressOptionWriter(w io.Writer) ProgressOption {
+	return func(bar *ProgressBar) {
+		bar.w = w
+	}
+}
+
 func NewProgressBar(opts ...ProgressOption) *ProgressBar {
 	bar := &ProgressBar{
 		max:         100,
@@ -53,6 +59,7 @@ func NewProgressBar(opts ...ProgressOption) *ProgressBar {
 		close:       make(chan struct{}),
 		update:      make(chan struct{}),
 		running:     make(chan struct{}),
+		w:           os.Stderr,
 	}
 
 	for _, o := range opts {
@@ -95,8 +102,8 @@ func (p *ProgressBar) bar() string {
 	return string(bar)
 }
 
-func (ProgressBar) clearLine() {
-	fmt.Fprint(os.Stderr, "\r")
+func (p *ProgressBar) clearLine() {
+	fmt.Fprint(p.w, "\r")
 }
 
 func (p *ProgressBar) print() {
@@ -104,9 +111,9 @@ func (p *ProgressBar) print() {
 	if len(d) > 0 {
 		d = "  " + d
 	}
-	fmt.Fprintf(os.Stderr, "%s  %.1f %% %s", d, p.percentage()*100, p.bar())
+	fmt.Fprintf(p.w, "%s  %.1f %% %s", d, p.percentage()*100, p.bar())
 	for _, f := range p.additionalInfo {
-		fmt.Fprintf(os.Stderr, "  %s", f())
+		fmt.Fprintf(p.w, "  %s", f())
 	}
 }
 
@@ -144,7 +151,7 @@ func (p *ProgressBar) Finish() {
 	p.Set(p.max, p.max)
 	p.Stop()
 	<-p.running
-	fmt.Fprintln(os.Stderr)
+	fmt.Fprintln(p.w)
 }
 
 func (p *ProgressBar) Start() {
