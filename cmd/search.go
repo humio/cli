@@ -184,7 +184,7 @@ func (b *queryResultProgressBar) Update(result api.QueryResult) {
 func (b *queryResultProgressBar) additionalInfoEps() string {
 	if !math.IsNaN(b.epsValue) {
 		v, suffix := prompt.AddSISuffix(b.epsValue, false)
-		return fmt.Sprintf("%.1f %sEPS", v, suffix)
+		return fmt.Sprintf("%.1f %s events/s", v, suffix)
 	}
 	return ""
 }
