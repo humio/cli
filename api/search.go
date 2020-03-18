@@ -16,12 +16,13 @@ type QueryJobs struct {
 func (c *Client) QueryJobs() *QueryJobs { return &QueryJobs{client: c} }
 
 type Query struct {
-	QueryString    string            `json:"queryString"`
-	Start          string            `json:"start,omitempty"`
-	End            string            `json:"end,omitempty"`
-	Live           bool              `json:"isLive,omitempty"`
-	TimezoneOffset *int              `json:"timeZoneOffsetMinutes,omitempty"`
-	Arguments      map[string]string `json:"arguments,omitempty"`
+	QueryString                string            `json:"queryString"`
+	Start                      string            `json:"start,omitempty"`
+	End                        string            `json:"end,omitempty"`
+	Live                       bool              `json:"isLive,omitempty"`
+	TimezoneOffset             *int              `json:"timeZoneOffsetMinutes,omitempty"`
+	Arguments                  map[string]string `json:"arguments,omitempty"`
+	ShowQueryEventDistribution bool              `json:"showQueryEventDistribution,omitempty"`
 }
 
 type QueryResultMetadata struct {
@@ -96,7 +97,6 @@ func (q *QueryJobs) PollContext(ctx context.Context, repository string, id strin
 	var result QueryResult
 
 	err = json.NewDecoder(resp.Body).Decode(&result)
-	//err = json.NewDecoder(io.TeeReader(resp.Body, os.Stderr)).Decode(&result)
 
 	return result, err
 }

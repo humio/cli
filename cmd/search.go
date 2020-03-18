@@ -4,10 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/prompt"
 	"github.com/olekukonko/tablewriter"
-	"github.com/schollz/progressbar/v2"
 	"github.com/spf13/cobra"
 	"io"
+	"math"
 	"os"
 	"os/signal"
 	"regexp"
@@ -39,7 +40,7 @@ func newSearchCmd() *cobra.Command {
 
 			// run in lambda func to be able to defer and delete the query job
 			err := func() error {
-				var progress queryResultProgressBar
+				var progress *queryResultProgressBar
 				if !noProgress {
 					progress = newQueryResultProgressBar()
 				}
@@ -49,6 +50,7 @@ func newSearchCmd() *cobra.Command {
 					Start:       start,
 					End:         end,
 					Live:        live,
+					ShowQueryEventDistribution: true,
 				})
 
 				if err != nil {
@@ -82,16 +84,20 @@ func newSearchCmd() *cobra.Command {
 					printer = newEventListPrinter(cmd.OutOrStdout(), fmtStr)
 				}
 
-
 				for !result.Done {
-					progress.Update(result)
+					if progress != nil {
+						progress.Update(result)
+					}
 					result, err = poller.WaitAndPollContext(ctx)
 					if err != nil {
 						return err
 					}
 				}
 
-				progress.Finish()
+				if progress != nil {
+					progress.Update(result)
+					progress.Finish()
+				}
 
 				printer.print(result)
 
@@ -117,11 +123,11 @@ func newSearchCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&start, "start", "s", "10m", "Query start time [default 10m]")
+	cmd.Flags().StringVarP(&start, "start", "s", "10m", "Query start time")
 	cmd.Flags().StringVarP(&end, "end", "e", "", "Query end time")
 	cmd.Flags().BoolVarP(&live, "live", "l", false, "Run a live search and keep outputting until interrupted.")
 	cmd.Flags().StringVarP(&fmtStr, "fmt", "f", "{@timestamp} {@rawstring}", "Format string if the result is an event list\n"+
-		"Insert fields by wrapping field names in brackets, e.g. {@timestamp} [default: '{@timestamp} {@rawstring}']\n"+
+		"Insert fields by wrapping field names in brackets, e.g. {@timestamp}\n"+
 		"Limited format modifiers are supported such as {@timestamp:40} which will right align and left pad @timestamp to 40 characters.\n"+
 		"{@timestamp:-40} left aligns and right pads to 40 characters.")
 	cmd.Flags().BoolVar(&noProgress, "no-progress", false, "Do not should progress information.")
@@ -144,37 +150,59 @@ func contextCancelledOnInterrupt(ctx context.Context) context.Context {
 }
 
 type queryResultProgressBar struct {
-	bar *progressbar.ProgressBar
+	bar       *prompt.ProgressBar
+	epsValue  float64
+	bpsValue  float64
+	hits      uint64
 }
 
-func newQueryResultProgressBar() queryResultProgressBar {
-	b := queryResultProgressBar{
-		bar: progressbar.NewOptions(
-			0,
-			progressbar.OptionSetPredictTime(false),
-			progressbar.OptionSetDescription("Searching..."),
-			progressbar.OptionClearOnFinish(),
-		),
-	}
+func newQueryResultProgressBar() *queryResultProgressBar {
+	b := &queryResultProgressBar{}
+	b.bar = prompt.NewProgressBar(
+		prompt.ProgressOptionDescription("Searching..."),
+		prompt.ProgressOptionAppendAdditionalInfo(b.additionalInfoBps),
+		prompt.ProgressOptionAppendAdditionalInfo(b.additionalInfoEps),
+		prompt.ProgressOptionAppendAdditionalInfo(b.additionalInfoHits),
+	)
+	b.epsValue = math.NaN()
+	b.bpsValue = math.NaN()
+	b.bar.Start()
 	return b
 }
 
-func (b queryResultProgressBar) Update(result api.QueryResult) {
-	if b.bar == nil {
-		return
+func (b *queryResultProgressBar) Update(result api.QueryResult) {
+	if result.Metadata.TimeMillis > 0 {
+		b.epsValue = float64(result.Metadata.ProcessedEvents) / float64(result.Metadata.TimeMillis) * 1000
+		b.bpsValue = float64(result.Metadata.ProcessedBytes) / float64(result.Metadata.TimeMillis) * 1000
 	}
 
-	if result.Metadata.TotalWork > 0 {
-		b.bar.ChangeMax64(int64(result.Metadata.TotalWork))
-		b.bar.Set64(int64(result.Metadata.WorkDone))
-	}
+	b.hits = result.Metadata.EventCount
+
+	b.bar.Set(result.Metadata.WorkDone, result.Metadata.TotalWork)
 }
 
-func (b queryResultProgressBar) Finish() {
-	if b.bar == nil {
-		return
+func (b *queryResultProgressBar) additionalInfoEps() string {
+	if !math.IsNaN(b.epsValue) {
+		v, suffix := prompt.AddSISuffix(b.epsValue, false)
+		return fmt.Sprintf("%.1f %sEPS", v, suffix)
 	}
+	return ""
+}
 
+func (b *queryResultProgressBar) additionalInfoBps() string {
+	if !math.IsNaN(b.bpsValue) {
+		v, suffix := prompt.AddSISuffix(b.bpsValue, true)
+		return fmt.Sprintf("%.1f %sB/s", v, suffix)
+	}
+	return ""
+}
+
+func (b *queryResultProgressBar) additionalInfoHits() string {
+	v, suffix := prompt.AddSISuffix(float64(b.hits), false)
+	return fmt.Sprintf("%.1f %s events", v, suffix)
+}
+
+func (b *queryResultProgressBar) Finish() {
 	b.bar.Finish()
 }
 
@@ -319,17 +347,21 @@ func newAggregatePrinter(w io.Writer) *aggregatePrinter {
 }
 
 func (p *aggregatePrinter) print(result api.QueryResult) {
-	f := p.columns
-	m := map[string]bool{}
-	for _, e := range result.Events {
-		for k := range e {
-			if !m[k] {
-				f = append(f, k)
-				m[k] = true
+	if len(result.Metadata.FieldOrder) > 0 {
+		p.columns = result.Metadata.FieldOrder
+	} else {
+		f := p.columns
+		m := map[string]bool{}
+		for _, e := range result.Events {
+			for k := range e {
+				if !m[k] {
+					f = append(f, k)
+					m[k] = true
+				}
 			}
 		}
+		p.columns = f
 	}
-	p.columns = f
 
 	if len(p.columns) == 0 {
 		return

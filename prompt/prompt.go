@@ -104,6 +104,7 @@ func Colorize(text string) string {
 		"[purple]", "\x1b[38;5;129m",
 		"[bold]", "\x1b[1m",
 		"[red]", "\x1b[38;5;1m",
+		"[yellow]", "\x1b[33m",
 		"[green]", "\x1b[38;5;2m",
 		"[underline]", "\x1b[4m",
 	)
