@@ -120,6 +120,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newReposCmd())
 	rootCmd.AddCommand(newSearchCmd())
 	rootCmd.AddCommand(newStatusCmd())
+	rootCmd.AddCommand(newHealthCmd())
 	rootCmd.AddCommand(newClusterCmd())
 	rootCmd.AddCommand(newNotifiersCmd())
 	rootCmd.AddCommand(newAlertsCmd())
