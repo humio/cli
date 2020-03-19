@@ -40,11 +40,6 @@ func newSearchCmd() *cobra.Command {
 
 			// run in lambda func to be able to defer and delete the query job
 			err := func() error {
-				var progress *queryResultProgressBar
-				if !noProgress {
-					progress = newQueryResultProgressBar()
-				}
-
 				id, err := client.QueryJobs().Create(repository, api.Query{
 					QueryString: queryString,
 					Start:       start,
@@ -55,6 +50,11 @@ func newSearchCmd() *cobra.Command {
 
 				if err != nil {
 					return err
+				}
+
+				var progress *queryResultProgressBar
+				if !noProgress {
+					progress = newQueryResultProgressBar()
 				}
 
 				defer func(id string) {
@@ -117,6 +117,11 @@ func newSearchCmd() *cobra.Command {
 
 			if err == context.Canceled {
 				err = nil
+			}
+
+			if queryError, ok := err.(api.QueryError); ok {
+				fmt.Printf("There was an error in your query string:\n\n%s\n", queryError.Error())
+				os.Exit(1)
 			}
 
 			exitOnError(cmd, err, "error running search")

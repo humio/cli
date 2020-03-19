@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -48,6 +49,14 @@ type QueryResult struct {
 	Metadata  QueryResultMetadata      `json:"metaData"`
 }
 
+type QueryError struct {
+	error string
+}
+
+func (e QueryError) Error() string {
+	return e.error
+}
+
 func (q QueryJobs) Create(repository string, query Query) (string, error) {
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(query)
@@ -62,7 +71,15 @@ func (q QueryJobs) Create(repository string, query Query) (string, error) {
 		return "", err
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	switch resp.StatusCode {
+	case http.StatusBadRequest:
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return "", err
+		}
+		return "", QueryError{string(body)}
+	case http.StatusOK:
+	default:
 		return "", fmt.Errorf("could not create query job, got status code %d", resp.StatusCode)
 	}
 
