@@ -1,21 +1,27 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 )
 
+type StatusValue string
+
+const (
+	StatusOK   StatusValue = "OK"
+	StatusWarn StatusValue = "WARN"
+	StatusDown StatusValue = "DOWN"
+)
+
 type HealthCheck struct {
 	Name          string                 `json:"name"`
-	Status        string                 `json:"status"`
+	Status        StatusValue            `json:"status"`
 	StatusMessage string                 `json:"statusMessage"`
 	Fields        map[string]interface{} `json:"fields"`
-}
-
-func (h HealthCheck) IsDown() bool {
-	return h.Status != "OK" && h.Status != "WARN"
 }
 
 type Health struct {
@@ -26,6 +32,7 @@ type Health struct {
 	OK            []HealthCheck `json:"oks"`
 	Warn          []HealthCheck `json:"warnings"`
 	Down          []HealthCheck `json:"down"`
+	rawJson       []byte
 }
 
 func (c *Client) HealthString() (string, error) {
@@ -52,8 +59,10 @@ func (c *Client) Health() (Health, error) {
 		return Health{}, fmt.Errorf("server responded with status code %d", resp.StatusCode)
 	}
 
+	var rawJson bytes.Buffer
+
 	var health Health
-	err = json.NewDecoder(resp.Body).Decode(&health)
+	err = json.NewDecoder(io.TeeReader(resp.Body, &rawJson)).Decode(&health)
 
 	if health.Down == nil {
 		health.Down = []HealthCheck{}
@@ -66,6 +75,8 @@ func (c *Client) Health() (Health, error) {
 	if health.OK == nil {
 		health.OK = []HealthCheck{}
 	}
+
+	health.rawJson = rawJson.Bytes()
 
 	return health, err
 }
@@ -80,4 +91,8 @@ func (h *Health) ChecksMap() map[string]HealthCheck {
 	}
 
 	return m
+}
+
+func (h *Health) Json() []byte {
+	return h.rawJson
 }
