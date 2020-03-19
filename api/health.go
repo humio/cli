@@ -25,7 +25,7 @@ type HealthCheck struct {
 }
 
 type Health struct {
-	Status        string        `json:"status"`
+	Status        StatusValue   `json:"status"`
 	StatusMessage string        `json:"statusMessage"`
 	Uptime        string        `json:"uptime"`
 	Version       string        `json:"version"`
