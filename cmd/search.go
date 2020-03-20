@@ -4,12 +4,15 @@ import (
 	"context"
 	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/prompt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"io"
+	"math"
 	"os"
 	"os/signal"
 	"regexp"
+	"sort"
 	"strings"
 	"syscall"
 	"time"
@@ -17,11 +20,11 @@ import (
 
 func newSearchCmd() *cobra.Command {
 	var (
-		start    string
-		end      string
-		live     bool
-		complete bool
-		fmt      string
+		start      string
+		end        string
+		live       bool
+		fmtStr     string
+		noProgress bool
 	)
 
 	cmd := &cobra.Command{
@@ -33,11 +36,6 @@ func newSearchCmd() *cobra.Command {
 			queryString := args[1]
 			client := NewApiClient(cmd)
 
-			if live && complete {
-				cmd.Println("Cannot use both --live and --complete at the same time.")
-				os.Exit(1)
-			}
-
 			ctx := contextCancelledOnInterrupt(context.Background())
 
 			// run in lambda func to be able to defer and delete the query job
@@ -47,10 +45,16 @@ func newSearchCmd() *cobra.Command {
 					Start:       start,
 					End:         end,
 					Live:        live,
+					ShowQueryEventDistribution: true,
 				})
 
 				if err != nil {
 					return err
+				}
+
+				var progress *queryResultProgressBar
+				if !noProgress {
+					progress = newQueryResultProgressBar()
 				}
 
 				defer func(id string) {
@@ -77,26 +81,35 @@ func newSearchCmd() *cobra.Command {
 				if result.Metadata.IsAggregate {
 					printer = newAggregatePrinter(cmd.OutOrStdout())
 				} else {
-					printer = newEventListPrinter(cmd.OutOrStdout(), fmt)
+					printer = newEventListPrinter(cmd.OutOrStdout(), fmtStr)
 				}
 
-				for {
-					if !complete && len(result.Events) > 0 {
-						printer.print(result)
+				for !result.Done {
+					if progress != nil {
+						progress.Update(result)
 					}
-
-					if result.Done && !live {
-						break
-					}
-
 					result, err = poller.WaitAndPollContext(ctx)
 					if err != nil {
 						return err
 					}
 				}
 
-				if complete {
-					printer.print(result)
+				if progress != nil {
+					progress.Update(result)
+					progress.Finish()
+				}
+
+				printer.print(result)
+
+				if live {
+					for {
+						result, err = poller.WaitAndPollContext(ctx)
+						if err != nil {
+							return err
+						}
+
+						printer.print(result)
+					}
 				}
 
 				return nil
@@ -106,18 +119,23 @@ func newSearchCmd() *cobra.Command {
 				err = nil
 			}
 
+			if queryError, ok := err.(api.QueryError); ok {
+				fmt.Printf("There was an error in your query string:\n\n%s\n", queryError.Error())
+				os.Exit(1)
+			}
+
 			exitOnError(cmd, err, "error running search")
 		},
 	}
 
-	cmd.Flags().StringVar(&start, "start", "10m", "Query start time [default 10m]")
-	cmd.Flags().StringVar(&end, "end", "", "Query end time")
-	cmd.Flags().BoolVar(&live, "live", false, "Run a live search and keep outputting until interrupted.")
-	cmd.Flags().BoolVar(&complete, "complete", false, "Wait for query to complete before printing result. Mostly useful for aggregates.")
-	cmd.Flags().StringVarP(&fmt, "fmt", "f", "{@timestamp} {@rawstring}", "Format string if the result is an event list\n"+
-		"Insert fields by wrapping field names in brackets, e.g. {@timestamp} [default: '{@timestamp} {@rawstring}']\n"+
+	cmd.Flags().StringVarP(&start, "start", "s", "10m", "Query start time")
+	cmd.Flags().StringVarP(&end, "end", "e", "", "Query end time")
+	cmd.Flags().BoolVarP(&live, "live", "l", false, "Run a live search and keep outputting until interrupted.")
+	cmd.Flags().StringVarP(&fmtStr, "fmt", "f", "{@timestamp} {@rawstring}", "Format string if the result is an event list\n"+
+		"Insert fields by wrapping field names in brackets, e.g. {@timestamp}\n"+
 		"Limited format modifiers are supported such as {@timestamp:40} which will right align and left pad @timestamp to 40 characters.\n"+
 		"{@timestamp:-40} left aligns and right pads to 40 characters.")
+	cmd.Flags().BoolVar(&noProgress, "no-progress", false, "Do not should progress information.")
 
 	return cmd
 }
@@ -134,6 +152,63 @@ func contextCancelledOnInterrupt(ctx context.Context) context.Context {
 	}()
 
 	return ctx
+}
+
+type queryResultProgressBar struct {
+	bar       *prompt.ProgressBar
+	epsValue  float64
+	bpsValue  float64
+	hits      uint64
+}
+
+func newQueryResultProgressBar() *queryResultProgressBar {
+	b := &queryResultProgressBar{}
+	b.bar = prompt.NewProgressBar(
+		prompt.ProgressOptionDescription("Searching..."),
+		prompt.ProgressOptionAppendAdditionalInfo(b.additionalInfoBps),
+		prompt.ProgressOptionAppendAdditionalInfo(b.additionalInfoEps),
+		prompt.ProgressOptionAppendAdditionalInfo(b.additionalInfoHits),
+	)
+	b.epsValue = math.NaN()
+	b.bpsValue = math.NaN()
+	b.bar.Start()
+	return b
+}
+
+func (b *queryResultProgressBar) Update(result api.QueryResult) {
+	if result.Metadata.TimeMillis > 0 {
+		b.epsValue = float64(result.Metadata.ProcessedEvents) / float64(result.Metadata.TimeMillis) * 1000
+		b.bpsValue = float64(result.Metadata.ProcessedBytes) / float64(result.Metadata.TimeMillis) * 1000
+	}
+
+	b.hits = result.Metadata.EventCount
+
+	b.bar.Set(result.Metadata.WorkDone, result.Metadata.TotalWork)
+}
+
+func (b *queryResultProgressBar) additionalInfoEps() string {
+	if !math.IsNaN(b.epsValue) {
+		v, suffix := prompt.AddSISuffix(b.epsValue, false)
+		return fmt.Sprintf("%.1f %s events/s", v, suffix)
+	}
+	return ""
+}
+
+func (b *queryResultProgressBar) additionalInfoBps() string {
+	if !math.IsNaN(b.bpsValue) {
+		v, suffix := prompt.AddSISuffix(b.bpsValue, true)
+		return fmt.Sprintf("%.1f %sB/s", v, suffix)
+	}
+	return ""
+}
+
+func (b *queryResultProgressBar) additionalInfoHits() string {
+	v, suffix := prompt.AddSISuffix(float64(b.hits), false)
+	return fmt.Sprintf("%.1f %s events", v, suffix)
+}
+
+func (b *queryResultProgressBar) Finish() {
+	b.bar.Finish()
 }
 
 type queryJobPoller struct {
@@ -238,6 +313,22 @@ func (p *eventListPrinter) initPrintFunc() {
 }
 
 func (p *eventListPrinter) print(result api.QueryResult) {
+	sort.Slice(result.Events, func(i, j int) bool {
+		tsI, hasTsI := result.Events[i]["@timestamp"].(float64)
+		tsJ, hasTsJ := result.Events[j]["@timestamp"].(float64)
+
+		switch {
+		case hasTsI && hasTsJ:
+			return tsI < tsJ
+		case !hasTsJ:
+			return false
+		case !hasTsI:
+			return true
+		default:
+			return false
+		}
+	})
+
 	for _, e := range result.Events {
 		id, hasID := e["@id"].(string)
 		if hasID && !p.printedIds[id] {
@@ -261,10 +352,18 @@ func newAggregatePrinter(w io.Writer) *aggregatePrinter {
 }
 
 func (p *aggregatePrinter) print(result api.QueryResult) {
-	if p.columns == nil {
-		var f []string
-		for k := range result.Events[0] {
-			f = append(f, k)
+	if len(result.Metadata.FieldOrder) > 0 {
+		p.columns = result.Metadata.FieldOrder
+	} else {
+		f := p.columns
+		m := map[string]bool{}
+		for _, e := range result.Events {
+			for k := range e {
+				if !m[k] {
+					f = append(f, k)
+					m[k] = true
+				}
+			}
 		}
 		p.columns = f
 	}
@@ -286,11 +385,16 @@ func (p *aggregatePrinter) print(result api.QueryResult) {
 	t.SetHeaderLine(false)
 
 	for _, e := range result.Events {
-		var v []string
+		var r []string
 		for _, i := range p.columns {
-			v = append(v, fmt.Sprint(e[i]))
+			v, hasField := e[i]
+			if hasField {
+				r = append(r, fmt.Sprint(v))
+			} else {
+				r = append(r, "")
+			}
 		}
-		t.Append(v)
+		t.Append(r)
 	}
 
 	t.Render()

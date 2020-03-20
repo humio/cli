@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -16,20 +17,29 @@ type QueryJobs struct {
 func (c *Client) QueryJobs() *QueryJobs { return &QueryJobs{client: c} }
 
 type Query struct {
-	QueryString    string            `json:"queryString"`
-	Start          string            `json:"start,omitempty"`
-	End            string            `json:"end,omitempty"`
-	Live           bool              `json:"isLive,omitempty"`
-	TimezoneOffset *int              `json:"timeZoneOffsetMinutes,omitempty"`
-	Arguments      map[string]string `json:"arguments,omitempty"`
+	QueryString                string            `json:"queryString"`
+	Start                      string            `json:"start,omitempty"`
+	End                        string            `json:"end,omitempty"`
+	Live                       bool              `json:"isLive,omitempty"`
+	TimezoneOffset             *int              `json:"timeZoneOffsetMinutes,omitempty"`
+	Arguments                  map[string]string `json:"arguments,omitempty"`
+	ShowQueryEventDistribution bool              `json:"showQueryEventDistribution,omitempty"`
 }
 
 type QueryResultMetadata struct {
-	EventCount  uint64 `json:"eventCount"`
-	IsAggregate bool   `json:"isAggregate"`
-	PollAfter   int    `json:"pollAfter"`
-	QueryStart  uint64 `json:"queryStart"`
-	QueryEnd    uint64 `json:"queryEnd"`
+	EventCount       uint64                 `json:"eventCount"`
+	ExtraData        map[string]interface{} `json:"extraData"`
+	FieldOrder       []string               `json:"fieldOrder"`
+	IsAggregate      bool                   `json:"isAggregate"`
+	PollAfter        int                    `json:"pollAfter"`
+	ProcessedBytes   uint64                 `json:"processedBytes"`
+	ProcessedEvents  uint64                 `json:"processedEvents"`
+	QueryStart       uint64                 `json:"queryStart"`
+	QueryEnd         uint64                 `json:"queryEnd"`
+	ResultBufferSize uint64                 `json:"resultBufferSize"`
+	TimeMillis       uint64                 `json:"timeMillis"`
+	TotalWork        uint64                 `json:"totalWork"`
+	WorkDone         uint64                 `json:"workDone"`
 }
 
 type QueryResult struct {
@@ -37,6 +47,14 @@ type QueryResult struct {
 	Done      bool                     `json:"done"`
 	Events    []map[string]interface{} `json:"events"`
 	Metadata  QueryResultMetadata      `json:"metaData"`
+}
+
+type QueryError struct {
+	error string
+}
+
+func (e QueryError) Error() string {
+	return e.error
 }
 
 func (q QueryJobs) Create(repository string, query Query) (string, error) {
@@ -53,7 +71,15 @@ func (q QueryJobs) Create(repository string, query Query) (string, error) {
 		return "", err
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	switch resp.StatusCode {
+	case http.StatusBadRequest:
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return "", err
+		}
+		return "", QueryError{string(body)}
+	case http.StatusOK:
+	default:
 		return "", fmt.Errorf("could not create query job, got status code %d", resp.StatusCode)
 	}
 

@@ -12,6 +12,10 @@ type StatusResponse struct {
 	Version string
 }
 
+func (s StatusResponse) IsDown() bool {
+	return s.Status != "OK" && s.Status != "WARN"
+}
+
 func (c *Client) Status() (*StatusResponse, error) {
 	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/status", nil)
 

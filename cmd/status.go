@@ -61,8 +61,12 @@ func newStatusCmd() *cobra.Command {
 }
 
 func formatStatusText(statusText string) string {
-	if statusText == "OK" {
+	switch statusText {
+	case "OK":
 		return prompt.Colorize("[green]OK[reset]")
+	case "WARN":
+		return prompt.Colorize("[yellow]WARN[reset]")
+	default:
+		return prompt.Colorize(fmt.Sprintf("[red]%s[reset]",statusText))
 	}
-	return prompt.Colorize(fmt.Sprintf("[red]%s[reset]", statusText))
 }
