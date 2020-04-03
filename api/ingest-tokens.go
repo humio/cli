@@ -79,21 +79,17 @@ func toIngestToken(data ingestTokenData) *IngestToken {
 	}
 }
 
-func (i *IngestTokens) Add(repo string, name string, parserName string) (*IngestToken, error) {
+func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
 	var mutation struct {
 		Result struct {
 			IngestToken ingestTokenData
-		} `graphql:"addIngestToken(repositoryName: $repositoryName, name: $name, parser: $parser)"`
+		} `graphql:"addIngestToken(repositoryName: $repositoryName, name: $tokenName, parser: $parserName)"`
 	}
 
-	var parserNameVar graphql.String
-	if parserName != "" {
-		parserNameVar = graphql.String(parserName)
-	}
 	variables := map[string]interface{}{
-		"name":           graphql.String(name),
-		"repositoryName": graphql.String(repo),
-		"parser":         parserNameVar,
+		"tokenName":      graphql.String(tokenName),
+		"repositoryName": graphql.String(repositoryName),
+		"parserName":     graphql.String(parserName),
 	}
 
 	err := i.client.Mutate(&mutation, variables)
@@ -105,16 +101,38 @@ func (i *IngestTokens) Add(repo string, name string, parserName string) (*Ingest
 	return toIngestToken(mutation.Result.IngestToken), err
 }
 
-func (i *IngestTokens) Remove(repo string, tokenName string) error {
+func (i *IngestTokens) Update(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
 	var mutation struct {
 		Result struct {
-			Type string `graphql:"__typename"`
-		} `graphql:"removeIngestToken(repositoryName: $repositoryName, name: $name)"`
+			IngestToken ingestTokenData
+		} `graphql:"assignIngestToken(repositoryName: $repositoryName, tokenName: $tokenName, parserName: $parserName)"`
 	}
 
 	variables := map[string]interface{}{
-		"name":           graphql.String(tokenName),
-		"repositoryName": graphql.String(repo),
+		"tokenName":      graphql.String(tokenName),
+		"repositoryName": graphql.String(repositoryName),
+		"parserName":     graphql.String(parserName),
+	}
+
+	err := i.client.Mutate(&mutation, variables)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return toIngestToken(mutation.Result.IngestToken), err
+}
+
+func (i *IngestTokens) Remove(repositoryName string, tokenName string) error {
+	var mutation struct {
+		Result struct {
+			Type string `graphql:"__typename"`
+		} `graphql:"removeIngestToken(repositoryName: $repositoryName, name: $tokenName)"`
+	}
+
+	variables := map[string]interface{}{
+		"tokenName":      graphql.String(tokenName),
+		"repositoryName": graphql.String(repositoryName),
 	}
 
 	return i.client.Mutate(&mutation, variables)

@@ -29,6 +29,7 @@ without having to change anything on sender/client.`,
 	}
 
 	cmd.AddCommand(newIngestTokensAddCmd())
+	cmd.AddCommand(newIngestTokensUpdateCmd())
 	cmd.AddCommand(newIngestTokensRemoveCmd())
 	cmd.AddCommand(newIngestTokensListCmd())
 	cmd.AddCommand(newIngestTokensShowCmd())
