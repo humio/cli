@@ -11,10 +11,11 @@ type Repositories struct {
 }
 
 type Repository struct {
-	Name            string
-	RetentionDays   float64 `graphql:"timeBasedRetention"`
-	RetentionSizeGB float64 `graphql:"storageSizeBasedRetention"`
-	SpaceUsed       int64   `graphql:"compressedByteSize"`
+	Name                   string
+	RetentionDays          float64 `graphql:"timeBasedRetention"`
+	IngestRetentionSizeGB  float64 `graphql:"ingestSizeBasedRetention"`
+	StorageRetentionSizeGB float64 `graphql:"storageSizeBasedRetention"`
+	SpaceUsed              int64   `graphql:"compressedByteSize"`
 }
 
 func (c *Client) Repositories() *Repositories { return &Repositories{client: c} }
