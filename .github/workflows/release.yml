@@ -42,5 +42,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       -
         name: Clear
+        if: always()
         run: |
           rm -f ${HOME}/.docker/config.json

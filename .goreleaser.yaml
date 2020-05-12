@@ -92,7 +92,7 @@ snapcrafts:
         # https://snapcraft.io/docs/reference/interfaces.
         plugs: ["home", "network"]
 
-dockers:
-  - image_templates:
-    - humio/cli:latest
-    - humio/cli:{{ .Tag }}
+#dockers:
+#  - image_templates:
+#    - humio/cli:latest
+#    - humio/cli:{{ .Tag }}
