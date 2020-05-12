@@ -40,7 +40,8 @@ func printRepoTable(cmd *cobra.Command, repo api.Repository) {
 	data := [][]string{
 		[]string{"Name", repo.Name},
 		[]string{"Space Used", ByteCountDecimal(repo.SpaceUsed)},
-		[]string{"Retention (Size)", ByteCountDecimal(int64(repo.RetentionSizeGB * 1e9))},
+		[]string{"Ingest Retention (Size)", ByteCountDecimal(int64(repo.IngestRetentionSizeGB * 1e9))},
+		[]string{"Storage Retention (Size)", ByteCountDecimal(int64(repo.StorageRetentionSizeGB * 1e9))},
 		[]string{"Retention (Days)", fmt.Sprintf("%d", int64(repo.RetentionDays))},
 	}
 
