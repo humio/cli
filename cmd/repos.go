@@ -31,6 +31,8 @@ func newReposCmd() *cobra.Command {
 	cmd.AddCommand(newReposShowCmd())
 	cmd.AddCommand(newReposListCmd())
 	cmd.AddCommand(newReposCreateCmd())
+	cmd.AddCommand(newReposUpdateCmd())
+	cmd.AddCommand(newReposDeleteCmd())
 
 	return cmd
 }
@@ -39,6 +41,7 @@ func printRepoTable(cmd *cobra.Command, repo api.Repository) {
 
 	data := [][]string{
 		[]string{"Name", repo.Name},
+		[]string{"Description", repo.Description},
 		[]string{"Space Used", ByteCountDecimal(repo.SpaceUsed)},
 		[]string{"Ingest Retention (Size)", ByteCountDecimal(int64(repo.IngestRetentionSizeGB * 1e9))},
 		[]string{"Storage Retention (Size)", ByteCountDecimal(int64(repo.StorageRetentionSizeGB * 1e9))},

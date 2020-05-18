@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -107,4 +108,29 @@ func (sf *urlPtrFlag) String() string {
 
 func (sf *urlPtrFlag) Type() string {
 	return "url"
+}
+
+type float64PtrFlag struct {
+	value *float64
+}
+
+func (sf *float64PtrFlag) Set(v string) error {
+	var val float64
+	val, err := strconv.ParseFloat(v, 64)
+	if err != nil {
+		return err
+	}
+	sf.value = &val
+	return nil
+}
+
+func (sf *float64PtrFlag) String() string {
+	if sf.value == nil {
+		return ""
+	}
+	return fmt.Sprintf("%f", *sf.value)
+}
+
+func (sf *float64PtrFlag) Type() string {
+	return "float64"
 }
