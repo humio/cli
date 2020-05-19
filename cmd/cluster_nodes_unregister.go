@@ -27,12 +27,12 @@ func newClusterNodesUnregisterCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			node, parseErr := strconv.ParseInt(args[0], 10, 64)
-			exitOnError(cmd, parseErr, "Not valid node id: %s")
+			exitOnError(cmd, parseErr, "Not valid node id")
 
 			client := NewApiClient(cmd)
 
 			apiError := client.ClusterNodes().Unregister(node, false)
-			exitOnError(cmd, apiError, "Error removing parser: %s")
+			exitOnError(cmd, apiError, "Error removing parser")
 		},
 	}
 
