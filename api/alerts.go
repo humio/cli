@@ -24,7 +24,6 @@ type Alert struct {
 	ThrottleTimeMillis int        `yaml:"throttleTimeMillis"    json:"throttleTimeMillis"`
 	Silenced           bool       `yaml:"silenced"              json:"silenced"`
 	Notifiers          []string   `yaml:"notifiers"             json:"notifiers"`
-	LinkURL            string     `yaml:"linkURL"               json:"linkURL"`
 	Labels             []string   `yaml:"labels,omitempty"      json:"labels,omitempty"`
 }
 
