@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"context"
+	"io"
 	"net/http"
 
 	"github.com/shurcooL/graphql"
@@ -62,13 +63,13 @@ func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) 
 	return graphqlErr
 }
 
-func (c *Client) HTTPRequest(httpMethod string, path string, body *bytes.Buffer) (*http.Response, error) {
+func (c *Client) HTTPRequest(httpMethod string, path string, body io.Reader) (*http.Response, error) {
 	return c.HTTPRequestContext(context.Background(), httpMethod, path, body)
 }
 
-func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path string, body *bytes.Buffer) (*http.Response, error) {
+func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path string, body io.Reader) (*http.Response, error) {
 	if body == nil {
-		body = bytes.NewBuffer([]byte(""))
+		body = bytes.NewReader([]byte{})
 	}
 
 	url := c.Address() + path
