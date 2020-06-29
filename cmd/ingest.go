@@ -156,7 +156,8 @@ type logSender struct {
 	finishedSending     chan struct{}
 	maxAttemptsPerBatch int
 	errorBehaviour      logSenderErrorBehaviour
-	batchSize           int
+	batchSizeLines      int
+	batchSizeBytes      int
 	batchTimeout        time.Duration
 }
 
@@ -172,17 +173,24 @@ func (s *logSender) finish() {
 func (s *logSender) start() {
 	go func() {
 		defer func() { close(s.finishedSending) }()
-		batch := make([]string, 0, s.batchSize)
+		batch := make([]string, 0, s.batchSizeLines)
 
 		for {
+			bytes := 0
+
 			e, more := <-s.events
 			if !more {
 				break
 			}
 
 			batch = append(batch, e)
+			bytes += len(e)
 
 			timeout := time.After(s.batchTimeout)
+
+			if s.batchSizeBytes > 0 && bytes > s.batchSizeBytes {
+				goto send
+			}
 
 		loop:
 			for {
@@ -192,7 +200,8 @@ func (s *logSender) start() {
 						break loop
 					}
 					batch = append(batch, e)
-					if len(batch) >= s.batchSize {
+					bytes += len(e)
+					if len(batch) >= s.batchSizeLines || (s.batchSizeBytes > 0 && bytes > s.batchSizeBytes) {
 						break loop
 					}
 				case <-timeout:
@@ -200,9 +209,11 @@ func (s *logSender) start() {
 				}
 			}
 
+		send:
 			s.sendBatch(batch)
 
 			batch = batch[:0]
+			bytes = 0
 		}
 		if len(batch) > 0 {
 			s.sendBatch(batch)
@@ -280,9 +291,9 @@ func (s *logSender) sendBatch(messages []string) {
 }
 
 func newIngestCmd() *cobra.Command {
-	var parserName, filepath, label, ingestToken, multiLineBeginsWith, multiLineContinuesWith string
+	var parserName, filepath, label, ingestToken, multiLineBeginsWith, multiLineContinuesWith, fieldsJson string
 	var openBrowser, noSession, quiet, failOnError, tailSeekToEnd bool
-	var retries, batchSize, batchTimeoutMs int
+	var retries, batchSizeLines, batchSizeBytes, batchTimeoutMs int
 
 	cmd := cobra.Command{
 		Use:   "ingest [flags] [<repo>]",
@@ -327,18 +338,29 @@ has the same effect.`,
 			var key string
 			fields := map[string]string{}
 
-			if !noSession {
-				u, _ := uuid.NewV4()
-				sessionID := u.String()
-				fields["@session"] = sessionID
-
-				if label == "" && !noSession {
-					key = "%40session%3D" + sessionID
+			if fieldsJson != "" {
+				var f map[string]string
+				err := json.Unmarshal([]byte(fieldsJson), &f)
+				if err != nil {
+					log.Fatalf("Error parsing --fields-json value: %v", err)
 				}
-			}
-			if label != "" {
-				fields["@label"] = label
-				key = "%40label%3D" + label
+				for k := range f {
+					fields[k] = f[k]
+				}
+			} else {
+				if !noSession {
+					u, _ := uuid.NewV4()
+					sessionID := u.String()
+					fields["@session"] = sessionID
+
+					if label == "" && !noSession {
+						key = "%40session%3D" + sessionID
+					}
+				}
+				if label != "" {
+					fields["@label"] = label
+					key = "%40label%3D" + label
+				}
 			}
 
 			// Open the browser (First so it has a chance to load)
@@ -362,9 +384,10 @@ has the same effect.`,
 				fields:              fields,
 				parserName:          parserName,
 				maxAttemptsPerBatch: retries + 1,
-				events:              make(chan string, batchSize),
+				events:              make(chan string, batchSizeLines),
 				finishedSending:     make(chan struct{}),
-				batchSize:           batchSize,
+				batchSizeLines:      batchSizeLines,
+				batchSizeBytes:      batchSizeBytes,
 				batchTimeout:        time.Duration(batchTimeoutMs) * time.Millisecond,
 			}
 
@@ -420,10 +443,12 @@ has the same effect.`,
 	cmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Don't print ingested data to stdout.")
 	cmd.Flags().BoolVarP(&failOnError, "fail", "e", false, "Stop processing more input when sending events has failed (after the allowed number of retries).")
 	cmd.Flags().IntVarP(&retries, "retries", "r", 2, "Number of retries when Humio sending events.")
-	cmd.Flags().IntVarP(&batchSize, "batch-size", "b", 500, "Max number of events to send in one batch.")
+	cmd.Flags().IntVarP(&batchSizeLines, "batch-lines", "L", 500, "Max number of events to send in one batch.")
+	cmd.Flags().IntVarP(&batchSizeBytes, "batch-bytes", "B", 1024*1024, "Max number of bytes to send in one batch.")
 	cmd.Flags().IntVarP(&batchTimeoutMs, "batch-timeout", "T", 100, "Max duration in milliseconds to wait before sending an incomplete batch.")
-	cmd.Flags().StringVarP(&multiLineBeginsWith, "multiline-begins-with", "B", "", "Operate in multi line mode. Each multi line event starts with the specified regexp pattern.")
-	cmd.Flags().StringVarP(&multiLineContinuesWith, "multiline-continues-with", "C", "", "Operate in multi line mode. Each multi line event is continued with the specified regexp pattern.")
+	cmd.Flags().StringVarP(&multiLineBeginsWith, "multiline-begins-with", "", "", "Operate in multi line mode. Each multi line event starts with the specified regexp pattern.")
+	cmd.Flags().StringVarP(&multiLineContinuesWith, "multiline-continues-with", "", "", "Operate in multi line mode. Each multi line event is continued with the specified regexp pattern.")
+	cmd.Flags().StringVarP(&fieldsJson, "fields-json", "J", "", "Add the supplied json object to each object as structured fields.")
 
 	return &cmd
 }
