@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/humio/cli/api"
@@ -60,20 +62,28 @@ func addAccount(out *prompt.Prompt, newName string, profile *login) {
 	profiles := viper.GetStringMap("profiles")
 
 	profiles[newName] = map[string]string{
-		"address":  profile.address,
-		"token":    profile.token,
-		"username": profile.username,
+		"address":        profile.address,
+		"token":          profile.token,
+		"username":       profile.username,
+		"ca-certificate": string(profile.caCertificate),
+		"insecure":       strconv.FormatBool(profile.insecure),
 	}
 
 	viper.Set("profiles", profiles)
 }
 
-func mapToLogin(data interface{}) *login {
-	return &login{
-		address:  getMapKey(data, "address"),
-		username: getMapKey(data, "username"),
-		token:    getMapKey(data, "token"),
+func mapToLogin(data interface{}) (*login, error) {
+	insecure, err := strconv.ParseBool(getMapKey(data, "insecure"))
+	if err != nil {
+		return nil, err
 	}
+	return &login{
+		address:       getMapKey(data, "address"),
+		username:      getMapKey(data, "username"),
+		token:         getMapKey(data, "token"),
+		caCertificate: []byte(getMapKey(data, "caCertificate")),
+		insecure:      insecure,
+	}, nil
 }
 
 func getMapKey(data interface{}, key string) string {
@@ -91,7 +101,8 @@ func getMapKey(data interface{}, key string) string {
 }
 
 func collectProfileInfo(cmd *cobra.Command) (*login, error) {
-	var addr, token, username string
+	var addr, token, username, caCertificate string
+	var insecure bool
 
 	out := prompt.NewPrompt(cmd.OutOrStdout())
 	out.Info("Which Humio instance should we talk to?")
@@ -114,7 +125,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		_, urlErr := url.ParseRequestURI(addr)
 
 		if urlErr != nil {
-			out.Error("The valus must be a valid URL.")
+			out.Error("The value must be a valid URL.")
 			continue
 		}
 
@@ -127,9 +138,61 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		client, apiErr := api.NewClient(clientConfig)
 		exitOnError(cmd, apiErr, "error initializing the API client")
 
-		out.Output("")
+		out.Output()
 		cmd.Print("==> Testing Connection...")
+		out.Output()
+		_, statusErr := client.Status()
+		if statusErr != nil {
+			if strings.Contains(statusErr.Error(), "x509: certificate signed by unknown authority") {
+				cmd.Println(prompt.Colorize("[[red]Failed[reset]] Certificate not signed by a trusted Certificate Authority."))
+				out.Info("What is the absolute path to the CA certificate that should be used for TLS certificate validation?")
+				out.Output()
+				out.Description("If you require a custom CA certificate for validating the TLS certificate of the Humio cluster,")
+				out.Description("specify the path to the file containing the CA certificate in PEM format.")
+				out.Description("If left empty it is not possible to validate TLS certificate chain.")
+				out.Output()
 
+				caCertificateFilePath, err := out.Ask("Absolute path on local disk to CA certificate in PEM format")
+				exitOnError(cmd, err, "error reading Humio CA certificate file path")
+				if caCertificateFilePath != "" {
+					// Read the file
+					caCertContent, err := ioutil.ReadFile(caCertificateFilePath)
+					exitOnError(cmd, err, "error reading Humio CA certificate file path")
+					caCertificate = string(caCertContent)
+					clientConfig.CACertificate = []byte(caCertificate)
+					client, err = api.NewClient(clientConfig)
+					exitOnError(cmd, err, "error initializing the API client")
+				}
+			}
+		}
+
+		out.Output()
+		cmd.Print("==> Testing Connection...")
+		out.Output()
+		_, statusErr = client.Status()
+		if statusErr != nil {
+			if strings.Contains(statusErr.Error(), "x509: certificate is valid for") {
+				cmd.Printf("%s: %s\n", prompt.Colorize("[[red]Failed[reset]] Certificate not valid for"), clientConfig.Address)
+				out.Output()
+				out.Info("Disable hostname verification for TLS connections?")
+				out.Output()
+				out.Description("By default all connections will verify the hostname, but this option allows you to disable this if required.")
+				out.Output()
+				insecureString, err := out.Ask("Do you want to disable hostname verification? Type 'yes' to disable hostname verification")
+				exitOnError(cmd, err, "error reading humio ca certificate file path")
+				if insecureString == "yes" {
+					out.Output("Disabling hostname verification.")
+					insecure = true
+					clientConfig.Insecure = true
+					client, err = api.NewClient(clientConfig)
+					exitOnError(cmd, err, "error initializing the API client")
+				}
+			}
+		}
+
+		out.Output()
+		cmd.Print("==> Testing Connection...")
+		out.Output()
 		status, statusErr := client.Status()
 
 		if statusErr != nil {
@@ -178,6 +241,9 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		config := api.DefaultConfig()
 		config.Address = addr
 		config.Token = token
+		config.CACertificate = []byte(caCertificate)
+		config.Insecure = insecure
+
 		client, clientErr := api.NewClient(config)
 
 		exitOnError(cmd, clientErr, "error initializing the http client")
@@ -186,7 +252,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		username, apiErr = client.Viewer().Username()
 
 		if apiErr != nil {
-			out.Error("Authentication failed, invalid token")
+			out.Error(fmt.Sprintf("Authentication failed, invalid token: %s", apiErr))
 
 			if out.Confirm("Do you want to use another token?") {
 				continue
@@ -203,7 +269,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		break
 	}
 
-	return &login{address: addr, token: token, username: username}, nil
+	return &login{address: addr, token: token, username: username, caCertificate: []byte(caCertificate), insecure: insecure}, nil
 }
 
 func isCurrentAccount(addr string, token string) bool {

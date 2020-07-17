@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/humio/cli/prompt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -37,10 +36,10 @@ func newStatusCmd() *cobra.Command {
 			exitOnError(cmd, usernameErr, "error getting the current user")
 
 			data := [][]string{
-				[]string{"Status", formatStatusText(serverStatus.Status)},
-				[]string{"Address", viper.GetString("address")},
-				[]string{"Version", serverStatus.Version},
-				[]string{"Username", username},
+				{"Status", formatStatusText(serverStatus.Status)},
+				{"Address", viper.GetString("address")},
+				{"Version", serverStatus.Version},
+				{"Username", username},
 			}
 
 			w := tablewriter.NewWriter(cmd.OutOrStdout())
@@ -67,6 +66,6 @@ func formatStatusText(statusText string) string {
 	case "WARN":
 		return prompt.Colorize("[yellow]WARN[reset]")
 	default:
-		return prompt.Colorize(fmt.Sprintf("[red]%s[reset]",statusText))
+		return prompt.Colorize(fmt.Sprintf("[red]%s[reset]", statusText))
 	}
 }

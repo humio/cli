@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
@@ -21,6 +22,8 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 			exitOnError(cmd, loadErr, "profile not found")
 			viper.Set("address", profile.address)
 			viper.Set("token", profile.token)
+			viper.Set("ca-certificate", string(profile.caCertificate))
+			viper.Set("insecure", strconv.FormatBool(profile.insecure))
 
 			saveErr := saveConfig()
 			exitOnError(cmd, saveErr, "error saving config")
@@ -44,7 +47,17 @@ func loadProfile(profileName string) (*login, error) {
 		return nil, fmt.Errorf("unknown profile %s", profileName)
 	}
 
-	profile := login{address: getMapKey(profileData, "address"), token: getMapKey(profileData, "token")}
+	insecure, err := strconv.ParseBool(getMapKey(profileData, "insecure"))
+	if err != nil {
+		return nil, err
+	}
+
+	profile := login{
+		address:       getMapKey(profileData, "address"),
+		token:         getMapKey(profileData, "token"),
+		caCertificate: []byte(getMapKey(profileData, "ca-certificate")),
+		insecure:      insecure,
+	}
 
 	return &profile, nil
 }
