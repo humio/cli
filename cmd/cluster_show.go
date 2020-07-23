@@ -42,19 +42,19 @@ func printClusterInfo(cmd *cobra.Command, cluster api.Cluster) {
 
 	header := []string{"Description", "Current", "Target"}
 	data := [][]string{
-		[]string{
+		{
 			"Under replicated segment (Size)",
 			ByteCountDecimal(int64(cluster.UnderReplicatedSegmentSize)),
 			ByteCountDecimal(int64(cluster.TargetUnderReplicatedSegmentSize))},
-		[]string{
+		{
 			"Over replicated segment (Size)",
 			ByteCountDecimal(int64(cluster.OverReplicatedSegmentSize)),
 			ByteCountDecimal(int64(cluster.TargetOverReplicatedSegmentSize))},
-		[]string{
+		{
 			"Missing segment (Size)",
 			ByteCountDecimal(int64(cluster.MissingSegmentSize)),
 			ByteCountDecimal(int64(cluster.TargetMissingSegmentSize))},
-		[]string{
+		{
 			"Properly replicated segment (Size)",
 			ByteCountDecimal(int64(cluster.ProperlyReplicatedSegmentSize)),
 			ByteCountDecimal(int64(cluster.TargetProperlyReplicatedSegmentSize))},

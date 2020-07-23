@@ -19,6 +19,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strconv"
 
 	"github.com/humio/cli/api"
 	homedir "github.com/mitchellh/go-homedir"
@@ -26,7 +27,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile, tokenFile, token, address, profileFlag string
+var cfgFile, tokenFile, token, address, caCertificateFile, profileFlag string
+var insecure bool
 
 var printVersion bool
 
@@ -102,10 +104,14 @@ Common Management Commands:
 	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "The API token to user when talking to Humio. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().StringVar(&tokenFile, "token-file", "", "File path to a file containing the API token. Overrides the value in your config file and the value of --token.")
 	rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "", "The HTTP address of the Humio cluster. Overrides the value in your config file.")
+	rootCmd.PersistentFlags().StringVar(&caCertificateFile, "ca-certificate-file", "", "File path to a file containing the CA certificate in PEM format. Overrides the value in your config file.")
+	rootCmd.PersistentFlags().BoolVar(&insecure, "insecure", false, "By default, all encrypted connections will verify that the hostname in the TLS certificate matches the name from the URL. Set this to true to ignore hostname validation.")
 
 	viper.BindPFlag("address", rootCmd.PersistentFlags().Lookup("address"))
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 	viper.BindPFlag("token-file", rootCmd.PersistentFlags().Lookup("token-file"))
+	viper.BindPFlag("ca-certificate-file", rootCmd.PersistentFlags().Lookup("ca-certificate-file"))
+	viper.BindPFlag("insecure", rootCmd.PersistentFlags().Lookup("insecure"))
 
 	rootCmd.Flags().BoolVarP(&printVersion, "version", "v", false, "Print the client version")
 
@@ -168,6 +174,12 @@ func initConfig() {
 		if token == "" {
 			viper.Set("token", profile.token)
 		}
+		if caCertificateFile == "" {
+			viper.Set("ca-certificate", profile.caCertificate)
+		}
+		if insecure {
+			viper.Set("insecure", strconv.FormatBool(insecure))
+		}
 	}
 
 	if tokenFile != "" {
@@ -177,6 +189,19 @@ func initConfig() {
 			os.Exit(1)
 		}
 		viper.Set("token", string(tokenFileContent))
+	}
+
+	if caCertificateFile != "" {
+		caCertificateFileContent, caCertificateFileErr := ioutil.ReadFile(caCertificateFile)
+		if caCertificateFileErr != nil {
+			fmt.Println(fmt.Sprintf("error loading CA certificate file: %s", caCertificateFileErr))
+			os.Exit(1)
+		}
+		viper.Set("ca-certificate", string(caCertificateFileContent))
+	}
+
+	if insecure {
+		viper.Set("insecure", insecure)
 	}
 }
 
@@ -195,6 +220,8 @@ func newApiClientE(cmd *cobra.Command) (*api.Client, error) {
 	config := api.DefaultConfig()
 	config.Address = viper.GetString("address")
 	config.Token = viper.GetString("token")
+	config.CACertificate = []byte(viper.GetString("ca-certificate"))
+	config.Insecure = viper.GetBool("insecure")
 
 	return api.NewClient(config)
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
@@ -9,9 +10,11 @@ import (
 )
 
 type login struct {
-	address  string
-	token    string
-	username string
+	address       string
+	token         string
+	username      string
+	caCertificate []byte
+	insecure      bool
 }
 
 // usersCmd represents the users command
@@ -37,7 +40,11 @@ You can change the default profile using:
 			profiles := viper.GetStringMap("profiles")
 
 			for name, data := range profiles {
-				login := mapToLogin(data)
+				login, err := mapToLogin(data)
+				if err != nil {
+					cmd.Println(prompt.Colorize(fmt.Sprintf("* [red]Error reading existing Humio profile: %s\n  Remove the configuration file %s and add the profile again.[reset]", err, cfgFile)))
+					os.Exit(1)
+				}
 				if isCurrentAccount(login.address, login.token) {
 					cmd.Println(prompt.Colorize(fmt.Sprintf("* [purple]%s (%s) - %s[reset]", name, login.username, login.address)))
 				} else {
