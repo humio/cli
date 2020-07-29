@@ -46,13 +46,13 @@ func formatSimpleAccount(account api.User) string {
 func printUserTable(cmd *cobra.Command, user api.User) {
 
 	data := [][]string{
-		[]string{"Username", user.Username},
-		[]string{"Name", user.FullName},
-		[]string{"Is Root", yesNo(user.IsRoot)},
-		[]string{"Email", user.Email},
-		[]string{"Created At", user.CreatedAt},
-		[]string{"Country Code", user.CountryCode},
-		[]string{"Company", user.Company},
+		{"Username", user.Username},
+		{"Name", user.FullName},
+		{"Is Root", yesNo(user.IsRoot)},
+		{"Email", user.Email},
+		{"Created At", user.CreatedAt},
+		{"Country Code", user.CountryCode},
+		{"Company", user.Company},
 	}
 
 	w := tablewriter.NewWriter(cmd.OutOrStdout())

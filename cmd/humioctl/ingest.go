@@ -129,7 +129,7 @@ func sendLine(line string) {
 
 func sendBatch(client *api.Client, repo string, messages []string, fields map[string]string, parserName string) {
 	lineJSON, err := json.Marshal([1]eventList{
-		eventList{
+		{
 			Type:     parserName,
 			Fields:   fields,
 			Messages: messages,

@@ -40,12 +40,12 @@ func newReposCmd() *cobra.Command {
 func printRepoTable(cmd *cobra.Command, repo api.Repository) {
 
 	data := [][]string{
-		[]string{"Name", repo.Name},
-		[]string{"Description", repo.Description},
-		[]string{"Space Used", ByteCountDecimal(repo.SpaceUsed)},
-		[]string{"Ingest Retention (Size)", ByteCountDecimal(int64(repo.IngestRetentionSizeGB * 1e9))},
-		[]string{"Storage Retention (Size)", ByteCountDecimal(int64(repo.StorageRetentionSizeGB * 1e9))},
-		[]string{"Retention (Days)", fmt.Sprintf("%d", int64(repo.RetentionDays))},
+		{"Name", repo.Name},
+		{"Description", repo.Description},
+		{"Space Used", ByteCountDecimal(repo.SpaceUsed)},
+		{"Ingest Retention (Size)", ByteCountDecimal(int64(repo.IngestRetentionSizeGB * 1e9))},
+		{"Storage Retention (Size)", ByteCountDecimal(int64(repo.StorageRetentionSizeGB * 1e9))},
+		{"Retention (Days)", fmt.Sprintf("%d", int64(repo.RetentionDays))},
 	}
 
 	w := tablewriter.NewWriter(cmd.OutOrStdout())

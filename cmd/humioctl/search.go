@@ -41,10 +41,10 @@ func newSearchCmd() *cobra.Command {
 			// run in lambda func to be able to defer and delete the query job
 			err := func() error {
 				id, err := client.QueryJobs().Create(repository, api.Query{
-					QueryString: queryString,
-					Start:       start,
-					End:         end,
-					Live:        live,
+					QueryString:                queryString,
+					Start:                      start,
+					End:                        end,
+					Live:                       live,
 					ShowQueryEventDistribution: true,
 				})
 
@@ -155,10 +155,10 @@ func contextCancelledOnInterrupt(ctx context.Context) context.Context {
 }
 
 type queryResultProgressBar struct {
-	bar       *prompt.ProgressBar
-	epsValue  float64
-	bpsValue  float64
-	hits      uint64
+	bar      *prompt.ProgressBar
+	epsValue float64
+	bpsValue float64
+	hits     uint64
 }
 
 func newQueryResultProgressBar() *queryResultProgressBar {

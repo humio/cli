@@ -2,6 +2,10 @@
 
 # Humio CLI
 
+[![Build Status](https://github.com/humio/cli/workflows/CI/badge.svg)](https://github.com/humio/cli/actions?query=workflow%3ACI)
+[![Release Status](https://github.com/humio/cli/workflows/goreleaser/badge.svg)](https://github.com/humio/cli/actions?query=workflow%3Agoreleaser)
+[![Go Report Card](https://goreportcard.com/badge/github.com/humio/cli)](https://goreportcard.com/report/github.com/humio/cli)
+
 A CLI for managing and sending data to Humio.
 
 _This repository also contains Humio GoLang API client you can

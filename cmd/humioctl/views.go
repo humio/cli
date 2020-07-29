@@ -38,7 +38,7 @@ func newViewsCmd() *cobra.Command {
 func printViewTable(view *api.View) {
 
 	data := [][]string{
-		[]string{"Name", view.Name},
+		{"Name", view.Name},
 	}
 
 	w := tablewriter.NewWriter(os.Stdout)
