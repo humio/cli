@@ -2,6 +2,7 @@ project_name: humioctl
 
 builds:
   - binary: humioctl
+    main: ./cmd/humioctl
     goos:
       - windows
       - darwin
@@ -16,16 +17,18 @@ release:
     owner: humio
     name: cli
 
-#brews:
-#  -
-#    github:
-#      owner: humio
-#      name: homebrew-humio
-#    folder: Formula
-#    homepage:  https://humio.com/
-#    description: Manage and Stream Logs to Humio
-#    test: |
-#      system "echo DONE"
+brews:
+  -
+    tap:
+      owner: humio
+      name: homebrew-humio
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    url_template: "https://github.com/humio/homebrew-humio/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    folder: Formula
+    homepage:  https://humio.com/
+    description: Manage and Stream Logs to Humio
+    test: |
+      system "echo DONE"
 
 archives:
   -
@@ -91,8 +94,3 @@ snapcrafts:
         # things they allow:
         # https://snapcraft.io/docs/reference/interfaces.
         plugs: ["home", "network"]
-
-#dockers:
-#  - image_templates:
-#    - humio/cli:latest
-#    - humio/cli:{{ .Tag }}

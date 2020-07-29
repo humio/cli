@@ -27,6 +27,15 @@ $ sudo snap install humioctl
 ```bash
 $ nix-env -i humioctl
 ```
+### Any OS (via Go)
+
+```bash
+$ go get github.com/humio/cli/cmd/humioctl
+```
+
+### Manual installation
+
+Download the latest release archive from the [releases](https://github.com/humio/cli/releases) page, unpack and enjoy!
 
 ## Usage
 
