@@ -22,6 +22,11 @@ $ brew install humioctl
 $ sudo snap install humioctl
 ```
 
+### Nix
+
+```bash
+$ nix-env -i humioctl
+```
 
 ## Usage
 
