@@ -109,28 +109,40 @@ $ humioctl ingest -label=work-related -tail=/var/log/mysql.log
 `@session` is a unique id that is generated for each execution of the `humio`
 binary. This allows you to find results for this session and nothing else.
 
-## Environment Variables
+## Profiles and Environment Variables
 
-When use `humio login` it will write your API token and server address
-into `.humioconfig` in your home dir.
+To make it easier to switch between different Humio clusters, you can
+configure a profile for each cluster. The configuration file, containing the
+API token and server address for all profiles will be default be saved in
+`$HOME/.humio/config.yaml`.
 
-The CLI will always have environment variables take precedence over
-values form your `~/.humioconfig` file.
+Adding a profile and making it the new default can be done using:
+
+```bash
+$ humioctl profiles add my-profile
+$ humioctl profiles set-default my-profile
+
+It is also possible to use environment variables, and these will take
+precendence over the default profile.
 
 ```bash
 # Your account API token. You can find your token in Humio's UI under
 # 'Your Account' in the account menu.
-HUMIO_API_TOKEN=<token>
-
-# A file containing the auth token to use for authorization
-# useful in conjunction with Humio's generated root token file.
-# If this is set it takes precedence over HUMIO_API_TOKEN.
-HUMIO_TOKEN_FILE=<path>
+HUMIO_TOKEN=<token>
 
 # The address of the Humio server. E.g. https://cloud.humio.com/,
 # or http://localhost:8080/
-HUMIO_ADDR=<url>
+HUMIO_ADDRESS=<url>
 
-# Disable color in terminal output
-HUMIO_CLI_NO_COLOR=<bool>
+# If access to the Humio server requires trusting a specific Certificate Authority,
+# for validating the certificate, you can specify CA certificate in PEM format.
+# You can either point to a file with the certificate or provide it directly.
+HUMIO_CA_CERTIFICATE=<ca-certificate>
+
+# If access to the Humio server uses an untrusted certificate and you
+# are unable to provide a CA certificate, you can disable TLS certificate verification.
+# NB: This should only ever be used on test/sandbox clusters where you are in full
+# control of the involved systems and underlying network.
+# Do not use this for prodution use-cases.
+HUMIO_INSECURE=<bool>
 ```

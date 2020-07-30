@@ -166,7 +166,7 @@ func initConfig() {
 			viper.Set("token", profile.token)
 		}
 		if caCertificateFile == "" {
-			viper.Set("ca-certificate", profile.caCertificate)
+			viper.Set("ca_certificate", profile.caCertificate)
 		}
 		if insecure {
 			viper.Set("insecure", strconv.FormatBool(insecure))
@@ -188,7 +188,7 @@ func initConfig() {
 			fmt.Println(fmt.Sprintf("error loading CA certificate file: %s", caCertificateFileErr))
 			os.Exit(1)
 		}
-		viper.Set("ca-certificate", string(caCertificateFileContent))
+		viper.Set("ca_certificate", string(caCertificateFileContent))
 	}
 
 	if insecure {
@@ -211,7 +211,7 @@ func newApiClientE(cmd *cobra.Command) (*api.Client, error) {
 	config := api.DefaultConfig()
 	config.Address = viper.GetString("address")
 	config.Token = viper.GetString("token")
-	config.CACertificate = []byte(viper.GetString("ca-certificate"))
+	config.CACertificate = []byte(viper.GetString("ca_certificate"))
 	config.Insecure = viper.GetBool("insecure")
 
 	return api.NewClient(config)

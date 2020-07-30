@@ -65,7 +65,7 @@ func addAccount(out *prompt.Prompt, newName string, profile *login) {
 		"address":        profile.address,
 		"token":          profile.token,
 		"username":       profile.username,
-		"ca-certificate": string(profile.caCertificate),
+		"ca_certificate": string(profile.caCertificate),
 		"insecure":       strconv.FormatBool(profile.insecure),
 	}
 
