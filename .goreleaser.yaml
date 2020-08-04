@@ -23,7 +23,7 @@ brews:
       owner: humio
       name: homebrew-humio
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    url_template: "https://github.com/humio/homebrew-humio/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/humio/cli/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     folder: Formula
     homepage:  https://humio.com/
     description: Manage and Stream Logs to Humio
