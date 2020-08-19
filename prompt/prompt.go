@@ -112,6 +112,14 @@ func Colorize(text string) string {
 	return replacer.Replace(text)
 }
 
+func (p *Prompt) List(items []string) string {
+	var str string
+	for _, value := range items {
+		str += "  - " + value + "\n"
+	}
+	return str
+}
+
 func Owl() string {
 	return `  , ,
    (O,o)

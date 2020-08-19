@@ -101,7 +101,7 @@ func (q *QueryJobs) Poll(repository string, id string) (QueryResult, error) {
 }
 
 func (q *QueryJobs) PollContext(ctx context.Context, repository string, id string) (QueryResult, error) {
-	resp, err := q.client.HTTPRequestContext(ctx, http.MethodGet, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, bytes.NewBuffer(nil))
+	resp, err := q.client.HTTPRequestContext(ctx, http.MethodGet, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, nil, JSONContentType)
 
 	if err != nil {
 		return QueryResult{}, err
@@ -119,6 +119,6 @@ func (q *QueryJobs) PollContext(ctx context.Context, repository string, id strin
 }
 
 func (q *QueryJobs) Delete(repository string, id string) error {
-	_, err := q.client.HTTPRequest(http.MethodDelete, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, bytes.NewBuffer(nil))
+	_, err := q.client.HTTPRequest(http.MethodDelete, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, nil)
 	return err
 }

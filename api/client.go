@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"context"
+	"io"
 	"net/http"
 
 	"github.com/shurcooL/graphql"
@@ -71,16 +72,20 @@ func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) 
 	return graphqlErr
 }
 
-func (c *Client) HTTPRequest(httpMethod string, path string, body *bytes.Buffer) (*http.Response, error) {
-	return c.HTTPRequestContext(context.Background(), httpMethod, path, body)
+// JSONContentType is "application/json"
+const JSONContentType string = "application/json"
+
+func (c *Client) HTTPRequest(httpMethod string, path string, body io.Reader) (*http.Response, error) {
+	return c.HTTPRequestContext(context.Background(), httpMethod, path, body, JSONContentType)
 }
 
-func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path string, body *bytes.Buffer) (*http.Response, error) {
+func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path string, body io.Reader, contentType string) (*http.Response, error) {
 	if body == nil {
-		body = bytes.NewBuffer([]byte(""))
+		body = bytes.NewBuffer(nil)
 	}
 
 	url := c.Address() + path
+
 	req, reqErr := http.NewRequestWithContext(ctx, httpMethod, url, body)
 	if reqErr != nil {
 		return nil, reqErr
@@ -88,7 +93,7 @@ func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path
 
 	var client = c.newHTTPClientWithHeaders(map[string]string{
 		"Authorization": "Bearer " + c.Token(),
-		"Content-Type":  "application/json",
+		"Content-Type":  contentType,
 	})
 	return client.Do(req)
 }
