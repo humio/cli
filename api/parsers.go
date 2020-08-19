@@ -157,3 +157,27 @@ func toTestCase(line string) ParserTestCase {
 		Output: map[string]string{},
 	}
 }
+
+func (p *Parsers) Export(reposistoryName string, parserName string) (string, error) {
+
+	var query struct {
+		Repository struct {
+			Parser struct {
+				YamlTemplate string
+			} `graphql:"parser(name: $parserName)"`
+		} `graphql:"repository(name: $repositoryName)"`
+	}
+
+	variables := map[string]interface{}{
+		"parserName":     graphql.String(parserName),
+		"repositoryName": graphql.String(reposistoryName),
+	}
+
+	graphqlErr := p.client.Query(&query, variables)
+
+	if graphqlErr != nil {
+		return "", graphqlErr
+	}
+
+	return query.Repository.Parser.YamlTemplate, nil
+}
