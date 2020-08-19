@@ -20,7 +20,6 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	yaml "gopkg.in/yaml.v2"
 )
 
 func newParsersExportCmd() *cobra.Command {
@@ -41,20 +40,15 @@ func newParsersExportCmd() *cobra.Command {
 			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			parser, apiErr := client.Parsers().Get(repo, parserName)
+			yamlData, apiErr := client.Parsers().Export(repo, parserName)
 			if apiErr != nil {
 				cmd.Println(fmt.Errorf("Error fetching parsers: %s", apiErr))
 				os.Exit(1)
 			}
 
-			yamlData, yamlErr := yaml.Marshal(&parser)
-			if yamlErr != nil {
-				cmd.Println(fmt.Errorf("Failed to serialize the parser: %s", yamlErr))
-				os.Exit(1)
-			}
 			outFilePath := outputName + ".yaml"
 
-			writeErr := ioutil.WriteFile(outFilePath, yamlData, 0644)
+			writeErr := ioutil.WriteFile(outFilePath, []byte(yamlData), 0644)
 			if writeErr != nil {
 				cmd.Println(fmt.Errorf("Error saving the parser file: %s", writeErr))
 				os.Exit(1)
