@@ -3,7 +3,7 @@ name: goreleaser
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
   goreleaser:
@@ -12,9 +12,8 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
-      -
-        name: Unshallow
-        run: git fetch --prune --unshallow
+        with:
+          fetch-depth: 0
       -
         name: Install Snapcraft
         uses: samuelmeuli/action-snapcraft@v1
@@ -40,6 +39,7 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
       -
         name: Clear
         if: always()
