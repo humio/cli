@@ -71,12 +71,12 @@ func (p *Packages) Validate(repoOrViewName string, absDiretoryPath string) (*Val
 }
 
 // InstallArchive installs a local package (zip file).
-func (p *Packages) InstallArchive(repoOrViewName string, pathToZip string) error {
+func (p *Packages) InstallArchive(repoOrViewName string, pathToZip string) (*ValidationResponse, error) {
 
 	fileReader, openErr := os.Open(pathToZip)
 
 	if openErr != nil {
-		return openErr
+		return nil, openErr
 	}
 	defer fileReader.Close()
 
@@ -85,14 +85,22 @@ func (p *Packages) InstallArchive(repoOrViewName string, pathToZip string) error
 	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, "application/zip")
 
 	if httpErr != nil {
-		return httpErr
+		return nil, httpErr
 	}
 
 	if response.StatusCode >= 400 {
-		return fmt.Errorf("Bad response. %s", response.Status)
+		return nil, fmt.Errorf("Bad response. %s", response.Status)
 	}
 
-	return nil
+	var report ValidationResponse
+	decoder := json.NewDecoder(response.Body)
+	decodeErr := decoder.Decode(&report)
+
+	if decodeErr != nil {
+		return nil, decodeErr
+	}
+
+	return &report, nil
 }
 
 type (
@@ -134,24 +142,24 @@ func (p *Packages) CreateArchive(packageDirPath string, targetFileName string) e
 }
 
 // InstallFromDirectory installs a package from a directory containing the package files.
-func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView string) error {
+func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView string) (*ValidationResponse, error) {
 	zipFilePath, err := createTempZipFromFolder(packageDirPath)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	zipFile, err := os.Open(zipFilePath)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	defer zipFile.Close()
 	defer os.Remove(zipFile.Name())
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	return p.InstallArchive(targetRepoOrView, zipFilePath)
