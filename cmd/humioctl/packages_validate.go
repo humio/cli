@@ -19,6 +19,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/humio/cli/api"
+
 	"github.com/humio/cli/prompt"
 
 	"github.com/spf13/cobra"
@@ -59,13 +61,17 @@ func validatePackageCmd() *cobra.Command {
 			if validationResult.IsValid() {
 				out.Info("Package is valid")
 			} else {
-				out.Error("Package is not valid")
-				out.Error(out.List(validationResult.InstallationErrors))
-				out.Error(out.List(validationResult.ParseErrors))
+				printValidation(out, validationResult)
 				os.Exit(1)
 			}
 		},
 	}
 
 	return &cmd
+}
+
+func printValidation(out *prompt.Prompt, validationResult *api.ValidationResponse) {
+	out.Error("Package is not valid")
+	out.Error(out.List(validationResult.InstallationErrors))
+	out.Error(out.List(validationResult.ParseErrors))
 }

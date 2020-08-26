@@ -16,8 +16,12 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
+	"strings"
 
+	"github.com/humio/cli/api"
 	"github.com/humio/cli/prompt"
 
 	"github.com/spf13/cobra"
@@ -35,24 +39,44 @@ func installPackageCmd() *cobra.Command {
 
 			out.Info(fmt.Sprintf("Installing Package from: %s", path))
 
-			// Get the HTTP client
-			client := NewApiClient(cmd)
+			if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
+				downloadedFile, err := getURLPackage(path)
 
-			var createErr error
+				if err != nil {
+					out.Error(fmt.Sprintf("Failed to download: %s %s", path, err))
+					os.Exit(1)
+				}
+
+				// defer os.Remove(downloadedFile.Name())
+
+				path = downloadedFile.Name()
+				println(path)
+			}
+
 			isDir, err := isDirectory(path)
-			println(path)
+
 			if err != nil {
 				out.Error(fmt.Sprintf("Errors installing archive: %s", err))
 				os.Exit(1)
 			}
 
+			// Get the HTTP client
+			client := NewApiClient(cmd)
+
+			var validationResult *api.ValidationResponse
+			var createErr error
+
 			if isDir {
-				createErr = client.Packages().InstallFromDirectory(path, repoOrView)
+				validationResult, createErr = client.Packages().InstallFromDirectory(path, repoOrView)
 			} else {
-				createErr = client.Packages().InstallArchive(repoOrView, path)
+				validationResult, createErr = client.Packages().InstallArchive(repoOrView, path)
 			}
+
 			if createErr != nil {
 				out.Error(fmt.Sprintf("Errors installing archive: %s", createErr))
+				os.Exit(1)
+			} else if !validationResult.IsValid() {
+				printValidation(out, validationResult)
 				os.Exit(1)
 			}
 		},
@@ -67,4 +91,44 @@ func isDirectory(path string) (bool, error) {
 		return false, err
 	}
 	return fileInfo.IsDir(), err
+}
+
+func getURLPackage(url string) (*os.File, error) {
+	// Github URLs should have the .got suffix removed
+	if strings.HasPrefix(url, "https://github.com") || strings.HasPrefix(url, "http://github.com") {
+		url = strings.TrimSuffix(url, ".git")
+	}
+
+	zipBallURL := url + "/zipball/master/"
+	response, err := http.Get(zipBallURL)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if response.StatusCode >= 400 {
+		return nil, fmt.Errorf("error downloading file %s: %s", zipBallURL, response.Status)
+	}
+
+	defer response.Body.Close()
+	zipContent, err := ioutil.ReadAll(response.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	tempDir := os.TempDir()
+	zipFile, err := ioutil.TempFile(tempDir, "humio-package.*.zip")
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = zipFile.Write(zipContent)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return zipFile, nil
 }
