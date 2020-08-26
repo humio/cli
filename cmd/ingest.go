@@ -261,6 +261,10 @@ func (s *logSender) sendBatch(messages []string) {
 			}
 
 			return fmt.Errorf("bad response while sending events (status='%s'): %s", resp.Status, responseData)
+		} else {
+			// discard the response in order to re-use the connection
+			_, _ = io.Copy(ioutil.Discard, resp.Body)
+			_ = resp.Body.Close()
 		}
 
 		return nil

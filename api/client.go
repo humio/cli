@@ -78,7 +78,7 @@ func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path
 	req.Header.Set("Authorization", "Bearer "+c.Token())
 	req.Header.Set("Content-Type", "application/json")
 
-	var client = &http.Client{}
+	var client = http.DefaultClient
 
 	if reqErr != nil {
 		return nil, reqErr
