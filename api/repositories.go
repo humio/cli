@@ -105,6 +105,30 @@ func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error
 	return nil
 }
 
+type DefaultGroupEnum string
+
+func (r *Repositories) AddUser(name, username, group string) error {
+	var mutation struct {
+		UpdateDefaultGroupMembershipsMutation struct {
+			ClientMutationId string
+		} `graphql:"updateDefaultGroupMemberships(input: {viewName: $name, userName: $username, groups: [$group]})"`
+	}
+	variables := map[string]interface{}{
+		"name":     graphql.String(name),
+		"username": graphql.String(username),
+		"group":    DefaultGroupEnum(group),
+	}
+
+	graphqlErr := r.client.Mutate(&mutation, variables)
+
+	if graphqlErr != nil {
+		// The graphql error message is vague if the user already is a member, so add a hint.
+		return fmt.Errorf("%+v. Does the user already have access to the repo?", graphqlErr)
+	}
+
+	return nil
+}
+
 func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays float64, allowDataDeletion bool) error {
 	existingRepo, err := r.Get(name)
 	if err != nil {
