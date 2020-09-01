@@ -197,8 +197,8 @@ func initConfig() {
 	}
 }
 
-func NewApiClient(cmd *cobra.Command) *api.Client {
-	client, err := newApiClientE(cmd)
+func NewApiClient(cmd *cobra.Command, opts ...func(config *api.Config)) *api.Client {
+	client, err := newApiClientE(cmd, opts...)
 
 	if err != nil {
 		fmt.Println(fmt.Errorf("Error creating HTTP client: %s", err))
@@ -208,12 +208,16 @@ func NewApiClient(cmd *cobra.Command) *api.Client {
 	return client
 }
 
-func newApiClientE(cmd *cobra.Command) (*api.Client, error) {
+func newApiClientE(cmd *cobra.Command, opts ...func(config *api.Config)) (*api.Client, error) {
 	config := api.DefaultConfig()
 	config.Address = viper.GetString("address")
 	config.Token = viper.GetString("token")
 	config.CACertificate = []byte(viper.GetString("ca_certificate"))
 	config.Insecure = viper.GetBool("insecure")
+
+	for _, opt := range opts {
+		opt(&config)
+	}
 
 	return api.NewClient(config)
 }

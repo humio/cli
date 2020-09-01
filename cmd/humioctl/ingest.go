@@ -5,12 +5,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/sync/errgroup"
+	"io"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"os/signal"
+	"regexp"
 	"syscall"
+	"time"
 
 	"github.com/gofrs/uuid"
 	"github.com/hpcloud/tail"
@@ -19,57 +24,92 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var batchLimit = 500
-var events = make(chan string, batchLimit)
-
 type eventList struct {
 	Type     string            `json:"type"`
 	Fields   map[string]string `json:"fields"`
 	Messages []string          `json:"messages"`
 }
 
-func tailFile(client *api.Client, repo string, filepath string, quiet bool) {
+type lineHandler interface {
+	handleLine(line string)
+}
 
-	// Join Tail
+type multiLineHandlerMode int
 
-	t, err := tail.TailFile(filepath, tail.Config{Follow: true})
+const (
+	multiLineHandlerModeBeginsWith multiLineHandlerMode = iota
+	multiLineHandlerModeContinuesWith
+)
+
+type multiLineHandler struct {
+	lineHandler lineHandler
+	regex       *regexp.Regexp
+	mode        multiLineHandlerMode
+	buf         bytes.Buffer
+}
+
+func (h *multiLineHandler) handleLine(line string) {
+	isMatch := h.regex.MatchString(line)
+
+	switch h.mode {
+	case multiLineHandlerModeBeginsWith:
+		if isMatch {
+			fullLine := h.buf.String()
+			h.buf.Reset()
+			h.lineHandler.handleLine(fullLine)
+		}
+
+	case multiLineHandlerModeContinuesWith:
+		if !isMatch {
+			fullLine := h.buf.String()
+			h.buf.Reset()
+			h.lineHandler.handleLine(fullLine)
+		}
+	}
+	h.buf.WriteString(line)
+	h.buf.WriteString("\n")
+}
+
+func tailFile(filepath string, quiet bool, seekToEnd bool, handler lineHandler) error {
+	tailConfig := tail.Config{Follow: true}
+	if seekToEnd {
+		tailConfig.Location = &tail.SeekInfo{Offset: 0, Whence: io.SeekEnd}
+	}
+
+	t, err := tail.TailFile(filepath, tailConfig)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for line := range t.Lines {
-		sendLine(line.Text)
+		handler.handleLine(line.Text)
 		if !quiet {
 			fmt.Println(line.Text)
 		}
 	}
 
-	tailError := t.Wait()
+	waitForInterrupt()
 
-	if tailError != nil {
-		log.Fatal(tailError)
-	}
+	err = t.Stop()
+
+	return err
 }
 
-func streamStdin(repo string, quiet bool) {
+func streamStdin(repo string, quiet bool, handler lineHandler) error {
 	log.Println("Humio Attached to StdIn, Forwarding to '" + repo + "'")
-	scanner := bufio.NewScanner(os.Stdin)
+
+	var reader io.Reader = os.Stdin
+	if !quiet {
+		reader = io.TeeReader(reader, os.Stdout)
+	}
+
+	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
-		text := scanner.Text()
-		sendLine(text)
-		// TODO: We should be able to do this more efficiently.
-		// Somehow connecting Stdin to Stdout
-		if !quiet {
-			fmt.Println(text)
-		}
+		handler.handleLine(scanner.Text())
 	}
 
-	if scanner.Err() != nil {
-		log.Fatal(scanner.Err())
-	}
-
-	waitForInterrupt()
+	return scanner.Err()
 }
 
 func waitForInterrupt() {
@@ -91,7 +131,7 @@ func waitForInterrupt() {
 		sig := <-sigs
 		fmt.Println()
 		fmt.Println(sig)
-		done <- true
+		close(done)
 	}()
 
 	// The program will wait here until it gets the
@@ -100,75 +140,170 @@ func waitForInterrupt() {
 	<-done
 }
 
-func startSending(client *api.Client, repo string, fields map[string]string, parserName string) {
+type logSenderErrorBehaviour int
+
+const (
+	logSenderErrorBehaviourDrop logSenderErrorBehaviour = iota
+	logSenderErrorBehaviourCrash
+)
+
+type logSender struct {
+	apiClient           *api.Client
+	url                 string
+	fields              map[string]string
+	parserName          string
+	events              chan string
+	finishedSending     chan struct{}
+	maxAttemptsPerBatch int
+	errorBehaviour      logSenderErrorBehaviour
+	batchSizeLines      int
+	batchSizeBytes      int
+	batchTimeout        time.Duration
+}
+
+func (s *logSender) handleLine(line string) {
+	s.events <- line
+}
+
+func (s *logSender) finish() {
+	close(s.events)
+	<-s.finishedSending
+}
+
+func (s *logSender) start() {
 	go func() {
-		var batch []string
+		defer func() { close(s.finishedSending) }()
+		batch := make([]string, 0, s.batchSizeLines)
+
 		for {
-			select {
-			case v := <-events:
-				batch = append(batch, v)
-				if len(batch) >= batchLimit {
-					sendBatch(client, repo, batch, fields, parserName)
-					batch = batch[:0]
-				}
-			default:
-				if len(batch) > 0 {
-					sendBatch(client, repo, batch, fields, parserName)
-					batch = batch[:0]
-				}
-				// Avoid busy waiting
-				batch = append(batch, <-events)
+			bytes := 0
+
+			e, more := <-s.events
+			if !more {
+				break
 			}
+
+			batch = append(batch, e)
+			bytes += len(e)
+
+			timeout := time.After(s.batchTimeout)
+
+			if s.batchSizeBytes > 0 && bytes > s.batchSizeBytes {
+				goto send
+			}
+
+		loop:
+			for {
+				select {
+				case e, more := <-s.events:
+					if !more {
+						break loop
+					}
+					batch = append(batch, e)
+					bytes += len(e)
+					if len(batch) >= s.batchSizeLines || (s.batchSizeBytes > 0 && bytes > s.batchSizeBytes) {
+						break loop
+					}
+				case <-timeout:
+					break loop
+				}
+			}
+
+		send:
+			s.sendBatch(batch)
+
+			batch = batch[:0]
+			bytes = 0
+		}
+		if len(batch) > 0 {
+			s.sendBatch(batch)
 		}
 	}()
 }
 
-func sendLine(line string) {
-	events <- line
-}
+func (s *logSender) sendBatch(messages []string) {
+	ship := func() error {
+		var eg errgroup.Group
 
-func sendBatch(client *api.Client, repo string, messages []string, fields map[string]string, parserName string) {
-	lineJSON, err := json.Marshal([1]eventList{
-		{
-			Type:     parserName,
-			Fields:   fields,
+		pr, pw := io.Pipe()
+
+		jsonBody := []eventList{{
+			Type:     s.parserName,
+			Fields:   s.fields,
 			Messages: messages,
-		}})
+		}}
 
-	if err != nil {
-		fmt.Printf("error while sending data: %v", err)
-		return
-	}
+		eg.Go(func() error {
+			defer pw.Close()
+			return json.NewEncoder(pw).Encode(jsonBody)
+		})
 
-	url := "api/v1/repositories/" + repo + "/ingest-messages"
-	resp, err := client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(lineJSON))
+		var resp *http.Response
 
-	if err != nil {
-		fmt.Println((fmt.Errorf("error while sending data: %v", err)))
-	}
+		eg.Go(func() error {
+			var err error
+			resp, err = s.apiClient.HTTPRequest(http.MethodPost, s.url, pr)
+			return err
+		})
 
-	defer resp.Body.Close()
-
-	if resp.StatusCode > 400 {
-		responseData, err := ioutil.ReadAll(resp.Body)
+		err := eg.Wait()
 
 		if err != nil {
-			fmt.Println(fmt.Errorf("error while sending data: %v", err))
+			return err
 		}
 
-		fmt.Println((fmt.Errorf("Bad response while sending events: %s", string(responseData))))
+		if resp.StatusCode > 400 {
+			responseData, err := ioutil.ReadAll(resp.Body)
+
+			if err != nil {
+				return fmt.Errorf("error reading http response body: %w", err)
+			}
+
+			return fmt.Errorf("bad response while sending events (status='%s'): %s", resp.Status, responseData)
+		} else {
+			// discard the response in order to re-use the connection
+			_, _ = io.Copy(ioutil.Discard, resp.Body)
+			_ = resp.Body.Close()
+		}
+
+		return nil
+	}
+
+	var err error
+	for i := 0; i < s.maxAttemptsPerBatch; i++ {
+		if i > 0 {
+			backOff := time.Duration(0.5*math.Pow(2, float64(i-1))*1000) * time.Millisecond
+			log.Printf("Backoff for %v...", backOff)
+			time.Sleep(backOff)
+		}
+		err = ship()
+		if err == nil {
+			break
+		}
+		log.Printf("Error while sending logs to Humio. Retrying %d more times. Error message: %v", s.maxAttemptsPerBatch-i-1, err)
+	}
+
+	if err != nil {
+		switch s.errorBehaviour {
+		case logSenderErrorBehaviourCrash:
+			log.Fatalf("Error sending logs to Humio: %v", err)
+		case logSenderErrorBehaviourDrop:
+			log.Printf("Error sending logs to Humio, dropping %d events: %v", len(messages), err)
+		}
 	}
 }
 
 func newIngestCmd() *cobra.Command {
-	var parserName, filepath, label string
-	var openBrowser, noSession, quiet bool
+	var parserName, filepath, label, ingestToken, multiLineBeginsWith, multiLineContinuesWith, fieldsJson string
+	var openBrowser, noSession, quiet, failOnError, tailSeekToEnd bool
+	var retries, batchSizeLines, batchSizeBytes, batchTimeoutMs int
 
 	cmd := cobra.Command{
 		Use:   "ingest [flags] [<repo>]",
 		Short: "Send data to Humio.",
 		Long: `Listens to stdin and sends all input to the repository <repo>.
-If <repo> is not specified, Humio will use your 'sandbox' repository as
+If the --ingest-token flag is specified, the repo associated with the ingest token will be used.
+Otherwise, if <repo> is not specified, Humio will use your 'sandbox' repository as
 destination.
 
 It can be handy to specify the parser to be used to ingest the
@@ -194,23 +329,41 @@ has the same effect.`,
 				repo = "sandbox"
 			}
 
-			client := NewApiClient(cmd)
+			var opts []func(config *api.Config)
+			if ingestToken != "" {
+				opts = append(opts, func(config *api.Config) {
+					config.Token = ingestToken
+				})
+			}
+
+			client := NewApiClient(cmd, opts...)
 
 			var key string
 			fields := map[string]string{}
 
-			if !noSession {
-				u, _ := uuid.NewV4()
-				sessionID := u.String()
-				fields["@session"] = sessionID
-
-				if label == "" && !noSession {
-					key = "%40session%3D" + sessionID
+			if fieldsJson != "" {
+				var f map[string]string
+				err := json.Unmarshal([]byte(fieldsJson), &f)
+				if err != nil {
+					log.Fatalf("Error parsing --fields-json value: %v", err)
 				}
-			}
-			if label != "" {
-				fields["@label"] = label
-				key = "%40label%3D" + label
+				for k := range f {
+					fields[k] = f[k]
+				}
+			} else {
+				if !noSession {
+					u, _ := uuid.NewV4()
+					sessionID := u.String()
+					fields["@session"] = sessionID
+
+					if label == "" && !noSession {
+						key = "%40session%3D" + sessionID
+					}
+				}
+				if label != "" {
+					fields["@label"] = label
+					key = "%40label%3D" + label
+				}
 			}
 
 			// Open the browser (First so it has a chance to load)
@@ -221,12 +374,62 @@ has the same effect.`,
 				}
 			}
 
-			startSending(client, repo, fields, parserName)
-
-			if filepath != "" {
-				tailFile(client, repo, filepath, quiet)
+			var url string
+			if ingestToken != "" {
+				url = "api/v1/ingest/humio-unstructured"
 			} else {
-				streamStdin(repo, quiet)
+				url = "api/v1/repositories/" + repo + "/ingest-messages"
+			}
+
+			sender := logSender{
+				apiClient:           client,
+				url:                 url,
+				fields:              fields,
+				parserName:          parserName,
+				maxAttemptsPerBatch: retries + 1,
+				events:              make(chan string, batchSizeLines),
+				finishedSending:     make(chan struct{}),
+				batchSizeLines:      batchSizeLines,
+				batchSizeBytes:      batchSizeBytes,
+				batchTimeout:        time.Duration(batchTimeoutMs) * time.Millisecond,
+			}
+
+			if failOnError {
+				sender.errorBehaviour = logSenderErrorBehaviourCrash
+			}
+
+			sender.start()
+
+			var lineHandler lineHandler = &sender
+
+			switch {
+			case multiLineBeginsWith != "" && multiLineContinuesWith != "":
+				log.Fatalf("Cannot specify both --multiline-begins-with and --multiline-continues-with")
+			case multiLineBeginsWith != "":
+				lineHandler = &multiLineHandler{
+					lineHandler: lineHandler,
+					regex:       regexp.MustCompile(multiLineBeginsWith),
+					mode:        multiLineHandlerModeBeginsWith,
+				}
+			case multiLineContinuesWith != "":
+				lineHandler = &multiLineHandler{
+					lineHandler: lineHandler,
+					regex:       regexp.MustCompile(multiLineContinuesWith),
+					mode:        multiLineHandlerModeContinuesWith,
+				}
+			}
+
+			var err error
+			if filepath != "" {
+				err = tailFile(filepath, quiet, tailSeekToEnd, lineHandler)
+			} else {
+				err = streamStdin(repo, quiet, lineHandler)
+			}
+
+			sender.finish()
+
+			if err != nil {
+				log.Fatal(err)
 			}
 
 			return nil
@@ -235,11 +438,20 @@ has the same effect.`,
 
 	cmd.Flags().StringVarP(&parserName, "parser", "p", "default", "Use a specific parser for ingestion.")
 	cmd.Flags().StringVarP(&filepath, "tail", "f", "", "A file to tail instead of listening to stdin.")
-	cmd.Flags().StringP("ingest-token", "i", "", "The ingest token to use. Defaults to your Account API token.")
+	cmd.Flags().BoolVarP(&tailSeekToEnd, "tail-end", "E", false, "When used with --tail, start from the end of the file and follow it. Equivalent to 'tail -f -n0 <file>'")
+	cmd.Flags().StringVarP(&ingestToken, "ingest-token", "i", "", "Use the specified ingest token instead of the API token.")
 	cmd.Flags().BoolVarP(&openBrowser, "open", "o", false, "Open the browser with live tail of the stream.")
 	cmd.Flags().StringVarP(&label, "label", "l", "", "Adds a @label=<lavel> field to each event. This can help you find specific data send by the CLI when searching in the UI.")
 	cmd.Flags().BoolVarP(&noSession, "no-session", "n", false, "No @session field will be added to each event. @session assigns a new UUID to each executing of the Humio CLI.")
 	cmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Don't print ingested data to stdout.")
+	cmd.Flags().BoolVarP(&failOnError, "fail", "e", false, "Stop processing more input when sending events has failed (after the allowed number of retries).")
+	cmd.Flags().IntVarP(&retries, "retries", "r", 2, "Number of retries when Humio sending events.")
+	cmd.Flags().IntVarP(&batchSizeLines, "batch-lines", "L", 500, "Max number of events to send in one batch.")
+	cmd.Flags().IntVarP(&batchSizeBytes, "batch-bytes", "B", 1024*1024, "Max number of bytes to send in one batch.")
+	cmd.Flags().IntVarP(&batchTimeoutMs, "batch-timeout", "T", 100, "Max duration in milliseconds to wait before sending an incomplete batch.")
+	cmd.Flags().StringVarP(&multiLineBeginsWith, "multiline-begins-with", "", "", "Operate in multi line mode. Each multi line event starts with the specified regexp pattern.")
+	cmd.Flags().StringVarP(&multiLineContinuesWith, "multiline-continues-with", "", "", "Operate in multi line mode. Each multi line event is continued with the specified regexp pattern.")
+	cmd.Flags().StringVarP(&fieldsJson, "fields-json", "J", "", "Add the supplied json object to each object as structured fields.")
 
 	return &cmd
 }

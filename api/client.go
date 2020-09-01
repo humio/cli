@@ -81,7 +81,7 @@ func (c *Client) HTTPRequest(httpMethod string, path string, body io.Reader) (*h
 
 func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path string, body io.Reader, contentType string) (*http.Response, error) {
 	if body == nil {
-		body = bytes.NewBuffer(nil)
+		body = bytes.NewReader(nil)
 	}
 
 	url := c.Address() + path
