@@ -33,7 +33,7 @@ func newReposCmd() *cobra.Command {
 	cmd.AddCommand(newReposCreateCmd())
 	cmd.AddCommand(newReposUpdateCmd())
 	cmd.AddCommand(newReposDeleteCmd())
-	cmd.AddCommand(newReposAddUserCmd())
+	cmd.AddCommand(newReposUpdateUserGroupCmd())
 
 	return cmd
 }
