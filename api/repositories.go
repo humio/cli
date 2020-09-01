@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/shurcooL/graphql"
 )
@@ -103,6 +104,53 @@ func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error
 	}
 
 	return nil
+}
+
+type DefaultGroupEnum string
+
+const (
+	DefaultGroupEnumMember     DefaultGroupEnum = "Member"
+	DefaultGroupEnumAdmin      DefaultGroupEnum = "Admin"
+	DefaultGroupEnumEliminator DefaultGroupEnum = "Eliminator"
+)
+
+func (e DefaultGroupEnum) String() string {
+	return string(e)
+}
+
+func (e *DefaultGroupEnum) ParseString(s string) bool {
+	switch strings.ToLower(s) {
+	case "member":
+		*e = DefaultGroupEnumMember
+		return true
+	case "admin":
+		*e = DefaultGroupEnumAdmin
+		return true
+	case "eliminator":
+		*e = DefaultGroupEnumEliminator
+		return true
+	default:
+		return false
+	}
+}
+
+func (r *Repositories) UpdateUserGroup(name, username string, groups ...DefaultGroupEnum) error {
+	if len(groups) == 0 {
+		return fmt.Errorf("at least one group must be defined")
+	}
+
+	var mutation struct {
+		UpdateDefaultGroupMembershipsMutation struct {
+			ClientMutationId string
+		} `graphql:"updateDefaultGroupMemberships(input: {viewName: $name, userName: $username, groups: $groups})"`
+	}
+	variables := map[string]interface{}{
+		"name":     graphql.String(name),
+		"username": graphql.String(username),
+		"groups":   groups,
+	}
+
+	return r.client.Mutate(&mutation, variables)
 }
 
 func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays float64, allowDataDeletion bool) error {
