@@ -27,6 +27,9 @@ snapshot:
 run: $(BIN_PATH)
 	$(BIN_PATH) $(CLI_COMMAND)
 
-.PHONY: build clean snapshot run FORCE
+e2e:
+	./e2e/run.bash
+
+.PHONY: build clean snapshot run e2e FORCE
 
 FORCE:
