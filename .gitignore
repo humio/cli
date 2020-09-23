@@ -3,6 +3,7 @@
 /bin/
 /pkg/
 /vendor
+node_modules/
 
 *.exe
 *.test
