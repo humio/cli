@@ -104,7 +104,7 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName s
 func (i *IngestTokens) Update(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
 	var mutation struct {
 		Result struct {
-			IngestToken ingestTokenData
+			Repository Repository
 		} `graphql:"assignIngestToken(repositoryName: $repositoryName, tokenName: $tokenName, parserName: $parserName)"`
 	}
 
@@ -115,12 +115,11 @@ func (i *IngestTokens) Update(repositoryName string, tokenName string, parserNam
 	}
 
 	err := i.client.Mutate(&mutation, variables)
-
 	if err != nil {
 		return nil, err
 	}
 
-	return toIngestToken(mutation.Result.IngestToken), err
+	return i.Get(repositoryName, tokenName)
 }
 
 func (i *IngestTokens) Remove(repositoryName string, tokenName string) error {
