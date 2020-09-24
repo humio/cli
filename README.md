@@ -71,27 +71,6 @@ $ humioctl ingest --tail=/var/log/system.log
 You can have Humio's UI open and tail the newly imported data using the `-open`
 flag.
 
-## Installing a Community Parser
-
-Find a parser at [humio/community](https://github.com/humio/community) and
-install it using the CLI.
-
-For instance if you wanted to install an AccessLog parser you could use.
-
-```bash
-humioctl parsers install accesslog
-```
-
-This would install the parser at: `humio/comminity/parsers/accesslog/default.yaml`.
-Since log formats can vary slightly you can install one of the other variations:
-
-```bash
-humioctl parsers install accesslog/utc
-```
-
-Which would install the `humio/comminity/parsers/accesslog/utc.yaml` parser.
-
-
 ## @label and @session
 
 When streaming data into Humio using the `ingest` command all events
