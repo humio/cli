@@ -4,7 +4,7 @@
 /pkg/
 /vendor
 node_modules/
-
+/.idea/
 *.exe
 *.test
 *.prof

@@ -50,7 +50,6 @@ func installPackageCmd() *cobra.Command {
 				// defer os.Remove(downloadedFile.Name())
 
 				path = downloadedFile.Name()
-				println(path)
 			}
 
 			isDir, err := isDirectory(path)
