@@ -51,7 +51,7 @@ func newLicenseInstallCmd() *cobra.Command {
 			installErr := client.Licenses().Install(license)
 			exitOnError(cmd, installErr, "error installing license")
 
-			cmd.Println("License installed")
+			cmd.Println("OK")
 		},
 	}
 
