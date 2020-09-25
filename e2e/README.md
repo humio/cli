@@ -12,7 +12,7 @@ The test runner is installed through NPM (see Setup below).
 
 ## Setup
 
-npm install
+cd e2e && npm install
 
 ## Running the Tests
 
