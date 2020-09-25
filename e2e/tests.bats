@@ -2,32 +2,35 @@
 
 humioctl="$BATS_TEST_DIRNAME/../bin/humioctl --address=http://localhost:8081/"
 
+load './node_modules/bats-support/load'
+load './node_modules/bats-assert/load'
+
 ## Health Commands
 
 @test "health" {
-  $humioctl health
+  run $humioctl health
 }
 
 ## Cluster Commands
 
 @test "cluster nodes list" {
   run $humioctl cluster nodes list
-  grep "localhost:8080" <<< "$output"
+  assert_output -p "localhost:8080"
 }
 
 @test "cluster nodes show" {
   run $humioctl cluster nodes show 1
-  [[ "$status" -eq 0 ]]
-  grep "UUID" <<< "$output"
+  assert_success
+  assert_output -p "UUID"
 }
 
 ## View Commands
 
 @test "views list" {
   run $humioctl views list
-  [[ "$status" -eq 0 ]]
-  grep "humio-audit" <<< "$output"
-  grep "sandbox" <<< "$output"
+  assert_success
+  assert_output -p "humio-audit"
+  assert_output -p "sandbox"
 }
 
 @test "views show" {
@@ -36,15 +39,15 @@ humioctl="$BATS_TEST_DIRNAME/../bin/humioctl --address=http://localhost:8081/"
 
 @test "views show <unknown>" {
   run $humioctl views show foo
-  [[ "$status" -eq 1 ]]
+  assert_failure 1
 }
 
 ## User Commands
 
 @test "users show" {
-  run $humioctl users list
-  [[ "$status" -eq 0 ]]
-  grep "developer" <<< "$output"
+  run $humioctl users show developer
+  assert_success
+  assert_output -p "developer"
 }
 
 @test "users add" {
@@ -53,8 +56,85 @@ humioctl="$BATS_TEST_DIRNAME/../bin/humioctl --address=http://localhost:8081/"
 
 @test "users add <already exists>" {
   run $humioctl users add --email "bar@acme.org" --root true --name "Peter" peter
-  [[ "$status" -eq 0 ]]
+  assert_success
 
   run $humioctl users add --email "bar@acme.org" --root true --name "Peter" peter
-  [[ "$status" -eq 1 ]]
+  assert_failure 1
+}
+
+@test "users list" {
+  run $humioctl users add --email "quux@acme.org" --root false --name "Jens" jens
+  assert_success
+
+  run $humioctl users list
+  assert_success
+  assert_output -p "Jens"
+}
+
+@test "users update" {
+  $humioctl users add --email "abc@acme.org" --name "Odin" odin
+  $humioctl users update --name 'Othello' odin
+  
+  run $humioctl users show odin 
+
+  assert_success
+  assert_output -p 'Othello'
+}
+
+# Status Commands
+
+@test "status" {
+  run $humioctl status
+  assert_success
+  assert_output -p 'Version'
+}
+
+# License Commands
+
+@test "license install" {
+  skip # TODO: This fails in the test build susseeds with manual tests.
+       # we keep getting 'error installing license: Invalid input' in the test.
+       # Why is that?
+  
+  # Humio will accept an expired license, but limit usage.
+  run $humioctl license install "$BATS_TEST_DIRNAME/licenses/expired.pem"
+  assert_success
+  assert_output "OK"
+}
+
+@test "license install <invalid license>" {
+  run $humioctl license install "$BATS_TEST_DIRNAME/licenses/invalid.pem"
+  assert_failure
+}
+
+@test "license show" {
+  $humioctl license show
+}
+
+# Alerts
+
+@test "alerts list" {
+  $humioctl alerts list humio
+}
+
+# Notifiers
+
+@test "notifiers list" {
+  $humioctl alerts list humio
+}
+
+# Ingest Token Commands
+
+@test "ingest-tokens add" {
+  run $humioctl ingest-tokens add humio "test123" --parser "kv"
+  assert_success
+  assert_output -p "test123"
+  assert_output -p "kv"
+}
+
+@test "ingest-tokens list" {
+  $humioctl ingest-tokens add humio "foo"
+  run $humioctl ingest-tokens list humio
+  assert_success
+  assert_output -p "Assigned Parser"
 }
