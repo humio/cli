@@ -34,8 +34,6 @@ func newViewsShowCmd() *cobra.Command {
 			printViewTable(view)
 
 			printViewConnectionsTable(view)
-
-			printViewRoleTable(view)
 		},
 	}
 

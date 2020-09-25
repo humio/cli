@@ -52,26 +52,6 @@ func printViewTable(view *api.View) {
 	fmt.Println()
 }
 
-func printViewRoleTable(view *api.View) {
-
-	data := [][]string{}
-
-	for _, role := range view.Roles {
-		data = append(data, []string{role.Role.Name, role.QueryPrefix})
-	}
-
-	w := tablewriter.NewWriter(os.Stdout)
-	w.AppendBulk(data)
-	w.SetBorder(true)
-	w.SetHeader([]string{"Role", "Query Prefix"})
-	w.SetColumnSeparator(":")
-	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-
-	fmt.Println()
-	w.Render()
-	fmt.Println()
-}
-
 func printViewConnectionsTable(view *api.View) {
 	if len(view.Connections) == 0 {
 		return

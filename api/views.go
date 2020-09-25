@@ -11,16 +11,6 @@ type Views struct {
 	client *Client
 }
 
-type RolePermission struct {
-	Role struct {
-		Name string
-	}
-	View struct {
-		Name string
-	}
-	QueryPrefix string
-}
-
 type ViewConnection struct {
 	RepoName string
 	Filter   string
@@ -28,7 +18,6 @@ type ViewConnection struct {
 
 type ViewQueryData struct {
 	Name     string
-	Roles    []RolePermission
 	ViewInfo struct {
 		Connections []struct {
 			Repository struct{ Name string }
@@ -39,7 +28,6 @@ type ViewQueryData struct {
 
 type View struct {
 	Name        string
-	Roles       []RolePermission
 	Connections []ViewConnection
 }
 
@@ -71,7 +59,6 @@ func (c *Views) Get(name string) (*View, error) {
 
 	view := View{
 		Name:        q.Result.Name,
-		Roles:       q.Result.Roles,
 		Connections: connections,
 	}
 
