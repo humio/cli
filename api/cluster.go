@@ -33,6 +33,8 @@ type ClusterNode struct {
 	SolitarySegmentSize     float64
 	IsAvailable             bool
 	LastHeartbeat           string
+	// Zone holds the availability zone as configured in the `ZONE` configuration of the Humio server.
+	Zone string
 }
 
 type IngestPartition struct {

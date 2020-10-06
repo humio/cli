@@ -44,11 +44,11 @@ func newClusterNodesListCmd() *cobra.Command {
 
 			rows := make([][]string, len(nodes))
 			for i, node := range nodes {
-				rows[i] = []string{strconv.Itoa(node.Id), node.Name, strconv.FormatBool(node.CanBeSafelyUnregistered)}
+				rows[i] = []string{strconv.Itoa(node.Id), node.Name, strconv.FormatBool(node.CanBeSafelyUnregistered), node.Zone}
 			}
 
 			w := tablewriter.NewWriter(cmd.OutOrStdout())
-			w.SetHeader([]string{"ID", "Name", "Can be safely unregistered"})
+			w.SetHeader([]string{"ID", "Name", "Can be safely unregistered", "Availability Zone"})
 			w.AppendBulk(rows)
 			w.SetBorder(false)
 
