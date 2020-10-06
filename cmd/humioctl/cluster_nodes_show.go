@@ -68,6 +68,7 @@ func printClusterNodeInfo(cmd *cobra.Command, node api.ClusterNode) {
 		{"Solitary segment size", ByteCountDecimal(int64(node.SolitarySegmentSize))},
 		{"Is available", strconv.FormatBool(node.IsAvailable)},
 		{"Last heartbeat", node.LastHeartbeat},
+		{"Availability Zone", node.Zone},
 	}
 
 	w := tablewriter.NewWriter(cmd.OutOrStdout())
