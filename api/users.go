@@ -1,12 +1,16 @@
 package api
 
-import "github.com/shurcooL/graphql"
+import (
+	"errors"
+	"github.com/shurcooL/graphql"
+)
 
 type Users struct {
 	client *Client
 }
 
 type User struct {
+	ID          string
 	Username    string
 	FullName    string
 	Email       string
@@ -30,7 +34,7 @@ func (c *Client) Users() *Users { return &Users{client: c} }
 
 func (u *Users) List() ([]User, error) {
 	var q struct {
-		Users []User `graphql:"accounts"`
+		Users []User `graphql:"users"`
 	}
 
 	graphqlErr := u.client.Query(&q, nil)
@@ -40,7 +44,7 @@ func (u *Users) List() ([]User, error) {
 
 func (u *Users) Get(username string) (User, error) {
 	var q struct {
-		User User `graphql:"account(username: $username)"`
+		Users []User `graphql:"users(search: $username)"`
 	}
 
 	variables := map[string]interface{}{
@@ -49,7 +53,17 @@ func (u *Users) Get(username string) (User, error) {
 
 	graphqlErr := u.client.Query(&q, variables)
 
-	return q.User, graphqlErr
+	if graphqlErr != nil {
+		return User{}, graphqlErr
+	}
+
+	for _, user := range q.Users {
+		if user.Username == username {
+			return user, nil
+		}
+	}
+
+	return User{}, errors.New("user not found")
 }
 
 func (u *Users) Update(username string, changeset UserChangeSet) (User, error) {
@@ -87,6 +101,28 @@ func (u *Users) Remove(username string) (User, error) {
 	graphqlErr := u.client.Mutate(&mutation, variables)
 
 	return mutation.Result.User, graphqlErr
+}
+
+func (u *Users) RotateUserApiTokenAndGet(userID string) (string, error) {
+	var mutation struct {
+		RotateUserApiTokenMutation struct {
+			RotateUserApiToken struct {
+				Token string
+			} `graphql:"rotateUserApiToken"`
+		} `graphql:"rotateUserApiTokenAndGet(input:{id:$id})"`
+	}
+
+	variables := map[string]interface{}{
+		"id": graphql.String(userID),
+	}
+
+	err := u.client.Mutate(&mutation, variables)
+
+	if err != nil {
+		return "", err
+	}
+
+	return mutation.RotateUserApiTokenMutation.RotateUserApiToken.Token, nil
 }
 
 func userChangesetToVars(username string, changeset UserChangeSet) map[string]interface{} {
