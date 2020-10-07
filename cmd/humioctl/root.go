@@ -125,6 +125,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newNotifiersCmd())
 	rootCmd.AddCommand(newAlertsCmd())
 	rootCmd.AddCommand(newPackagesCmd())
+	rootCmd.AddCommand(newGroupsCmd())
 
 	// Hidden Commands
 	rootCmd.AddCommand(newWelcomeCmd())
