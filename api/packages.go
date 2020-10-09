@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"os"
+	"path"
 
 	"github.com/shurcooL/graphql"
 )
@@ -197,7 +198,7 @@ func createZipFromFolder(baseFolder string, outFile *os.File) error {
 	return nil
 }
 
-func addFiles(w *zip.Writer, basePath, baseInZip string) {
+func addFiles(w *zip.Writer, basePath string, baseInZip string) {
 	// Open the Directory
 	files, err := ioutil.ReadDir(basePath)
 	if err != nil {
@@ -206,13 +207,13 @@ func addFiles(w *zip.Writer, basePath, baseInZip string) {
 
 	for _, file := range files {
 		if !file.IsDir() {
-			dat, err := ioutil.ReadFile(basePath + file.Name())
+			dat, err := ioutil.ReadFile(path.Join(basePath, file.Name()))
 			if err != nil {
 				fmt.Println(err)
 			}
 
 			// Add some files to the archive.
-			f, err := w.Create(baseInZip + file.Name())
+			f, err := w.Create(path.Join(baseInZip, file.Name()))
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -222,8 +223,8 @@ func addFiles(w *zip.Writer, basePath, baseInZip string) {
 			}
 		} else if file.IsDir() {
 			// Drill down
-			newBase := basePath + file.Name() + "/"
-			addFiles(w, newBase, baseInZip+file.Name()+"/")
+			newBase := path.Join(basePath, file.Name())
+			addFiles(w, newBase, path.Join(baseInZip, file.Name()))
 		}
 	}
 }
