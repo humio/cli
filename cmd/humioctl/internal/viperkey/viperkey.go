@@ -9,4 +9,5 @@ const (
 	Insecure          = "insecure"
 	Username          = "username"
 	Profiles          = "profiles"
+	ProxyOrganization = "proxy-organization"
 )

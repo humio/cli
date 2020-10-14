@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -15,14 +16,17 @@ type Client struct {
 }
 
 type Config struct {
-	Address       *url.URL
-	Token         string
-	CACertificate []byte
-	Insecure      bool
+	Address           *url.URL
+	Token             string
+	CACertificate     []byte
+	Insecure          bool
+	ProxyOrganization string
 }
 
 func DefaultConfig() Config {
-	return Config{}
+	config := Config{}
+
+	return config
 }
 
 func (c *Client) Address() *url.URL {
@@ -47,10 +51,20 @@ func NewClient(config Config) *Client {
 	}
 }
 
+func (c *Client) headers() map[string]string {
+	headers := map[string]string{
+		"Authorization": fmt.Sprintf("Bearer %s", c.Token()),
+	}
+
+	if c.config.ProxyOrganization != "" {
+		headers["ProxyOrganization"] = c.config.ProxyOrganization
+	}
+
+	return headers
+}
+
 func (c *Client) newGraphQLClient() *graphql.Client {
-	httpClient := c.newHTTPClientWithHeaders(map[string]string{
-		"Authorization": "Bearer " + c.Token(),
-	})
+	httpClient := c.newHTTPClientWithHeaders(c.headers())
 	graphqlURL, err := c.Address().Parse("/graphql")
 	if err != nil {
 		panic(err)
@@ -93,10 +107,11 @@ func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path
 		return nil, reqErr
 	}
 
-	var client = c.newHTTPClientWithHeaders(map[string]string{
-		"Authorization": "Bearer " + c.Token(),
-		"Content-Type":  contentType,
-	})
+	headers := c.headers()
+
+	headers["Content-Type"] = contentType
+
+	var client = c.newHTTPClientWithHeaders(headers)
 	return client.Do(req)
 }
 
