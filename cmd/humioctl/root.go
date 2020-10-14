@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile, tokenFile, token, address, caCertificateFile, profileFlag string
+var cfgFile, tokenFile, token, address, caCertificateFile, profileFlag, proxyOrganization string
 var insecure bool
 
 var printVersion bool
@@ -96,12 +96,14 @@ Common Management Commands:
 	rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "", "The HTTP address of the Humio cluster. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().StringVar(&caCertificateFile, "ca-certificate-file", "", "File path to a file containing the CA certificate in PEM format. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().BoolVar(&insecure, "insecure", false, "By default, all encrypted connections will verify that the hostname in the TLS certificate matches the name from the URL. Set this to true to ignore hostname validation.")
+	rootCmd.PersistentFlags().StringVar(&proxyOrganization, "proxy-organization", "", "Commands are executed in the specified organization.")
 
 	viper.BindPFlag(viperkey.Address, rootCmd.PersistentFlags().Lookup("address"))
 	viper.BindPFlag(viperkey.Token, rootCmd.PersistentFlags().Lookup("token"))
 	viper.BindPFlag(viperkey.TokenFile, rootCmd.PersistentFlags().Lookup("token-file"))
 	viper.BindPFlag(viperkey.CACertificateFile, rootCmd.PersistentFlags().Lookup("ca-certificate-file"))
 	viper.BindPFlag(viperkey.Insecure, rootCmd.PersistentFlags().Lookup("insecure"))
+	viper.BindPFlag(viperkey.ProxyOrganization, rootCmd.PersistentFlags().Lookup("proxy-organization"))
 
 	rootCmd.Flags().BoolVarP(&printVersion, "version", "v", false, "Print the client version")
 
@@ -218,6 +220,7 @@ func newApiClientE(cmd *cobra.Command, opts ...func(config *api.Config)) (*api.C
 	config.Token = viper.GetString(viperkey.Token)
 	config.CACertificate = []byte(viper.GetString(viperkey.CACertificate))
 	config.Insecure = viper.GetBool(viperkey.Insecure)
+	config.ProxyOrganization = viper.GetString(viperkey.ProxyOrganization)
 
 	for _, opt := range opts {
 		opt(&config)
