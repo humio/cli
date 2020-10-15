@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/pem"
 	"fmt"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"io/ioutil"
@@ -155,8 +156,12 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 					// Read the file
 					caCertContent, err := ioutil.ReadFile(caCertificateFilePath)
 					exitOnError(cmd, err, "error reading Humio CA certificate file path")
+					block, _ := pem.Decode(caCertContent)
+					if block == nil {
+						exitOnError(cmd, fmt.Errorf("expected PEM block"), "expected PEM encoded CA certificate file")
+					}
 					caCertificate = string(caCertContent)
-					clientConfig.CACertificate = []byte(caCertificate)
+					clientConfig.CACertificatePEM = caCertificate
 					client = api.NewClient(clientConfig)
 				}
 			}
@@ -236,7 +241,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		config := api.DefaultConfig()
 		config.Address = parsedURL
 		config.Token = token
-		config.CACertificate = []byte(caCertificate)
+		config.CACertificatePEM = caCertificate
 		config.Insecure = insecure
 
 		client := api.NewClient(config)

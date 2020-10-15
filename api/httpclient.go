@@ -45,10 +45,10 @@ func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Clien
 		}
 	}
 
-	if len(c.config.CACertificate) > 0 {
+	if len(c.config.CACertificatePEM) > 0 {
 		// Create a certificate pool and return a HTTP client with the specified specified CA certificate.
 		caCertPool := x509.NewCertPool()
-		caCertPool.AppendCertsFromPEM(c.config.CACertificate)
+		caCertPool.AppendCertsFromPEM([]byte(c.config.CACertificatePEM))
 		return &http.Client{
 			Transport: &headerTransport{
 				base: &http.Transport{
