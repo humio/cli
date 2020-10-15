@@ -17,6 +17,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"path"
 	"strconv"
@@ -210,7 +211,12 @@ func NewApiClient(cmd *cobra.Command, opts ...func(config *api.Config)) *api.Cli
 
 func newApiClientE(cmd *cobra.Command, opts ...func(config *api.Config)) (*api.Client, error) {
 	config := api.DefaultConfig()
-	config.Address = viper.GetString("address")
+	address := viper.GetString("address")
+	parsedURL, err := url.Parse(address)
+	if err != nil {
+		return nil, err
+	}
+	config.Address = parsedURL
 	config.Token = viper.GetString("token")
 	config.CACertificate = []byte(viper.GetString("ca_certificate"))
 	config.Insecure = viper.GetBool("insecure")
@@ -219,7 +225,7 @@ func newApiClientE(cmd *cobra.Command, opts ...func(config *api.Config)) (*api.C
 		opt(&config)
 	}
 
-	return api.NewClient(config)
+	return api.NewClient(config), nil
 }
 
 func main() {

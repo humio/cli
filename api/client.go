@@ -5,6 +5,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"net/url"
 
 	"github.com/shurcooL/graphql"
 )
@@ -14,24 +15,17 @@ type Client struct {
 }
 
 type Config struct {
-	Address       string
+	Address       *url.URL
 	Token         string
 	CACertificate []byte
 	Insecure      bool
 }
 
 func DefaultConfig() Config {
-	config := Config{
-		Address:       "",
-		Token:         "",
-		CACertificate: []byte{},
-		Insecure:      false,
-	}
-
-	return config
+	return Config{}
 }
 
-func (c *Client) Address() string {
+func (c *Client) Address() *url.URL {
 	return c.config.Address
 }
 
@@ -57,7 +51,11 @@ func (c *Client) newGraphQLClient() *graphql.Client {
 	httpClient := c.newHTTPClientWithHeaders(map[string]string{
 		"Authorization": "Bearer " + c.Token(),
 	})
-	return graphql.NewClient(c.Address()+"graphql", httpClient)
+	graphqlURL, err := c.Address().Parse("/graphql")
+	if err != nil {
+		panic(err)
+	}
+	return graphql.NewClient(graphqlURL.String(), httpClient)
 }
 
 func (c *Client) Query(query interface{}, variables map[string]interface{}) error {
@@ -84,9 +82,12 @@ func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path
 		body = bytes.NewReader(nil)
 	}
 
-	url := c.Address() + path
+	url, err := c.Address().Parse(path)
+	if err != nil {
+		return nil, err
+	}
 
-	req, reqErr := http.NewRequestWithContext(ctx, httpMethod, url, body)
+	req, reqErr := http.NewRequestWithContext(ctx, httpMethod, url.String(), body)
 	if reqErr != nil {
 		return nil, reqErr
 	}

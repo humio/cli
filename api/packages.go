@@ -41,7 +41,7 @@ func (p *Packages) Validate(repoOrViewName string, absDiretoryPath string) (*Val
 		return nil, err
 	}
 
-	urlPath := "api/v1/packages/analyze?view=" + url.QueryEscape(repoOrViewName)
+	urlPath := "/api/v1/packages/analyze?view=" + url.QueryEscape(repoOrViewName)
 
 	fileReader, openErr := os.Open(zipFilePath)
 
@@ -81,7 +81,7 @@ func (p *Packages) InstallArchive(repoOrViewName string, pathToZip string) (*Val
 	}
 	defer fileReader.Close()
 
-	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(repoOrViewName)
+	urlPath := "/api/v1/packages/install?view=" + url.QueryEscape(repoOrViewName)
 
 	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, "application/zip")
 

@@ -36,7 +36,7 @@ type Health struct {
 }
 
 func (c *Client) HealthString() (string, error) {
-	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/health", nil)
+	resp, err := c.HTTPRequest(http.MethodGet, "/api/v1/health", nil)
 	if err != nil {
 		return "", err
 	}
@@ -50,7 +50,7 @@ func (c *Client) HealthString() (string, error) {
 }
 
 func (c *Client) Health() (Health, error) {
-	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/health-json", nil)
+	resp, err := c.HTTPRequest(http.MethodGet, "/api/v1/health-json", nil)
 	if err != nil {
 		return Health{}, err
 	}
