@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/humio/cli/prompt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -37,7 +38,7 @@ func newStatusCmd() *cobra.Command {
 
 			data := [][]string{
 				{"Status", formatStatusText(serverStatus.Status)},
-				{"Address", viper.GetString("address")},
+				{"Address", viper.GetString(viperkey.Address)},
 				{"Version", serverStatus.Version},
 				{"Username", username},
 			}

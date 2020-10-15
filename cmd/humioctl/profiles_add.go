@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"io/ioutil"
 	"net/url"
 	"os"
@@ -59,29 +60,29 @@ func saveConfig() error {
 }
 
 func addAccount(out *prompt.Prompt, newName string, profile *login) {
-	profiles := viper.GetStringMap("profiles")
+	profiles := viper.GetStringMap(viperkey.Profiles)
 
 	profiles[newName] = map[string]interface{}{
-		"address":        profile.address,
-		"token":          profile.token,
-		"username":       profile.username,
-		"ca_certificate": string(profile.caCertificate),
-		"insecure":       profile.insecure,
+		viperkey.Address:        profile.address,
+		viperkey.Token:          profile.token,
+		viperkey.Username:       profile.username,
+		viperkey.CACertificate: string(profile.caCertificate),
+		viperkey.Insecure:       profile.insecure,
 	}
 
-	viper.Set("profiles", profiles)
+	viper.Set(viperkey.Profiles, profiles)
 }
 
 func mapToLogin(data interface{}) (*login, error) {
-	insecure, err := strconv.ParseBool(getMapKey(data, "insecure"))
+	insecure, err := strconv.ParseBool(getMapKey(data, viperkey.Insecure))
 	if err != nil {
 		return nil, err
 	}
 	return &login{
-		address:       getMapKey(data, "address"),
-		username:      getMapKey(data, "username"),
-		token:         getMapKey(data, "token"),
-		caCertificate: []byte(getMapKey(data, "caCertificate")),
+		address:       getMapKey(data, viperkey.Address),
+		username:      getMapKey(data, viperkey.Username),
+		token:         getMapKey(data, viperkey.Token),
+		caCertificate: []byte(getMapKey(data, viperkey.CACertificate)),
 		insecure:      insecure,
 	}, nil
 }
@@ -265,5 +266,5 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 }
 
 func isCurrentAccount(addr string, token string) bool {
-	return viper.GetString("address") == addr && viper.GetString("token") == token
+	return viper.GetString(viperkey.Address) == addr && viper.GetString(viperkey.Token) == token
 }
