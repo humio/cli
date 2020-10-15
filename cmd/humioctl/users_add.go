@@ -16,8 +16,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 )
@@ -31,7 +29,7 @@ func newUsersAddCmd() *cobra.Command {
 		Use:   "add [flags] <username>",
 		Short: "Adds a user. [Root Only]",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 
 			username := args[0]
 
@@ -47,12 +45,13 @@ func newUsersAddCmd() *cobra.Command {
 			})
 
 			if err != nil {
-				cmd.Println(fmt.Errorf("Error creating the user: %s", err))
-				os.Exit(1)
+				return nil, fmt.Errorf("error creating the user: %w", err)
 			}
 
 			printUserTable(cmd, user)
-		},
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().Var(&rootFlag, "root", "If true grants root access to the user.")

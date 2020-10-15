@@ -26,8 +26,7 @@ func newAlertsListCmd() *cobra.Command {
 		Use:   "list [flags] <view>",
 		Short: "List all alerts in a view.",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			view := args[0]
 
 			// Get the HTTP client
@@ -35,7 +34,7 @@ func newAlertsListCmd() *cobra.Command {
 			alerts, err := client.Alerts().List(view)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching alerts: %s", err)
+				return nil, fmt.Errorf("Error fetching alerts: %w", err)
 			}
 
 			var output []string
@@ -46,7 +45,7 @@ func newAlertsListCmd() *cobra.Command {
 				for _, notifierID := range alert.Notifiers {
 					notifier, err := client.Notifiers().GetByID(view, notifierID)
 					if err != nil {
-						return fmt.Errorf("could not get details for notifier with id %s: %v", notifierID, err)
+						return nil, fmt.Errorf("could not get details for notifier with id %s: %w", notifierID, err)
 					}
 					notifierNames = append(notifierNames, notifier.Name)
 				}
@@ -55,8 +54,8 @@ func newAlertsListCmd() *cobra.Command {
 
 			printTable(cmd, output)
 
-			return nil
-		},
+			return nil, nil
+		}),
 	}
 
 	return &cmd

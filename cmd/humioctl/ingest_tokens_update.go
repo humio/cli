@@ -35,7 +35,7 @@ use the assigned parser at ingest time.
 
 If parser is not specified, the ingest token will not be associated with a parser.`,
 		Args: cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repositoryName := args[0]
 			tokenName := args[1]
 
@@ -45,7 +45,7 @@ If parser is not specified, the ingest token will not be associated with a parse
 			token, err := client.IngestTokens().Update(repositoryName, tokenName, parserName)
 
 			if err != nil {
-				return fmt.Errorf("Error updating ingest token: %s", err)
+				return nil, fmt.Errorf("error updating ingest token: %w", err)
 			}
 
 			var output []string
@@ -58,8 +58,8 @@ If parser is not specified, the ingest token will not be associated with a parse
 			cmd.Println(table)
 			cmd.Println()
 
-			return nil
-		},
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().StringVarP(&parserName, "parser", "p", "", "Assigns the a parser to the ingest token.")

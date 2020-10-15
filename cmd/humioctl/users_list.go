@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -22,11 +23,13 @@ func newUsersListCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "list",
 		Short: "Lists all users. [Root Only]",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			users, err := client.Users().List()
-			exitOnError(cmd, err, "error fetching user list")
+			if err != nil {
+				return nil, fmt.Errorf("error fetching user list: %w", err)
+			}
 
 			rows := make([]string, len(users))
 			for i, user := range users {
@@ -37,6 +40,8 @@ func newUsersListCmd() *cobra.Command {
 				"Username | Name | Root | Created"},
 				rows...,
 			))
-		},
+
+			return nil, nil
+		}),
 	}
 }

@@ -25,7 +25,7 @@ func newIngestTokensShowCmd() *cobra.Command {
 		Use:   "show [flags] <repo> <token-name>",
 		Short: "Show details about an ingest-token in a repository.",
 		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 
 			repo := args[0]
 			name := args[1]
@@ -35,7 +35,7 @@ func newIngestTokensShowCmd() *cobra.Command {
 			ingestToken, err := client.IngestTokens().Get(repo, name)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching ingest-token: %s", err)
+				return nil, fmt.Errorf("error fetching ingest-token: %w", err)
 			}
 
 			var output []string
@@ -44,8 +44,8 @@ func newIngestTokensShowCmd() *cobra.Command {
 
 			printTable(cmd, output)
 
-			return nil
-		},
+			return nil, nil
+		}),
 	}
 
 	return &cmd

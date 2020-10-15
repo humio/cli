@@ -25,18 +25,22 @@ func newReposShowCmd() *cobra.Command {
 		Use:   "show [flags] <repo>",
 		Short: "Show details about a repository.",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repoName := args[0]
 
 			client := NewApiClient(cmd)
 
 			repo, apiErr := client.Repositories().Get(repoName)
-			exitOnError(cmd, apiErr, "error fetching repository")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error fetching repository: %w", apiErr)
+			}
 
 			printRepoTable(cmd, repo)
 
 			fmt.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return &cmd

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
@@ -23,11 +24,13 @@ func newViewsListCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "list",
 		Short: "Lists all views you have access to",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			views, apiErr := client.Views().List()
-			exitOnError(cmd, apiErr, "Error while fetching view list")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error while fetching view list: %w", apiErr)
+			}
 
 			rows := make([][]string, len(views))
 			for i, view := range views {
@@ -41,6 +44,8 @@ func newViewsListCmd() *cobra.Command {
 			cmd.Println()
 			w.Render()
 			cmd.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 }

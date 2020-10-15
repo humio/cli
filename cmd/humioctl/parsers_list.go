@@ -25,7 +25,7 @@ func newParsersListCmd() *cobra.Command {
 		Use:   "list [flags] <repo>",
 		Short: "List all installed parsers in a repository.",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 
 			repo := args[0]
 
@@ -34,7 +34,7 @@ func newParsersListCmd() *cobra.Command {
 			parsers, err := client.Parsers().List(repo)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching parsers: %s", err)
+				return nil, fmt.Errorf("error fetching parsers: %s", err)
 			}
 
 			var output []string
@@ -46,8 +46,8 @@ func newParsersListCmd() *cobra.Command {
 
 			printTable(cmd, output)
 
-			return nil
-		},
+			return nil, nil
+		}),
 	}
 
 	return &cmd

@@ -33,7 +33,7 @@ You can associate a parser with the ingest token using the --parser flag.
 Assigning a parser will make all data sent to Humio using this ingest token
 use the assigned parser at ingest time.`,
 		Args: cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repo := args[0]
 			name := args[1]
 
@@ -43,7 +43,7 @@ use the assigned parser at ingest time.`,
 			token, err := client.IngestTokens().Add(repo, name, parserName)
 
 			if err != nil {
-				return fmt.Errorf("Error adding ingest token: %s", err)
+				return nil, fmt.Errorf("error adding ingest token: %w", err)
 			}
 
 			var output []string
@@ -56,8 +56,8 @@ use the assigned parser at ingest time.`,
 			cmd.Println(table)
 			cmd.Println()
 
-			return nil
-		},
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().StringVarP(&parserName, "parser", "p", "", "Assigns the a parser to the ingest token.")

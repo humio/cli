@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -25,15 +26,19 @@ func newReposDeleteCmd() *cobra.Command {
 		Use:   "delete [flags] <repo> \"descriptive reason for why it is being deleted\"",
 		Short: "Delete a repository.",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repo := args[0]
 			reason := args[1]
 
 			client := NewApiClient(cmd)
 
 			apiError := client.Repositories().Delete(repo, reason, allowDataDeletionFlag)
-			exitOnError(cmd, apiError, "error removing repository")
-		},
+			if apiError != nil {
+				return nil, fmt.Errorf("error removing repository: %w", apiError)
+			}
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().BoolVar(&allowDataDeletionFlag, "allow-data-deletion", false, "Allow changing retention settings for a non-empty repository")

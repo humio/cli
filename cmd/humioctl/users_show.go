@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -23,15 +24,19 @@ func newUsersShowCmd() *cobra.Command {
 		Use:   "show [flags] <username>",
 		Short: "Show details about a user [Root Only]",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			username := args[0]
 
 			client := NewApiClient(cmd)
 			user, err := client.Users().Get(username)
-			exitOnError(cmd, err, "Error fetching user")
+			if err != nil {
+				return nil, fmt.Errorf("error fetching user: %w", err)
+			}
 
 			printUserTable(cmd, user)
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return &cmd

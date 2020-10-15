@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -23,13 +24,15 @@ func newLicenseShowCmd() *cobra.Command {
 		Use:   "show",
 		Short: "Show the current Humio license installed",
 		Args:  cobra.ExactArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 			license, apiErr := client.Licenses().Get()
-			exitOnError(cmd, apiErr, "error fetching the license")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error fetching the license: %w", apiErr)
+			}
 			printLicenseInfo(cmd, license)
-			cmd.Println()
-		},
+			return nil, nil
+		}),
 	}
 
 	return cmd

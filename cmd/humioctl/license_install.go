@@ -16,10 +16,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
-
 	"github.com/spf13/cobra"
+	"io/ioutil"
 )
 
 func newLicenseInstallCmd() *cobra.Command {
@@ -28,31 +26,30 @@ func newLicenseInstallCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "install [flags] (<license-file> | --license=<string>)",
 		Short: "Install a Humio license",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			if len(args) == 1 {
 				filepath := args[0]
 
 				licenseBytes, readErr := ioutil.ReadFile(filepath)
 				if readErr != nil {
-					cmd.Println(fmt.Errorf("error reading license file: %s", readErr))
-					os.Exit(1)
+					return nil, fmt.Errorf("error reading license file: %w", readErr)
 				}
 
 				license = string(licenseBytes)
 			} else if license != "" {
 				// License set from flag
 			} else {
-				cmd.Println("Expected either an argument <filename> or flag --license=<license>.")
-				cmd.Help()
-				os.Exit(1)
+				return nil, fmt.Errorf("expected either an argument <filename> or flag --license=<license>.")
 			}
 
 			client := NewApiClient(cmd)
 			installErr := client.Licenses().Install(license)
-			exitOnError(cmd, installErr, "error installing license")
+			if installErr != nil {
+				return nil, fmt.Errorf("error installing license: %w", installErr)
+			}
 
-			cmd.Println("OK")
-		},
+			return "OK", nil
+		}),
 	}
 
 	cmd.Flags().StringVarP(&license, "license", "l", "", "A string with the content license license file.")

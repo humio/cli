@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"sort"
 
 	"github.com/humio/cli/api"
@@ -29,11 +30,13 @@ func newReposListCmd() *cobra.Command {
 		Use:   "list [flags]",
 		Short: "List repositories.",
 		Args:  cobra.ExactArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			repos, apiErr := client.Repositories().List()
-			exitOnError(cmd, apiErr, "error fetching repository")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error fetching repository: %w", apiErr)
+			}
 
 			sort.Slice(repos, func(i, j int) bool {
 				var a, b api.RepoListItem
@@ -63,7 +66,9 @@ func newReposListCmd() *cobra.Command {
 
 			w.Render()
 			cmd.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().BoolVarP(&orderBySize, "size", "s", false, "Order by size instead of name")

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 )
@@ -28,7 +29,7 @@ func newUsersUpdateCmd() *cobra.Command {
 		Use:   "update",
 		Short: "Updates a user's settings [Root Only]",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			username := args[0]
 
 			client := NewApiClient(cmd)
@@ -40,10 +41,14 @@ func newUsersUpdateCmd() *cobra.Command {
 				Email:       emailFlag.value,
 				Picture:     pictureFlag.value,
 			})
-			exitOnError(cmd, apiErr, "Error updating user")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error updating user: %w", apiErr)
+			}
 
 			printUserTable(cmd, user)
-		},
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().Var(&rootFlag, "root", "If true grants root access to the user.")

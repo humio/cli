@@ -1,8 +1,7 @@
 package main
 
 import (
-	"os"
-
+	"fmt"
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +12,7 @@ func newReposUpdateUserGroupCmd() *cobra.Command {
 		Use:   "update-user-group [flags] <repo> <username>",
 		Short: "Updates the users permissions to a repository based on default groups",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repoName := args[0]
 			userName := args[1]
 
@@ -21,16 +20,19 @@ func newReposUpdateUserGroupCmd() *cobra.Command {
 			for _, group := range groups {
 				var defaultGroup api.DefaultGroupEnum
 				if !defaultGroup.ParseString(group) {
-					cmd.Println("the group '%s' was not valid (must be either 'Member', 'Admin' or 'Eliminator')")
-					os.Exit(1)
+					return nil, fmt.Errorf("the group %q was not valid (must be either 'Member', 'Admin' or 'Eliminator')", group)
 				}
 				defaultGroups = append(defaultGroups, defaultGroup)
 			}
 
 			client := NewApiClient(cmd)
 			apiErr := client.Repositories().UpdateUserGroup(repoName, userName, defaultGroups...)
-			exitOnError(cmd, apiErr, "error adding user")
-		},
+			if apiErr != nil {
+				return nil, fmt.Errorf("error adding user: %w", apiErr)
+			}
+
+			return nil, nil
+		}),
 	}
 	cmd.Flags().StringSliceVarP(&groups, "groups", "g", []string{api.DefaultGroupEnumMember.String()}, "the groups that the user should be added in")
 

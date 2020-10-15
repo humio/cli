@@ -16,8 +16,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +25,7 @@ func newAlertsRemoveCmd() *cobra.Command {
 		Short: "Removes an alert.",
 		Long:  `Removes the alert with name '<name>' in the view with name '<view>'.`,
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			view := args[0]
 			name := args[1]
 
@@ -36,12 +34,11 @@ func newAlertsRemoveCmd() *cobra.Command {
 
 			err := client.Alerts().Delete(view, name)
 			if err != nil {
-				cmd.Println(fmt.Errorf("error removing ingest token: %s", err))
-				os.Exit(1)
+				return nil, fmt.Errorf("error removing ingest token: %w", err)
 			}
 
-			cmd.Println("Alert removed")
-		},
+			return "Alert removed", nil
+		}),
 	}
 
 	return cmd

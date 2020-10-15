@@ -16,10 +16,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
-
 	"github.com/spf13/cobra"
+	"io/ioutil"
 )
 
 func newParsersExportCmd() *cobra.Command {
@@ -29,7 +27,7 @@ func newParsersExportCmd() *cobra.Command {
 		Use:   "export [flags] <repo> <parser>",
 		Short: "Export a parser <parser> in <repo> to a file.",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repo := args[0]
 			parserName := args[1]
 
@@ -42,18 +40,18 @@ func newParsersExportCmd() *cobra.Command {
 
 			yamlData, apiErr := client.Parsers().Export(repo, parserName)
 			if apiErr != nil {
-				cmd.Println(fmt.Errorf("Error fetching parsers: %s", apiErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("error fetching parsers: %w", apiErr)
 			}
 
 			outFilePath := outputName + ".yaml"
 
 			writeErr := ioutil.WriteFile(outFilePath, []byte(yamlData), 0644)
 			if writeErr != nil {
-				cmd.Println(fmt.Errorf("Error saving the parser file: %s", writeErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("error saving the parser file: %w", writeErr)
 			}
-		},
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().StringVarP(&outputName, "output", "o", "", "The file path where the parser should be written. Defaults to ./<parser-name>.yaml")

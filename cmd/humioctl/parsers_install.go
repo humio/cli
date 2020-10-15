@@ -16,13 +16,11 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
-
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
+	"io/ioutil"
+	"net/http"
 )
 
 func newParsersInstallCmd() *cobra.Command {
@@ -60,31 +58,33 @@ install from a local file or a URL, e.g.
 By default 'install' will not override existing parsers with the same name.
 Use the --force flag to update existing parsers with conflicting names.
 `,
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			// Check that we got the right number of argument
 			// if we only got <repo> you must supply --file or --url.
-			if l := len(args); l == 1 {
+			if len(args) != 1 {
 				if filePath != "" {
 					content, readErr = getParserFromFile(filePath)
 				} else if url != "" {
 					content, readErr = getURLParser(url)
 				} else {
-					cmd.Println(fmt.Errorf("if you only provide repo you must specify --file or --url"))
-					os.Exit(1)
+					return nil, fmt.Errorf("if you only provide repo you must specify --file or --url")
 				}
-			} else if l := len(args); l != 2 {
-				cmd.Println(fmt.Errorf("This command takes one or two arguments: <repo> [parser]"))
-				os.Exit(1)
+			} else if len(args) != 2 {
+				return nil, fmt.Errorf("this command takes one or two arguments: <repo> [parser]")
 			} else {
 				parserName := args[1]
 				content, readErr = getGithubParser(parserName)
 			}
 
-			exitOnError(cmd, readErr, "Failed to load the parser")
+			if readErr != nil {
+				return nil, fmt.Errorf("failed to load the parser: %w", readErr)
+			}
 
 			parser := api.Parser{}
 			yamlErr := yaml.Unmarshal(content, &parser)
-			exitOnError(cmd, yamlErr, "The parser's format was invalid")
+			if yamlErr != nil {
+				return nil, fmt.Errorf("the parser's format was invalid: %w", yamlErr)
+			}
 
 			if name != "" {
 				parser.Name = name
@@ -93,11 +93,15 @@ Use the --force flag to update existing parsers with conflicting names.
 			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			reposistoryName := args[0]
+			repositoryName := args[0]
 
-			installErr := client.Parsers().Add(reposistoryName, &parser, force)
-			exitOnError(cmd, installErr, "error installing parser")
-		},
+			installErr := client.Parsers().Add(repositoryName, &parser, force)
+			if installErr != nil {
+				return nil, fmt.Errorf("error installing parser: %w", installErr)
+			}
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().BoolVarP(&force, "force", "f", false, "Overrides any parser with the same name. This can be used for updating parser that are already installed. (See --name)")

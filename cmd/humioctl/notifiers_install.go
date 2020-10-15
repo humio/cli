@@ -16,13 +16,11 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
-
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
+	"io/ioutil"
+	"net/http"
 )
 
 func newNotifiersInstallCmd() *cobra.Command {
@@ -47,7 +45,7 @@ The install command allows you to install notifiers from a URL or from a local f
 By default 'install' will not override existing parsers with the same name.
 Use the --force flag to update existing parsers with conflicting names.
 `,
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			// Check that we got the right number of argument
 			// if we only got <view> you must supply --file or --url.
 			if l := len(args); l == 1 {
@@ -56,27 +54,33 @@ Use the --force flag to update existing parsers with conflicting names.
 				} else if url != "" {
 					content, readErr = getURLNotifier(url)
 				} else {
-					cmd.Println(fmt.Errorf("you must specify a path using --file or --url"))
-					os.Exit(1)
+					return nil, fmt.Errorf("you must specify a path using --file or --url")
 				}
 			} else if l := len(args); l != 2 {
-				cmd.Println(fmt.Errorf("This command takes one argument: <view>"))
-				os.Exit(1)
+				return nil, fmt.Errorf("this command takes one argument: <view>")
 			}
-			exitOnError(cmd, readErr, "Failed to load the notifier")
+			if readErr != nil {
+				return nil, fmt.Errorf("failed to load the notifier: %w", readErr)
+			}
 
 			viewName := args[0]
 			notifier := api.Notifier{}
 			notifier.Name = name
 			yamlErr := yaml.Unmarshal(content, &notifier)
-			exitOnError(cmd, yamlErr, "The notifier's format was invalid")
+			if yamlErr != nil {
+				return nil, fmt.Errorf("the notifier's format was invalid: %w", yamlErr)
+			}
 
 			// Get the HTTP client
 			client := NewApiClient(cmd)
 
 			_, installErr := client.Notifiers().Add(viewName, &notifier, force)
-			exitOnError(cmd, installErr, "error installing parser")
-		},
+			if installErr != nil {
+				return nil, fmt.Errorf("error installing parser: %w", installErr)
+			}
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().BoolVarP(&force, "force", "f", false, "Overrides any notifier with the same name. This can be used for updating notifier that are already installed. (See --name)")

@@ -25,7 +25,7 @@ func newNotifiersShowCmd() *cobra.Command {
 		Use:   "show [flags] <view> <name>",
 		Short: "Show details about a notifier in a view.",
 		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 
 			view := args[0]
 			name := args[1]
@@ -35,7 +35,7 @@ func newNotifiersShowCmd() *cobra.Command {
 			notifier, err := client.Notifiers().Get(view, name)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching notifier: %s", err)
+				return nil, fmt.Errorf("error fetching notifier: %w", err)
 			}
 
 			var output []string
@@ -44,8 +44,8 @@ func newNotifiersShowCmd() *cobra.Command {
 
 			printTable(cmd, output)
 
-			return nil
-		},
+			return nil, nil
+		}),
 	}
 
 	return &cmd

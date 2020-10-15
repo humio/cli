@@ -23,19 +23,25 @@ func newProfilesAddCmd() *cobra.Command {
 		Use:   "add <profile-name> [flags]",
 		Short: "Add a configuration profile",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 
 			profileName := args[0]
 
 			profile, profileErr := collectProfileInfo(cmd)
-			exitOnError(cmd, profileErr, "failed to collect profile info")
+			if profileErr != nil {
+				return nil, fmt.Errorf("failed to collect profile info: %w", profileErr)
+			}
 
 			addAccount(out, profileName, profile)
 
 			saveErr := saveConfig()
-			exitOnError(cmd, saveErr, "error saving config")
-		},
+			if saveErr != nil {
+				return nil, fmt.Errorf("error saving config: %w", saveErr)
+			}
+
+			return nil, nil
+		}),
 	}
 
 	return cmd
@@ -118,7 +124,9 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		var err error
 		out.Output("")
 		addr, err = out.Ask("Address (default: https://cloud.humio.com/ [Hit Enter])")
-		exitOnError(cmd, err, "error reading humio server address")
+		if err != nil {
+			return nil, fmt.Errorf("error reading humio server address: %w", err)
+		}
 
 		if addr == "" {
 			addr = "https://cloud.humio.com/"
@@ -152,14 +160,20 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 				out.Output()
 
 				caCertificateFilePath, err := out.Ask("Absolute path on local disk to CA certificate in PEM format")
-				exitOnError(cmd, err, "error reading Humio CA certificate file path")
+				if err != nil {
+					return nil, fmt.Errorf("error reading Humio CA certificate file path: %w", err)
+				}
 				if caCertificateFilePath != "" {
 					// Read the file
 					caCertContent, err := ioutil.ReadFile(caCertificateFilePath)
-					exitOnError(cmd, err, "error reading Humio CA certificate file path")
+					if err != nil {
+						return nil, fmt.Errorf("error reading Humio CA certificate file path: %w", err)
+					}
 					block, _ := pem.Decode(caCertContent)
 					if block == nil {
-						exitOnError(cmd, fmt.Errorf("expected PEM block"), "expected PEM encoded CA certificate file")
+						if fmt.Errorf("expected PEM block") != nil {
+							return nil, fmt.Errorf("expected PEM encoded CA certificate file: %w", fmt.Errorf("expected PEM block"))
+						}
 					}
 					caCertificate = string(caCertContent)
 					clientConfig.CACertificatePEM = caCertificate
@@ -181,7 +195,9 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 				out.Description("By default all connections will verify the hostname, but this option allows you to disable this if required.")
 				out.Output()
 				insecureString, err := out.Ask("Do you want to disable hostname verification? Type 'yes' to disable hostname verification")
-				exitOnError(cmd, err, "error reading humio ca certificate file path")
+				if err != nil {
+					return nil, fmt.Errorf("error reading humio ca certificate file path: %w", err)
+				}
 				if insecureString == "yes" {
 					out.Output("Disabling hostname verification.")
 					insecure = true
@@ -236,7 +252,9 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 	for {
 		var err error
 		token, err = out.AskSecret("API Token")
-		exitOnError(cmd, err, "error reading token")
+		if err != nil {
+			return nil, fmt.Errorf("error reading token: %w", err)
+		}
 
 		// Create a new API client with the token
 		config := api.DefaultConfig()

@@ -16,8 +16,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +25,7 @@ func newIngestTokensListCmd() *cobra.Command {
 		Use:   "list [flags] <repo>",
 		Short: "List all ingest tokens in a repository.",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repo := args[0]
 
 			// Get the HTTP client
@@ -36,8 +34,7 @@ func newIngestTokensListCmd() *cobra.Command {
 			tokens, err := client.IngestTokens().List(repo)
 
 			if err != nil {
-				cmd.Println(fmt.Errorf("Error fetching token list: %s", err))
-				os.Exit(1)
+				return nil, fmt.Errorf("error fetching token list: %w", err)
 			}
 
 			var output []string
@@ -52,7 +49,9 @@ func newIngestTokensListCmd() *cobra.Command {
 			cmd.Println()
 			cmd.Println(table)
 			cmd.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return cmd

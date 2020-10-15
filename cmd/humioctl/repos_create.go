@@ -25,22 +25,28 @@ func newReposCreateCmd() *cobra.Command {
 		Use:   "create [flags] <repo>",
 		Short: "Create a repository.",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repoName := args[0]
 
 			client := NewApiClient(cmd)
 
 			apiErr := client.Repositories().Create(repoName)
-			exitOnError(cmd, apiErr, "error creating repository")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error creating repository: %w", apiErr)
+			}
 			fmt.Println(fmt.Sprintf("Sucessfully created repo %s", repoName))
 
 			repo, apiErr := client.Repositories().Get(repoName)
-			exitOnError(cmd, apiErr, "error fetching repository")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error fetching repository: %w", apiErr)
+			}
 
 			printRepoTable(cmd, repo)
 
 			fmt.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return &cmd
