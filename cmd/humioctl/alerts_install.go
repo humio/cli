@@ -79,7 +79,7 @@ Use the --force flag to update existing alerts with conflicting names.
 				return nil, fmt.Errorf("error installing alert: %w", installErr)
 			}
 
-			return "Alert installed", nil
+			return fmt.Sprintf("Alert %q installed.", alert.Name), nil
 		}),
 	}
 

@@ -33,9 +33,7 @@ func newUsersShowCmd() *cobra.Command {
 				return nil, fmt.Errorf("error fetching user: %w", err)
 			}
 
-			printUserTable(cmd, user)
-
-			return nil, nil
+			return user, nil
 		}),
 	}
 

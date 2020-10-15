@@ -16,7 +16,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 )
 
@@ -37,20 +36,7 @@ func newIngestTokensListCmd() *cobra.Command {
 				return nil, fmt.Errorf("error fetching token list: %w", err)
 			}
 
-			var output []string
-			output = append(output, "Name | Token | Assigned Parser")
-			for i := 0; i < len(tokens); i++ {
-				token := tokens[i]
-				output = append(output, fmt.Sprintf("%v | %v | %v", token.Name, token.Token, valueOrEmpty(token.AssignedParser)))
-			}
-
-			table := columnize.SimpleFormat(output)
-
-			cmd.Println()
-			cmd.Println(table)
-			cmd.Println()
-
-			return nil, nil
+			return tokens, nil
 		}),
 	}
 

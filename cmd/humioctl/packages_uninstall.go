@@ -41,7 +41,7 @@ func uninstallPackageCmd() *cobra.Command {
 				return nil, fmt.Errorf("errors uninstalling package: %w", err)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Package %q in %q uninstalled.", packageName, viewName), nil
 		}),
 	}
 

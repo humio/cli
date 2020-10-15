@@ -45,9 +45,7 @@ func newUsersUpdateCmd() *cobra.Command {
 				return nil, fmt.Errorf("error updating user: %w", apiErr)
 			}
 
-			printUserTable(cmd, user)
-
-			return nil, nil
+			return user, nil
 		}),
 	}
 

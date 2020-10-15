@@ -37,7 +37,7 @@ func newAlertsRemoveCmd() *cobra.Command {
 				return nil, fmt.Errorf("error removing ingest token: %w", err)
 			}
 
-			return "Alert removed", nil
+			return fmt.Sprintf("Alert %q removed.", name), nil
 		}),
 	}
 

@@ -55,7 +55,7 @@ func newAlertsExportCmd() *cobra.Command {
 				return nil, fmt.Errorf("error saving the alert file: %w", writeErr)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Alert %q exported to %s.", alertName, outFilePath), nil
 		}),
 	}
 

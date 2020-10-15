@@ -34,18 +34,13 @@ func newReposCreateCmd() *cobra.Command {
 			if apiErr != nil {
 				return nil, fmt.Errorf("error creating repository: %w", apiErr)
 			}
-			fmt.Println(fmt.Sprintf("Sucessfully created repo %s", repoName))
 
 			repo, apiErr := client.Repositories().Get(repoName)
 			if apiErr != nil {
 				return nil, fmt.Errorf("error fetching repository: %w", apiErr)
 			}
 
-			printRepoTable(cmd, repo)
-
-			fmt.Println()
-
-			return nil, nil
+			return repo, nil
 		}),
 	}
 

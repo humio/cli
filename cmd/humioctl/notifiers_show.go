@@ -38,13 +38,7 @@ func newNotifiersShowCmd() *cobra.Command {
 				return nil, fmt.Errorf("error fetching notifier: %w", err)
 			}
 
-			var output []string
-			output = append(output, "Name | EntityType")
-			output = append(output, fmt.Sprintf("%v | %v", notifier.Name, notifier.Entity))
-
-			printTable(cmd, output)
-
-			return nil, nil
+			return notifier, nil
 		}),
 	}
 

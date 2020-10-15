@@ -17,7 +17,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 )
 
@@ -48,17 +47,7 @@ If parser is not specified, the ingest token will not be associated with a parse
 				return nil, fmt.Errorf("error updating ingest token: %w", err)
 			}
 
-			var output []string
-			output = append(output, "Name | Token | Assigned Parser")
-			output = append(output, fmt.Sprintf("%v | %v | %v", token.Name, token.Token, valueOrEmpty(token.AssignedParser)))
-
-			table := columnize.SimpleFormat(output)
-
-			cmd.Println()
-			cmd.Println(table)
-			cmd.Println()
-
-			return nil, nil
+			return token, nil
 		}),
 	}
 

@@ -39,7 +39,7 @@ func newIngestTokensRemoveCmd() *cobra.Command {
 				return nil, fmt.Errorf("error removing ingest token: %w", err)
 			}
 
-			return "Ingest tokens removed", nil
+			return fmt.Sprintf("Ingest token %q removed.", name), nil
 		}),
 	}
 

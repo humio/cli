@@ -39,7 +39,7 @@ func newClusterNodesUnregisterCmd() *cobra.Command {
 				return nil, fmt.Errorf("error removing parser: %w", apiError)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Cluster node %d unregistered.", node), nil
 		}),
 	}
 

@@ -19,7 +19,6 @@ import (
 	"sort"
 
 	"github.com/humio/cli/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -54,20 +53,7 @@ func newReposListCmd() *cobra.Command {
 				return a.Name < b.Name
 			})
 
-			rows := make([][]string, len(repos))
-			for i, view := range repos {
-				rows[i] = []string{view.Name, ByteCountDecimal(view.SpaceUsed)}
-			}
-
-			w := tablewriter.NewWriter(cmd.OutOrStdout())
-			w.SetHeader([]string{"Name", "Space Used"})
-			w.AppendBulk(rows)
-			w.SetBorder(false)
-
-			w.Render()
-			cmd.Println()
-
-			return nil, nil
+			return repos, nil
 		}),
 	}
 

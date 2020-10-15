@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
+	"strings"
 )
 
 func newReposUpdateUserGroupCmd() *cobra.Command {
@@ -31,7 +32,7 @@ func newReposUpdateUserGroupCmd() *cobra.Command {
 				return nil, fmt.Errorf("error adding user: %w", apiErr)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("User %q's groups in repository %q changed to %s", userName, repoName, strings.Join(groups, ", ")), nil
 		}),
 	}
 	cmd.Flags().StringSliceVarP(&groups, "groups", "g", []string{api.DefaultGroupEnumMember.String()}, "the groups that the user should be added in")

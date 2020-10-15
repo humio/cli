@@ -17,7 +17,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 )
 
@@ -46,17 +45,7 @@ use the assigned parser at ingest time.`,
 				return nil, fmt.Errorf("error adding ingest token: %w", err)
 			}
 
-			var output []string
-			output = append(output, "Name | Token | Assigned Parser")
-			output = append(output, fmt.Sprintf("%v | %v | %v", token.Name, token.Token, valueOrEmpty(token.AssignedParser)))
-
-			table := columnize.SimpleFormat(output)
-
-			cmd.Println()
-			cmd.Println(table)
-			cmd.Println()
-
-			return nil, nil
+			return token, nil
 		}),
 	}
 

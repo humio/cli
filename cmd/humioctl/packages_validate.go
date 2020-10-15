@@ -31,8 +31,6 @@ func validatePackageCmd() *cobra.Command {
 		Short: "Validate a package's content.",
 		Args:  cobra.ExactArgs(2),
 		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
-			out := prompt.NewPrompt(cmd.OutOrStdout())
-
 			repoOrViewName := args[0]
 			dirPath := args[1]
 
@@ -45,8 +43,6 @@ func validatePackageCmd() *cobra.Command {
 				dirPath += "/"
 			}
 
-			out.Info(fmt.Sprintf("Validating Package in: %s", dirPath))
-
 			// Get the HTTP client
 			client := NewApiClient(cmd)
 
@@ -56,10 +52,9 @@ func validatePackageCmd() *cobra.Command {
 			}
 
 			if validationResult.IsValid() {
-				return "Package is valid", nil
+				return fmt.Sprintf("Package in %s is valid.", dirPath), nil
 			} else {
-				printValidation(out, validationResult)
-				return nil, fmt.Errorf("")
+				return nil, fmt.Errorf("%s", FormatResult(validationResult, true))
 			}
 		}),
 	}

@@ -40,7 +40,7 @@ func newProfilesAddCmd() *cobra.Command {
 				return nil, fmt.Errorf("error saving config: %w", saveErr)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Profile %q added.", profileName), nil
 		}),
 	}
 

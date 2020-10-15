@@ -52,9 +52,7 @@ func newAlertsListCmd() *cobra.Command {
 				output = append(output, fmt.Sprintf("%v | %v | %v | %v", alert.Name, !alert.Silenced, alert.Description, strings.Join(notifierNames, ", ")))
 			}
 
-			printTable(cmd, output)
-
-			return nil, nil
+			return alerts, nil
 		}),
 	}
 

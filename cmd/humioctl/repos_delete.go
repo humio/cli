@@ -37,7 +37,7 @@ func newReposDeleteCmd() *cobra.Command {
 				return nil, fmt.Errorf("error removing repository: %w", apiError)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Repository removed %q", repo), nil
 		}),
 	}
 

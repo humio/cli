@@ -38,13 +38,7 @@ func newIngestTokensShowCmd() *cobra.Command {
 				return nil, fmt.Errorf("error fetching ingest-token: %w", err)
 			}
 
-			var output []string
-			output = append(output, "Name | Token | Assigned parser")
-			output = append(output, fmt.Sprintf("%v | %v | %v", ingestToken.Name, ingestToken.Token, ingestToken.AssignedParser))
-
-			printTable(cmd, output)
-
-			return nil, nil
+			return ingestToken, nil
 		}),
 	}
 

@@ -79,7 +79,7 @@ Use the --force flag to update existing parsers with conflicting names.
 				return nil, fmt.Errorf("error installing parser: %w", installErr)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Notifier %q installed.", notifier.Name), nil
 		}),
 	}
 

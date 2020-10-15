@@ -30,8 +30,8 @@ func newLicenseShowCmd() *cobra.Command {
 			if apiErr != nil {
 				return nil, fmt.Errorf("error fetching the license: %w", apiErr)
 			}
-			printLicenseInfo(cmd, license)
-			return nil, nil
+
+			return license, nil
 		}),
 	}
 

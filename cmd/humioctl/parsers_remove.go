@@ -35,7 +35,7 @@ func newParsersRemoveCmd() *cobra.Command {
 				return nil, fmt.Errorf("error removing parser: %w", apiError)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Parser %q removed.", parser), nil
 		}),
 	}
 

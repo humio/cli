@@ -35,9 +35,7 @@ func newUsersRemoveCmd() *cobra.Command {
 				return nil, fmt.Errorf("error removing the user: %w", err)
 			}
 
-			printUserTable(cmd, removedUser)
-
-			return nil, nil
+			return fmt.Sprintf("User %q removed.", removedUser.Username), nil
 		}),
 	}
 
