@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"os"
 
 	"github.com/humio/cli/prompt"
@@ -18,7 +19,7 @@ func newWelcomeCmd() *cobra.Command {
 		Args:   cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
 			var err error
-			profiles := viper.GetStringMap("profiles")
+			profiles := viper.GetStringMap(viperkey.Profiles)
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 
 			if profiles["default"] != nil && !out.Confirm("Your system is already set up for Humio. Re-initialize?") {
@@ -36,8 +37,8 @@ func newWelcomeCmd() *cobra.Command {
 			profile, err := collectProfileInfo(cmd)
 			exitOnError(cmd, err, "failed to collect profile info")
 
-			viper.Set("address", profile.address)
-			viper.Set("token", profile.token)
+			viper.Set(viperkey.Address, profile.address)
+			viper.Set(viperkey.Token, profile.token)
 
 			addAccount(out, "default", profile)
 

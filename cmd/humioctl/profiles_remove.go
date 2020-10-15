@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"os"
 
 	"github.com/humio/cli/prompt"
@@ -19,7 +20,7 @@ func newProfilesRemoveCmd() *cobra.Command {
 
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 
-			profiles := viper.GetStringMap("profiles")
+			profiles := viper.GetStringMap(viperkey.Profiles)
 
 			if profiles[profileName] == nil {
 				cmd.Println("profile not found")
