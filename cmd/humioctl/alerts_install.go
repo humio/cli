@@ -16,13 +16,11 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
-
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
+	"io/ioutil"
+	"net/http"
 )
 
 func newAlertsInstallCmd() *cobra.Command {
@@ -47,38 +45,42 @@ The install command allows you to install alerts from a URL or from a local file
 By default 'install' will not override existing alerts with the same name.
 Use the --force flag to update existing alerts with conflicting names.
 `,
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			// Check that we got the right number of argument
 			// if we only got <view> you must supply --file or --url.
-			if l := len(args); l == 1 {
+			if len(args) == 1 {
 				if filePath != "" {
 					content, readErr = getAlertFromFile(filePath)
 				} else if url != "" {
 					content, readErr = getURLAlert(url)
 				} else {
-					cmd.Println(fmt.Errorf("you must specify a path using --file or --url"))
-					os.Exit(1)
+					return nil, fmt.Errorf("you must specify a path using --file or --url")
 				}
-			} else if l := len(args); l != 2 {
-				cmd.Println(fmt.Errorf("This command takes one argument: <view>"))
-				os.Exit(1)
+			} else if len(args) != 2 {
+				return nil, fmt.Errorf("this command takes one argument: <view>")
 			}
-			exitOnError(cmd, readErr, "Failed to load the alert")
+			if readErr != nil {
+				return nil, fmt.Errorf("failed to load the alert: %w", readErr)
+			}
 
 			viewName := args[0]
 			alert := api.Alert{}
 			alert.Name = name
 			yamlErr := yaml.Unmarshal(content, &alert)
-			exitOnError(cmd, yamlErr, "The alert's format was invalid")
+			if yamlErr != nil {
+				return nil, fmt.Errorf("the alert's format was invalid: %w", yamlErr)
+			}
 
 			// Get the HTTP client
 			client := NewApiClient(cmd)
 
 			_, installErr := client.Alerts().Add(viewName, &alert, force)
-			exitOnError(cmd, installErr, "error installing alert")
+			if installErr != nil {
+				return nil, fmt.Errorf("error installing alert: %w", installErr)
+			}
 
-			cmd.Println("Alert installed")
-		},
+			return "Alert installed", nil
+		}),
 	}
 
 	cmd.Flags().BoolVarP(&force, "force", "f", false, "Overrides any alert with the same name. This can be used for updating alert that are already installed. (See --name)")

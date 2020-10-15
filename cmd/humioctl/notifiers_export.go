@@ -16,11 +16,9 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
-
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
 func newNotifiersExportCmd() *cobra.Command {
@@ -30,7 +28,7 @@ func newNotifiersExportCmd() *cobra.Command {
 		Use:   "export [flags] <view> <notifier>",
 		Short: "Export a notifier <notifier> in <view> to a file.",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			view := args[0]
 			notifierName := args[1]
 
@@ -43,23 +41,22 @@ func newNotifiersExportCmd() *cobra.Command {
 
 			notifier, apiErr := client.Notifiers().Get(view, notifierName)
 			if apiErr != nil {
-				cmd.Println(fmt.Errorf("Error fetching notifier: %s", apiErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("error fetching notifier: %w", apiErr)
 			}
 
 			yamlData, yamlErr := yaml.Marshal(&notifier)
 			if yamlErr != nil {
-				cmd.Println(fmt.Errorf("Failed to serialize the notifier: %s", yamlErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("failed to serialize the notifier: %w", yamlErr)
 			}
 			outFilePath := outputName + ".yaml"
 
 			writeErr := ioutil.WriteFile(outFilePath, yamlData, 0644)
 			if writeErr != nil {
-				cmd.Println(fmt.Errorf("Error saving the notifier file: %s", writeErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("Error saving the notifier file: %w", writeErr)
 			}
-		},
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().StringVarP(&outputName, "output", "o", "", "The file path where the notifier should be written. Defaults to ./<notifier-name>.yaml")

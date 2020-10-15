@@ -7,7 +7,6 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"io"
-	"os"
 	"sort"
 	"strings"
 )
@@ -35,19 +34,19 @@ func newHealthCmd() *cobra.Command {
 		Short: "Health",
 		Args:  cobra.ExactArgs(0),
 
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			health, err := client.Health()
-			exitOnError(cmd, err, "error getting health information")
+			if err != nil {
+				return nil, fmt.Errorf("error getting health information: %w", err)
+			}
 
 			switch {
 			case versionFlag:
-				cmd.Println(health.Version)
-				return
+				return health.Version, nil
 			case uptimeFlag:
-				cmd.Println(health.Uptime)
-				return
+				return health.Uptime, nil
 			}
 
 			m := health.ChecksMap()
@@ -83,9 +82,11 @@ func newHealthCmd() *cobra.Command {
 					}
 				}
 
-				os.Exit(numDown)
+				return nil, humioErrorExitCode{fmt.Errorf("%d statuses are down", numDown), numDown}
 			}
-		},
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().BoolVarP(&jsonFlag, "json", "j", false, "Output as json.")

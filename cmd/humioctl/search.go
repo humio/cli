@@ -31,7 +31,7 @@ func newSearchCmd() *cobra.Command {
 		Use:   "search <repo> <query>",
 		Short: "Search",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repository := args[0]
 			queryString := args[1]
 			client := NewApiClient(cmd)
@@ -120,12 +120,15 @@ func newSearchCmd() *cobra.Command {
 			}
 
 			if queryError, ok := err.(api.QueryError); ok {
-				fmt.Printf("There was an error in your query string:\n\n%s\n", queryError.Error())
-				os.Exit(1)
+				return nil, fmt.Errorf("There was an error in your query string:\n\n%w\n", queryError)
 			}
 
-			exitOnError(cmd, err, "error running search")
-		},
+			if err != nil {
+				return nil, fmt.Errorf("error running search: %w", err)
+			}
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().StringVarP(&start, "start", "s", "10m", "Query start time")

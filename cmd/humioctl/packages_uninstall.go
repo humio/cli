@@ -16,8 +16,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/humio/cli/prompt"
 
 	"github.com/spf13/cobra"
@@ -28,7 +26,7 @@ func uninstallPackageCmd() *cobra.Command {
 		Use:   "uninstall [flags] <view-or-repo-name> <package-name>",
 		Short: "Uninstall a package.",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 			viewName := args[0]
 			packageName := args[1]
@@ -40,10 +38,11 @@ func uninstallPackageCmd() *cobra.Command {
 
 			err := client.Packages().UninstallPackage(viewName, packageName)
 			if err != nil {
-				out.Error(fmt.Sprintf("Errors uninstalling package: %s", err))
-				os.Exit(1)
+				return nil, fmt.Errorf("errors uninstalling package: %w", err)
 			}
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return &cmd

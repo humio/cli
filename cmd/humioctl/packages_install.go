@@ -32,7 +32,7 @@ func installPackageCmd() *cobra.Command {
 		Use:   "install [flags] <repo-or-view-name> <path-to-package-dir>",
 		Short: "Installs a package.",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 			repoOrView := args[0]
 			path := args[1]
@@ -43,8 +43,7 @@ func installPackageCmd() *cobra.Command {
 				downloadedFile, err := getURLPackage(path)
 
 				if err != nil {
-					out.Error(fmt.Sprintf("Failed to download: %s %s", path, err))
-					os.Exit(1)
+					return nil, fmt.Errorf("failed to download %s: %w", path, err)
 				}
 
 				// defer os.Remove(downloadedFile.Name())
@@ -55,8 +54,7 @@ func installPackageCmd() *cobra.Command {
 			isDir, err := isDirectory(path)
 
 			if err != nil {
-				out.Error(fmt.Sprintf("Errors installing archive: %s", err))
-				os.Exit(1)
+				return nil, fmt.Errorf("errors installing archive: %w", err)
 			}
 
 			// Get the HTTP client
@@ -72,13 +70,14 @@ func installPackageCmd() *cobra.Command {
 			}
 
 			if createErr != nil {
-				out.Error(fmt.Sprintf("Errors installing archive: %s", createErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("errors installing archive: %w", createErr)
 			} else if !validationResult.IsValid() {
 				printValidation(out, validationResult)
-				os.Exit(1)
+				return nil, fmt.Errorf("")
 			}
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return &cmd

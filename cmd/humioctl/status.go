@@ -28,13 +28,17 @@ func newStatusCmd() *cobra.Command {
 		Use:   "status",
 		Short: "Shows general status information",
 		Args:  cobra.ExactArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 			serverStatus, serverErr := client.Status()
-			exitOnError(cmd, serverErr, "error getting server status")
+			if serverErr != nil {
+				return nil, fmt.Errorf("error getting server status: %w", serverErr)
+			}
 
 			username, usernameErr := client.Viewer().Username()
-			exitOnError(cmd, usernameErr, "error getting the current user")
+			if usernameErr != nil {
+				return nil, fmt.Errorf("error getting the current user: %w", usernameErr)
+			}
 
 			data := [][]string{
 				{"Status", formatStatusText(serverStatus.Status)},
@@ -51,7 +55,9 @@ func newStatusCmd() *cobra.Command {
 
 			w.Render()
 			fmt.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	cmd.AddCommand(newLicenseInstallCmd())

@@ -15,26 +15,32 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 		Use:   "set-default <profile-name>",
 		Short: "Choose one of your profiles to be the default.",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			profileName := args[0]
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 
 			profile, loadErr := loadProfile(profileName)
-			exitOnError(cmd, loadErr, "profile not found")
+			if loadErr != nil {
+				return nil, fmt.Errorf("profile not found: %w", loadErr)
+			}
 			viper.Set(viperkey.Address, profile.address)
 			viper.Set(viperkey.TokenFile, profile.token)
 			viper.Set(viperkey.CACertificateFile, profile.caCertificate)
 			viper.Set(viperkey.Insecure, strconv.FormatBool(profile.insecure))
 
 			saveErr := saveConfig()
-			exitOnError(cmd, saveErr, "error saving config")
+			if saveErr != nil {
+				return nil, fmt.Errorf("error saving config: %w", saveErr)
+			}
 
 			out.Info(fmt.Sprintf("Default profile set to '%s'", profileName))
 
 			cmd.Println()
 			out.Output("Address: " + viper.GetString(viperkey.Address))
 			cmd.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return cmd

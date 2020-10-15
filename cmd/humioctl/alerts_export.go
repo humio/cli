@@ -16,11 +16,9 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
-
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
 func newAlertsExportCmd() *cobra.Command {
@@ -30,7 +28,7 @@ func newAlertsExportCmd() *cobra.Command {
 		Use:   "export [flags] <view> <alert>",
 		Short: "Export an alert <alert> in <view> to a file.",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			view := args[0]
 			alertName := args[1]
 
@@ -43,23 +41,22 @@ func newAlertsExportCmd() *cobra.Command {
 
 			alert, apiErr := client.Alerts().Get(view, alertName)
 			if apiErr != nil {
-				cmd.Println(fmt.Errorf("Error fetching alert: %s", apiErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("error fetching alert: %w", apiErr)
 			}
 
 			yamlData, yamlErr := yaml.Marshal(&alert)
 			if yamlErr != nil {
-				cmd.Println(fmt.Errorf("Failed to serialize the alert: %s", yamlErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("failed to serialize the alert: %w", yamlErr)
 			}
 			outFilePath := outputName + ".yaml"
 
 			writeErr := ioutil.WriteFile(outFilePath, yamlData, 0644)
 			if writeErr != nil {
-				cmd.Println(fmt.Errorf("Error saving the alert file: %s", writeErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("error saving the alert file: %w", writeErr)
 			}
-		},
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().StringVarP(&outputName, "output", "o", "", "The file path where the alert should be written. Defaults to ./<alert-name>.yaml")

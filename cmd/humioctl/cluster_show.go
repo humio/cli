@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/humio/cli/api"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -25,13 +26,17 @@ func newClusterShowCmd() *cobra.Command {
 		Use:   "show",
 		Short: "Show the information about the current Humio cluster",
 		Args:  cobra.ExactArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 			cluster, apiErr := client.Clusters().Get()
-			exitOnError(cmd, apiErr, "error fetching cluster information")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error fetching cluster information: %w", apiErr)
+			}
 			printClusterInfo(cmd, cluster)
 			cmd.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return cmd

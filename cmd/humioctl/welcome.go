@@ -17,8 +17,7 @@ func newWelcomeCmd() *cobra.Command {
 		Hidden: true,
 		Short:  "Creates the 'default' profile",
 		Args:   cobra.ExactArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
-			var err error
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			profiles := viper.GetStringMap(viperkey.Profiles)
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 
@@ -27,7 +26,7 @@ func newWelcomeCmd() *cobra.Command {
 			}
 
 			owl := "[purple]" + prompt.Owl() + "[reset]"
-			out.Print((prompt.Colorize(owl)))
+			out.Print(prompt.Colorize(owl))
 			out.Output("")
 			out.Title("Welcome to Humio")
 			out.Output("")
@@ -35,7 +34,9 @@ func newWelcomeCmd() *cobra.Command {
 			out.Output("")
 
 			profile, err := collectProfileInfo(cmd)
-			exitOnError(cmd, err, "failed to collect profile info")
+			if err != nil {
+				return nil, fmt.Errorf("failed to collect profile info: %w", err)
+			}
 
 			viper.Set(viperkey.Address, profile.address)
 			viper.Set(viperkey.Token, profile.token)
@@ -46,8 +47,7 @@ func newWelcomeCmd() *cobra.Command {
 			cmd.Println(prompt.Colorize("==> Writing settings to: [purple]" + configFile + "[reset]"))
 
 			if saveErr := saveConfig(); saveErr != nil {
-				cmd.Println(fmt.Errorf("error saving config: %s", saveErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("error saving config: %w", saveErr)
 			}
 
 			cmd.Println()
@@ -58,7 +58,9 @@ func newWelcomeCmd() *cobra.Command {
 			cmd.Println()
 			out.Output("Bye bye now! 🎉")
 			cmd.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return cmd

@@ -29,7 +29,7 @@ func archivePackageCmd() *cobra.Command {
 		Use:   "archive [flags] <package-dir> <output-file>",
 		Short: " Create a zip containing the content of a package directory.",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 			dirPath := args[0]
 			outPath := args[1]
@@ -38,7 +38,7 @@ func archivePackageCmd() *cobra.Command {
 				var err error
 				dirPath, err = filepath.Abs(dirPath)
 				if err != nil {
-					out.Error(fmt.Sprintf("Invalid path: %s", err))
+					return nil, fmt.Errorf("invalid path: %w", err)
 					os.Exit(1)
 				}
 				dirPath += "/"
@@ -51,10 +51,11 @@ func archivePackageCmd() *cobra.Command {
 
 			createErr := client.Packages().CreateArchive(dirPath, outPath)
 			if createErr != nil {
-				out.Error(fmt.Sprintf("Errors creating archive: %s", createErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("errors creating archive: %w", createErr)
 			}
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return &cmd

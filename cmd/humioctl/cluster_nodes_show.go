@@ -28,17 +28,23 @@ func newClusterNodesShowCmd() *cobra.Command {
 		Use:   "show",
 		Short: "Show the information about the a Humio node [Root Only]",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			nodeID := args[0]
 			id, parseErr := strconv.Atoi(nodeID)
-			exitOnError(cmd, parseErr, "could not parse node id")
+			if parseErr != nil {
+				return nil, fmt.Errorf("could not parse node id: %w", parseErr)
+			}
 
 			client := NewApiClient(cmd)
 			node, apiErr := client.ClusterNodes().Get(id)
-			exitOnError(cmd, apiErr, "error fetching node information")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error fetching node information: %w", apiErr)
+			}
 			printClusterNodeInfo(cmd, node)
 			cmd.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return cmd

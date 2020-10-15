@@ -16,7 +16,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/humio/cli/api"
@@ -31,7 +30,7 @@ func validatePackageCmd() *cobra.Command {
 		Use:   "validate [flags] <repo-or-view-name> <package-dir>",
 		Short: "Validate a package's content.",
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 
 			repoOrViewName := args[0]
@@ -41,8 +40,7 @@ func validatePackageCmd() *cobra.Command {
 				var err error
 				dirPath, err = filepath.Abs(dirPath)
 				if err != nil {
-					out.Error(fmt.Sprintf("Invalid path: %s", err))
-					os.Exit(1)
+					return nil, fmt.Errorf("invalid path: %w", err)
 				}
 				dirPath += "/"
 			}
@@ -54,17 +52,16 @@ func validatePackageCmd() *cobra.Command {
 
 			validationResult, apiErr := client.Packages().Validate(repoOrViewName, dirPath)
 			if apiErr != nil {
-				out.Error(fmt.Sprintf("Errors validating package: %s", apiErr))
-				os.Exit(1)
+				return nil, fmt.Errorf("errors validating package: %w", apiErr)
 			}
 
 			if validationResult.IsValid() {
-				out.Info("Package is valid")
+				return "Package is valid", nil
 			} else {
 				printValidation(out, validationResult)
-				os.Exit(1)
+				return nil, fmt.Errorf("")
 			}
-		},
+		}),
 	}
 
 	return &cmd

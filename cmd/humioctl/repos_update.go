@@ -29,36 +29,48 @@ func newReposUpdateCmd() *cobra.Command {
 		Use:   "update",
 		Short: "Updates the settings of a repository",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			repoName := args[0]
 
 			if descriptionFlag.value == nil && retentionTimeFlag.value == nil && ingestSizeBasedRetentionFlag.value == nil && storageSizeBasedretentionFlag.value == nil {
-				exitOnError(cmd, fmt.Errorf("you must specify at least one flag to update"), "nothing specifed to update")
+				return nil, fmt.Errorf("you must specify at least one flag to update")
 			}
 
 			client := NewApiClient(cmd)
 			if descriptionFlag.value != nil {
 				err := client.Repositories().UpdateDescription(repoName, *descriptionFlag.value)
-				exitOnError(cmd, err, "error updating repository description")
+				if err != nil {
+					return nil, fmt.Errorf("error updating repository description: %w", err)
+				}
 			}
 			if retentionTimeFlag.value != nil {
 				err := client.Repositories().UpdateTimeBasedRetention(repoName, *retentionTimeFlag.value, allowDataDeletionFlag)
-				exitOnError(cmd, err, "error updating repository retention time in days")
+				if err != nil {
+					return nil, fmt.Errorf("error updating repository retention time in days: %w", err)
+				}
 			}
 			if ingestSizeBasedRetentionFlag.value != nil {
 				err := client.Repositories().UpdateIngestBasedRetention(repoName, *ingestSizeBasedRetentionFlag.value, allowDataDeletionFlag)
-				exitOnError(cmd, err, "error updating repository ingest size based retention")
+				if err != nil {
+					return nil, fmt.Errorf("error updating repository ingest size based retention: %w", err)
+				}
 			}
 			if storageSizeBasedretentionFlag.value != nil {
 				err := client.Repositories().UpdateStorageBasedRetention(repoName, *storageSizeBasedretentionFlag.value, allowDataDeletionFlag)
-				exitOnError(cmd, err, "error updating repository storage size based retention")
+				if err != nil {
+					return nil, fmt.Errorf("error updating repository storage size based retention: %w", err)
+				}
 			}
 
 			repo, apiErr := client.Repositories().Get(repoName)
-			exitOnError(cmd, apiErr, "error fetching repository")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error fetching repository: %w", apiErr)
+			}
 			printRepoTable(cmd, repo)
 			fmt.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	cmd.Flags().BoolVar(&allowDataDeletionFlag, "allow-data-deletion", false, "Allow changing retention settings for a non-empty repository")

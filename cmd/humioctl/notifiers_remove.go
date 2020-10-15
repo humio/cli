@@ -16,8 +16,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +25,7 @@ func newNotifiersRemoveCmd() *cobra.Command {
 		Short: "Removes an alert notifier.",
 		Long:  `Removes the alert notifier with name '<name>' in the view with name '<view>'.`,
 		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			view := args[0]
 			name := args[1]
 
@@ -36,12 +34,11 @@ func newNotifiersRemoveCmd() *cobra.Command {
 
 			err := client.Notifiers().Delete(view, name)
 			if err != nil {
-				cmd.Println(fmt.Errorf("error removing ingest token: %s", err))
-				os.Exit(1)
+				return nil, fmt.Errorf("error removing ingest token: %w", err)
 			}
 
-			cmd.Println("Notifier removed")
-		},
+			return "Notifier removed", nil
+		}),
 	}
 
 	return cmd

@@ -15,10 +15,10 @@
 package main
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 
-	"github.com/humio/cli/api"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
@@ -29,17 +29,16 @@ func newClusterNodesListCmd() *cobra.Command {
 		Use:   "list [flags]",
 		Short: "List cluster nodes [Root Only]",
 		Args:  cobra.ExactArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			nodes, apiErr := client.ClusterNodes().List()
-			exitOnError(cmd, apiErr, "error fetching cluster nodes")
+			if apiErr != nil {
+				return nil, fmt.Errorf("error fetching cluster nodes: %w", apiErr)
+			}
 
 			sort.Slice(nodes, func(i, j int) bool {
-				var a, b api.ClusterNode
-				a = nodes[j]
-				b = nodes[j]
-				return a.Name < b.Name
+				return nodes[i].Name < nodes[j].Name
 			})
 
 			rows := make([][]string, len(nodes))
@@ -54,7 +53,9 @@ func newClusterNodesListCmd() *cobra.Command {
 
 			w.Render()
 			cmd.Println()
-		},
+
+			return nil, nil
+		}),
 	}
 
 	return &cmd

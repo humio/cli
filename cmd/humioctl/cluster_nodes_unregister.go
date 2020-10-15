@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -25,15 +26,21 @@ func newClusterNodesUnregisterCmd() *cobra.Command {
 		Use:   "unregister [flags] <nodeID>",
 		Short: "Unregister (remove) a node from the cluster [Root Only]",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			node, parseErr := strconv.ParseInt(args[0], 10, 64)
-			exitOnError(cmd, parseErr, "Not valid node id")
+			if parseErr != nil {
+				return nil, fmt.Errorf("not valid node id: %w", parseErr)
+			}
 
 			client := NewApiClient(cmd)
 
 			apiError := client.ClusterNodes().Unregister(node, false)
-			exitOnError(cmd, apiError, "Error removing parser")
-		},
+			if apiError != nil {
+				return nil, fmt.Errorf("error removing parser: %w", apiError)
+			}
+
+			return nil, nil
+		}),
 	}
 
 	return &cmd
