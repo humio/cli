@@ -64,38 +64,34 @@ func addAccount(out *prompt.Prompt, newName string, profile *login) {
 	profiles := viper.GetStringMap(viperkey.Profiles)
 
 	profiles[newName] = map[string]interface{}{
-		viperkey.Address:        profile.address,
-		viperkey.Token:          profile.token,
-		viperkey.Username:       profile.username,
-		viperkey.CACertificate: string(profile.caCertificate),
-		viperkey.Insecure:       profile.insecure,
+		viperkey.Address:       profile.address,
+		viperkey.Token:         profile.token,
+		viperkey.Username:      profile.username,
+		viperkey.CACertificate: profile.caCertificate,
+		viperkey.Insecure:      profile.insecure,
 	}
 
 	viper.Set(viperkey.Profiles, profiles)
 }
 
 func mapToLogin(data interface{}) (*login, error) {
-	insecure, err := strconv.ParseBool(getMapKey(data, viperkey.Insecure))
+	insecure, err := strconv.ParseBool(getMapKeyString(data, viperkey.Insecure))
 	if err != nil {
 		return nil, err
 	}
 	return &login{
-		address:       getMapKey(data, viperkey.Address),
-		username:      getMapKey(data, viperkey.Username),
-		token:         getMapKey(data, viperkey.Token),
-		caCertificate: []byte(getMapKey(data, viperkey.CACertificate)),
+		address:       getMapKeyString(data, viperkey.Address),
+		username:      getMapKeyString(data, viperkey.Username),
+		token:         getMapKeyString(data, viperkey.Token),
+		caCertificate: getMapKeyString(data, viperkey.CACertificate),
 		insecure:      insecure,
 	}, nil
 }
 
-func getMapKey(data interface{}, key string) string {
-	m, ok1 := data.(map[string]interface{})
-	if ok1 {
-		v := m[key]
-		vStr, ok2 := v.(string)
-
-		if ok2 {
-			return vStr
+func getMapKeyString(data interface{}, key string) string {
+	if m, ok := data.(map[string]interface{}); ok {
+		if v, ok := m[key].(string); ok {
+			return v
 		}
 	}
 
@@ -267,7 +263,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		break
 	}
 
-	return &login{address: addr, token: token, username: username, caCertificate: []byte(caCertificate), insecure: insecure}, nil
+	return &login{address: addr, token: token, username: username, caCertificate: caCertificate, insecure: insecure}, nil
 }
 
 func isCurrentAccount(addr string, token string) bool {

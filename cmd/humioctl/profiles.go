@@ -14,7 +14,7 @@ type login struct {
 	address       string
 	token         string
 	username      string
-	caCertificate []byte
+	caCertificate string
 	insecure      bool
 }
 
