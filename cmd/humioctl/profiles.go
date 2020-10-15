@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
-	"os"
-
 	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -41,11 +39,7 @@ You can change the default profile using:
 			profiles := viper.GetStringMap(viperkey.Profiles)
 
 			for name, data := range profiles {
-				login, err := mapToLogin(data)
-				if err != nil {
-					cmd.Println(prompt.Colorize(fmt.Sprintf("* [red]Error reading existing Humio profile: %s\n  Remove the configuration file %s and add the profile again.[reset]", err, cfgFile)))
-					os.Exit(1)
-				}
+				login := mapToLogin(data)
 				if isCurrentAccount(login.address, login.token) {
 					cmd.Println(prompt.Colorize(fmt.Sprintf("* [purple]%s (%s) - %s[reset]", name, login.username, login.address)))
 				} else {

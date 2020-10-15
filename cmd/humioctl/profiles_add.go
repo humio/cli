@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/humio/cli/api"
@@ -74,18 +73,14 @@ func addAccount(out *prompt.Prompt, newName string, profile *login) {
 	viper.Set(viperkey.Profiles, profiles)
 }
 
-func mapToLogin(data interface{}) (*login, error) {
-	insecure, err := strconv.ParseBool(getMapKeyString(data, viperkey.Insecure))
-	if err != nil {
-		return nil, err
-	}
+func mapToLogin(data interface{}) *login {
 	return &login{
 		address:       getMapKeyString(data, viperkey.Address),
 		username:      getMapKeyString(data, viperkey.Username),
 		token:         getMapKeyString(data, viperkey.Token),
 		caCertificate: getMapKeyString(data, viperkey.CACertificate),
-		insecure:      insecure,
-	}, nil
+		insecure:      getMapKeyBool(data, viperkey.Insecure),
+	}
 }
 
 func getMapKeyString(data interface{}, key string) string {
@@ -96,6 +91,16 @@ func getMapKeyString(data interface{}, key string) string {
 	}
 
 	return ""
+}
+
+func getMapKeyBool(data interface{}, key string) bool {
+	if m, ok := data.(map[string]interface{}); ok {
+		if v, ok := m[key].(bool); ok {
+			return v
+		}
+	}
+
+	return false
 }
 
 func collectProfileInfo(cmd *cobra.Command) (*login, error) {
