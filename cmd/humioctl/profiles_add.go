@@ -61,12 +61,12 @@ func saveConfig() error {
 func addAccount(out *prompt.Prompt, newName string, profile *login) {
 	profiles := viper.GetStringMap("profiles")
 
-	profiles[newName] = map[string]string{
+	profiles[newName] = map[string]interface{}{
 		"address":        profile.address,
 		"token":          profile.token,
 		"username":       profile.username,
 		"ca_certificate": string(profile.caCertificate),
-		"insecure":       strconv.FormatBool(profile.insecure),
+		"insecure":       profile.insecure,
 	}
 
 	viper.Set("profiles", profiles)
@@ -110,6 +110,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 	out.Description("If you are not using Humio Cloud enter the address of your Humio installation,")
 	out.Description("e.g. http://localhost:8080/ or https://humio.example.com/")
 
+	var parsedURL *url.URL
 	for {
 		var err error
 		out.Output("")
@@ -122,19 +123,15 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 
 		// Make sure it is a valid URL and that
 		// we always end in a slash.
-		_, urlErr := url.ParseRequestURI(addr)
+		parsedURL, err = url.Parse(addr)
 
-		if urlErr != nil {
+		if err != nil {
 			out.Error("The value must be a valid URL.")
 			continue
 		}
 
-		if !strings.HasSuffix(addr, "/") {
-			addr = addr + "/"
-		}
-
 		clientConfig := api.DefaultConfig()
-		clientConfig.Address = addr
+		clientConfig.Address = parsedURL
 		client := api.NewClient(clientConfig)
 
 		out.Output()
@@ -236,7 +233,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 
 		// Create a new API client with the token
 		config := api.DefaultConfig()
-		config.Address = addr
+		config.Address = parsedURL
 		config.Token = token
 		config.CACertificate = []byte(caCertificate)
 		config.Insecure = insecure

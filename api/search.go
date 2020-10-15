@@ -65,7 +65,7 @@ func (q QueryJobs) Create(repository string, query Query) (string, error) {
 		return "", err
 	}
 
-	resp, err := q.client.HTTPRequest(http.MethodPost, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs", &buf)
+	resp, err := q.client.HTTPRequest(http.MethodPost, "/api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs", &buf)
 
 	if err != nil {
 		return "", err
@@ -101,7 +101,7 @@ func (q *QueryJobs) Poll(repository string, id string) (QueryResult, error) {
 }
 
 func (q *QueryJobs) PollContext(ctx context.Context, repository string, id string) (QueryResult, error) {
-	resp, err := q.client.HTTPRequestContext(ctx, http.MethodGet, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, nil, JSONContentType)
+	resp, err := q.client.HTTPRequestContext(ctx, http.MethodGet, "/api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, nil, JSONContentType)
 
 	if err != nil {
 		return QueryResult{}, err
@@ -119,6 +119,6 @@ func (q *QueryJobs) PollContext(ctx context.Context, repository string, id strin
 }
 
 func (q *QueryJobs) Delete(repository string, id string) error {
-	_, err := q.client.HTTPRequest(http.MethodDelete, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, nil)
+	_, err := q.client.HTTPRequest(http.MethodDelete, "/api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, nil)
 	return err
 }

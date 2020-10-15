@@ -368,7 +368,11 @@ has the same effect.`,
 
 			// Open the browser (First so it has a chance to load)
 			if openBrowser {
-				err := open.Start(client.Address() + repo + "/search?live=true&start=1d&query=" + key)
+				browserURL, err := client.Address().Parse(fmt.Sprintf("/%s/search?live=true&start=1d&query=%s", repo, key))
+				if err != nil {
+					fmt.Println(fmt.Errorf("could not open browser: %v", err))
+				}
+				err = open.Start(browserURL.String())
 				if err != nil {
 					fmt.Println(fmt.Errorf("could not open browser: %v", err))
 				}
@@ -376,9 +380,9 @@ has the same effect.`,
 
 			var url string
 			if ingestToken != "" {
-				url = "api/v1/ingest/humio-unstructured"
+				url = "/api/v1/ingest/humio-unstructured"
 			} else {
-				url = "api/v1/repositories/" + repo + "/ingest-messages"
+				url = "/api/v1/repositories/" + repo + "/ingest-messages"
 			}
 
 			sender := logSender{
