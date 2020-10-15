@@ -23,7 +23,7 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 			exitOnError(cmd, loadErr, "profile not found")
 			viper.Set(viperkey.Address, profile.address)
 			viper.Set(viperkey.TokenFile, profile.token)
-			viper.Set(viperkey.CACertificateFile, string(profile.caCertificate))
+			viper.Set(viperkey.CACertificateFile, profile.caCertificate)
 			viper.Set(viperkey.Insecure, strconv.FormatBool(profile.insecure))
 
 			saveErr := saveConfig()
@@ -42,21 +42,20 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 
 func loadProfile(profileName string) (*login, error) {
 	profiles := viper.GetStringMap(viperkey.Profiles)
-	profileData := profiles[profileName]
-
-	if profileData == nil {
-		return nil, fmt.Errorf("unknown profile %s", profileName)
+	profileData, ok := profiles[profileName].(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("unknown or invalid profile %s", profileName)
 	}
 
-	insecure, err := strconv.ParseBool(getMapKey(profileData, viperkey.Insecure))
+	insecure, err := strconv.ParseBool(getMapKeyString(profileData, viperkey.Insecure))
 	if err != nil {
 		return nil, err
 	}
 
 	profile := login{
-		address:       getMapKey(profileData, viperkey.Address),
-		token:         getMapKey(profileData, viperkey.Token),
-		caCertificate: []byte(getMapKey(profileData, viperkey.CACertificate)),
+		address:       getMapKeyString(profileData, viperkey.Address),
+		token:         getMapKeyString(profileData, viperkey.Token),
+		caCertificate: getMapKeyString(profileData, viperkey.CACertificate),
 		insecure:      insecure,
 	}
 
