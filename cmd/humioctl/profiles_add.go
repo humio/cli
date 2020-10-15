@@ -135,8 +135,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 
 		clientConfig := api.DefaultConfig()
 		clientConfig.Address = addr
-		client, apiErr := api.NewClient(clientConfig)
-		exitOnError(cmd, apiErr, "error initializing the API client")
+		client := api.NewClient(clientConfig)
 
 		out.Output()
 		cmd.Print("==> Testing Connection...")
@@ -160,8 +159,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 					exitOnError(cmd, err, "error reading Humio CA certificate file path")
 					caCertificate = string(caCertContent)
 					clientConfig.CACertificate = []byte(caCertificate)
-					client, err = api.NewClient(clientConfig)
-					exitOnError(cmd, err, "error initializing the API client")
+					client = api.NewClient(clientConfig)
 				}
 			}
 		}
@@ -184,8 +182,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 					out.Output("Disabling hostname verification.")
 					insecure = true
 					clientConfig.Insecure = true
-					client, err = api.NewClient(clientConfig)
-					exitOnError(cmd, err, "error initializing the API client")
+					client = api.NewClient(clientConfig)
 				}
 			}
 		}
@@ -244,9 +241,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		config.CACertificate = []byte(caCertificate)
 		config.Insecure = insecure
 
-		client, clientErr := api.NewClient(config)
-
-		exitOnError(cmd, clientErr, "error initializing the http client")
+		client := api.NewClient(config)
 
 		var apiErr error
 		username, apiErr = client.Viewer().Username()

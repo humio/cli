@@ -47,10 +47,10 @@ func (c *Client) Insecure() bool {
 	return c.config.Insecure
 }
 
-func NewClient(config Config) (*Client, error) {
+func NewClient(config Config) *Client {
 	return &Client{
 		config: config,
-	}, nil
+	}
 }
 
 func (c *Client) newGraphQLClient() *graphql.Client {
