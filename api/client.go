@@ -63,23 +63,29 @@ func (c *Client) headers() map[string]string {
 	return headers
 }
 
-func (c *Client) newGraphQLClient() *graphql.Client {
+func (c *Client) newGraphQLClient() (*graphql.Client, error) {
 	httpClient := c.newHTTPClientWithHeaders(c.headers())
 	graphqlURL, err := c.Address().Parse("/graphql")
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return graphql.NewClient(graphqlURL.String(), httpClient)
+	return graphql.NewClient(graphqlURL.String(), httpClient), nil
 }
 
 func (c *Client) Query(query interface{}, variables map[string]interface{}) error {
-	client := c.newGraphQLClient()
+	client, err := c.newGraphQLClient()
+	if err != nil {
+		return err
+	}
 	graphqlErr := client.Query(context.Background(), query, variables)
 	return graphqlErr
 }
 
 func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) error {
-	client := c.newGraphQLClient()
+	client, err := c.newGraphQLClient()
+	if err != nil {
+		return err
+	}
 	graphqlErr := client.Mutate(context.Background(), mutation, variables)
 	return graphqlErr
 }
