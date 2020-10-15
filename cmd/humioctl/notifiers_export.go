@@ -55,7 +55,7 @@ func newNotifiersExportCmd() *cobra.Command {
 				return nil, fmt.Errorf("Error saving the notifier file: %w", writeErr)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Notifier %q exported to file %s.", notifierName, outFilePath), nil
 		}),
 	}
 

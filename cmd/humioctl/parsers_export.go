@@ -50,7 +50,7 @@ func newParsersExportCmd() *cobra.Command {
 				return nil, fmt.Errorf("error saving the parser file: %w", writeErr)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Parser %q exported to %s.", parserName, outFilePath), nil
 		}),
 	}
 

@@ -54,7 +54,7 @@ func archivePackageCmd() *cobra.Command {
 				return nil, fmt.Errorf("errors creating archive: %w", createErr)
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Created %s with package contents from %s.", outPath, dirPath), nil
 		}),
 	}
 

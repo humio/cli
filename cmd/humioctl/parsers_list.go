@@ -37,16 +37,7 @@ func newParsersListCmd() *cobra.Command {
 				return nil, fmt.Errorf("error fetching parsers: %s", err)
 			}
 
-			var output []string
-			output = append(output, "Name | Custom")
-			for i := 0; i < len(parsers); i++ {
-				parser := parsers[i]
-				output = append(output, fmt.Sprintf("%v | %v", parser.Name, checkmark(!parser.IsBuiltIn)))
-			}
-
-			printTable(cmd, output)
-
-			return nil, nil
+			return parsers, nil
 		}),
 	}
 

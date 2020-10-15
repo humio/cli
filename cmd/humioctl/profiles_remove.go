@@ -29,7 +29,7 @@ func newProfilesRemoveCmd() *cobra.Command {
 				return nil, fmt.Errorf("error saving config: %w", saveErr)
 			}
 
-			return "Profile removed: " + profileName, nil
+			return fmt.Sprintf("Profile %q removed.", profileName), nil
 		}),
 	}
 

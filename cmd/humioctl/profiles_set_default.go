@@ -5,7 +5,6 @@ import (
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"strconv"
 
-	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -17,7 +16,6 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			profileName := args[0]
-			out := prompt.NewPrompt(cmd.OutOrStdout())
 
 			profile, loadErr := loadProfile(profileName)
 			if loadErr != nil {
@@ -33,13 +31,7 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 				return nil, fmt.Errorf("error saving config: %w", saveErr)
 			}
 
-			out.Info(fmt.Sprintf("Default profile set to '%s'", profileName))
-
-			cmd.Println()
-			out.Output("Address: " + viper.GetString(viperkey.Address))
-			cmd.Println()
-
-			return nil, nil
+			return fmt.Sprintf("Default profile set to %q.\nAddress: %s", profileName, viper.GetString(viperkey.Address)), nil
 		}),
 	}
 
@@ -53,16 +45,11 @@ func loadProfile(profileName string) (*login, error) {
 		return nil, fmt.Errorf("unknown or invalid profile %s", profileName)
 	}
 
-	insecure, err := strconv.ParseBool(getMapKeyString(profileData, viperkey.Insecure))
-	if err != nil {
-		return nil, err
-	}
-
 	profile := login{
 		address:       getMapKeyString(profileData, viperkey.Address),
 		token:         getMapKeyString(profileData, viperkey.Token),
 		caCertificate: getMapKeyString(profileData, viperkey.CACertificate),
-		insecure:      insecure,
+		insecure:      getMapKeyBool(profileData, viperkey.Insecure),
 	}
 
 	return &profile, nil

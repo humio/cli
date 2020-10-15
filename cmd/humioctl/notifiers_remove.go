@@ -37,7 +37,7 @@ func newNotifiersRemoveCmd() *cobra.Command {
 				return nil, fmt.Errorf("error removing ingest token: %w", err)
 			}
 
-			return "Notifier removed", nil
+			return fmt.Sprintf("Notifier %q removed.", name), nil
 		}),
 	}
 

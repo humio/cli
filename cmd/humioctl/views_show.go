@@ -34,11 +34,7 @@ func newViewsShowCmd() *cobra.Command {
 				return nil, fmt.Errorf("error fetching view: %w", apiErr)
 			}
 
-			printViewTable(view)
-
-			printViewConnectionsTable(view)
-
-			return nil, nil
+			return view, nil
 		}),
 	}
 

@@ -66,10 +66,8 @@ func newReposUpdateCmd() *cobra.Command {
 			if apiErr != nil {
 				return nil, fmt.Errorf("error fetching repository: %w", apiErr)
 			}
-			printRepoTable(cmd, repo)
-			fmt.Println()
 
-			return nil, nil
+			return repo, nil
 		}),
 	}
 

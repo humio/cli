@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/humio/cli/prompt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -40,23 +39,19 @@ func newStatusCmd() *cobra.Command {
 				return nil, fmt.Errorf("error getting the current user: %w", usernameErr)
 			}
 
-			data := [][]string{
-				{"Status", formatStatusText(serverStatus.Status)},
-				{"Address", viper.GetString(viperkey.Address)},
-				{"Version", serverStatus.Version},
-				{"Username", username},
+			data := struct {
+				Status   string
+				Address  string
+				Version  string
+				Username string
+			}{
+				Status:   formatStatusText(serverStatus.Status),
+				Address:  viper.GetString(viperkey.Address),
+				Version:  serverStatus.Version,
+				Username: username,
 			}
 
-			w := tablewriter.NewWriter(cmd.OutOrStdout())
-			w.AppendBulk(data)
-			w.SetBorder(false)
-			w.SetColumnSeparator(":")
-			w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-
-			w.Render()
-			fmt.Println()
-
-			return nil, nil
+			return data, nil
 		}),
 	}
 

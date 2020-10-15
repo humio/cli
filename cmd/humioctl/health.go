@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/humio/cli/api"
 	"github.com/olekukonko/tablewriter"
@@ -21,7 +20,6 @@ type healthCheckResult struct {
 
 func newHealthCmd() *cobra.Command {
 	var (
-		jsonFlag       bool
 		versionFlag    bool
 		uptimeFlag     bool
 		failFlag       bool
@@ -68,12 +66,6 @@ func newHealthCmd() *cobra.Command {
 				StatusMessage: health.StatusMessage,
 			}
 
-			if jsonFlag {
-				_ = json.NewEncoder(cmd.OutOrStdout()).Encode(result)
-			} else {
-				encodeAsText(cmd.OutOrStdout(), result)
-			}
-
 			if failFlag {
 				numDown := 0
 				for _, c := range m {
@@ -85,11 +77,10 @@ func newHealthCmd() *cobra.Command {
 				return nil, humioErrorExitCode{fmt.Errorf("%d statuses are down", numDown), numDown}
 			}
 
-			return nil, nil
+			return result, nil
 		}),
 	}
 
-	cmd.Flags().BoolVarP(&jsonFlag, "json", "j", false, "Output as json.")
 	cmd.Flags().BoolVar(&versionFlag, "version", false, "Print server version and exit.")
 	cmd.Flags().BoolVar(&uptimeFlag, "uptime", false, "Print uptime and exit.")
 	cmd.Flags().BoolVar(&failFlag, "fail", false, "Set exit code to number of down checks.")

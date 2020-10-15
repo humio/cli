@@ -48,7 +48,7 @@ func newLicenseInstallCmd() *cobra.Command {
 				return nil, fmt.Errorf("error installing license: %w", installErr)
 			}
 
-			return "OK", nil
+			return fmt.Sprintf("License installed."), nil
 		}),
 	}
 

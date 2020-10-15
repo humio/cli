@@ -48,9 +48,7 @@ func newUsersAddCmd() *cobra.Command {
 				return nil, fmt.Errorf("error creating the user: %w", err)
 			}
 
-			printUserTable(cmd, user)
-
-			return nil, nil
+			return user, nil
 		}),
 	}
 

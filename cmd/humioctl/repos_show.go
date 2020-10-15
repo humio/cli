@@ -35,11 +35,7 @@ func newReposShowCmd() *cobra.Command {
 				return nil, fmt.Errorf("error fetching repository: %w", apiErr)
 			}
 
-			printRepoTable(cmd, repo)
-
-			fmt.Println()
-
-			return nil, nil
+			return repo, nil
 		}),
 	}
 

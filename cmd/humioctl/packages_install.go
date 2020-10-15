@@ -37,8 +37,6 @@ func installPackageCmd() *cobra.Command {
 			repoOrView := args[0]
 			path := args[1]
 
-			out.Info(fmt.Sprintf("Installing Package from: %s", path))
-
 			if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
 				downloadedFile, err := getURLPackage(path)
 
@@ -76,7 +74,7 @@ func installPackageCmd() *cobra.Command {
 				return nil, fmt.Errorf("")
 			}
 
-			return nil, nil
+			return fmt.Sprintf("Package %q installed.", path), nil
 		}),
 	}
 

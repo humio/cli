@@ -31,17 +31,7 @@ func newUsersListCmd() *cobra.Command {
 				return nil, fmt.Errorf("error fetching user list: %w", err)
 			}
 
-			rows := make([]string, len(users))
-			for i, user := range users {
-				rows[i] = formatSimpleAccount(user)
-			}
-
-			printTable(cmd, append([]string{
-				"Username | Name | Root | Created"},
-				rows...,
-			))
-
-			return nil, nil
+			return users, nil
 		}),
 	}
 }

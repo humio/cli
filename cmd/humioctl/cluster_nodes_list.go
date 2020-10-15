@@ -16,11 +16,8 @@ package main
 
 import (
 	"fmt"
-	"sort"
-	"strconv"
-
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
+	"sort"
 )
 
 func newClusterNodesListCmd() *cobra.Command {
@@ -41,20 +38,7 @@ func newClusterNodesListCmd() *cobra.Command {
 				return nodes[i].Name < nodes[j].Name
 			})
 
-			rows := make([][]string, len(nodes))
-			for i, node := range nodes {
-				rows[i] = []string{strconv.Itoa(node.Id), node.Name, strconv.FormatBool(node.CanBeSafelyUnregistered), node.Zone}
-			}
-
-			w := tablewriter.NewWriter(cmd.OutOrStdout())
-			w.SetHeader([]string{"ID", "Name", "Can be safely unregistered", "Availability Zone"})
-			w.AppendBulk(rows)
-			w.SetBorder(false)
-
-			w.Render()
-			cmd.Println()
-
-			return nil, nil
+			return nodes, nil
 		}),
 	}
 
