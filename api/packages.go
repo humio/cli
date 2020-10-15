@@ -107,6 +107,8 @@ func (p *Packages) InstallArchive(repoOrViewName string, pathToZip string) (*Val
 type (
 	// VersionedPackageSpecifier is the ID and version of a package, e.g foo/bar@2.0.1
 	VersionedPackageSpecifier string
+	// UnversionedPackageSpecifier is the ID of a package, e.g foo/bar
+	UnversionedPackageSpecifier string
 )
 
 // UninstallPackage uninstalls a package by name.
@@ -120,7 +122,7 @@ func (p *Packages) UninstallPackage(repoOrViewName string, packageID string) err
 	}
 
 	variables := map[string]interface{}{
-		"packageId": VersionedPackageSpecifier(packageID),
+		"packageId": UnversionedPackageSpecifier(packageID),
 		"viewName":  graphql.String(repoOrViewName),
 	}
 
