@@ -218,7 +218,7 @@ func newApiClientE(cmd *cobra.Command, opts ...func(config *api.Config)) (*api.C
 	}
 	config.Address = parsedURL
 	config.Token = viper.GetString(viperkey.Token)
-	config.CACertificate = []byte(viper.GetString(viperkey.CACertificate))
+	config.CACertificatePEM = viper.GetString(viperkey.CACertificate)
 	config.Insecure = viper.GetBool(viperkey.Insecure)
 	config.ProxyOrganization = viper.GetString(viperkey.ProxyOrganization)
 

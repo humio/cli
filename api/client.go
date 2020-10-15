@@ -18,7 +18,7 @@ type Client struct {
 type Config struct {
 	Address           *url.URL
 	Token             string
-	CACertificate     []byte
+	CACertificatePEM  string
 	Insecure          bool
 	ProxyOrganization string
 }
@@ -37,8 +37,8 @@ func (c *Client) Token() string {
 	return c.config.Token
 }
 
-func (c *Client) CACertificate() []byte {
-	return c.config.CACertificate
+func (c *Client) CACertificate() string {
+	return c.config.CACertificatePEM
 }
 
 func (c *Client) Insecure() bool {
