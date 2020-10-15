@@ -81,9 +81,6 @@ Common Management Commands:
 				}
 			}
 		},
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			cmd.SetOutput(os.Stdout)
-		},
 	}
 
 	cobra.OnInitialize(initConfig)
