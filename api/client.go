@@ -72,6 +72,7 @@ func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) 
 
 // JSONContentType is "application/json"
 const JSONContentType string = "application/json"
+const ZIPContentType string = "application/zip"
 
 func (c *Client) HTTPRequest(httpMethod string, path string, body io.Reader) (*http.Response, error) {
 	return c.HTTPRequestContext(context.Background(), httpMethod, path, body, JSONContentType)
