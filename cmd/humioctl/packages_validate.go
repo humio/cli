@@ -34,7 +34,7 @@ func validatePackageCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 
-			repoOrViewName := args[0]
+			viewName := args[0]
 			dirPath := args[1]
 
 			if !filepath.IsAbs(dirPath) {
@@ -52,7 +52,7 @@ func validatePackageCmd() *cobra.Command {
 			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			validationResult, apiErr := client.Packages().Validate(repoOrViewName, dirPath)
+			validationResult, apiErr := client.Packages().Validate(viewName, dirPath)
 			if apiErr != nil {
 				out.Error(fmt.Sprintf("Errors validating package: %s", apiErr))
 				os.Exit(1)
