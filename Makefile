@@ -30,6 +30,9 @@ run: $(BIN_PATH)
 e2e: $(BIN_PATH)
 	./e2e/run.bash
 
+e2e-upcoming: $(BIN_PATH)
+	./e2e/run-upcoming-features.bash
+
 .PHONY: build clean snapshot run e2e FORCE
 
 FORCE:

@@ -1,0 +1,55 @@
+$schema: https://schemas.humio.com/dashboard/v0.1.0
+name: Something
+timeSelector: {}
+sharedTimeInterval:
+  enabled: false
+  isLive: false
+  start: 24h
+widgets:
+  4313b679-b571-40fc-b543-2133de183e18:
+    x: 4
+    y: 0
+    height: 4
+    queryString: 'progname=?{prog-name=*} | #level=WARN or #level=ERROR | timechart(#level)'
+    end: now
+    start: 24h
+    width: 4
+    options:
+      plotType: area
+      yAxisScale: linear
+      series:
+        ERROR:
+          color: '#ff0a0a'
+        WARN:
+          color: '#ffe224'
+      interpolation: step-after
+    visualization: time-chart
+    title: 'Errors & Warnings'
+    type: query
+  c3f03c3a-ed42-4ace-9fbf-d507b84a58fd:
+    x: 0
+    y: 0
+    height: 4
+    queryString: progname=?{prog-name=*} | case {progname="" | progname := "<No ProgName>";
+      *} | timechart(progname)
+    end: now
+    start: 24h
+    width: 4
+    options:
+      plotType: line
+      yAxisScale: linear
+      series: {}
+      interpolation: monotone
+    visualization: time-chart
+    title: Activity
+    type: query
+
+parameters:
+  prog-name:
+    query: top(progname)
+    timeInterval: 7d
+    useDashboardTimeIfSet: false
+    defaultValue: '*'
+    order: 50
+    valueField: progname
+    type: query

@@ -28,6 +28,7 @@ func newPackagesCmd() *cobra.Command {
 	cmd.AddCommand(archivePackageCmd())
 	cmd.AddCommand(installPackageCmd())
 	cmd.AddCommand(uninstallPackageCmd())
+	cmd.AddCommand(listInstalledPackagesCmd())
 
 	return cmd
 }
