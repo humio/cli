@@ -1,0 +1,7 @@
+$schema: https://schemas.humio.com/alert/v0.1.0
+enabled: true
+name: errors
+queryString: "#level=ERROR"
+timeInterval: 5m
+throttleTime: 5m
+description: Triggers an alert when an error occurs.

@@ -1,6 +1,7 @@
 #!/usr/bin/env bats
 
-humioctl="$BATS_TEST_DIRNAME/../bin/humioctl --address=http://localhost:8081/"
+HUMIO_PORT=${HUMIO_PORT:-8081}
+humioctl="$BATS_TEST_DIRNAME/../bin/humioctl --address=http://localhost:$HUMIO_PORT/"
 
 load './node_modules/bats-support/load'
 load './node_modules/bats-assert/load'

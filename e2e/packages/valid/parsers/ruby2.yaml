@@ -1,0 +1,71 @@
+$schema: https://schemas.humio.com/parser/v0.1.0
+
+name: ruby-logger-2
+
+script: |-
+  case {
+
+  // Lines logged using 'logger'
+  //
+  /^(?:I|E|W|U|F|D), \[\S+ #(?<pid>\d+)\] (?<level>INFO|DEBUG|UNKNOWN|FATAL|INFO|ERROR|WARN) -- (?<progname>[^:]*): ?(?<message>.*)$/
+    | msgtype:="log"
+    | findTimestamp()
+    | kvParse(separator=":", field=message)
+  ;
+
+  // Things that look like the start of an exception
+  //
+  // The exceptions are assuming non-tty, which prints stacktraces
+  // differently than when a terminal is attached as STDERR.
+  //
+  // You can use `msgtype="exception"` to find stacktraces
+  //
+  /^(?<file>.+?.rb):(?<linenum>\d+):in `(?<function>.+?)': (?<message>.+) \((?<exception>.+)\)$/
+    | msgtype:="exception"
+    | @timestamp := now() // We don't get any timestamp in the log :(
+  ;
+
+  // Stacktrace
+  //
+  /^\tfrom (?<file>.+\.rb):(?<linenum>\d+):in `(?<function>.+)'$/
+    | msgtype:="exception"
+    | level := ERROR
+    | @timestamp := now() // We don't get any timestamp in the log :(
+  ;
+
+  // Unknown output
+  //
+  // We try to find a timestamp and extract some fields.
+  //
+  * | msgtype := "unknown"
+    | level := UNKNOWN
+    | findTimestamp(addErrors=false)
+    | case { @timestamp != * | @timestamp:=now(); * }
+    | kvParse(separator=":", field=message)
+  }
+
+tagFields:
+  - 'level'
+
+tests:
+  # Logger Output
+  - 'I, [2020-01-28T11:41:59.534985+02:00 #11511] INFO -- : Hi Thomas!'
+  - 'E, [2020-02-28T12:41:59.534985 #11] ERROR -- Prog: Login error, User:123 Controller: MainController'
+  - 'W, [2020-03-28T13:41:59.534985 #11512] WARN -- Main: message'
+  - 'U, [2020-04-28T14:41:59.534985 #1411] UNKNOWN -- Main: message with other chars -- foo'
+  - 'F, [2020-05-28T15:41:59.534985 #11512] FATAL -- Main: Process died'
+  - 'D, [2020-05-28T15:41:59.534985 #11512] DEBUG -- Main: Test'
+  - 'D, [2020-05-28T15:41:59.534985 #11512] DEBUG -- Main:'
+
+  # Stacktrace start
+  - "division_service.rb:14:in `/': divided by 0 (ZeroDivisionError)"
+
+  # Stacktrace items
+  - "	from division_service.rb:14:in `divide'"
+  - "	from division_service.rb:18:in `<main>'"
+
+  # Unknown messages
+  - "Hello World"
+  - "StatusCode : 1"
+
+

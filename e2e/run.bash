@@ -9,7 +9,7 @@ cd $DIR
 npm install 1>/dev/null
 
 SKIP_HUMIO=$1
-PORT=8081
+PORT=${2:-8081}
 
 stop_humio() {
     if [[ "$SKIP_HUMIO" != "--skip-humio" ]]; then
@@ -45,5 +45,4 @@ else
 fi
 
 echo "==> Running Tests"
-
-npx bats $DIR/tests.bats -p
+HUMIO_PORT=$PORT npx bats $DIR/tests.bats -p

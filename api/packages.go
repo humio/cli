@@ -32,6 +32,11 @@ func (resp *ValidationResponse) IsValid() bool {
 	return (len(resp.InstallationErrors) == 0) && (len(resp.ParseErrors) == 0)
 }
 
+// InstalledPackage contain the details of an installed package
+type InstalledPackage struct {
+	ID string
+}
+
 // Validate checks a package declaration validity against a Humio
 // server.
 func (p *Packages) Validate(repoOrViewName string, absDiretoryPath string) (*ValidationResponse, error) {
@@ -69,6 +74,28 @@ func (p *Packages) Validate(repoOrViewName string, absDiretoryPath string) (*Val
 	}
 
 	return &report, nil
+}
+
+// ListInstalled returns a list of installed packages
+func (p *Packages) ListInstalled(repoOrViewName string) ([]InstalledPackage, error) {
+	var q struct {
+		Repository struct {
+			InstalledPackages []InstalledPackage
+		} `graphql:"repository(name: $repositoryName)"`
+	}
+
+	variables := map[string]interface{}{
+		"repositoryName": graphql.String(repoOrViewName),
+	}
+
+	graphqlErr := p.client.Query(&q, variables)
+
+	var installedPackages []InstalledPackage
+	if graphqlErr == nil {
+		installedPackages = q.Repository.InstalledPackages
+	}
+
+	return installedPackages, graphqlErr
 }
 
 // InstallArchive installs a local package (zip file).
