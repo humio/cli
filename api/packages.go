@@ -34,19 +34,29 @@ func (resp *ValidationResponse) IsValid() bool {
 
 // InstalledPackage contain the details of an installed package
 type InstalledPackage struct {
-	ID string
+	ID          string
+	InstalledBy *struct {
+		Username  string
+		Timestamp string
+	}
+	UpdatedBy *struct {
+		Username  string
+		Timestamp string
+	}
+	Source          string
+	AvailableUpdate string
 }
 
 // Validate checks a package declaration validity against a Humio
 // server.
-func (p *Packages) Validate(repoOrViewName string, absDiretoryPath string) (*ValidationResponse, error) {
+func (p *Packages) Validate(viewName string, absDiretoryPath string) (*ValidationResponse, error) {
 	zipFilePath, err := createTempZipFromFolder(absDiretoryPath)
 
 	if err != nil {
 		return nil, err
 	}
 
-	urlPath := "api/v1/packages/analyze?view=" + url.QueryEscape(repoOrViewName)
+	urlPath := "api/v1/packages/analyze?view=" + url.QueryEscape(viewName)
 
 	fileReader, openErr := os.Open(zipFilePath)
 
@@ -77,7 +87,7 @@ func (p *Packages) Validate(repoOrViewName string, absDiretoryPath string) (*Val
 }
 
 // ListInstalled returns a list of installed packages
-func (p *Packages) ListInstalled(repoOrViewName string) ([]InstalledPackage, error) {
+func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
 	var q struct {
 		Repository struct {
 			InstalledPackages []InstalledPackage
@@ -85,21 +95,16 @@ func (p *Packages) ListInstalled(repoOrViewName string) ([]InstalledPackage, err
 	}
 
 	variables := map[string]interface{}{
-		"repositoryName": graphql.String(repoOrViewName),
+		"repositoryName": graphql.String(viewName),
 	}
 
 	graphqlErr := p.client.Query(&q, variables)
 
-	var installedPackages []InstalledPackage
-	if graphqlErr == nil {
-		installedPackages = q.Repository.InstalledPackages
-	}
-
-	return installedPackages, graphqlErr
+	return q.Repository.InstalledPackages, graphqlErr
 }
 
 // InstallArchive installs a local package (zip file).
-func (p *Packages) InstallArchive(repoOrViewName string, pathToZip string) (*ValidationResponse, error) {
+func (p *Packages) InstallArchive(viewName string, pathToZip string) (*ValidationResponse, error) {
 
 	fileReader, openErr := os.Open(pathToZip)
 
@@ -108,7 +113,7 @@ func (p *Packages) InstallArchive(repoOrViewName string, pathToZip string) (*Val
 	}
 	defer fileReader.Close()
 
-	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(repoOrViewName)
+	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(viewName)
 
 	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, "application/zip")
 
@@ -139,7 +144,7 @@ type (
 )
 
 // UninstallPackage uninstalls a package by name.
-func (p *Packages) UninstallPackage(repoOrViewName string, packageID string) error {
+func (p *Packages) UninstallPackage(viewName string, packageID string) error {
 
 	var m struct {
 		StartDataRedistribution struct {
@@ -150,7 +155,7 @@ func (p *Packages) UninstallPackage(repoOrViewName string, packageID string) err
 
 	variables := map[string]interface{}{
 		"packageId": UnversionedPackageSpecifier(packageID),
-		"viewName":  graphql.String(repoOrViewName),
+		"viewName":  graphql.String(viewName),
 	}
 
 	graphqlErr := p.client.Mutate(&m, variables)

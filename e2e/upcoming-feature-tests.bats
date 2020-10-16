@@ -17,8 +17,8 @@ load './node_modules/bats-assert/load'
   assert_success
 }
 
-@test "package listInstalled should contain humio/rubyapp" {
-  run $humioctl packages listInstalled developer
+@test "package list-installed should contain humio/rubyapp" {
+  run $humioctl packages list-installed developer
   assert_success
   assert_output -p "humio/rubyapp"
 }
@@ -28,10 +28,9 @@ load './node_modules/bats-assert/load'
   assert_success
 }
 
-@test "package listInstalled should be empty" {
-  run $humioctl packages listInstalled developer
-  assert_success
-  assert_line --index 0 -p "Listing installed packages in view developer" 
+@test "package list-installed should be empty" {
+  run $humioctl packages list-installed developer
+  assert_success  
   refute_output -p "humio/rubyapp"
 }
 
@@ -45,8 +44,8 @@ load './node_modules/bats-assert/load'
   assert_success
 }
 
-@test "package listInstalled should contain humio/rubyapp" {
-  run $humioctl packages listInstalled developer
+@test "package list-installed should contain zip version of humio/rubyapp" {
+  run $humioctl packages list-installed developer
   assert_success
   assert_output -p "humio/rubyapp"
 }
