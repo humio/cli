@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/shurcooL/graphql"
 )
@@ -232,6 +233,10 @@ func createZipFromFolder(baseFolder string, outFile *os.File) error {
 	return nil
 }
 
+func isValidFolderOrFile(name string) bool {
+	return strings.HasPrefix(name, "_") || strings.HasPrefix(name, ".")
+}
+
 func addFiles(w *zip.Writer, basePath string, baseInZip string) {
 	// Open the Directory
 	files, err := ioutil.ReadDir(basePath)
@@ -240,6 +245,10 @@ func addFiles(w *zip.Writer, basePath string, baseInZip string) {
 	}
 
 	for _, file := range files {
+		if isValidFolderOrFile(file.Name()) {
+			return // Ignore unwanted files and directories
+		}
+
 		if !file.IsDir() {
 			dat, err := ioutil.ReadFile(path.Join(basePath, file.Name()))
 			if err != nil {
