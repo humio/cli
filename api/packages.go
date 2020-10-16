@@ -5,11 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path"
 	"strings"
+	"path/filepath"
 
 	"github.com/shurcooL/graphql"
 )
@@ -218,30 +220,30 @@ func createTempZipFromFolder(baseFolder string) (string, error) {
 	return zipFile.Name(), nil
 }
 
-func createZipFromFolder(baseFolder string, outFile *os.File) error {
+func createZipFromFolder(baseFolder string, outFile *os.File) (err error) {
 	// Create a new zip archive.
 	w := zip.NewWriter(outFile)
+	defer func() {
+		// Make sure to check the error on Close.
+		closeErr := w.Close()
+		if err == nil {
+			err = closeErr
+		}
+	}()
 
 	// Add some files to the archive.
-	addFiles(w, baseFolder, "")
-
-	// Make sure to check the error on Close.
-	err := w.Close()
-	if err != nil {
-		return err
-	}
-	return nil
+	return addFiles(w, baseFolder, "")
 }
 
 func isValidFolderOrFile(name string) bool {
 	return strings.HasPrefix(name, "_") || strings.HasPrefix(name, ".")
 }
 
-func addFiles(w *zip.Writer, basePath string, baseInZip string) {
+func addFiles(w *zip.Writer, basePath string, baseInZip string) error {
 	// Open the Directory
 	files, err := ioutil.ReadDir(basePath)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	for _, file := range files {
@@ -250,24 +252,29 @@ func addFiles(w *zip.Writer, basePath string, baseInZip string) {
 		}
 
 		if !file.IsDir() {
-			dat, err := ioutil.ReadFile(path.Join(basePath, file.Name()))
+			srcFile, err := os.Open(filepath.Join(basePath, file.Name()))
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 
 			// Add some files to the archive.
-			f, err := w.Create(path.Join(baseInZip, file.Name()))
+			dstFile, err := w.Create(path.Join(baseInZip, file.Name()))
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
-			_, err = f.Write(dat)
+			_, err = io.Copy(dstFile, srcFile)
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 		} else if file.IsDir() {
 			// Drill down
-			newBase := path.Join(basePath, file.Name())
-			addFiles(w, newBase, path.Join(baseInZip, file.Name()))
+			newBase := filepath.Join(basePath, file.Name())
+			err := addFiles(w, newBase, path.Join(baseInZip, file.Name()))
+			if err != nil {
+				return err
+			}
 		}
 	}
+
+	return nil
 }

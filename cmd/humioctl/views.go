@@ -15,11 +15,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/humio/cli/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -33,44 +28,4 @@ func newViewsCmd() *cobra.Command {
 	cmd.AddCommand(newViewsListCmd())
 
 	return cmd
-}
-
-func printViewTable(view *api.View) {
-
-	data := [][]string{
-		{"Name", view.Name},
-	}
-
-	w := tablewriter.NewWriter(os.Stdout)
-	w.AppendBulk(data)
-	w.SetBorder(false)
-	w.SetColumnSeparator(":")
-	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-
-	fmt.Println()
-	w.Render()
-	fmt.Println()
-}
-
-func printViewConnectionsTable(view *api.View) {
-	if len(view.Connections) == 0 {
-		return
-	}
-
-	data := [][]string{}
-
-	for _, conn := range view.Connections {
-		data = append(data, []string{conn.RepoName, conn.Filter})
-	}
-
-	w := tablewriter.NewWriter(os.Stdout)
-	w.AppendBulk(data)
-	w.SetBorder(true)
-	w.SetHeader([]string{"Repository", "Query Prefix"})
-	w.SetColumnSeparator(":")
-	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-
-	fmt.Println()
-	w.Render()
-	fmt.Println()
 }
