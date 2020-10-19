@@ -66,7 +66,7 @@ func (p *Packages) Validate(viewName string, absDiretoryPath string) (*Validatio
 	}
 	defer fileReader.Close()
 
-	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, "application/zip")
+	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, ZIPContentType)
 
 	if httpErr != nil {
 		return nil, httpErr
@@ -116,7 +116,7 @@ func (p *Packages) InstallArchive(viewName string, pathToZip string) (*Validatio
 
 	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(viewName)
 
-	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, "application/zip")
+	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, ZIPContentType)
 
 	if httpErr != nil {
 		return nil, httpErr

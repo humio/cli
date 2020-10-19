@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/url"
 	"os"
 	"strconv"
@@ -22,12 +21,6 @@ func SetVersion(v, c, d string) {
 	version = v
 	commit = c
 	date = d
-}
-
-func check(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func exitOnError(cmd *cobra.Command, err error, message string) {

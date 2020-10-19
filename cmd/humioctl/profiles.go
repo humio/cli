@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
-
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -13,7 +12,7 @@ type login struct {
 	address       string
 	token         string
 	username      string
-	caCertificate []byte
+	caCertificate string
 	insecure      bool
 }
 
@@ -37,14 +36,10 @@ You can change the default profile using:
     `,
 		Args: cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
-			profiles := viper.GetStringMap("profiles")
+			profiles := viper.GetStringMap(viperkey.Profiles)
 
 			for name, data := range profiles {
-				login, err := mapToLogin(data)
-				if err != nil {
-					cmd.Println(prompt.Colorize(fmt.Sprintf("* [red]Error reading existing Humio profile: %s\n  Remove the configuration file %s and add the profile again.[reset]", err, cfgFile)))
-					os.Exit(1)
-				}
+				login := mapToLogin(data)
 				if isCurrentAccount(login.address, login.token) {
 					cmd.Println(prompt.Colorize(fmt.Sprintf("* [purple]%s (%s) - %s[reset]", name, login.username, login.address)))
 				} else {

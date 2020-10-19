@@ -1,12 +1,13 @@
 package main
 
 import (
+	"encoding/pem"
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/humio/cli/api"
@@ -59,45 +60,47 @@ func saveConfig() error {
 }
 
 func addAccount(out *prompt.Prompt, newName string, profile *login) {
-	profiles := viper.GetStringMap("profiles")
+	profiles := viper.GetStringMap(viperkey.Profiles)
 
-	profiles[newName] = map[string]string{
-		"address":        profile.address,
-		"token":          profile.token,
-		"username":       profile.username,
-		"ca_certificate": string(profile.caCertificate),
-		"insecure":       strconv.FormatBool(profile.insecure),
+	profiles[newName] = map[string]interface{}{
+		viperkey.Address:       profile.address,
+		viperkey.Token:         profile.token,
+		viperkey.Username:      profile.username,
+		viperkey.CACertificate: profile.caCertificate,
+		viperkey.Insecure:      profile.insecure,
 	}
 
-	viper.Set("profiles", profiles)
+	viper.Set(viperkey.Profiles, profiles)
 }
 
-func mapToLogin(data interface{}) (*login, error) {
-	insecure, err := strconv.ParseBool(getMapKey(data, "insecure"))
-	if err != nil {
-		return nil, err
-	}
+func mapToLogin(data interface{}) *login {
 	return &login{
-		address:       getMapKey(data, "address"),
-		username:      getMapKey(data, "username"),
-		token:         getMapKey(data, "token"),
-		caCertificate: []byte(getMapKey(data, "caCertificate")),
-		insecure:      insecure,
-	}, nil
+		address:       getMapKeyString(data, viperkey.Address),
+		username:      getMapKeyString(data, viperkey.Username),
+		token:         getMapKeyString(data, viperkey.Token),
+		caCertificate: getMapKeyString(data, viperkey.CACertificate),
+		insecure:      getMapKeyBool(data, viperkey.Insecure),
+	}
 }
 
-func getMapKey(data interface{}, key string) string {
-	m, ok1 := data.(map[string]interface{})
-	if ok1 {
-		v := m[key]
-		vStr, ok2 := v.(string)
-
-		if ok2 {
-			return vStr
+func getMapKeyString(data interface{}, key string) string {
+	if m, ok := data.(map[string]interface{}); ok {
+		if v, ok := m[key].(string); ok {
+			return v
 		}
 	}
 
 	return ""
+}
+
+func getMapKeyBool(data interface{}, key string) bool {
+	if m, ok := data.(map[string]interface{}); ok {
+		if v, ok := m[key].(bool); ok {
+			return v
+		}
+	}
+
+	return false
 }
 
 func collectProfileInfo(cmd *cobra.Command) (*login, error) {
@@ -110,6 +113,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 	out.Description("If you are not using Humio Cloud enter the address of your Humio installation,")
 	out.Description("e.g. http://localhost:8080/ or https://humio.example.com/")
 
+	var parsedURL *url.URL
 	for {
 		var err error
 		out.Output("")
@@ -122,21 +126,16 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 
 		// Make sure it is a valid URL and that
 		// we always end in a slash.
-		_, urlErr := url.ParseRequestURI(addr)
+		parsedURL, err = url.Parse(addr)
 
-		if urlErr != nil {
+		if err != nil {
 			out.Error("The value must be a valid URL.")
 			continue
 		}
 
-		if !strings.HasSuffix(addr, "/") {
-			addr = addr + "/"
-		}
-
 		clientConfig := api.DefaultConfig()
-		clientConfig.Address = addr
-		client, apiErr := api.NewClient(clientConfig)
-		exitOnError(cmd, apiErr, "error initializing the API client")
+		clientConfig.Address = parsedURL
+		client := api.NewClient(clientConfig)
 
 		out.Output()
 		cmd.Print("==> Testing Connection...")
@@ -158,10 +157,13 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 					// Read the file
 					caCertContent, err := ioutil.ReadFile(caCertificateFilePath)
 					exitOnError(cmd, err, "error reading Humio CA certificate file path")
+					block, _ := pem.Decode(caCertContent)
+					if block == nil {
+						exitOnError(cmd, fmt.Errorf("expected PEM block"), "expected PEM encoded CA certificate file")
+					}
 					caCertificate = string(caCertContent)
-					clientConfig.CACertificate = []byte(caCertificate)
-					client, err = api.NewClient(clientConfig)
-					exitOnError(cmd, err, "error initializing the API client")
+					clientConfig.CACertificatePEM = caCertificate
+					client = api.NewClient(clientConfig)
 				}
 			}
 		}
@@ -184,8 +186,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 					out.Output("Disabling hostname verification.")
 					insecure = true
 					clientConfig.Insecure = true
-					client, err = api.NewClient(clientConfig)
-					exitOnError(cmd, err, "error initializing the API client")
+					client = api.NewClient(clientConfig)
 				}
 			}
 		}
@@ -239,14 +240,12 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 
 		// Create a new API client with the token
 		config := api.DefaultConfig()
-		config.Address = addr
+		config.Address = parsedURL
 		config.Token = token
-		config.CACertificate = []byte(caCertificate)
+		config.CACertificatePEM = caCertificate
 		config.Insecure = insecure
 
-		client, clientErr := api.NewClient(config)
-
-		exitOnError(cmd, clientErr, "error initializing the http client")
+		client := api.NewClient(config)
 
 		var apiErr error
 		username, apiErr = client.Viewer().Username()
@@ -269,9 +268,9 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		break
 	}
 
-	return &login{address: addr, token: token, username: username, caCertificate: []byte(caCertificate), insecure: insecure}, nil
+	return &login{address: addr, token: token, username: username, caCertificate: caCertificate, insecure: insecure}, nil
 }
 
 func isCurrentAccount(addr string, token string) bool {
-	return viper.GetString("address") == addr && viper.GetString("token") == token
+	return viper.GetString(viperkey.Address) == addr && viper.GetString(viperkey.Token) == token
 }

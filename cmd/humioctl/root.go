@@ -16,7 +16,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"path"
 	"strconv"
@@ -27,7 +29,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile, tokenFile, token, address, caCertificateFile, profileFlag string
+var cfgFile, tokenFile, token, address, caCertificateFile, profileFlag, proxyOrganization string
 var insecure bool
 
 var printVersion bool
@@ -69,7 +71,7 @@ Common Management Commands:
 
 			// If no token or address flags are passed
 			// and no configuration file exists, run login.
-			if viper.GetString("token") == "" && viper.GetString("address") == "" {
+			if viper.GetString(viperkey.Token) == "" && viper.GetString(viperkey.Address) == "" {
 				if err := newWelcomeCmd().Execute(); err != nil {
 					fmt.Println(fmt.Errorf("error printing welcome message: %v", err))
 				}
@@ -79,9 +81,6 @@ Common Management Commands:
 					fmt.Println(fmt.Errorf("error printing help: %v", err))
 				}
 			}
-		},
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			cmd.SetOutput(os.Stdout)
 		},
 	}
 
@@ -97,12 +96,14 @@ Common Management Commands:
 	rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "", "The HTTP address of the Humio cluster. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().StringVar(&caCertificateFile, "ca-certificate-file", "", "File path to a file containing the CA certificate in PEM format. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().BoolVar(&insecure, "insecure", false, "By default, all encrypted connections will verify that the hostname in the TLS certificate matches the name from the URL. Set this to true to ignore hostname validation.")
+	rootCmd.PersistentFlags().StringVar(&proxyOrganization, "proxy-organization", "", "Commands are executed in the specified organization.")
 
-	viper.BindPFlag("address", rootCmd.PersistentFlags().Lookup("address"))
-	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
-	viper.BindPFlag("token-file", rootCmd.PersistentFlags().Lookup("token-file"))
-	viper.BindPFlag("ca-certificate-file", rootCmd.PersistentFlags().Lookup("ca-certificate-file"))
-	viper.BindPFlag("insecure", rootCmd.PersistentFlags().Lookup("insecure"))
+	viper.BindPFlag(viperkey.Address, rootCmd.PersistentFlags().Lookup("address"))
+	viper.BindPFlag(viperkey.Token, rootCmd.PersistentFlags().Lookup("token"))
+	viper.BindPFlag(viperkey.TokenFile, rootCmd.PersistentFlags().Lookup("token-file"))
+	viper.BindPFlag(viperkey.CACertificateFile, rootCmd.PersistentFlags().Lookup("ca-certificate-file"))
+	viper.BindPFlag(viperkey.Insecure, rootCmd.PersistentFlags().Lookup("insecure"))
+	viper.BindPFlag(viperkey.ProxyOrganization, rootCmd.PersistentFlags().Lookup("proxy-organization"))
 
 	rootCmd.Flags().BoolVarP(&printVersion, "version", "v", false, "Print the client version")
 
@@ -161,16 +162,16 @@ func initConfig() {
 
 		// Explicitly bound address or token have precedence
 		if address == "" {
-			viper.Set("address", profile.address)
+			viper.Set(viperkey.Address, profile.address)
 		}
 		if token == "" {
-			viper.Set("token", profile.token)
+			viper.Set(viperkey.Token, profile.token)
 		}
 		if caCertificateFile == "" {
-			viper.Set("ca_certificate", profile.caCertificate)
+			viper.Set(viperkey.CACertificate, profile.caCertificate)
 		}
 		if insecure {
-			viper.Set("insecure", strconv.FormatBool(insecure))
+			viper.Set(viperkey.Insecure, strconv.FormatBool(insecure))
 		}
 	}
 
@@ -180,7 +181,7 @@ func initConfig() {
 			fmt.Println(fmt.Sprintf("error loading token file: %s", tokenFileErr))
 			os.Exit(1)
 		}
-		viper.Set("token", string(tokenFileContent))
+		viper.Set(viperkey.Token, string(tokenFileContent))
 	}
 
 	if caCertificateFile != "" {
@@ -189,11 +190,11 @@ func initConfig() {
 			fmt.Println(fmt.Sprintf("error loading CA certificate file: %s", caCertificateFileErr))
 			os.Exit(1)
 		}
-		viper.Set("ca_certificate", string(caCertificateFileContent))
+		viper.Set(viperkey.CACertificate, string(caCertificateFileContent))
 	}
 
 	if insecure {
-		viper.Set("insecure", insecure)
+		viper.Set(viperkey.Insecure, insecure)
 	}
 }
 
@@ -210,16 +211,22 @@ func NewApiClient(cmd *cobra.Command, opts ...func(config *api.Config)) *api.Cli
 
 func newApiClientE(cmd *cobra.Command, opts ...func(config *api.Config)) (*api.Client, error) {
 	config := api.DefaultConfig()
-	config.Address = viper.GetString("address")
-	config.Token = viper.GetString("token")
-	config.CACertificate = []byte(viper.GetString("ca_certificate"))
-	config.Insecure = viper.GetBool("insecure")
+	address := viper.GetString(viperkey.Address)
+	parsedURL, err := url.Parse(address)
+	if err != nil {
+		return nil, err
+	}
+	config.Address = parsedURL
+	config.Token = viper.GetString(viperkey.Token)
+	config.CACertificatePEM = viper.GetString(viperkey.CACertificate)
+	config.Insecure = viper.GetBool(viperkey.Insecure)
+	config.ProxyOrganization = viper.GetString(viperkey.ProxyOrganization)
 
 	for _, opt := range opts {
 		opt(&config)
 	}
 
-	return api.NewClient(config)
+	return api.NewClient(config), nil
 }
 
 func main() {
