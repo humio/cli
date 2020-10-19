@@ -25,15 +25,17 @@ func newTransferCreateManagedExportGroupCmd() *cobra.Command {
 		Use:   "create-managed-export-group",
 		Short: "Create a group that has an attached role with permission to export the organization through the cluster transfer API.",
 		Args:  cobra.ExactArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			groupID, err := client.Transfer().CreateManagedExportGroup()
-			exitOnError(cmd, err, "error creating managed group")
-			fmt.Printf("Group ID: %v\n", groupID)
 
-			cmd.Println()
-		},
+			if err != nil {
+				return nil, fmt.Errorf("error creating managed group: %w", err)
+			}
+
+			return groupID, nil
+		}),
 	}
 
 	return cmd
@@ -44,15 +46,16 @@ func newTransferGetManagedExportGroupCmd() *cobra.Command {
 		Use:   "get-managed-export-group",
 		Short: "Get the id of the managed export group.",
 		Args:  cobra.ExactArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			groupID, err := client.Transfer().GetManagedExportGroup()
-			exitOnError(cmd, err, "error retrieving managed group")
-			fmt.Printf("Group ID: %v\n", groupID)
+			if err != nil {
+				return nil, fmt.Errorf("error retrieving managed group: %w", err)
+			}
 
-			cmd.Println()
-		},
+			return groupID, nil
+		}),
 	}
 
 	return cmd
@@ -63,14 +66,16 @@ func newTransferRemoveManagedExportGroupCmd() *cobra.Command {
 		Use:   "remove-managed-export-group",
 		Short: "Remove the managed export group.",
 		Args:  cobra.ExactArgs(0),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			err := client.Transfer().RemoveManagedExportGroup()
-			exitOnError(cmd, err, "error removing managed group")
+			if err != nil {
+				return nil, fmt.Errorf("error removing managed group: %w", err)
+			}
 
-			cmd.Println()
-		},
+			return fmt.Sprintf("Removed managed export group."), nil
+		}),
 	}
 
 	return cmd
@@ -94,13 +99,16 @@ func newTransferJobsListCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List jobs",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			jobs, err := client.Transfer().ListTransferJobs()
-			exitOnError(cmd, err, "error listing transfer jobs")
-			cmd.Println(jobs)
-		},
+			if err != nil {
+				return nil, fmt.Errorf("error listing transfer jobs: %w", err)
+			}
+
+			return jobs, nil
+		}),
 	}
 
 	return cmd
@@ -116,13 +124,16 @@ func newTransferJobsAddCmd() *cobra.Command {
 		Use:   "add <source cluster url> <source cluster token> <destination organization id> <dataspaceID[,dataspaceID]*>",
 		Short: "Add jobs",
 		Args:  cobra.ExactArgs(4),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
-			jobs, err := client.Transfer().AddTransferJob(args[0], args[1], args[2], strings.Split(args[3], ","), maximumParallelDownloads, setTargetAsNewMaster)
-			exitOnError(cmd, err, "error creating transfer job")
-			cmd.Println(jobs)
-		},
+			job, err := client.Transfer().AddTransferJob(args[0], args[1], args[2], strings.Split(args[3], ","), maximumParallelDownloads, setTargetAsNewMaster)
+			if err != nil {
+				return nil, fmt.Errorf("error adding transfer jobs: %w", err)
+			}
+
+			return job, nil
+		}),
 	}
 
 	cmd.Flags().BoolVar(&setTargetAsNewMaster, "set-as-new-master", false, "Configures the source cluster to proxy ingest to the new cluster when segments have been transferred.")
@@ -136,14 +147,16 @@ func newTransferJobsCancelCmd() *cobra.Command {
 		Use:   "cancel <transfer job id>",
 		Short: "Cancel an ongoing transfer job",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			job, err := client.Transfer().CancelTransferJob(args[0])
-			exitOnError(cmd, err, "error cancelling transfer job")
+			if err != nil {
+				return nil, fmt.Errorf("error cancelling transfer jobs: %w", err)
+			}
 
-			cmd.Println(job)
-		},
+			return job, nil
+		}),
 	}
 
 	return cmd
@@ -154,14 +167,16 @@ func newTransferJobsStatusCmd() *cobra.Command {
 		Use:   "status <transfer job id>",
 		Short: "Get status of an ongoing transfer job",
 		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: WrapRun(func(cmd *cobra.Command, args []string) (humioResultType, error) {
 			client := NewApiClient(cmd)
 
 			job, err := client.Transfer().GetTransferJobStatus(args[0])
-			exitOnError(cmd, err, "error getting status of transfer job")
+			if err != nil {
+				return nil, fmt.Errorf("error getting transfer jobs status: %w", err)
+			}
 
-			cmd.Println(job)
-		},
+			return job, nil
+		}),
 	}
 
 	return cmd
