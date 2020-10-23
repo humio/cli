@@ -5,10 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/shurcooL/graphql"
@@ -204,6 +206,7 @@ func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView 
 func createTempZipFromFolder(baseFolder string) (string, error) {
 	tempDir := os.TempDir()
 	zipFile, err := ioutil.TempFile(tempDir, "humio-package.*.zip")
+	defer zipFile.Close()
 
 	if err != nil {
 		return "", err
@@ -223,10 +226,13 @@ func createZipFromFolder(baseFolder string, outFile *os.File) error {
 	w := zip.NewWriter(outFile)
 
 	// Add some files to the archive.
-	addFiles(w, baseFolder, "")
+	err := addFiles(w, baseFolder, "")
+	if err != nil {
+		return err
+	}
 
 	// Make sure to check the error on Close.
-	err := w.Close()
+	err = w.Close()
 	if err != nil {
 		return err
 	}
@@ -234,40 +240,47 @@ func createZipFromFolder(baseFolder string, outFile *os.File) error {
 }
 
 func isValidFolderOrFile(name string) bool {
-	return strings.HasPrefix(name, "_") || strings.HasPrefix(name, ".")
+	return !strings.HasPrefix(name, "_") && !strings.HasPrefix(name, ".")
 }
 
-func addFiles(w *zip.Writer, basePath string, baseInZip string) {
+func addFiles(w *zip.Writer, basePath string, baseInZip string) error {
 	// Open the Directory
 	files, err := ioutil.ReadDir(basePath)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	for _, file := range files {
-		if isValidFolderOrFile(file.Name()) {
-			return // Ignore unwanted files and directories
+		if !isValidFolderOrFile(file.Name()) {
+			continue
 		}
 
 		if !file.IsDir() {
-			dat, err := ioutil.ReadFile(path.Join(basePath, file.Name()))
+			src, err := os.Open(filepath.Join(basePath, file.Name()))
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 
 			// Add some files to the archive.
-			f, err := w.Create(path.Join(baseInZip, file.Name()))
+			dst, err := w.Create(path.Join(baseInZip, file.Name()))
 			if err != nil {
-				fmt.Println(err)
+				_ = src.Close()
+				return err
 			}
-			_, err = f.Write(dat)
+			_, err = io.Copy(dst, src)
+			_ = src.Close()
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 		} else if file.IsDir() {
 			// Drill down
 			newBase := path.Join(basePath, file.Name())
-			addFiles(w, newBase, path.Join(baseInZip, file.Name()))
+			err := addFiles(w, newBase, path.Join(baseInZip, file.Name()))
+			if err != nil {
+				return err
+			}
 		}
 	}
+
+	return nil
 }
