@@ -264,6 +264,7 @@ func addFiles(w *zip.Writer, basePath string, baseInZip string) error {
 			// Add some files to the archive.
 			dst, err := w.Create(path.Join(baseInZip, file.Name()))
 			if err != nil {
+				_ = src.Close()
 				return err
 			}
 			_, err = io.Copy(dst, src)
