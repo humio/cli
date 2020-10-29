@@ -28,7 +28,7 @@ import (
 
 func validatePackageCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "validate [flags] <repo-or-view-name> <package-dir>",
+		Use:   "validate [flags] <repo-or-view-name> <package-dir-or-zip>",
 		Short: "Validate a package's content.",
 		Long: `
 Packages can be validated from a directory or Zip File. You must specify the
