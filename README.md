@@ -6,7 +6,7 @@
 [![Release Status](https://github.com/humio/cli/workflows/goreleaser/badge.svg)](https://github.com/humio/cli/actions?query=workflow%3Agoreleaser)
 [![Go Report Card](https://goreportcard.com/badge/github.com/humio/cli)](https://goreportcard.com/report/github.com/humio/cli)
 
-A CLI for managing and sending data to Humio.
+A CLI for managing and searching in Humio from the command line. The CLI also has limited support for ingesting data, but it no substitude for a dedicated log shipper like FileBeat.
 
 _This repository also contains Humio GoLang API client you can
 use to build your own tools._
