@@ -31,7 +31,16 @@ func installPackageCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "install [flags] <repo-or-view-name> <path-to-package-dir>",
 		Short: "Installs a package.",
-		Args:  cobra.ExactArgs(2),
+		Long: `
+Packages can be installed from a directory, Github Repository URL, Zip File, or
+Zip File URL.
+
+  $ humioctl packages install myrepo /path/to/package/dir/
+  $ humioctl packages install myrepo /path/to/pazkage.zip
+  $ humioctl packages install myrepo https://github.com/org/mypackage-name
+  $ humioctl packages install myrepo https://content.example.com/mypackage-name.zip
+`,
+		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 			repoOrView := args[0]

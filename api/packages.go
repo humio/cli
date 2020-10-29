@@ -50,10 +50,31 @@ type InstalledPackage struct {
 	AvailableUpdate string
 }
 
+func isDirectory(path string) (bool, error) {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return false, err
+	}
+	return fileInfo.IsDir(), err
+}
+
 // Validate checks a package declaration validity against a Humio
 // server.
 func (p *Packages) Validate(viewName string, absDiretoryPath string) (*ValidationResponse, error) {
-	zipFilePath, err := createTempZipFromFolder(absDiretoryPath)
+	var zipFilePath string
+	var err error
+
+	isDir, err := isDirectory(absDiretoryPath)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if isDir {
+		zipFilePath, err = createTempZipFromFolder(absDiretoryPath)
+	} else {
+		zipFilePath = absDiretoryPath
+	}
 
 	if err != nil {
 		return nil, err
