@@ -27,7 +27,7 @@ import (
 func archivePackageCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "archive [flags] <package-dir> <output-file>",
-		Short: " Create a zip containing the content of a package directory.",
+		Short: "Create a zip containing the content of a package directory.",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			out := prompt.NewPrompt(cmd.OutOrStdout())
