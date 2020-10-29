@@ -30,7 +30,14 @@ func validatePackageCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "validate [flags] <repo-or-view-name> <package-dir>",
 		Short: "Validate a package's content.",
-		Args:  cobra.ExactArgs(2),
+		Long: `
+Packages can be validated from a directory or Zip File. You must specify the
+repository or view to validate the package against.
+
+  $ humioctl packages validate myrepo /path/to/package/dir/
+  $ humioctl packages validate myrepo /path/to/pazkage.zip
+`,
+		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			out := prompt.NewPrompt(cmd.OutOrStdout())
 
