@@ -60,20 +60,20 @@ func isDirectory(path string) (bool, error) {
 
 // Validate checks a package declaration validity against a Humio
 // server.
-func (p *Packages) Validate(viewName string, absDiretoryPath string) (*ValidationResponse, error) {
+func (p *Packages) Validate(viewName string, absPath string) (*ValidationResponse, error) {
 	var zipFilePath string
 	var err error
 
-	isDir, err := isDirectory(absDiretoryPath)
+	isDir, err := isDirectory(absPath)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if isDir {
-		zipFilePath, err = createTempZipFromFolder(absDiretoryPath)
+		zipFilePath, err = createTempZipFromFolder(absPath)
 	} else {
-		zipFilePath = absDiretoryPath
+		zipFilePath = absPath
 	}
 
 	if err != nil {
