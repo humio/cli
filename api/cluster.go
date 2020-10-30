@@ -221,3 +221,27 @@ func (n *ClusterNodes) Unregister(nodeID int64, force bool) error {
 
 	return graphqlErr
 }
+
+func (c *Clusters) SuggestedIngestPartitions() ([]IngestPartitionInput, error) {
+	var q struct {
+		Cluster struct {
+			SuggestedIngestPartitions []IngestPartitionInput `graphql:"suggestedIngestPartitions"`
+		} `graphql:"cluster"`
+	}
+
+	err := c.client.Query(&q, nil)
+
+	return q.Cluster.SuggestedIngestPartitions, err
+}
+
+func (c *Clusters) SuggestedStoragePartitions() ([]StoragePartitionInput, error) {
+	var q struct {
+		Cluster struct {
+			SuggestedStoragePartitions []StoragePartitionInput `graphql:"suggestedStoragePartitions"`
+		} `graphql:"cluster"`
+	}
+
+	err := c.client.Query(&q, nil)
+
+	return q.Cluster.SuggestedStoragePartitions, err
+}
