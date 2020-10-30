@@ -19,17 +19,22 @@ type headerTransport struct {
 // NewHTTPClientWithHeaders returns a *http.Client that attaches a defined set of Headers to all requests.
 // If specified, the client will also trust the CA certificate specified in the client configuration.
 func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Client {
+	dialContext := c.config.DialContext
+	if dialContext == nil {
+		dialContext = (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext
+	}
+
 	if c.config.Insecure {
 		// Return HTTP client where we skip certificate verification
 		return &http.Client{
 			Transport: &headerTransport{
 				base: &http.Transport{
-					Proxy: http.ProxyFromEnvironment,
-					DialContext: (&net.Dialer{
-						Timeout:   30 * time.Second,
-						KeepAlive: 30 * time.Second,
-						DualStack: true,
-					}).DialContext,
+					Proxy:                 http.ProxyFromEnvironment,
+					DialContext:           dialContext,
 					ForceAttemptHTTP2:     true,
 					MaxIdleConns:          100,
 					IdleConnTimeout:       90 * time.Second,
@@ -52,12 +57,8 @@ func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Clien
 		return &http.Client{
 			Transport: &headerTransport{
 				base: &http.Transport{
-					Proxy: http.ProxyFromEnvironment,
-					DialContext: (&net.Dialer{
-						Timeout:   30 * time.Second,
-						KeepAlive: 30 * time.Second,
-						DualStack: true,
-					}).DialContext,
+					Proxy:                 http.ProxyFromEnvironment,
+					DialContext:           dialContext,
 					ForceAttemptHTTP2:     true,
 					MaxIdleConns:          100,
 					IdleConnTimeout:       90 * time.Second,
@@ -77,7 +78,15 @@ func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Clien
 	// Return a regular default HTTP client
 	return &http.Client{
 		Transport: &headerTransport{
-			base:    http.DefaultTransport,
+			base: &http.Transport{
+				Proxy:                 http.ProxyFromEnvironment,
+				DialContext:           dialContext,
+				ForceAttemptHTTP2:     true,
+				MaxIdleConns:          100,
+				IdleConnTimeout:       90 * time.Second,
+				TLSHandshakeTimeout:   10 * time.Second,
+				ExpectContinueTimeout: 1 * time.Second,
+			},
 			headers: headers,
 		},
 	}

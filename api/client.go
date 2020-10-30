@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
 
@@ -21,6 +22,7 @@ type Config struct {
 	CACertificatePEM  string
 	Insecure          bool
 	ProxyOrganization string
+	DialContext       func(ctx context.Context, network, addr string) (net.Conn, error)
 }
 
 func DefaultConfig() Config {
@@ -43,6 +45,10 @@ func (c *Client) CACertificate() string {
 
 func (c *Client) Insecure() bool {
 	return c.config.Insecure
+}
+
+func (c *Client) Config() Config {
+	return c.config
 }
 
 func NewClient(config Config) *Client {
