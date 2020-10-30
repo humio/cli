@@ -10,9 +10,11 @@ import (
 )
 
 const NotifierTypeEmail = "EmailNotifier"
+const NotifierTypeHumioRepo = "HumioRepoNotifier"
 const NotifierTypeOpsGenie = "OpsGenieNotifier"
 const NotifierTypePagerDuty = "PagerDutyNotifier"
 const NotifierTypeSlack = "SlackNotifier"
+const NotifierTypeSlackPostMessage = "SlackPostMessageNotifier"
 const NotifierTypeVictorOps = "VictorOpsNotifier"
 const NotifierTypeWebHook = "WebHookNotifier"
 
