@@ -117,3 +117,23 @@ func (c *Views) Create(name, description string, connections map[string]string) 
 
 	return nil
 }
+
+func (c *Views) Delete(name, reason string) error {
+	var m struct {
+		deleteView struct {
+			Type string `graphql:"__typename"`
+		} `graphql:"deleteSearchDomain(name: $name, deleteMessage: $reason)"`
+	}
+	variables := map[string]interface{}{
+		"name":   graphql.String(name),
+		"reason": graphql.String(reason),
+	}
+
+	err := c.client.Mutate(&m, variables)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
