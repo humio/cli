@@ -32,6 +32,7 @@ func newViewsCmd() *cobra.Command {
 	cmd.AddCommand(newViewsShowCmd())
 	cmd.AddCommand(newViewsListCmd())
 	cmd.AddCommand(newViewsCreateCmd())
+	cmd.AddCommand(newViewsDeleteCmd())
 
 	return cmd
 }
