@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
@@ -81,4 +82,38 @@ func (c *Views) List() ([]ViewListItem, error) {
 	})
 
 	return q.View, graphqlErr
+}
+
+type ViewConnectionInput struct {
+	RepositoryName graphql.String
+	Filter graphql.String
+}
+
+func (c *Views) Create(name, description string, connections map[string]string) error {
+	var m struct {
+		CreateView struct {
+			Name string
+			Description string
+		} `graphql:"createView(name: $name, description: $description, connections: $connections)"`
+	}
+                                                                                                
+	viewConnections := make([]ViewConnectionInput, 1)
+	viewConnections[0] = ViewConnectionInput{
+		RepositoryName: "monitoring",
+		Filter:         "*",
+	}
+	variables := map[string]interface{} {
+		"name": graphql.String(name),
+		"description": graphql.String(description),
+		"connections": viewConnections,
+	}
+
+	graphqlErr := c.client.Mutate(&m, variables)
+
+	if graphqlErr != nil {
+		// The graphql error message is vague if the repo already exists, so add a hint.
+		return fmt.Errorf("%+v. Does the view already exist?", graphqlErr)
+	}
+
+	return nil
 }
