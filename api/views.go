@@ -142,3 +142,35 @@ func (c *Views) Delete(name, reason string) error {
 
 	return nil
 }
+
+func (c *Views) UpdateConnections(name string, connections map[string]string) error {
+	var m struct {
+		View struct {
+			Name    string
+		} `graphql:"updateView(viewName: $viewName, connections: $connections)"`
+	}
+
+	var viewConnections []ViewConnectionInput
+	for k, v := range connections {
+		viewConnections = append(
+			viewConnections,
+			ViewConnectionInput{
+				RepositoryName: graphql.String(k),
+				Filter: graphql.String(v),
+			})
+	}
+
+	variables := map[string]interface{} {
+		"viewName": graphql.String(name),
+		"connections": viewConnections,
+	}
+
+	graphqlErr := c.client.Mutate(&m, variables)
+
+	if graphqlErr != nil {
+		// The graphql error message is vague if the repo already exists, so add a hint.
+		return fmt.Errorf("%+v. Does the view already exist?", graphqlErr)
+	}
+
+	return nil
+}
