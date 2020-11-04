@@ -34,12 +34,13 @@ func newUsersCmd() *cobra.Command {
 	cmd.AddCommand(newUsersUpdateCmd())
 	cmd.AddCommand(newUsersListCmd())
 	cmd.AddCommand(newUsersShowCmd())
+	cmd.AddCommand(newUsersRotateApiTokenCmd())
 
 	return cmd
 }
 
 func formatSimpleAccount(account api.User) string {
-	columns := []string{account.Username, account.FullName, yesNo(account.IsRoot), account.CreatedAt}
+	columns := []string{account.Username, account.FullName, yesNo(account.IsRoot), account.CreatedAt, account.ID}
 	return strings.Join(columns, " | ")
 }
 
@@ -53,6 +54,7 @@ func printUserTable(cmd *cobra.Command, user api.User) {
 		{"Created At", user.CreatedAt},
 		{"Country Code", user.CountryCode},
 		{"Company", user.Company},
+		{"ID", user.ID},
 	}
 
 	w := tablewriter.NewWriter(cmd.OutOrStdout())

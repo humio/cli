@@ -12,6 +12,7 @@ type Repositories struct {
 }
 
 type Repository struct {
+	ID                     string
 	Name                   string
 	Description            string
 	RetentionDays          float64 `graphql:"timeBasedRetention"`
