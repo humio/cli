@@ -45,8 +45,8 @@ func newViewsCreateCmd() *cobra.Command {
 		},
 	}
 
-	c.Flags().StringToString("connection", connections, "Sets a repository connection with the chosen filter.")
-	c.Flags().String("description", description, "Sets an optional description")
+	c.Flags().StringToStringVar(&connections, "connection", connections, "Sets a repository connection with the chosen filter.")
+	c.Flags().StringVar(&description, "description", description, "Sets an optional description")
 
 	return c
 }

@@ -85,8 +85,8 @@ func (c *Views) List() ([]ViewListItem, error) {
 }
 
 type ViewConnectionInput struct {
-	RepositoryName graphql.String
-	Filter graphql.String
+	RepositoryName graphql.String `json:"repositoryName"`
+	Filter graphql.String `json:"filter"`
 }
 
 func (c *Views) Create(name, description string, connections map[string]string) error {
@@ -97,11 +97,17 @@ func (c *Views) Create(name, description string, connections map[string]string) 
 		} `graphql:"createView(name: $name, description: $description, connections: $connections)"`
 	}
                                                                                                 
-	viewConnections := make([]ViewConnectionInput, 1)
-	viewConnections[0] = ViewConnectionInput{
-		RepositoryName: "monitoring",
-		Filter:         "*",
+	viewConnections := make([]ViewConnectionInput, len(connections))
+	i := 0
+	for k, v := range connections {
+		viewConnections[i] = ViewConnectionInput{
+			RepositoryName: graphql.String(k),
+			Filter: graphql.String(v),
+		}
+
+		i++
 	}
+
 	variables := map[string]interface{} {
 		"name": graphql.String(name),
 		"description": graphql.String(description),
@@ -120,8 +126,8 @@ func (c *Views) Create(name, description string, connections map[string]string) 
 
 func (c *Views) Delete(name, reason string) error {
 	var m struct {
-		deleteView struct {
-			Type string `graphql:"__typename"`
+		DeleteSearchDomain struct {
+			ClientMutationId string
 		} `graphql:"deleteSearchDomain(name: $name, deleteMessage: $reason)"`
 	}
 	variables := map[string]interface{}{
