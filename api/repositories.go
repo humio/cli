@@ -88,8 +88,8 @@ func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error
 	}
 
 	var m struct {
-		CreateRepository struct {
-			Type string `graphql:"__typename"`
+		DeleteSearchDomain struct {
+			ClientMutationId string
 		} `graphql:"deleteSearchDomain(name: $name, deleteMessage: $reason)"`
 	}
 	variables := map[string]interface{}{
