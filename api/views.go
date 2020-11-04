@@ -97,15 +97,14 @@ func (c *Views) Create(name, description string, connections map[string]string) 
 		} `graphql:"createView(name: $name, description: $description, connections: $connections)"`
 	}
                                                                                                 
-	viewConnections := make([]ViewConnectionInput, len(connections))
-	i := 0
+	var viewConnections []ViewConnectionInput
 	for k, v := range connections {
-		viewConnections[i] = ViewConnectionInput{
-			RepositoryName: graphql.String(k),
-			Filter: graphql.String(v),
-		}
-
-		i++
+		viewConnections = append(
+			viewConnections,
+			ViewConnectionInput{
+				RepositoryName: graphql.String(k),
+				Filter: graphql.String(v),
+			})
 	}
 
 	variables := map[string]interface{} {
