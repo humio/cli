@@ -24,7 +24,7 @@ func newViewsCreateCmd() *cobra.Command {
 	description := ""
 
 	c := &cobra.Command{
-		Use:   "create",
+		Use:   "create <view-name>",
 		Short: "Create a view.",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
