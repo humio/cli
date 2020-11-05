@@ -30,9 +30,12 @@ func newUsersUpdateCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			username := args[0]
-
 			client := NewApiClient(cmd)
-			user, apiErr := client.Users().Update(username, api.UserChangeSet{
+
+			user, err := client.Users().Get(username)
+			exitOnError(cmd, err, "Error looking up user")
+
+			user, apiErr := client.Users().Update(user.ID, api.UserChangeSet{
 				IsRoot:      rootFlag.value,
 				FirstName:   firstNameFlag.value,
 				LastName:    lastNameFlag.value,
