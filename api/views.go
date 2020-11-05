@@ -168,7 +168,7 @@ func (c *Views) UpdateConnections(name string, connections map[string]string) er
 	graphqlErr := c.client.Mutate(&m, variables)
 
 	if graphqlErr != nil {
-		// The graphql error message is vague if the repo already exists, so add a hint.
+		// The graphql error message is vague if the view already exists, so add a hint.
 		return fmt.Errorf("%+v. Does the view already exist?", graphqlErr)
 	}
 
