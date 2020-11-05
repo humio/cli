@@ -82,3 +82,113 @@ func (c *Views) List() ([]ViewListItem, error) {
 
 	return q.View, graphqlErr
 }
+
+type ViewConnectionInput struct {
+	RepositoryName graphql.String `json:"repositoryName"`
+	Filter         graphql.String `json:"filter"`
+}
+
+func (c *Views) Create(name, description string, connections map[string]string) error {
+	var m struct {
+		CreateView struct {
+			Name        string
+			Description string
+		} `graphql:"createView(name: $name, description: $description, connections: $connections)"`
+	}
+
+	var viewConnections []ViewConnectionInput
+	for k, v := range connections {
+		viewConnections = append(
+			viewConnections,
+			ViewConnectionInput{
+				RepositoryName: graphql.String(k),
+				Filter:         graphql.String(v),
+			})
+	}
+
+	variables := map[string]interface{}{
+		"name":        graphql.String(name),
+		"description": graphql.String(description),
+		"connections": viewConnections,
+	}
+
+	err := c.client.Mutate(&m, variables)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Views) Delete(name, reason string) error {
+	var m struct {
+		DeleteSearchDomain struct {
+			ClientMutationId string
+		} `graphql:"deleteSearchDomain(name: $name, deleteMessage: $reason)"`
+	}
+	variables := map[string]interface{}{
+		"name":   graphql.String(name),
+		"reason": graphql.String(reason),
+	}
+
+	err := c.client.Mutate(&m, variables)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Views) UpdateConnections(name string, connections map[string]string) error {
+	var m struct {
+		View struct {
+			Name string
+		} `graphql:"updateView(viewName: $viewName, connections: $connections)"`
+	}
+
+	var viewConnections []ViewConnectionInput
+	for k, v := range connections {
+		viewConnections = append(
+			viewConnections,
+			ViewConnectionInput{
+				RepositoryName: graphql.String(k),
+				Filter:         graphql.String(v),
+			})
+	}
+
+	variables := map[string]interface{}{
+		"viewName":    graphql.String(name),
+		"connections": viewConnections,
+	}
+
+	err := c.client.Mutate(&m, variables)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Views) UpdateDescription(name string, description string) error {
+	var m struct {
+		UpdateDescriptionMutation struct {
+			ClientMutationId string
+		} `graphql:"updateDescriptionForSearchDomain(name: $name, newDescription: $description)"`
+	}
+
+	variables := map[string]interface{}{
+		"name":        graphql.String(name),
+		"description": graphql.String(description),
+	}
+
+	err := c.client.Mutate(&m, variables)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
