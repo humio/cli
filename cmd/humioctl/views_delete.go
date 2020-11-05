@@ -28,8 +28,7 @@ func newViewsDeleteCmd() *cobra.Command {
 			view := args[0]
 			reason := args[1]
 
-			fmt.Printf("View: '%s'", view)
-			fmt.Printf("Reason: '%s'", reason)
+			fmt.Printf("Deleting view %s with reason %q\n", view, reason)
 
 			client := NewApiClient(cmd)
 
