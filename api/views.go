@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 
@@ -113,11 +112,10 @@ func (c *Views) Create(name, description string, connections map[string]string) 
 		"connections": viewConnections,
 	}
 
-	graphqlErr := c.client.Mutate(&m, variables)
+	err := c.client.Mutate(&m, variables)
 
-	if graphqlErr != nil {
-		// The graphql error message is vague if the repo already exists, so add a hint.
-		return fmt.Errorf("%+v. Does the view already exist?", graphqlErr)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -165,11 +163,10 @@ func (c *Views) UpdateConnections(name string, connections map[string]string) er
 		"connections": viewConnections,
 	}
 
-	graphqlErr := c.client.Mutate(&m, variables)
+	err := c.client.Mutate(&m, variables)
 
-	if graphqlErr != nil {
-		// The graphql error message is vague if the view already exists, so add a hint.
-		return fmt.Errorf("%+v. Does the view already exist?", graphqlErr)
+	if err != nil {
+		return err
 	}
 
 	return nil
