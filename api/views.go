@@ -86,29 +86,29 @@ func (c *Views) List() ([]ViewListItem, error) {
 
 type ViewConnectionInput struct {
 	RepositoryName graphql.String `json:"repositoryName"`
-	Filter graphql.String `json:"filter"`
+	Filter         graphql.String `json:"filter"`
 }
 
 func (c *Views) Create(name, description string, connections map[string]string) error {
 	var m struct {
 		CreateView struct {
-			Name string
+			Name        string
 			Description string
 		} `graphql:"createView(name: $name, description: $description, connections: $connections)"`
 	}
-                                                                                                
+
 	var viewConnections []ViewConnectionInput
 	for k, v := range connections {
 		viewConnections = append(
 			viewConnections,
 			ViewConnectionInput{
 				RepositoryName: graphql.String(k),
-				Filter: graphql.String(v),
+				Filter:         graphql.String(v),
 			})
 	}
 
-	variables := map[string]interface{} {
-		"name": graphql.String(name),
+	variables := map[string]interface{}{
+		"name":        graphql.String(name),
 		"description": graphql.String(description),
 		"connections": viewConnections,
 	}
@@ -146,7 +146,7 @@ func (c *Views) Delete(name, reason string) error {
 func (c *Views) UpdateConnections(name string, connections map[string]string) error {
 	var m struct {
 		View struct {
-			Name    string
+			Name string
 		} `graphql:"updateView(viewName: $viewName, connections: $connections)"`
 	}
 
@@ -156,12 +156,12 @@ func (c *Views) UpdateConnections(name string, connections map[string]string) er
 			viewConnections,
 			ViewConnectionInput{
 				RepositoryName: graphql.String(k),
-				Filter: graphql.String(v),
+				Filter:         graphql.String(v),
 			})
 	}
 
-	variables := map[string]interface{} {
-		"viewName": graphql.String(name),
+	variables := map[string]interface{}{
+		"viewName":    graphql.String(name),
 		"connections": viewConnections,
 	}
 
@@ -170,6 +170,27 @@ func (c *Views) UpdateConnections(name string, connections map[string]string) er
 	if graphqlErr != nil {
 		// The graphql error message is vague if the view already exists, so add a hint.
 		return fmt.Errorf("%+v. Does the view already exist?", graphqlErr)
+	}
+
+	return nil
+}
+
+func (c *Views) UpdateDescription(name string, description string) error {
+	var m struct {
+		UpdateDescriptionMutation struct {
+			ClientMutationId string
+		} `graphql:"updateDescriptionForSearchDomain(name: $name, newDescription: $description)"`
+	}
+
+	variables := map[string]interface{}{
+		"name":        graphql.String(name),
+		"description": graphql.String(description),
+	}
+
+	err := c.client.Mutate(&m, variables)
+
+	if err != nil {
+		return err
 	}
 
 	return nil

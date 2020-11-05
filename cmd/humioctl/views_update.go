@@ -16,11 +16,13 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
 func newViewsUpdateCmd() *cobra.Command {
-	connections := make(map[string] string)
+	connections := make(map[string]string)
+	description := ""
 
 	cmd := cobra.Command{
 		Use:   "update",
@@ -29,14 +31,21 @@ func newViewsUpdateCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			viewName := args[0]
 
-			if len(connections) == 0 {
-				exitOnError(cmd, fmt.Errorf("you must specify at least one connection flag"), "nothing specified to update")
+			if len(connections) == 0 && description == "" {
+				exitOnError(cmd, fmt.Errorf("you must specify at least one flag"), "nothing specified to update")
 			}
 
 			client := NewApiClient(cmd)
 
-			err := client.Views().UpdateConnections(viewName, connections)
-			exitOnError(cmd, err, "error updating view connections")
+			if len(connections) > 0 {
+				err := client.Views().UpdateConnections(viewName, connections)
+				exitOnError(cmd, err, "error updating view connections")
+			}
+
+			if description != "" {
+				err := client.Views().UpdateDescription(viewName, description)
+				exitOnError(cmd, err, "error updating view description")
+			}
 
 			view, apiErr := client.Views().Get(viewName)
 			exitOnError(cmd, apiErr, "error fetching view")
@@ -46,6 +55,7 @@ func newViewsUpdateCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringToStringVar(&connections, "connection", connections, "Sets a repository connection with the chosen filter.")
+	cmd.Flags().StringVar(&description, "description", description, "Sets the view description.")
 
 	return &cmd
 }
