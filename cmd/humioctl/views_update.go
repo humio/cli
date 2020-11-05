@@ -15,9 +15,8 @@
 package main
 
 import (
-"fmt"
-
-"github.com/spf13/cobra"
+	"fmt"
+	"github.com/spf13/cobra"
 )
 
 func newViewsUpdateCmd() *cobra.Command {
