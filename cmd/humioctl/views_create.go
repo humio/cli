@@ -34,7 +34,7 @@ func newViewsCreateCmd() *cobra.Command {
 
 			apiErr := client.Views().Create(viewName, description, connections)
 			exitOnError(cmd, apiErr, "Error creating view")
-			fmt.Println(fmt.Sprintf("Sucessfully created view %s", viewName))
+			fmt.Printf("Successfully created view %s\n", viewName)
 
 			view, apiErr := client.Views().Get(viewName)
 			exitOnError(cmd, apiErr, "error fetching view")
