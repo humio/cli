@@ -21,7 +21,6 @@ import (
 	"net/url"
 	"os"
 	"path"
-	"strconv"
 
 	"github.com/humio/cli/api"
 	homedir "github.com/mitchellh/go-homedir"
@@ -172,8 +171,8 @@ func initConfig() {
 		if caCertificateFile == "" {
 			viper.Set(viperkey.CACertificate, profile.caCertificate)
 		}
-		if insecure {
-			viper.Set(viperkey.Insecure, strconv.FormatBool(insecure))
+		if !insecure {
+			viper.Set(viperkey.Insecure, profile.insecure)
 		}
 	}
 
