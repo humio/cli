@@ -119,7 +119,7 @@ func (p *Parsers) Get(reposistoryName string, parserName string) (*Parser, error
 				SourceCode string
 				TestData   []string
 				TagFields  []string
-			} `graphql:"parser(id: $parserName)"`
+			} `graphql:"parser(name: $parserName)"`
 		} `graphql:"repository(name: $repositoryName)"`
 	}
 
@@ -164,7 +164,7 @@ func (p *Parsers) Export(reposistoryName string, parserName string) (string, err
 		Repository struct {
 			Parser struct {
 				YamlTemplate string
-			} `graphql:"parser(id: $parserName)"`
+			} `graphql:"parser(name: $parserName)"`
 		} `graphql:"repository(name: $repositoryName)"`
 	}
 
