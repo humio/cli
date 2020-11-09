@@ -60,7 +60,7 @@ func (p *Parsers) Remove(reposistoryName string, parserId string) error {
 
 	variables := map[string]interface{}{
 		"repositoryName": graphql.String(reposistoryName),
-		"id":           graphql.String(parserId),
+		"id":             graphql.String(parserId),
 	}
 
 	return p.client.Mutate(&mutation, variables)
@@ -124,7 +124,7 @@ func (p *Parsers) Get(reposistoryName string, parserId string) (*Parser, error) 
 	}
 
 	variables := map[string]interface{}{
-		"parserId":     graphql.String(parserId),
+		"parserId":       graphql.String(parserId),
 		"repositoryName": graphql.String(reposistoryName),
 	}
 
@@ -169,7 +169,7 @@ func (p *Parsers) Export(reposistoryName string, parserId string) (string, error
 	}
 
 	variables := map[string]interface{}{
-		"parserId":     graphql.String(parserId),
+		"parserId":       graphql.String(parserId),
 		"repositoryName": graphql.String(reposistoryName),
 	}
 
