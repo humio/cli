@@ -245,3 +245,27 @@ func (c *Clusters) SuggestedStoragePartitions() ([]StoragePartitionInput, error)
 
 	return q.Cluster.SuggestedStoragePartitions, err
 }
+
+func (c *Clusters) CurrentIngestPartitions() ([]IngestPartition, error) {
+	var q struct {
+		Cluster struct {
+			IngestPartitions []IngestPartition `graphql:"ingestPartitions"`
+		} `graphql:"cluster"`
+	}
+
+	err := c.client.Query(&q, nil)
+
+	return q.Cluster.IngestPartitions, err
+}
+
+func (c *Clusters) CurrentStoragePartitions() ([]StoragePartition, error) {
+	var q struct {
+		Cluster struct {
+			StoragePartitions []StoragePartition `graphql:"storagePartitions"`
+		} `graphql:"cluster"`
+	}
+
+	err := c.client.Query(&q, nil)
+
+	return q.Cluster.StoragePartitions, err
+}
