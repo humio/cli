@@ -9,7 +9,8 @@ import (
 func newTransferCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "transfer",
-		Short: "Cluster transfers",
+		Short: "Cluster transfers [Experimental]",
+		Hidden: true,
 	}
 
 	cmd.AddCommand(newTransferCreateManagedExportGroupCmd())
