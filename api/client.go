@@ -71,7 +71,7 @@ func (c *Client) headers() map[string]string {
 
 func (c *Client) newGraphQLClient() (*graphql.Client, error) {
 	httpClient := c.newHTTPClientWithHeaders(c.headers())
-	graphqlURL, err := c.Address().Parse("/graphql")
+	graphqlURL, err := c.Address().Parse(c.Address().EscapedPath()+"/graphql")
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path
 		body = bytes.NewReader(nil)
 	}
 
-	url, err := c.Address().Parse(path)
+	url, err := c.Address().Parse(c.Address().EscapedPath()+path)
 	if err != nil {
 		return nil, err
 	}
