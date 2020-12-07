@@ -41,6 +41,7 @@ func newReposCmd() *cobra.Command {
 func printRepoTable(cmd *cobra.Command, repo api.Repository) {
 
 	data := [][]string{
+		{"ID", repo.ID},
 		{"Name", repo.Name},
 		{"Description", repo.Description},
 		{"Space Used", ByteCountDecimal(repo.SpaceUsed)},
