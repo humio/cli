@@ -137,7 +137,7 @@ func (p *Packages) InstallArchive(viewName string, pathToZip string) (*Validatio
 	}
 	defer fileReader.Close()
 
-	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(viewName)
+	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(viewName) + "&overwrite=true"
 
 	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, ZIPContentType)
 
