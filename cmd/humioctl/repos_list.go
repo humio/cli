@@ -53,11 +53,11 @@ func newReposListCmd() *cobra.Command {
 
 			rows := make([][]string, len(repos))
 			for i, view := range repos {
-				rows[i] = []string{view.Name, ByteCountDecimal(view.SpaceUsed)}
+				rows[i] = []string{view.Name, ByteCountDecimal(view.SpaceUsed), view.ID}
 			}
 
 			w := tablewriter.NewWriter(cmd.OutOrStdout())
-			w.SetHeader([]string{"Name", "Space Used"})
+			w.SetHeader([]string{"Name", "Space Used", "ID"})
 			w.AppendBulk(rows)
 			w.SetBorder(false)
 
