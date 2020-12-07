@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/shurcooL/graphql"
 )
@@ -52,6 +53,10 @@ func (c *Client) Config() Config {
 }
 
 func NewClient(config Config) *Client {
+	if !strings.HasSuffix(config.Address.Path, "/") {
+		config.Address.Path = config.Address.Path + "/"
+	}
+
 	return &Client{
 		config: config,
 	}
@@ -71,7 +76,7 @@ func (c *Client) headers() map[string]string {
 
 func (c *Client) newGraphQLClient() (*graphql.Client, error) {
 	httpClient := c.newHTTPClientWithHeaders(c.headers())
-	graphqlURL, err := c.Address().Parse("/graphql")
+	graphqlURL, err := c.Address().Parse("graphql")
 	if err != nil {
 		return nil, err
 	}

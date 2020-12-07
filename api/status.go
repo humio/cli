@@ -17,7 +17,7 @@ func (s StatusResponse) IsDown() bool {
 }
 
 func (c *Client) Status() (*StatusResponse, error) {
-	resp, err := c.HTTPRequest(http.MethodGet, "/api/v1/status", nil)
+	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/status", nil)
 
 	if err != nil {
 		return nil, err

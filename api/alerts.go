@@ -34,7 +34,7 @@ type Alerts struct {
 func (c *Client) Alerts() *Alerts { return &Alerts{client: c} }
 
 func (a *Alerts) List(viewName string) ([]Alert, error) {
-	url := fmt.Sprintf("/api/v1/repositories/%s/alerts", viewName)
+	url := fmt.Sprintf("api/v1/repositories/%s/alerts", viewName)
 
 	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -55,7 +55,7 @@ func (a *Alerts) Update(viewName string, alert *Alert) (*Alert, error) {
 		return nil, fmt.Errorf("unable to convert alert to json string: %v", err)
 	}
 
-	url := fmt.Sprintf("/api/v1/repositories/%s/alerts/%s", viewName, existingID)
+	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, existingID)
 
 	res, postErr := a.client.HTTPRequest(http.MethodPut, url, bytes.NewBuffer(jsonStr))
 	if postErr != nil {
@@ -82,7 +82,7 @@ func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert
 		return nil, fmt.Errorf("unable to convert alert to json string: %v", err)
 	}
 
-	url := fmt.Sprintf("/api/v1/repositories/%s/alerts/", viewName)
+	url := fmt.Sprintf("api/v1/repositories/%s/alerts/", viewName)
 
 	res, err := a.client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(jsonStr))
 	if err != nil {
@@ -98,7 +98,7 @@ func (a *Alerts) Get(viewName, alertName string) (*Alert, error) {
 		return nil, fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, alertName)
 	}
 
-	url := fmt.Sprintf("/api/v1/repositories/%s/alerts/%s", viewName, alertID)
+	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, alertID)
 
 	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -114,7 +114,7 @@ func (a *Alerts) Delete(viewName, alertName string) error {
 		return fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, alertName)
 	}
 
-	url := fmt.Sprintf("/api/v1/repositories/%s/alerts/%s", viewName, alertID)
+	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, alertID)
 
 	res, err := a.client.HTTPRequest(http.MethodDelete, url, nil)
 	if err != nil {
