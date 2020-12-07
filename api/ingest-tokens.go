@@ -86,10 +86,15 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName s
 		} `graphql:"addIngestToken(repositoryName: $repositoryName, name: $tokenName, parser: $parserName)"`
 	}
 
+	var parserNameArg *graphql.String
+	if parserName != "" {
+		parserNameArg = graphql.NewString(graphql.String(parserName))
+	}
+
 	variables := map[string]interface{}{
 		"tokenName":      graphql.String(tokenName),
 		"repositoryName": graphql.String(repositoryName),
-		"parserName":     graphql.String(parserName),
+		"parserName":     parserNameArg,
 	}
 
 	err := i.client.Mutate(&mutation, variables)
