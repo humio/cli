@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -38,7 +37,7 @@ func (a *Alerts) List(viewName string) ([]Alert, error) {
 
 	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return []Alert{}, err
 	}
 
 	return a.unmarshalToAlertList(res)
@@ -57,9 +56,9 @@ func (a *Alerts) Update(viewName string, alert *Alert) (*Alert, error) {
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, existingID)
 
-	res, postErr := a.client.HTTPRequest(http.MethodPut, url, bytes.NewBuffer(jsonStr))
-	if postErr != nil {
-		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %v", viewName, alert.Name, postErr)
+	res, err := a.client.HTTPRequest(http.MethodPut, url, bytes.NewBuffer(jsonStr))
+	if err != nil {
+		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %v", viewName, alert.Name, err)
 	}
 	return a.unmarshalToAlert(res)
 }
@@ -118,7 +117,7 @@ func (a *Alerts) Delete(viewName, alertName string) error {
 
 	res, err := a.client.HTTPRequest(http.MethodDelete, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if err != nil || res.StatusCode != http.StatusNoContent {
@@ -141,29 +140,32 @@ func (a *Alerts) marshalToJSON(alert *Alert) ([]byte, error) {
 }
 
 func (a *Alerts) unmarshalToAlertList(res *http.Response) ([]Alert, error) {
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
+	var alertList []Alert
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return alertList, err
 	}
 
-	alertList := []Alert{}
-	jsonErr := json.Unmarshal(body, &alertList)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
+	err = json.Unmarshal(body, &alertList)
+	if err != nil {
+		return alertList, fmt.Errorf("error in json response: %v. response: %v", err, string(body))
 	}
+
 	return alertList, nil
 }
 
 func (a *Alerts) unmarshalToAlert(res *http.Response) (*Alert, error) {
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
+	var alert Alert
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return &alert, err
 	}
 
-	alert := Alert{}
-	jsonErr := json.Unmarshal(body, &alert)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
+	err = json.Unmarshal(body, &alert)
+	if err != nil {
+		return &alert, fmt.Errorf("error in json response: %v. response: %v", err, string(body))
 	}
 	return &alert, nil
 }

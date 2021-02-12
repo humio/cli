@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -36,28 +35,32 @@ func (n *Notifiers) List(viewName string) ([]Notifier, error) {
 
 	res, err := n.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return []Notifier{}, err
 	}
 
 	return n.unmarshalToNotifierList(res)
 }
 
 func (n *Notifiers) Update(viewName string, notifier *Notifier) (*Notifier, error) {
-	existingID, err := n.convertNotifierNameToID(viewName, notifier.Name)
-	if err != nil {
-		return nil, fmt.Errorf("could not convert notifier name to id: %v", err)
+	if notifier.ID == "" {
+		existingID, err := n.convertNotifierNameToID(viewName, notifier.Name)
+		if err != nil {
+			return nil, fmt.Errorf("could not convert notifier name to id: %v", err)
+		}
+		notifier.ID = existingID
 	}
+
 
 	jsonStr, err := n.marshalToJSON(notifier)
 	if err != nil {
 		return nil, fmt.Errorf("unable to convert notifier to json string: %v", err)
 	}
 
-	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", viewName, existingID)
+	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", viewName, notifier.ID)
 
 	res, err := n.client.HTTPRequest(http.MethodPut, url, bytes.NewBuffer(jsonStr))
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	return n.unmarshalToNotifier(res)
@@ -84,7 +87,7 @@ func (n *Notifiers) Add(viewName string, notifier *Notifier, force bool) (*Notif
 
 	res, err := n.client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(jsonStr))
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	return n.unmarshalToNotifier(res)
@@ -100,7 +103,7 @@ func (n *Notifiers) Get(viewName, notifierName string) (*Notifier, error) {
 
 	res, err := n.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	return n.unmarshalToNotifier(res)
@@ -111,7 +114,7 @@ func (n *Notifiers) GetByID(viewName, notifierID string) (*Notifier, error) {
 
 	res, err := n.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	return n.unmarshalToNotifier(res)
@@ -127,7 +130,7 @@ func (n *Notifiers) Delete(viewName, notifierName string) error {
 
 	res, err := n.client.HTTPRequest(http.MethodDelete, url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if err != nil || res.StatusCode != http.StatusNoContent {
@@ -145,30 +148,30 @@ func (n *Notifiers) marshalToJSON(notifier *Notifier) ([]byte, error) {
 }
 
 func (n *Notifiers) unmarshalToNotifierList(res *http.Response) ([]Notifier, error) {
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
+	notifiers := []Notifier{}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return notifiers, err
 	}
 
-	notifiers := []Notifier{}
-	jsonErr := json.Unmarshal(body, &notifiers)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
+	if err = json.Unmarshal(body, &notifiers); err != nil {
+		return notifiers, err
 	}
 	return notifiers, nil
 }
 
 func (n *Notifiers) unmarshalToNotifier(res *http.Response) (*Notifier, error) {
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
+	notifier := Notifier{}
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return &notifier, err
 	}
 
-	notifier := Notifier{}
-	jsonErr := json.Unmarshal(body, &notifier)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
+	if err = json.Unmarshal(body, &notifier); err != nil {
+		return &notifier, fmt.Errorf("error in json response: %v. response: %v", err, string(body))
 	}
+
 	return &notifier, nil
 }
 
