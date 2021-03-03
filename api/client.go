@@ -53,7 +53,7 @@ func (c *Client) Config() Config {
 }
 
 func NewClient(config Config) *Client {
-	if !strings.HasSuffix(config.Address.Path, "/") {
+	if config.Address != nil && !strings.HasSuffix(config.Address.Path, "/") {
 		config.Address.Path = config.Address.Path + "/"
 	}
 
