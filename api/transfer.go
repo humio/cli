@@ -84,9 +84,9 @@ type AddTransferJobResponse struct {
 	ID string
 }
 
-func (t *Transfer) AddTransferJob(sourceClusterURL string, sourceClusterToken string, destinationOrganizationID string, dataspaces []string, maximumParallelDownloads int, setTargetAsNewMaster bool) (AddTransferJobResponse, error) {
+func (t *Transfer) AddTransferJob(sourceClusterURL string, sourceClusterToken string, destinationOrganizationID string, dataspaces []string, maximumParallelDownloads int, setTargetAsNewMaster bool, onlyTransferDataspaces bool) (AddTransferJobResponse, error) {
 	var mutation struct {
-		AddTransferJob AddTransferJobResponse `graphql:"addTransferJob(input: {sourceClusterUrl: $sourceClusterUrl, sourceClusterToken: $sourceClusterToken, destinationOrganizationId: $destinationOrganizationId, dataspaces: $dataspaces, maximumParallelDownloads: $maximumParallelDownloads, setTargetClusterAsNewMaster: $setTargetClusterAsNewMaster})"`
+		AddTransferJob AddTransferJobResponse `graphql:"addTransferJob(input: {sourceClusterUrl: $sourceClusterUrl, sourceClusterToken: $sourceClusterToken, destinationOrganizationId: $destinationOrganizationId, dataspaces: $dataspaces, maximumParallelDownloads: $maximumParallelDownloads, setTargetClusterAsNewMaster: $setTargetClusterAsNewMaster, onlyTransferDataspaces: $onlyTransferDataspaces})"`
 	}
 
 	ds := make([]graphql.String, len(dataspaces))
@@ -100,6 +100,7 @@ func (t *Transfer) AddTransferJob(sourceClusterURL string, sourceClusterToken st
 		"destinationOrganizationId":   graphql.String(destinationOrganizationID),
 		"dataspaces":                  ds,
 		"setTargetClusterAsNewMaster": graphql.Boolean(setTargetAsNewMaster),
+		"onlyTransferDataspaces":      graphql.Boolean(onlyTransferDataspaces),
 	}
 
 	if maximumParallelDownloads > 0 {
