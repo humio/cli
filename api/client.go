@@ -63,8 +63,10 @@ func NewClient(config Config) *Client {
 }
 
 func (c *Client) headers() map[string]string {
-	headers := map[string]string{
-		"Authorization": fmt.Sprintf("Bearer %s", c.Token()),
+	headers := map[string]string{}
+
+	if c.Token() != "" {
+		headers["Authorization"] = fmt.Sprintf("Bearer %s", c.Token())
 	}
 
 	if c.config.ProxyOrganization != "" {
