@@ -223,6 +223,7 @@ func newApiClientE(cmd *cobra.Command, opts ...func(config *api.Config)) (*api.C
 	config.CACertificatePEM = viper.GetString(viperkey.CACertificate)
 	config.Insecure = viper.GetBool(viperkey.Insecure)
 	config.ProxyOrganization = viper.GetString(viperkey.ProxyOrganization)
+	config.UserAgent = fmt.Sprintf("humioctl/%s (%s on %s)", version, commit, date)
 
 	for _, opt := range opts {
 		opt(&config)
