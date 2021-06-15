@@ -13,12 +13,15 @@ import (
 	"github.com/shurcooL/graphql"
 )
 
+const defaultUserAgent = "Humio-go-client/unknown"
+
 type Client struct {
 	config Config
 }
 
 type Config struct {
 	Address           *url.URL
+	UserAgent         string
 	Token             string
 	CACertificatePEM  string
 	Insecure          bool
@@ -57,6 +60,10 @@ func NewClient(config Config) *Client {
 		config.Address.Path = config.Address.Path + "/"
 	}
 
+	if config.UserAgent == "" {
+		config.UserAgent = defaultUserAgent
+	}
+
 	return &Client{
 		config: config,
 	}
@@ -71,6 +78,10 @@ func (c *Client) headers() map[string]string {
 
 	if c.config.ProxyOrganization != "" {
 		headers["ProxyOrganization"] = c.config.ProxyOrganization
+	}
+
+	if c.config.UserAgent != "" {
+		headers["User-Agent"] = c.config.UserAgent
 	}
 
 	return headers
