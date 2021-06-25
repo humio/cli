@@ -115,7 +115,7 @@ func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
 	var q struct {
 		Repository struct {
 			InstalledPackages []InstalledPackage
-		} `graphql:"repository(name: $repositoryName)"`
+		} `graphql:"searchDomain(name: $repositoryName)"`
 	}
 
 	variables := map[string]interface{}{
