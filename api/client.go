@@ -17,6 +17,7 @@ const defaultUserAgent = "Humio-go-client/unknown"
 
 type Client struct {
 	config Config
+	httpTransport *http.Transport
 }
 
 type Config struct {
@@ -64,8 +65,11 @@ func NewClient(config Config) *Client {
 		config.UserAgent = defaultUserAgent
 	}
 
+	httpTransport := newHttpTransport(config)
+
 	return &Client{
 		config: config,
+		httpTransport: httpTransport,
 	}
 }
 

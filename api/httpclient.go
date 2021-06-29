@@ -16,10 +16,8 @@ type headerTransport struct {
 	headers map[string]string
 }
 
-// NewHTTPClientWithHeaders returns a *http.Client that attaches a defined set of Headers to all requests.
-// If specified, the client will also trust the CA certificate specified in the client configuration.
-func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Client {
-	dialContext := c.config.DialContext
+func newHttpTransport(config Config) *http.Transport {
+	dialContext := config.DialContext
 	if dialContext == nil {
 		dialContext = (&net.Dialer{
 			Timeout:   30 * time.Second,
@@ -28,65 +26,60 @@ func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Clien
 		}).DialContext
 	}
 
-	if c.config.Insecure {
-		// Return HTTP client where we skip certificate verification
-		return &http.Client{
-			Transport: &headerTransport{
-				base: &http.Transport{
-					Proxy:                 http.ProxyFromEnvironment,
-					DialContext:           dialContext,
-					ForceAttemptHTTP2:     true,
-					MaxIdleConns:          100,
-					IdleConnTimeout:       90 * time.Second,
-					TLSHandshakeTimeout:   10 * time.Second,
-					ExpectContinueTimeout: 1 * time.Second,
+	if config.Insecure {
+		// Return HTTP transport where we skip certificate verification
+		return &http.Transport{
+			Proxy:                 http.ProxyFromEnvironment,
+			DialContext:           dialContext,
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
 
-					TLSClientConfig: &tls.Config{
-						InsecureSkipVerify: c.config.Insecure,
-					},
-				},
-				headers: headers,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: config.Insecure,
 			},
 		}
 	}
 
-	if len(c.config.CACertificatePEM) > 0 {
-		// Create a certificate pool and return a HTTP client with the specified specified CA certificate.
+	if len(config.CACertificatePEM) > 0 {
+		// Create a certificate pool and return a HTTP transport with the specified specified CA certificate.
 		caCertPool := x509.NewCertPool()
-		caCertPool.AppendCertsFromPEM([]byte(c.config.CACertificatePEM))
-		return &http.Client{
-			Transport: &headerTransport{
-				base: &http.Transport{
-					Proxy:                 http.ProxyFromEnvironment,
-					DialContext:           dialContext,
-					ForceAttemptHTTP2:     true,
-					MaxIdleConns:          100,
-					IdleConnTimeout:       90 * time.Second,
-					TLSHandshakeTimeout:   10 * time.Second,
-					ExpectContinueTimeout: 1 * time.Second,
+		caCertPool.AppendCertsFromPEM([]byte(config.CACertificatePEM))
+		return &http.Transport{
+			Proxy:                 http.ProxyFromEnvironment,
+			DialContext:           dialContext,
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
 
-					TLSClientConfig: &tls.Config{
-						RootCAs:            caCertPool,
-						InsecureSkipVerify: c.config.Insecure,
-					},
-				},
-				headers: headers,
+			TLSClientConfig: &tls.Config{
+				RootCAs:            caCertPool,
+				InsecureSkipVerify: config.Insecure,
 			},
 		}
 	}
 
 	// Return a regular default HTTP client
+	return &http.Transport{
+		Proxy:                 http.ProxyFromEnvironment,
+		DialContext:           dialContext,
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+}
+
+// NewHTTPClientWithHeaders returns a *http.Client that attaches a defined set of Headers to all requests.
+func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Client {
 	return &http.Client{
 		Transport: &headerTransport{
-			base: &http.Transport{
-				Proxy:                 http.ProxyFromEnvironment,
-				DialContext:           dialContext,
-				ForceAttemptHTTP2:     true,
-				MaxIdleConns:          100,
-				IdleConnTimeout:       90 * time.Second,
-				TLSHandshakeTimeout:   10 * time.Second,
-				ExpectContinueTimeout: 1 * time.Second,
-			},
+			base:    c.httpTransport,
 			headers: headers,
 		},
 	}
