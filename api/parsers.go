@@ -1,8 +1,6 @@
 package api
 
 import (
-	"strings"
-
 	"github.com/shurcooL/graphql"
 )
 
@@ -13,10 +11,10 @@ type ParserTestCase struct {
 
 type Parser struct {
 	Name      string
-	Tests     []ParserTestCase `yaml:",omitempty"`
-	Example   string           `yaml:",omitempty"`
-	Script    string           `yaml:",flow"`
-	TagFields []string         `yaml:",omitempty"`
+	Tests     []string `yaml:",omitempty"`
+	Example   string   `yaml:",omitempty"`
+	Script    string   `yaml:",flow"`
+	TagFields []string `yaml:",omitempty"`
 }
 
 type Parsers struct {
@@ -80,34 +78,22 @@ func (p *Parsers) Add(reposistoryName string, parser *Parser, force bool) error 
 		tagFieldsGQL[i] = graphql.String(field)
 	}
 
+	testsGQL := make([]graphql.String, len(parser.Tests))
+
+	for i, field := range parser.Tests {
+		testsGQL[i] = graphql.String(field)
+	}
+
 	variables := map[string]interface{}{
 		"name":           graphql.String(parser.Name),
 		"sourceCode":     graphql.String(parser.Script),
 		"repositoryName": graphql.String(reposistoryName),
-		"testData":       testCasesToStrings(parser),
+		"testData":       testsGQL,
 		"tagFields":      tagFieldsGQL,
 		"force":          graphql.Boolean(force),
 	}
 
 	return p.client.Mutate(&mutation, variables)
-}
-
-func testCasesToStrings(parser *Parser) []graphql.String {
-
-	lines := strings.Split(parser.Example, "\n")
-
-	result := make([]graphql.String, 0)
-	for _, item := range parser.Tests {
-		result = append(result, graphql.String(item.Input))
-	}
-
-	for i, item := range lines {
-		if i != len(lines)-1 {
-			result = append(result, graphql.String(item))
-		}
-	}
-
-	return result
 }
 
 func (p *Parsers) Get(reposistoryName string, parserName string) (*Parser, error) {
@@ -134,7 +120,7 @@ func (p *Parsers) Get(reposistoryName string, parserName string) (*Parser, error
 	if graphqlErr == nil {
 		parser = Parser{
 			Name:      query.Repository.Parser.Name,
-			Tests:     mapTests(query.Repository.Parser.TestData, toTestCase),
+			Tests:     query.Repository.Parser.TestData,
 			Script:    query.Repository.Parser.SourceCode,
 			TagFields: query.Repository.Parser.TagFields,
 		}
@@ -143,22 +129,7 @@ func (p *Parsers) Get(reposistoryName string, parserName string) (*Parser, error
 	return &parser, graphqlErr
 }
 
-func mapTests(vs []string, f func(string) ParserTestCase) []ParserTestCase {
-	vsm := make([]ParserTestCase, len(vs))
-	for i, v := range vs {
-		vsm[i] = f(v)
-	}
-	return vsm
-}
-
-func toTestCase(line string) ParserTestCase {
-	return ParserTestCase{
-		Input:  line,
-		Output: map[string]string{},
-	}
-}
-
-func (p *Parsers) Export(reposistoryName string, parserName string) (string, error) {
+func (p *Parsers) Export(repositoryName string, parserName string) (string, error) {
 
 	var query struct {
 		Repository struct {
@@ -170,7 +141,7 @@ func (p *Parsers) Export(reposistoryName string, parserName string) (string, err
 
 	variables := map[string]interface{}{
 		"parserName":     graphql.String(parserName),
-		"repositoryName": graphql.String(reposistoryName),
+		"repositoryName": graphql.String(repositoryName),
 	}
 
 	graphqlErr := p.client.Query(&query, variables)
