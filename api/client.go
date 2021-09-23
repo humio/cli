@@ -57,6 +57,11 @@ func (c *Client) Config() Config {
 }
 
 func NewClient(config Config) *Client {
+	httpTransport := NewHttpTransport(config)
+	return NewClientWithTransport(config, httpTransport)
+}
+
+func NewClientWithTransport(config Config, httpTransport *http.Transport) *Client {
 	if config.Address != nil && !strings.HasSuffix(config.Address.Path, "/") {
 		config.Address.Path = config.Address.Path + "/"
 	}
@@ -64,8 +69,6 @@ func NewClient(config Config) *Client {
 	if config.UserAgent == "" {
 		config.UserAgent = defaultUserAgent
 	}
-
-	httpTransport := newHttpTransport(config)
 
 	return &Client{
 		config:        config,
