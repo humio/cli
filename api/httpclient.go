@@ -82,6 +82,7 @@ func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Clien
 			base:    c.httpTransport,
 			headers: headers,
 		},
+		Timeout: 30 * time.Second,
 	}
 }
 
