@@ -16,7 +16,7 @@ type headerTransport struct {
 	headers map[string]string
 }
 
-func newHttpTransport(config Config) *http.Transport {
+func NewHttpTransport(config Config) *http.Transport {
 	dialContext := config.DialContext
 	if dialContext == nil {
 		dialContext = (&net.Dialer{
@@ -82,6 +82,7 @@ func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Clien
 			base:    c.httpTransport,
 			headers: headers,
 		},
+		Timeout: 30 * time.Second,
 	}
 }
 
