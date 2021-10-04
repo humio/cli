@@ -38,8 +38,6 @@ func printLicenseInfo(cmd *cobra.Command, license api.License) {
 
 	var data [][]string
 
-	data = append(data, []string{"License Type", license.LicenseType()})
-
 	if onprem, ok := license.(api.OnPremLicense); ok {
 		data = append(data, []string{"License ID", onprem.ID})
 		data = append(data, []string{"Issued To", onprem.IssuedTo})
