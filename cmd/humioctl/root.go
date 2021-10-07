@@ -16,11 +16,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"path"
+
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 
 	"github.com/humio/cli/api"
 	homedir "github.com/mitchellh/go-homedir"
@@ -90,7 +91,7 @@ Common Management Commands:
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVarP(&profileFlag, "profile", "u", "", "Name of the config profile to use")
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "Config file (default is $HOME/.humio/config.yaml)")
-	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "The API token to user when talking to Humio. Overrides the value in your config file.")
+	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "The API token to use when talking to Humio. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().StringVar(&tokenFile, "token-file", "", "File path to a file containing the API token. Overrides the value in your config file and the value of --token.")
 	rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "", "The HTTP address of the Humio cluster. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().StringVar(&caCertificateFile, "ca-certificate-file", "", "File path to a file containing the CA certificate in PEM format. Overrides the value in your config file.")
