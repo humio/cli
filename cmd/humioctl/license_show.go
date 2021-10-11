@@ -15,6 +15,8 @@
 package main
 
 import (
+	"errors"
+	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 )
 
@@ -26,6 +28,10 @@ func newLicenseShowCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 			license, apiErr := client.Licenses().Get()
+			noLicense := api.OnPremLicense{}
+			if license == noLicense {
+				apiErr = errors.New("no license currently installed")
+			}
 			exitOnError(cmd, apiErr, "error fetching the license")
 			printLicenseInfo(cmd, license)
 			cmd.Println()

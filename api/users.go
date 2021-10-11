@@ -68,7 +68,7 @@ func (u *Users) Get(username string) (User, error) {
 
 func (u *Users) Update(username string, changeset UserChangeSet) (User, error) {
 	var mutation struct {
-		Result struct{ User User } `graphql:"updateUser(input: {username: $username, isRoot: $isRoot, fullName: $fullName, company: $company, countryCode: $countryCode, email: $email, picture: $picture})"`
+		Result struct{ User User } `graphql:"updateUser(input: {username: $username, company: $company, isRoot: $isRoot, fullName: $fullName, picture: $picture, email: $email, countryCode: $countryCode})"`
 	}
 
 	graphqlErr := u.client.Mutate(&mutation, userChangesetToVars(username, changeset))
@@ -78,12 +78,18 @@ func (u *Users) Update(username string, changeset UserChangeSet) (User, error) {
 
 func (u *Users) Add(username string, changeset UserChangeSet) (User, error) {
 	var mutation struct {
-		Result struct{ User User } `graphql:"addUser(input: {username: $username, isRoot: $isRoot, fullName: $fullName, company: $company, countryCode: $countryCode, email: $email, picture: $picture})"`
+		Result struct {
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
+		} `graphql:"addUserV2(input: {username: $username, company: $company, isRoot: $isRoot, fullName: $fullName, picture: $picture, email: $email, countryCode: $countryCode})"`
 	}
 
 	graphqlErr := u.client.Mutate(&mutation, userChangesetToVars(username, changeset))
+	if graphqlErr != nil {
+		return User{}, graphqlErr
+	}
 
-	return mutation.Result.User, graphqlErr
+	return u.Get(username)
 }
 
 func (u *Users) Remove(username string) (User, error) {

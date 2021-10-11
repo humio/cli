@@ -11,24 +11,6 @@ type Licenses struct {
 type License interface {
 	ExpiresAt() string
 	IssuedAt() string
-	LicenseType() string
-}
-
-type TrialLicense struct {
-	ExpiresAtVal string
-	IssuedAtVal  string
-}
-
-func (l TrialLicense) LicenseType() string {
-	return "trial"
-}
-
-func (l TrialLicense) IssuedAt() string {
-	return l.IssuedAtVal
-}
-
-func (l TrialLicense) ExpiresAt() string {
-	return l.ExpiresAtVal
 }
 
 type OnPremLicense struct {
@@ -45,10 +27,6 @@ func (l OnPremLicense) IssuedAt() string {
 
 func (l OnPremLicense) ExpiresAt() string {
 	return l.ExpiresAtVal
-}
-
-func (l OnPremLicense) LicenseType() string {
-	return "onprem"
 }
 
 func (c *Client) Licenses() *Licenses { return &Licenses{client: c} }
@@ -69,7 +47,7 @@ func (l *Licenses) Install(license string) error {
 
 func (l *Licenses) Get() (License, error) {
 	var query struct {
-		License struct {
+		InstalledLicense struct {
 			ExpiresAt string
 			IssuedAt  string
 			OnPrem    struct {
@@ -86,21 +64,11 @@ func (l *Licenses) Get() (License, error) {
 		return nil, err
 	}
 
-	var license License
-	if query.License.OnPrem.ID == "" {
-		license = TrialLicense{
-			ExpiresAtVal: query.License.ExpiresAt,
-			IssuedAtVal:  query.License.IssuedAt,
-		}
-	} else {
-		license = OnPremLicense{
-			ID:            query.License.OnPrem.ID,
-			ExpiresAtVal:  query.License.ExpiresAt,
-			IssuedAtVal:   query.License.IssuedAt,
-			IssuedTo:      query.License.OnPrem.Owner,
-			NumberOfSeats: query.License.OnPrem.MaxUsers,
-		}
-	}
-
-	return license, nil
+	return OnPremLicense{
+		ID:            query.InstalledLicense.OnPrem.ID,
+		ExpiresAtVal:  query.InstalledLicense.ExpiresAt,
+		IssuedAtVal:   query.InstalledLicense.IssuedAt,
+		IssuedTo:      query.InstalledLicense.OnPrem.Owner,
+		NumberOfSeats: query.InstalledLicense.OnPrem.MaxUsers,
+	}, nil
 }
