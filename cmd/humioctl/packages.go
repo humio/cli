@@ -21,7 +21,7 @@ import (
 func newPackagesCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "packages",
-		Short: "[BETA] Manage packages",
+		Short: "Manage packages",
 	}
 
 	cmd.AddCommand(validatePackageCmd())
