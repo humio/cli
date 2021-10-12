@@ -109,7 +109,8 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName s
 func (i *IngestTokens) Update(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
 	var mutation struct {
 		Result struct {
-			Type string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"assignIngestToken(repositoryName: $repositoryName, tokenName: $tokenName, parserName: $parserName)"`
 	}
 
@@ -130,7 +131,8 @@ func (i *IngestTokens) Update(repositoryName string, tokenName string, parserNam
 func (i *IngestTokens) Remove(repositoryName string, tokenName string) error {
 	var mutation struct {
 		Result struct {
-			Type string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"removeIngestToken(repositoryName: $repositoryName, name: $tokenName)"`
 	}
 

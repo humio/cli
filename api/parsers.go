@@ -52,7 +52,8 @@ func (p *Parsers) List(reposistoryName string) ([]ParserListItem, error) {
 func (p *Parsers) Remove(reposistoryName string, parserName string) error {
 	var mutation struct {
 		RemoveParser struct {
-			Type string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"removeParser(input: { name: $name, repositoryName: $repositoryName })"`
 	}
 
@@ -68,7 +69,8 @@ func (p *Parsers) Add(reposistoryName string, parser *Parser, force bool) error 
 
 	var mutation struct {
 		CreateParser struct {
-			Type string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"createParser(input: { name: $name, repositoryName: $repositoryName, testData: $testData, tagFields: $tagFields, sourceCode: $sourceCode, force: $force})"`
 	}
 

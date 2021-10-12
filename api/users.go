@@ -95,7 +95,6 @@ func (u *Users) Add(username string, changeset UserChangeSet) (User, error) {
 func (u *Users) Remove(username string) (User, error) {
 	var mutation struct {
 		Result struct {
-			// We have to make a selection, so just take __typename
 			User User
 		} `graphql:"removeUser(input: {username: $username})"`
 	}
