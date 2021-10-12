@@ -91,7 +91,8 @@ func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error
 
 	var m struct {
 		DeleteSearchDomain struct {
-			ClientMutationId string
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"deleteSearchDomain(name: $name, deleteMessage: $reason)"`
 	}
 	variables := map[string]interface{}{
@@ -143,7 +144,8 @@ func (r *Repositories) UpdateUserGroup(name, username string, groups ...DefaultG
 
 	var mutation struct {
 		UpdateDefaultGroupMembershipsMutation struct {
-			ClientMutationId string
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"updateDefaultGroupMemberships(input: {viewName: $name, userName: $username, groups: $groups})"`
 	}
 	variables := map[string]interface{}{
@@ -164,7 +166,8 @@ func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays flo
 
 	var m struct {
 		UpdateRetention struct {
-			Type string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"updateRetention(repositoryName: $name, timeBasedRetention: $retentionInDays)"`
 	}
 	variables := map[string]interface{}{
@@ -197,7 +200,8 @@ func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB floa
 
 	var m struct {
 		UpdateRetention struct {
-			Type string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"updateRetention(repositoryName: $name, storageSizeBasedRetention: $storageInGB)"`
 	}
 	variables := map[string]interface{}{
@@ -230,7 +234,8 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 
 	var m struct {
 		UpdateRetention struct {
-			Type string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"updateRetention(repositoryName: $name, ingestSizeBasedRetention: $ingestInGB)"`
 	}
 	variables := map[string]interface{}{
@@ -257,7 +262,8 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 func (r *Repositories) UpdateDescription(name, description string) error {
 	var m struct {
 		UpdateDescription struct {
-			Type string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"updateDescriptionForSearchDomain(name: $name, newDescription: $description)"`
 	}
 

@@ -43,7 +43,8 @@ func (f *Files) List(viewName string) ([]File, error) {
 func (f *Files) Delete(viewName string, fileName string) error {
 	var q struct {
 		RemoveFile struct {
-			TypeName string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"removeFile(name:$viewName, fileName: $fileName)"`
 	}
 

@@ -124,7 +124,8 @@ func (c *Views) Create(name, description string, connections map[string]string) 
 func (c *Views) Delete(name, reason string) error {
 	var m struct {
 		DeleteSearchDomain struct {
-			ClientMutationId string
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"deleteSearchDomain(name: $name, deleteMessage: $reason)"`
 	}
 	variables := map[string]interface{}{
@@ -175,7 +176,8 @@ func (c *Views) UpdateConnections(name string, connections map[string]string) er
 func (c *Views) UpdateDescription(name string, description string) error {
 	var m struct {
 		UpdateDescriptionMutation struct {
-			ClientMutationId string
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"updateDescriptionForSearchDomain(name: $name, newDescription: $description)"`
 	}
 

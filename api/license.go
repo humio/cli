@@ -35,7 +35,8 @@ func (l *Licenses) Install(license string) error {
 
 	var mutation struct {
 		UpdateLicenseKey struct {
-			Type string `graphql:"__typename"`
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"updateLicenseKey(license: $license)"`
 	}
 	variables := map[string]interface{}{
