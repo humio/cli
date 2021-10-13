@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"net/url"
 	"os"
 	"path"
@@ -146,7 +147,7 @@ func (p *Packages) InstallArchive(viewName string, pathToZip string) (*Validatio
 	}
 
 	if response.StatusCode >= 400 {
-		return nil, fmt.Errorf("Bad response. %s", response.Status)
+		return nil, detailedInstallationError(response)
 	}
 
 	var report ValidationResponse
@@ -158,6 +159,38 @@ func (p *Packages) InstallArchive(viewName string, pathToZip string) (*Validatio
 	}
 
 	return &report, nil
+}
+
+func detailedInstallationError(response *http.Response) error {
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(response.Body)
+
+	body, err := ioutil.ReadAll(response.Body) // response body is []byte
+
+	if err != nil {
+		return fmt.Errorf("the package could not be installed")
+	}
+
+	var result InstallationErrors
+	if err := json.Unmarshal(body, &result); err != nil {
+		return fmt.Errorf("the package could not be installed and the reason returned could not be parsed")
+	}
+
+	allErrors := append(result.ParseErrors, result.InstallationErrors...)
+
+	formattedErrors := make([]string, len(allErrors))
+	for i, v := range allErrors {
+		formattedErrors[i] = "\n    - " + v
+	}
+
+	return fmt.Errorf("%s", strings.Join(formattedErrors, ""))
+}
+
+type InstallationErrors struct {
+	InstallationErrors []string `json:"installationErrors"`
+	ParseErrors        []string `json:"parseErrors"`
+	ResponseType       string   `json:"responseType"`
 }
 
 type (
