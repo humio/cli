@@ -44,7 +44,7 @@ func archivePackageCmd() *cobra.Command {
 				dirPath += "/"
 			}
 
-			out.Info(fmt.Sprintf("Archiving Package in: %s", dirPath))
+			out.Info(fmt.Sprintf("Reading package in: %s", dirPath))
 
 			// Get the HTTP client
 			client := NewApiClient(cmd)
@@ -54,6 +54,12 @@ func archivePackageCmd() *cobra.Command {
 				out.Error(fmt.Sprintf("Errors creating archive: %s", createErr))
 				os.Exit(1)
 			}
+
+			absoluteOutPath, pathErr := filepath.Abs(outPath)
+			if pathErr != nil {
+				out.Error(fmt.Sprintf("Could not find path %s", outPath))
+			}
+			out.Info(fmt.Sprintf("Wrote archive to %s", absoluteOutPath))
 		},
 	}
 
