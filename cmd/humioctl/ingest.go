@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/humio/cli/shipper"
 	"io"
 	"log"
 	"os"
@@ -12,6 +11,8 @@ import (
 	"regexp"
 	"syscall"
 	"time"
+
+	"github.com/humio/cli/shipper"
 
 	"github.com/gofrs/uuid"
 	"github.com/hpcloud/tail"
@@ -241,7 +242,7 @@ has the same effect.`,
 	cmd.Flags().BoolVarP(&tailSeekToEnd, "tail-end", "E", false, "When used with --tail, start from the end of the file and follow it. Equivalent to 'tail -f -n0 <file>'")
 	cmd.Flags().StringVarP(&ingestToken, "ingest-token", "i", "", "Use the specified ingest token instead of the API token.")
 	cmd.Flags().BoolVarP(&openBrowser, "open", "o", false, "Open the browser with live tail of the stream.")
-	cmd.Flags().StringVarP(&label, "label", "l", "", "Adds a @label=<lavel> field to each event. This can help you find specific data send by the CLI when searching in the UI.")
+	cmd.Flags().StringVarP(&label, "label", "l", "", "Adds a @label=<label> field to each event. This can help you find specific data sent by the CLI when searching in the UI.")
 	cmd.Flags().BoolVarP(&noSession, "no-session", "n", false, "No @session field will be added to each event. @session assigns a new UUID to each executing of the Humio CLI.")
 	cmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Don't print ingested data to stdout.")
 	cmd.Flags().BoolVarP(&failOnError, "fail", "e", false, "Stop processing more input when sending events has failed (after the allowed number of retries).")
