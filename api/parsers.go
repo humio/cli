@@ -98,7 +98,7 @@ func (p *Parsers) Add(reposistoryName string, parser *Parser, force bool) error 
 	return p.client.Mutate(&mutation, variables)
 }
 
-func (p *Parsers) Get(reposistoryName string, parserName string) (*Parser, error) {
+func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error) {
 
 	var query struct {
 		Repository struct {
@@ -113,7 +113,7 @@ func (p *Parsers) Get(reposistoryName string, parserName string) (*Parser, error
 
 	variables := map[string]interface{}{
 		"parserName":     graphql.String(parserName),
-		"repositoryName": graphql.String(reposistoryName),
+		"repositoryName": graphql.String(repositoryName),
 	}
 
 	graphqlErr := p.client.Query(&query, variables)
