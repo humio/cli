@@ -35,7 +35,7 @@ func newIngestTokensShowCmd() *cobra.Command {
 			ingestToken, err := client.IngestTokens().Get(repo, name)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching ingest-token: %s", err)
+				return fmt.Errorf("error fetching ingest-token: %s", err)
 			}
 
 			var output []string

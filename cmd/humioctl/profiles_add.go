@@ -205,7 +205,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 
 		if status.IsDown() {
 			cmd.Println(prompt.Colorize("[[red]Failed[reset]]"))
-			cmd.Println(fmt.Errorf("The server reported that it is malfunctioning, status: %s", status.Status))
+			cmd.Println(fmt.Errorf("the server reported that it is malfunctioning, status: %s", status.Status))
 			os.Exit(1)
 		} else {
 			cmd.Println(prompt.Colorize("[[green]Ok[reset]]"))
@@ -226,7 +226,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		open.Start(fmt.Sprintf("%ssettings", addr))
 
 		out.Output()
-		out.Description(fmt.Sprintf("If the browser did not open, you can manually visit:"))
+		out.Description("If the browser did not open, you can manually visit:")
 		out.Description(fmt.Sprintf("%ssettings", addr))
 		out.Output()
 	}

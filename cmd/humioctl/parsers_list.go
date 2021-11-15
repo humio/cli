@@ -34,7 +34,7 @@ func newParsersListCmd() *cobra.Command {
 			parsers, err := client.Parsers().List(repo)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching parsers: %s", err)
+				return fmt.Errorf("error fetching parsers: %s", err)
 			}
 
 			var output []string

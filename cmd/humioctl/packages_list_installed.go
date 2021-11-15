@@ -34,7 +34,7 @@ func listInstalledPackagesCmd() *cobra.Command {
 			installedPackages, err := client.Packages().ListInstalled(viewName)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching packages: %s", err)
+				return fmt.Errorf("error fetching packages: %s", err)
 			}
 
 			var output []string

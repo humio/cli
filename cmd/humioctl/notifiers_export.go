@@ -43,20 +43,20 @@ func newNotifiersExportCmd() *cobra.Command {
 
 			notifier, apiErr := client.Notifiers().Get(view, notifierName)
 			if apiErr != nil {
-				cmd.Println(fmt.Errorf("Error fetching notifier: %s", apiErr))
+				cmd.Println(fmt.Errorf("error fetching notifier: %s", apiErr))
 				os.Exit(1)
 			}
 
 			yamlData, yamlErr := yaml.Marshal(&notifier)
 			if yamlErr != nil {
-				cmd.Println(fmt.Errorf("Failed to serialize the notifier: %s", yamlErr))
+				cmd.Println(fmt.Errorf("failed to serialize the notifier: %s", yamlErr))
 				os.Exit(1)
 			}
 			outFilePath := outputName + ".yaml"
 
 			writeErr := ioutil.WriteFile(outFilePath, yamlData, 0644)
 			if writeErr != nil {
-				cmd.Println(fmt.Errorf("Error saving the notifier file: %s", writeErr))
+				cmd.Println(fmt.Errorf("error saving the notifier file: %s", writeErr))
 				os.Exit(1)
 			}
 		},

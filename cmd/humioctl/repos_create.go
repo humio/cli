@@ -32,7 +32,7 @@ func newReposCreateCmd() *cobra.Command {
 
 			apiErr := client.Repositories().Create(repoName)
 			exitOnError(cmd, apiErr, "error creating repository")
-			fmt.Println(fmt.Sprintf("Sucessfully created repo %s", repoName))
+			fmt.Printf("Sucessfully created repo %s\n", repoName)
 
 			repo, apiErr := client.Repositories().Get(repoName)
 			exitOnError(cmd, apiErr, "error fetching repository")

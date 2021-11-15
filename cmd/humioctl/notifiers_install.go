@@ -60,7 +60,7 @@ Use the --force flag to update existing parsers with conflicting names.
 					os.Exit(1)
 				}
 			} else if l := len(args); l != 2 {
-				cmd.Println(fmt.Errorf("This command takes one argument: <view>"))
+				cmd.Println(fmt.Errorf("this command takes one argument: <view>"))
 				os.Exit(1)
 			}
 			exitOnError(cmd, readErr, "Failed to load the notifier")

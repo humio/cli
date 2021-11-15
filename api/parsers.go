@@ -10,6 +10,7 @@ type ParserTestCase struct {
 }
 
 type Parser struct {
+	Id        string
 	Name      string
 	Tests     []string `yaml:",omitempty"`
 	Example   string   `yaml:",omitempty"`
@@ -28,7 +29,7 @@ type ParserListItem struct {
 	IsBuiltIn bool
 }
 
-func (p *Parsers) List(reposistoryName string) ([]ParserListItem, error) {
+func (p *Parsers) List(repositoryName string) ([]ParserListItem, error) {
 	var q struct {
 		Repository struct {
 			Parsers []ParserListItem
@@ -36,7 +37,7 @@ func (p *Parsers) List(reposistoryName string) ([]ParserListItem, error) {
 	}
 
 	variables := map[string]interface{}{
-		"repositoryName": graphql.String(reposistoryName),
+		"repositoryName": graphql.String(repositoryName),
 	}
 
 	graphqlErr := p.client.Query(&q, variables)
@@ -49,7 +50,7 @@ func (p *Parsers) List(reposistoryName string) ([]ParserListItem, error) {
 	return parsers, graphqlErr
 }
 
-func (p *Parsers) Remove(reposistoryName string, parserName string) error {
+func (p *Parsers) Remove(repositoryName string, parserName string) error {
 	var mutation struct {
 		RemoveParser struct {
 			// We have to make a selection, so just take __typename
@@ -58,14 +59,14 @@ func (p *Parsers) Remove(reposistoryName string, parserName string) error {
 	}
 
 	variables := map[string]interface{}{
-		"repositoryName": graphql.String(reposistoryName),
+		"repositoryName": graphql.String(repositoryName),
 		"name":           graphql.String(parserName),
 	}
 
 	return p.client.Mutate(&mutation, variables)
 }
 
-func (p *Parsers) Add(reposistoryName string, parser *Parser, force bool) error {
+func (p *Parsers) Add(repositoryName string, parser *Parser, force bool) error {
 
 	var mutation struct {
 		CreateParser struct {
@@ -89,7 +90,7 @@ func (p *Parsers) Add(reposistoryName string, parser *Parser, force bool) error 
 	variables := map[string]interface{}{
 		"name":           graphql.String(parser.Name),
 		"sourceCode":     graphql.String(parser.Script),
-		"repositoryName": graphql.String(reposistoryName),
+		"repositoryName": graphql.String(repositoryName),
 		"testData":       testsGQL,
 		"tagFields":      tagFieldsGQL,
 		"force":          graphql.Boolean(force),

@@ -73,7 +73,7 @@ Use the --force flag to update existing parsers with conflicting names.
 					os.Exit(1)
 				}
 			} else if l := len(args); l != 2 {
-				cmd.Println(fmt.Errorf("This command takes one or two arguments: <repo> [parser]"))
+				cmd.Println(fmt.Errorf("this command takes one or two arguments: <repo> [parser]"))
 				os.Exit(1)
 			} else {
 				parserName := args[1]
@@ -93,9 +93,9 @@ Use the --force flag to update existing parsers with conflicting names.
 			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			reposistoryName := args[0]
+			repositoryName := args[0]
 
-			installErr := client.Parsers().Add(reposistoryName, &parser, force)
+			installErr := client.Parsers().Add(repositoryName, &parser, force)
 			exitOnError(cmd, installErr, "error installing parser")
 		},
 	}

@@ -43,20 +43,20 @@ func newAlertsExportCmd() *cobra.Command {
 
 			alert, apiErr := client.Alerts().Get(view, alertName)
 			if apiErr != nil {
-				cmd.Println(fmt.Errorf("Error fetching alert: %s", apiErr))
+				cmd.Println(fmt.Errorf("error fetching alert: %s", apiErr))
 				os.Exit(1)
 			}
 
 			yamlData, yamlErr := yaml.Marshal(&alert)
 			if yamlErr != nil {
-				cmd.Println(fmt.Errorf("Failed to serialize the alert: %s", yamlErr))
+				cmd.Println(fmt.Errorf("failed to serialize the alert: %s", yamlErr))
 				os.Exit(1)
 			}
 			outFilePath := outputName + ".yaml"
 
 			writeErr := ioutil.WriteFile(outFilePath, yamlData, 0644)
 			if writeErr != nil {
-				cmd.Println(fmt.Errorf("Error saving the alert file: %s", writeErr))
+				cmd.Println(fmt.Errorf("error saving the alert file: %s", writeErr))
 				os.Exit(1)
 			}
 		},

@@ -65,7 +65,7 @@ Common Management Commands:
 		Run: func(cmd *cobra.Command, args []string) {
 
 			if printVersion {
-				fmt.Println(fmt.Sprintf("humioctl %s (%s on %s)", version, commit, date))
+				fmt.Printf("humioctl %s (%s on %s)\n", version, commit, date)
 				os.Exit(0)
 			}
 
@@ -181,7 +181,7 @@ func initConfig() {
 	if tokenFile != "" {
 		tokenFileContent, tokenFileErr := ioutil.ReadFile(tokenFile)
 		if tokenFileErr != nil {
-			fmt.Println(fmt.Sprintf("error loading token file: %s", tokenFileErr))
+			fmt.Printf("error loading token file: %s\n", tokenFileErr)
 			os.Exit(1)
 		}
 		viper.Set(viperkey.Token, string(tokenFileContent))
@@ -190,7 +190,7 @@ func initConfig() {
 	if caCertificateFile != "" {
 		caCertificateFileContent, caCertificateFileErr := ioutil.ReadFile(caCertificateFile)
 		if caCertificateFileErr != nil {
-			fmt.Println(fmt.Sprintf("error loading CA certificate file: %s", caCertificateFileErr))
+			fmt.Printf("error loading CA certificate file: %s\n", caCertificateFileErr)
 			os.Exit(1)
 		}
 		viper.Set(viperkey.CACertificate, string(caCertificateFileContent))
@@ -205,7 +205,7 @@ func NewApiClient(cmd *cobra.Command, opts ...func(config *api.Config)) *api.Cli
 	client, err := newApiClientE(cmd, opts...)
 
 	if err != nil {
-		fmt.Println(fmt.Errorf("Error creating HTTP client: %s", err))
+		fmt.Println(fmt.Errorf("error creating HTTP client: %s", err))
 		os.Exit(1)
 	}
 

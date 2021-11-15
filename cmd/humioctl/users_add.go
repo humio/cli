@@ -47,7 +47,7 @@ func newUsersAddCmd() *cobra.Command {
 			})
 
 			if err != nil {
-				cmd.Println(fmt.Errorf("Error creating the user: %s", err))
+				cmd.Println(fmt.Errorf("error creating the user: %s", err))
 				os.Exit(1)
 			}
 

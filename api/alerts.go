@@ -70,7 +70,7 @@ func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert
 	}
 
 	if nameAlreadyInUse {
-		if updateExisting == false {
+		if !updateExisting {
 			return nil, fmt.Errorf("alert with name %s already exists", alert.Name)
 		}
 		return a.Update(viewName, alert)

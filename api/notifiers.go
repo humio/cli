@@ -50,7 +50,6 @@ func (n *Notifiers) Update(viewName string, notifier *Notifier) (*Notifier, erro
 		notifier.ID = existingID
 	}
 
-
 	jsonStr, err := n.marshalToJSON(notifier)
 	if err != nil {
 		return nil, fmt.Errorf("unable to convert notifier to json string: %v", err)
@@ -72,7 +71,7 @@ func (n *Notifiers) Add(viewName string, notifier *Notifier, force bool) (*Notif
 		return nil, fmt.Errorf("could not determine if notifier name is in use: %v", err)
 	}
 	if nameAlreadyInUse {
-		if force == false {
+		if !force {
 			return nil, fmt.Errorf("notifier with name %s already exists", notifier.Name)
 		}
 		return n.Update(viewName, notifier)

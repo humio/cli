@@ -97,7 +97,7 @@ func (p *Packages) Validate(viewName string, absPath string) (*ValidationRespons
 	}
 
 	if response.StatusCode >= 400 {
-		return nil, fmt.Errorf("Bad response. %s", response.Status)
+		return nil, fmt.Errorf("bad response. %s", response.Status)
 	}
 
 	var report ValidationResponse
@@ -260,11 +260,10 @@ func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView 
 func createTempZipFromFolder(baseFolder string) (string, error) {
 	tempDir := os.TempDir()
 	zipFile, err := ioutil.TempFile(tempDir, "humio-package.*.zip")
-	defer zipFile.Close()
-
 	if err != nil {
 		return "", err
 	}
+	defer zipFile.Close()
 
 	err = createZipFromFolder(baseFolder, zipFile)
 
