@@ -102,7 +102,7 @@ func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error)
 
 	var query struct {
 		Repository struct {
-			Parser struct {
+			Parser *struct {
 				Name       string
 				SourceCode string
 				TestData   []string
@@ -117,25 +117,30 @@ func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error)
 	}
 
 	graphqlErr := p.client.Query(&query, variables)
-
-	var parser Parser
-	if graphqlErr == nil {
-		parser = Parser{
-			Name:      query.Repository.Parser.Name,
-			Tests:     query.Repository.Parser.TestData,
-			Script:    query.Repository.Parser.SourceCode,
-			TagFields: query.Repository.Parser.TagFields,
-		}
+	if graphqlErr != nil {
+		return nil, graphqlErr
 	}
 
-	return &parser, graphqlErr
+	if query.Repository.Parser == nil {
+		return nil, ParserNotFound(parserName)
+	}
+
+	parser := Parser{
+		Name:      query.Repository.Parser.Name,
+		Tests:     query.Repository.Parser.TestData,
+		Script:    query.Repository.Parser.SourceCode,
+		TagFields: query.Repository.Parser.TagFields,
+	}
+
+	return &parser, nil
 }
 
 func (p *Parsers) Export(repositoryName string, parserName string) (string, error) {
 
 	var query struct {
 		Repository struct {
-			Parser struct {
+			Parser *struct {
+				Name         string
 				YamlTemplate string
 			} `graphql:"parser(name: $parserName)"`
 		} `graphql:"repository(name: $repositoryName)"`
@@ -150,6 +155,10 @@ func (p *Parsers) Export(repositoryName string, parserName string) (string, erro
 
 	if graphqlErr != nil {
 		return "", graphqlErr
+	}
+
+	if query.Repository.Parser == nil {
+		return "", ParserNotFound(parserName)
 	}
 
 	return query.Repository.Parser.YamlTemplate, nil
