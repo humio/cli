@@ -223,17 +223,17 @@ __humio_convert_bash_to_zsh() {
 	-e "s/\\\$(type${RWORD}/\$(__humio_type/g" \
 	<<'BASH_COMPLETION_EOF'
 `
-	out.Write([]byte(zshInitialization))
+	_, _ = out.Write([]byte(zshInitialization))
 
 	buf := new(bytes.Buffer)
-	cmd.Root().GenBashCompletion(buf)
-	out.Write(buf.Bytes())
+	_ = cmd.Root().GenBashCompletion(buf)
+	_, _ = out.Write(buf.Bytes())
 
 	zshTail := `
 BASH_COMPLETION_EOF
 }
 __humio_bash_source <(__humio_convert_bash_to_zsh)
 `
-	out.Write([]byte(zshTail))
+	_, _ = out.Write([]byte(zshTail))
 	return nil
 }

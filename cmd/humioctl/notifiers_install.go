@@ -88,10 +88,12 @@ Use the --force flag to update existing parsers with conflicting names.
 }
 
 func getNotifierFromFile(filePath string) ([]byte, error) {
+	// #nosec G304
 	return ioutil.ReadFile(filePath)
 }
 
 func getURLNotifier(url string) ([]byte, error) {
+	// #nosec G107
 	response, err := http.Get(url)
 
 	if err != nil {

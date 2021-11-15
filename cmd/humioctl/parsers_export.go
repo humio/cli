@@ -48,7 +48,7 @@ func newParsersExportCmd() *cobra.Command {
 
 			outFilePath := outputName + ".yaml"
 
-			writeErr := ioutil.WriteFile(outFilePath, []byte(yamlData), 0644)
+			writeErr := ioutil.WriteFile(outFilePath, []byte(yamlData), 0600)
 			if writeErr != nil {
 				cmd.Println(fmt.Errorf("error saving the parser file: %s", writeErr))
 				os.Exit(1)

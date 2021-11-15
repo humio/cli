@@ -109,6 +109,7 @@ Use the --force flag to update existing parsers with conflicting names.
 }
 
 func getParserFromFile(filePath string) ([]byte, error) {
+	// #nosec G304
 	return ioutil.ReadFile(filePath)
 }
 
@@ -118,6 +119,7 @@ func getGithubParser(parserName string) ([]byte, error) {
 }
 
 func getURLParser(url string) ([]byte, error) {
+	// #nosec G107
 	response, err := http.Get(url)
 
 	if err != nil {

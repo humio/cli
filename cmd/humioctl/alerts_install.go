@@ -90,10 +90,12 @@ Use the --force flag to update existing alerts with conflicting names.
 }
 
 func getAlertFromFile(filePath string) ([]byte, error) {
+	// #nosec G304
 	return ioutil.ReadFile(filePath)
 }
 
 func getURLAlert(url string) ([]byte, error) {
+	// #nosec G107
 	response, err := http.Get(url)
 
 	if err != nil {

@@ -83,11 +83,13 @@ func (p *Packages) Validate(viewName string, absPath string) (*ValidationRespons
 
 	urlPath := "api/v1/packages/analyze?view=" + url.QueryEscape(viewName)
 
+	// #nosec G304
 	fileReader, openErr := os.Open(zipFilePath)
 
 	if openErr != nil {
 		return nil, openErr
 	}
+	// #nosec G307
 	defer fileReader.Close()
 
 	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, ZIPContentType)
@@ -130,12 +132,13 @@ func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
 
 // InstallArchive installs a local package (zip file).
 func (p *Packages) InstallArchive(viewName string, pathToZip string) (*ValidationResponse, error) {
-
+	// #nosec G304
 	fileReader, openErr := os.Open(pathToZip)
 
 	if openErr != nil {
 		return nil, openErr
 	}
+	// #nosec G307
 	defer fileReader.Close()
 
 	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(viewName) + "&overwrite=true"
@@ -228,6 +231,7 @@ func (p *Packages) CreateArchive(packageDirPath string, targetFileName string) e
 	if err != nil {
 		return err
 	}
+	// #nosec G307
 	defer outFile.Close()
 
 	return createZipFromFolder(packageDirPath, outFile)
@@ -241,12 +245,14 @@ func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView 
 		return nil, err
 	}
 
+	// #nosec G304
 	zipFile, err := os.Open(zipFilePath)
 
 	if err != nil {
 		return nil, err
 	}
 
+	// #nosec G307
 	defer zipFile.Close()
 	defer os.Remove(zipFile.Name())
 
@@ -263,6 +269,7 @@ func createTempZipFromFolder(baseFolder string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	// #nosec G307
 	defer zipFile.Close()
 
 	err = createZipFromFolder(baseFolder, zipFile)
@@ -309,6 +316,7 @@ func addFiles(w *zip.Writer, basePath string, baseInZip string) error {
 		}
 
 		if !file.IsDir() {
+			// #nosec G304
 			src, err := os.Open(filepath.Join(basePath, file.Name()))
 			if err != nil {
 				return err

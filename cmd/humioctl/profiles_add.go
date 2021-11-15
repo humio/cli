@@ -155,6 +155,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 				exitOnError(cmd, err, "error reading Humio CA certificate file path")
 				if caCertificateFilePath != "" {
 					// Read the file
+					// #nosec G304
 					caCertContent, err := ioutil.ReadFile(caCertificateFilePath)
 					exitOnError(cmd, err, "error reading Humio CA certificate file path")
 					block, _ := pem.Decode(caCertContent)
@@ -223,7 +224,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 	out.Output()
 
 	if out.Confirm("Would you like us to open a browser on the account page?") {
-		open.Start(fmt.Sprintf("%ssettings", addr))
+		_ = open.Start(fmt.Sprintf("%ssettings", addr))
 
 		out.Output()
 		out.Description("If the browser did not open, you can manually visit:")

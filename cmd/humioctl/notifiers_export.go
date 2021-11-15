@@ -54,7 +54,7 @@ func newNotifiersExportCmd() *cobra.Command {
 			}
 			outFilePath := outputName + ".yaml"
 
-			writeErr := ioutil.WriteFile(outFilePath, yamlData, 0644)
+			writeErr := ioutil.WriteFile(outFilePath, yamlData, 0600)
 			if writeErr != nil {
 				cmd.Println(fmt.Errorf("error saving the notifier file: %s", writeErr))
 				os.Exit(1)

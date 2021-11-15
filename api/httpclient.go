@@ -37,6 +37,7 @@ func NewHttpTransport(config Config) *http.Transport {
 			TLSHandshakeTimeout:   10 * time.Second,
 			ExpectContinueTimeout: 1 * time.Second,
 
+			// #nosec G402
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: config.Insecure,
 			},
@@ -56,6 +57,7 @@ func NewHttpTransport(config Config) *http.Transport {
 			TLSHandshakeTimeout:   10 * time.Second,
 			ExpectContinueTimeout: 1 * time.Second,
 
+			// #nosec G402
 			TLSClientConfig: &tls.Config{
 				RootCAs:            caCertPool,
 				InsecureSkipVerify: config.Insecure,
