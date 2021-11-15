@@ -15,7 +15,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -35,7 +34,7 @@ func newLicenseInstallCmd() *cobra.Command {
 				// #nosec G304
 				licenseBytes, readErr := ioutil.ReadFile(filepath)
 				if readErr != nil {
-					cmd.Println(fmt.Errorf("error reading license file: %s", readErr))
+					cmd.Printf("Error reading license file: %s\n", readErr)
 					os.Exit(1)
 				}
 

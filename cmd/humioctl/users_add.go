@@ -15,7 +15,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/humio/cli/api"
@@ -47,7 +46,7 @@ func newUsersAddCmd() *cobra.Command {
 			})
 
 			if err != nil {
-				cmd.Println(fmt.Errorf("error creating the user: %s", err))
+				cmd.Printf("Error creating the user: %s\n", err)
 				os.Exit(1)
 			}
 

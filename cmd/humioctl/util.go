@@ -25,7 +25,7 @@ func SetVersion(v, c, d string) {
 
 func exitOnError(cmd *cobra.Command, err error, message string) {
 	if err != nil {
-		cmd.Println(fmt.Errorf(message+": %s", err))
+		cmd.Printf(message+": %s\n", err)
 		os.Exit(1)
 	}
 }

@@ -15,7 +15,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -69,11 +68,11 @@ Use the --force flag to update existing parsers with conflicting names.
 				} else if url != "" {
 					content, readErr = getURLParser(url)
 				} else {
-					cmd.Println(fmt.Errorf("if you only provide repo you must specify --file or --url"))
+					cmd.Printf("If you only provide repo you must specify --file or --url\n")
 					os.Exit(1)
 				}
 			} else if l := len(args); l != 2 {
-				cmd.Println(fmt.Errorf("this command takes one or two arguments: <repo> [parser]"))
+				cmd.Printf("This command takes one or two arguments: <repo> [parser]\n")
 				os.Exit(1)
 			} else {
 				parserName := args[1]

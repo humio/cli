@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"os"
 
@@ -46,7 +45,7 @@ func newWelcomeCmd() *cobra.Command {
 			cmd.Println(prompt.Colorize("==> Writing settings to: [purple]" + configFile + "[reset]"))
 
 			if saveErr := saveConfig(); saveErr != nil {
-				cmd.Println(fmt.Errorf("error saving config: %s", saveErr))
+				cmd.Printf("Error saving config: %s\n", saveErr)
 				os.Exit(1)
 			}
 
