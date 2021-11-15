@@ -20,9 +20,10 @@ jobs:
         version: latest
         args: build --rm-dist --snapshot
     - name: Run Gosec Security Scanner
-      uses: securego/gosec@master
-      with:
-        args: ./...
+      run: |
+        export PATH=$PATH:$(go env GOPATH)/bin
+        go get github.com/securego/gosec/cmd/gosec
+        gosec ./...
     - name: Run Staticcheck
       uses: dominikh/staticcheck-action@v1.1.0
       with:
