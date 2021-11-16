@@ -35,7 +35,7 @@ func newAlertsListCmd() *cobra.Command {
 			alerts, err := client.Alerts().List(view)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching alerts: %s", err)
+				return fmt.Errorf("error fetching alerts: %s", err)
 			}
 
 			var output []string

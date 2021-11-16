@@ -15,7 +15,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -36,7 +35,7 @@ func newAlertsRemoveCmd() *cobra.Command {
 
 			err := client.Alerts().Delete(view, name)
 			if err != nil {
-				cmd.Println(fmt.Errorf("error removing ingest token: %s", err))
+				cmd.Printf("Error removing ingest token: %s\n", err)
 				os.Exit(1)
 			}
 

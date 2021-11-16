@@ -34,7 +34,7 @@ func newNotifiersListCmd() *cobra.Command {
 			notifiers, err := client.Notifiers().List(view)
 
 			if err != nil {
-				return fmt.Errorf("Error fetching notifiers: %s", err)
+				return fmt.Errorf("error fetching notifiers: %s", err)
 			}
 
 			var output []string

@@ -36,7 +36,7 @@ func newIngestTokensListCmd() *cobra.Command {
 			tokens, err := client.IngestTokens().List(repo)
 
 			if err != nil {
-				cmd.Println(fmt.Errorf("Error fetching token list: %s", err))
+				cmd.Printf("Error fetching token list: %s\n", err)
 				os.Exit(1)
 			}
 

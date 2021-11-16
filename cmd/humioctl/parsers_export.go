@@ -15,7 +15,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -42,15 +41,15 @@ func newParsersExportCmd() *cobra.Command {
 
 			yamlData, apiErr := client.Parsers().Export(repo, parserName)
 			if apiErr != nil {
-				cmd.Println(fmt.Errorf("Error fetching parsers: %s", apiErr))
+				cmd.Printf("Error fetching parsers: %s\n", apiErr)
 				os.Exit(1)
 			}
 
 			outFilePath := outputName + ".yaml"
 
-			writeErr := ioutil.WriteFile(outFilePath, []byte(yamlData), 0644)
+			writeErr := ioutil.WriteFile(outFilePath, []byte(yamlData), 0600)
 			if writeErr != nil {
-				cmd.Println(fmt.Errorf("Error saving the parser file: %s", writeErr))
+				cmd.Printf("Error saving the parser file: %s\n", writeErr)
 				os.Exit(1)
 			}
 		},

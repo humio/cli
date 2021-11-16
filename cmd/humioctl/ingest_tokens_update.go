@@ -45,7 +45,7 @@ If parser is not specified, the ingest token will not be associated with a parse
 			token, err := client.IngestTokens().Update(repositoryName, tokenName, parserName)
 
 			if err != nil {
-				return fmt.Errorf("Error updating ingest token: %s", err)
+				return fmt.Errorf("error updating ingest token: %s", err)
 			}
 
 			var output []string

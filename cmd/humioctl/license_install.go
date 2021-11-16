@@ -15,7 +15,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -32,9 +31,10 @@ func newLicenseInstallCmd() *cobra.Command {
 			if len(args) == 1 {
 				filepath := args[0]
 
+				// #nosec G304
 				licenseBytes, readErr := ioutil.ReadFile(filepath)
 				if readErr != nil {
-					cmd.Println(fmt.Errorf("error reading license file: %s", readErr))
+					cmd.Printf("Error reading license file: %s\n", readErr)
 					os.Exit(1)
 				}
 
@@ -43,7 +43,7 @@ func newLicenseInstallCmd() *cobra.Command {
 				// License set from flag
 			} else {
 				cmd.Println("Expected either an argument <filename> or flag --license=<license>.")
-				cmd.Help()
+				_ = cmd.Help()
 				os.Exit(1)
 			}
 

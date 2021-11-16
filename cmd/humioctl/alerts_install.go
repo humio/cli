@@ -15,7 +15,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -56,11 +55,11 @@ Use the --force flag to update existing alerts with conflicting names.
 				} else if url != "" {
 					content, readErr = getURLAlert(url)
 				} else {
-					cmd.Println(fmt.Errorf("you must specify a path using --file or --url"))
+					cmd.Printf("You must specify a path using --file or --url\n")
 					os.Exit(1)
 				}
 			} else if l := len(args); l != 2 {
-				cmd.Println(fmt.Errorf("This command takes one argument: <view>"))
+				cmd.Printf("This command takes one argument: <view>\n")
 				os.Exit(1)
 			}
 			exitOnError(cmd, readErr, "Failed to load the alert")
@@ -90,10 +89,12 @@ Use the --force flag to update existing alerts with conflicting names.
 }
 
 func getAlertFromFile(filePath string) ([]byte, error) {
+	// #nosec G304
 	return ioutil.ReadFile(filePath)
 }
 
 func getURLAlert(url string) ([]byte, error) {
+	// #nosec G107
 	response, err := http.Get(url)
 
 	if err != nil {

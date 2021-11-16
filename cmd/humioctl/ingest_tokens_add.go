@@ -43,7 +43,7 @@ use the assigned parser at ingest time.`,
 			token, err := client.IngestTokens().Add(repo, name, parserName)
 
 			if err != nil {
-				return fmt.Errorf("Error adding ingest token: %s", err)
+				return fmt.Errorf("error adding ingest token: %s", err)
 			}
 
 			var output []string

@@ -155,6 +155,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 				exitOnError(cmd, err, "error reading Humio CA certificate file path")
 				if caCertificateFilePath != "" {
 					// Read the file
+					// #nosec G304
 					caCertContent, err := ioutil.ReadFile(caCertificateFilePath)
 					exitOnError(cmd, err, "error reading Humio CA certificate file path")
 					block, _ := pem.Decode(caCertContent)
@@ -205,7 +206,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 
 		if status.IsDown() {
 			cmd.Println(prompt.Colorize("[[red]Failed[reset]]"))
-			cmd.Println(fmt.Errorf("The server reported that it is malfunctioning, status: %s", status.Status))
+			cmd.Printf("The server reported that it is malfunctioning, status: %s\n", status.Status)
 			os.Exit(1)
 		} else {
 			cmd.Println(prompt.Colorize("[[green]Ok[reset]]"))
@@ -223,10 +224,10 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 	out.Output()
 
 	if out.Confirm("Would you like us to open a browser on the account page?") {
-		open.Start(fmt.Sprintf("%ssettings", addr))
+		_ = open.Start(fmt.Sprintf("%ssettings", addr))
 
 		out.Output()
-		out.Description(fmt.Sprintf("If the browser did not open, you can manually visit:"))
+		out.Description("If the browser did not open, you can manually visit:")
 		out.Description(fmt.Sprintf("%ssettings", addr))
 		out.Output()
 	}

@@ -108,6 +108,7 @@ func getURLPackage(url string) (*os.File, error) {
 	}
 
 	zipBallURL := url + "/zipball/master/"
+	// #nosec G107
 	response, err := http.Get(zipBallURL)
 
 	if err != nil {

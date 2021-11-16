@@ -65,7 +65,7 @@ Common Management Commands:
 		Run: func(cmd *cobra.Command, args []string) {
 
 			if printVersion {
-				fmt.Println(fmt.Sprintf("humioctl %s (%s on %s)", version, commit, date))
+				fmt.Printf("humioctl %s (%s on %s)\n", version, commit, date)
 				os.Exit(0)
 			}
 
@@ -98,12 +98,12 @@ Common Management Commands:
 	rootCmd.PersistentFlags().BoolVar(&insecure, "insecure", false, "By default, all encrypted connections will verify that the hostname in the TLS certificate matches the name from the URL. Set this to true to ignore hostname validation.")
 	rootCmd.PersistentFlags().StringVar(&proxyOrganization, "proxy-organization", "", "Commands are executed in the specified organization.")
 
-	viper.BindPFlag(viperkey.Address, rootCmd.PersistentFlags().Lookup("address"))
-	viper.BindPFlag(viperkey.Token, rootCmd.PersistentFlags().Lookup("token"))
-	viper.BindPFlag(viperkey.TokenFile, rootCmd.PersistentFlags().Lookup("token-file"))
-	viper.BindPFlag(viperkey.CACertificateFile, rootCmd.PersistentFlags().Lookup("ca-certificate-file"))
-	viper.BindPFlag(viperkey.Insecure, rootCmd.PersistentFlags().Lookup("insecure"))
-	viper.BindPFlag(viperkey.ProxyOrganization, rootCmd.PersistentFlags().Lookup("proxy-organization"))
+	_ = viper.BindPFlag(viperkey.Address, rootCmd.PersistentFlags().Lookup("address"))
+	_ = viper.BindPFlag(viperkey.Token, rootCmd.PersistentFlags().Lookup("token"))
+	_ = viper.BindPFlag(viperkey.TokenFile, rootCmd.PersistentFlags().Lookup("token-file"))
+	_ = viper.BindPFlag(viperkey.CACertificateFile, rootCmd.PersistentFlags().Lookup("ca-certificate-file"))
+	_ = viper.BindPFlag(viperkey.Insecure, rootCmd.PersistentFlags().Lookup("insecure"))
+	_ = viper.BindPFlag(viperkey.ProxyOrganization, rootCmd.PersistentFlags().Lookup("proxy-organization"))
 
 	rootCmd.Flags().BoolVarP(&printVersion, "version", "v", false, "Print the client version")
 
@@ -153,7 +153,7 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	viper.ReadInConfig()
+	_ = viper.ReadInConfig()
 
 	// If the user has specified a profile flag, load it.
 	if profileFlag != "" {
@@ -179,18 +179,20 @@ func initConfig() {
 	}
 
 	if tokenFile != "" {
+		// #nosec G304
 		tokenFileContent, tokenFileErr := ioutil.ReadFile(tokenFile)
 		if tokenFileErr != nil {
-			fmt.Println(fmt.Sprintf("error loading token file: %s", tokenFileErr))
+			fmt.Printf("error loading token file: %s\n", tokenFileErr)
 			os.Exit(1)
 		}
 		viper.Set(viperkey.Token, string(tokenFileContent))
 	}
 
 	if caCertificateFile != "" {
+		// #nosec G304
 		caCertificateFileContent, caCertificateFileErr := ioutil.ReadFile(caCertificateFile)
 		if caCertificateFileErr != nil {
-			fmt.Println(fmt.Sprintf("error loading CA certificate file: %s", caCertificateFileErr))
+			fmt.Printf("error loading CA certificate file: %s\n", caCertificateFileErr)
 			os.Exit(1)
 		}
 		viper.Set(viperkey.CACertificate, string(caCertificateFileContent))
@@ -205,7 +207,7 @@ func NewApiClient(cmd *cobra.Command, opts ...func(config *api.Config)) *api.Cli
 	client, err := newApiClientE(cmd, opts...)
 
 	if err != nil {
-		fmt.Println(fmt.Errorf("Error creating HTTP client: %s", err))
+		fmt.Println(fmt.Errorf("error creating HTTP client: %s", err))
 		os.Exit(1)
 	}
 

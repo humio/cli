@@ -220,7 +220,7 @@ type queryJobPoller struct {
 
 func (q *queryJobPoller) WaitAndPollContext(ctx context.Context) (api.QueryResult, error) {
 	select {
-	case <-time.After(q.nextPoll.Sub(time.Now())):
+	case <-time.After(time.Until(q.nextPoll)):
 	case <-ctx.Done():
 		return api.QueryResult{}, ctx.Err()
 	}
