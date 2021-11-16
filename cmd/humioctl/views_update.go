@@ -25,32 +25,28 @@ func newViewsUpdateCmd() *cobra.Command {
 	description := ""
 
 	cmd := cobra.Command{
-		Use:   "update",
+		Use:   "update [flags] <view>",
 		Short: "Updates the settings of a view",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			viewName := args[0]
+			client := NewApiClient(cmd)
 
 			if len(connections) == 0 && description == "" {
-				exitOnError(cmd, fmt.Errorf("you must specify at least one flag"), "nothing specified to update")
+				exitOnError(cmd, fmt.Errorf("you must specify at least one flag"), "Nothing specified to update")
 			}
-
-			client := NewApiClient(cmd)
 
 			if len(connections) > 0 {
 				err := client.Views().UpdateConnections(viewName, connections)
-				exitOnError(cmd, err, "error updating view connections")
+				exitOnError(cmd, err, "Error updating view connections")
 			}
 
 			if description != "" {
 				err := client.Views().UpdateDescription(viewName, description)
-				exitOnError(cmd, err, "error updating view description")
+				exitOnError(cmd, err, "Error updating view description")
 			}
 
-			view, apiErr := client.Views().Get(viewName)
-			exitOnError(cmd, apiErr, "error fetching view")
-			printViewTable(view)
-			fmt.Println()
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully updated view %q\n", viewName)
 		},
 	}
 

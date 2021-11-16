@@ -15,8 +15,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -25,26 +23,20 @@ func newIngestTokensShowCmd() *cobra.Command {
 		Use:   "show [flags] <repo> <token-name>",
 		Short: "Show details about an ingest-token in a repository.",
 		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-
+		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
 			name := args[1]
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
+
 			ingestToken, err := client.IngestTokens().Get(repo, name)
+			exitOnError(cmd, err, "Error fetching ingest token")
 
-			if err != nil {
-				return fmt.Errorf("error fetching ingest-token: %s", err)
+			details := [][]string{
+				{"Name", ingestToken.Name},
+				{"Token", ingestToken.Token},
+				{"Assigned Parser", ingestToken.AssignedParser},
 			}
-
-			var output []string
-			output = append(output, "Name | Token | Assigned parser")
-			output = append(output, fmt.Sprintf("%v | %v | %v", ingestToken.Name, ingestToken.Token, ingestToken.AssignedParser))
-
-			printTable(cmd, output)
-
-			return nil
+			printDetailsTable(cmd, details)
 		},
 	}
 

@@ -28,7 +28,7 @@ func newSearchCmd() *cobra.Command {
 	)
 
 	cmd := &cobra.Command{
-		Use:   "search <repo> <query>",
+		Use:   "search [flags] <repo> <query>",
 		Short: "Search",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -120,7 +120,7 @@ func newSearchCmd() *cobra.Command {
 			}
 
 			if queryError, ok := err.(api.QueryError); ok {
-				fmt.Printf("There was an error in your query string:\n\n%s\n", queryError.Error())
+				cmd.PrintErrf("There was an error in your query string:\n\n%s\n", queryError.Error())
 				os.Exit(1)
 			}
 

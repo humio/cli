@@ -3,35 +3,30 @@ package main
 import (
 	"fmt"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
-	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 func newProfilesSetDefaultCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-default <profile-name>",
+		Use:   "set-default <profile>",
 		Short: "Choose one of your profiles to be the default.",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			profileName := args[0]
-			out := prompt.NewPrompt(cmd.OutOrStdout())
 
-			profile, loadErr := loadProfile(profileName)
-			exitOnError(cmd, loadErr, "profile not found")
+			profile, err := loadProfile(profileName)
+			exitOnError(cmd, err, "Profile not found")
 			viper.Set(viperkey.Address, profile.address)
 			viper.Set(viperkey.Token, profile.token)
 			viper.Set(viperkey.CACertificateFile, profile.caCertificate)
 			viper.Set(viperkey.Insecure, profile.insecure)
 
-			saveErr := saveConfig()
-			exitOnError(cmd, saveErr, "error saving config")
+			err = saveConfig()
+			exitOnError(cmd, err, "Error saving config")
 
-			out.Info(fmt.Sprintf("Default profile set to '%s'", profileName))
-
-			cmd.Println()
-			out.Output("Address: " + viper.GetString(viperkey.Address))
-			cmd.Println()
+			fmt.Fprintf(cmd.OutOrStdout(), "Default profile set to %q\n", profileName)
+			fmt.Fprintf(cmd.OutOrStdout(), "Address: %s\n", viper.GetString(viperkey.Address))
 		},
 	}
 
@@ -45,13 +40,13 @@ func loadProfile(profileName string) (*login, error) {
 		return nil, fmt.Errorf("unknown or invalid profile %s", profileName)
 	}
 
-	insecure, _ := profileData[viperkey.Insecure].(bool) // false if not found in map, or type isn't bool
+	insecureFromProfileData, _ := profileData[viperkey.Insecure].(bool) // false if not found in map, or type isn't bool
 
 	profile := login{
 		address:       getMapKeyString(profileData, viperkey.Address),
 		token:         getMapKeyString(profileData, viperkey.Token),
 		caCertificate: getMapKeyString(profileData, viperkey.CACertificate),
-		insecure:      insecure,
+		insecure:      insecureFromProfileData,
 	}
 
 	return &profile, nil

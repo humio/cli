@@ -26,17 +26,14 @@ func newUsersListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			users, err := client.Users().List()
-			exitOnError(cmd, err, "error fetching user list")
+			exitOnError(cmd, err, "Error fetching user list")
 
-			rows := make([]string, len(users))
+			rows := make([][]string, len(users))
 			for i, user := range users {
-				rows[i] = formatSimpleAccount(user)
+				rows[i] = []string{user.Username, user.FullName, yesNo(user.IsRoot), user.CreatedAt, user.ID}
 			}
 
-			printTable(cmd, append([]string{
-				"Username | Name | Root | Created"},
-				rows...,
-			))
+			printOverviewTable(cmd, []string{"Username", "Name", "Root", "Created", "ID"}, rows)
 		},
 	}
 }

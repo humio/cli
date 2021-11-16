@@ -15,11 +15,7 @@
 package main
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/humio/cli/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -39,14 +35,8 @@ func newUsersCmd() *cobra.Command {
 	return cmd
 }
 
-func formatSimpleAccount(account api.User) string {
-	columns := []string{account.Username, account.FullName, yesNo(account.IsRoot), account.CreatedAt, account.ID}
-	return strings.Join(columns, " | ")
-}
-
-func printUserTable(cmd *cobra.Command, user api.User) {
-
-	data := [][]string{
+func printUserDetailsTable(cmd *cobra.Command, user api.User) {
+	details := [][]string{
 		{"Username", user.Username},
 		{"Name", user.FullName},
 		{"Is Root", yesNo(user.IsRoot)},
@@ -57,13 +47,5 @@ func printUserTable(cmd *cobra.Command, user api.User) {
 		{"ID", user.ID},
 	}
 
-	w := tablewriter.NewWriter(cmd.OutOrStdout())
-	w.AppendBulk(data)
-	w.SetBorder(false)
-	w.SetColumnSeparator(":")
-	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-
-	fmt.Println()
-	w.Render()
-	fmt.Println()
+	printDetailsTable(cmd, details)
 }

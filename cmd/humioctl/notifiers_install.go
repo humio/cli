@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -25,63 +26,66 @@ import (
 )
 
 func newNotifiersInstallCmd() *cobra.Command {
-	var content []byte
-	var readErr error
 	var force bool
 	var filePath, url, name string
 
 	cmd := cobra.Command{
-		Use:   "install [flags] <view>",
+		Use:   "install [flags] <repo-or-view>",
 		Short: "Installs a notifier in a view",
 		Long: `Install a notifier from a URL or from a local file.
 
 The install command allows you to install notifiers from a URL or from a local file, e.g.
 
-  $ humioctl notifiers install viewName notifierName --url=https://example.com/acme/notifier.yaml
+  $ humioctl notifiers install viewName --name notifierName --url=https://example.com/acme/notifier.yaml
 
-  $ humioctl notifiers install viewName notifierName --file=./notifier.yaml
+  $ humioctl notifiers install viewName --name notifierName --file=./notifier.yaml
 
   $ humioctl notifiers install viewName --file=./notifier.yaml
 
 By default 'install' will not override existing parsers with the same name.
 Use the --force flag to update existing parsers with conflicting names.
 `,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			var content []byte
+			var err error
+
 			// Check that we got the right number of argument
 			// if we only got <view> you must supply --file or --url.
 			if l := len(args); l == 1 {
 				if filePath != "" {
-					content, readErr = getNotifierFromFile(filePath)
+					content, err = getNotifierFromFile(filePath)
 				} else if url != "" {
-					content, readErr = getURLNotifier(url)
+					content, err = getURLNotifier(url)
 				} else {
-					cmd.Printf("You must specify a path using --file or --url\n")
+					cmd.PrintErrln("You must specify a path using --file or --url")
 					os.Exit(1)
 				}
-			} else if l := len(args); l != 2 {
-				cmd.Printf("This command takes one argument: <view>\n")
-				os.Exit(1)
 			}
-			exitOnError(cmd, readErr, "Failed to load the notifier")
+			exitOnError(cmd, err, "Failed to load the notifier")
 
-			viewName := args[0]
-			notifier := api.Notifier{}
-			notifier.Name = name
-			yamlErr := yaml.Unmarshal(content, &notifier)
-			exitOnError(cmd, yamlErr, "The notifier's format was invalid")
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
+			viewName := args[0]
 
-			_, installErr := client.Notifiers().Add(viewName, &notifier, force)
-			exitOnError(cmd, installErr, "error installing parser")
+			notifier := api.Notifier{}
+			err = yaml.Unmarshal(content, &notifier)
+			exitOnError(cmd, err, "The notifier's format was invalid")
+
+			if name != "" {
+				notifier.Name = name
+			}
+
+			_, err = client.Notifiers().Add(viewName, &notifier, force)
+			exitOnError(cmd, err, "Error installing notifier")
+
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully installed notifier with name: %q\n", notifier.Name)
 		},
 	}
 
 	cmd.Flags().BoolVarP(&force, "force", "f", false, "Overrides any notifier with the same name. This can be used for updating notifier that are already installed. (See --name)")
 	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the notifier to install.")
 	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the notifier file from.")
-	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the notifer under a specific name, ignoreing the `name` attribute in the notifier file.")
+	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the notifier under a specific name, ignoring the `name` attribute in the notifier file.")
 
 	return &cmd
 }

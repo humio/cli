@@ -65,7 +65,7 @@ Common Management Commands:
 		Run: func(cmd *cobra.Command, args []string) {
 
 			if printVersion {
-				fmt.Printf("humioctl %s (%s on %s)\n", version, commit, date)
+				cmd.Printf("humioctl %s (%s on %s)\n", version, commit, date)
 				os.Exit(0)
 			}
 
@@ -157,11 +157,8 @@ func initConfig() {
 
 	// If the user has specified a profile flag, load it.
 	if profileFlag != "" {
-		profile, loadErr := loadProfile(profileFlag)
-		if loadErr != nil {
-			fmt.Println(fmt.Errorf("failed to load profile: %s", loadErr))
-			os.Exit(1)
-		}
+		profile, err := loadProfile(profileFlag)
+		exitOnError(rootCmd, err, "Failed to load profile")
 
 		// Explicitly bound address or token have precedence
 		if address == "" {
@@ -180,21 +177,15 @@ func initConfig() {
 
 	if tokenFile != "" {
 		// #nosec G304
-		tokenFileContent, tokenFileErr := ioutil.ReadFile(tokenFile)
-		if tokenFileErr != nil {
-			fmt.Printf("error loading token file: %s\n", tokenFileErr)
-			os.Exit(1)
-		}
+		tokenFileContent, err := ioutil.ReadFile(tokenFile)
+		exitOnError(rootCmd, err, "Error loading token file")
 		viper.Set(viperkey.Token, string(tokenFileContent))
 	}
 
 	if caCertificateFile != "" {
 		// #nosec G304
-		caCertificateFileContent, caCertificateFileErr := ioutil.ReadFile(caCertificateFile)
-		if caCertificateFileErr != nil {
-			fmt.Printf("error loading CA certificate file: %s\n", caCertificateFileErr)
-			os.Exit(1)
-		}
+		caCertificateFileContent, err := ioutil.ReadFile(caCertificateFile)
+		exitOnError(rootCmd, err, "Error loading CA certificate file")
 		viper.Set(viperkey.CACertificate, string(caCertificateFileContent))
 	}
 
@@ -204,23 +195,19 @@ func initConfig() {
 }
 
 func NewApiClient(cmd *cobra.Command, opts ...func(config *api.Config)) *api.Client {
-	client, err := newApiClientE(cmd, opts...)
-
-	if err != nil {
-		fmt.Println(fmt.Errorf("error creating HTTP client: %s", err))
-		os.Exit(1)
-	}
-
+	client, err := newApiClientE(opts...)
+	exitOnError(cmd, err, "Error creating HTTP client")
 	return client
 }
 
-func newApiClientE(cmd *cobra.Command, opts ...func(config *api.Config)) (*api.Client, error) {
+func newApiClientE(opts ...func(config *api.Config)) (*api.Client, error) {
 	config := api.DefaultConfig()
-	address := viper.GetString(viperkey.Address)
-	parsedURL, err := url.Parse(address)
+	addr := viper.GetString(viperkey.Address)
+	parsedURL, err := url.Parse(addr)
 	if err != nil {
 		return nil, err
 	}
+
 	config.Address = parsedURL
 	config.Token = viper.GetString(viperkey.Token)
 	config.CACertificatePEM = viper.GetString(viperkey.CACertificate)
@@ -237,8 +224,6 @@ func newApiClientE(cmd *cobra.Command, opts ...func(config *api.Config)) (*api.C
 
 func main() {
 	SetVersion(version, commit, date)
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	err := rootCmd.Execute()
+	exitOnError(rootCmd, err, "Unable to execute command")
 }

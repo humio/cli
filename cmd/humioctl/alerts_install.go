@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -25,10 +26,10 @@ import (
 )
 
 func newAlertsInstallCmd() *cobra.Command {
-	var content []byte
-	var readErr error
-	var force bool
-	var filePath, url, name string
+	var (
+		force               bool
+		filePath, url, name string
+	)
 
 	cmd := cobra.Command{
 		Use:   "install [flags] <view>",
@@ -37,53 +38,56 @@ func newAlertsInstallCmd() *cobra.Command {
 
 The install command allows you to install alerts from a URL or from a local file, e.g.
 
-  $ humioctl alerts install viewName alertName --url=https://example.com/acme/alert.yaml
+  $ humioctl alerts install viewName --name alertName --url=https://example.com/acme/alert.yaml
 
-  $ humioctl alerts install viewName alertName --file=./parser.yaml
+  $ humioctl alerts install viewName --name alertName --file=./parser.yaml
 
   $ humioctl alerts install viewName --file=./alert.yaml
 
 By default 'install' will not override existing alerts with the same name.
 Use the --force flag to update existing alerts with conflicting names.
 `,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			var content []byte
+			var err error
+
 			// Check that we got the right number of argument
 			// if we only got <view> you must supply --file or --url.
 			if l := len(args); l == 1 {
 				if filePath != "" {
-					content, readErr = getAlertFromFile(filePath)
+					content, err = getAlertFromFile(filePath)
 				} else if url != "" {
-					content, readErr = getURLAlert(url)
+					content, err = getURLAlert(url)
 				} else {
 					cmd.Printf("You must specify a path using --file or --url\n")
 					os.Exit(1)
 				}
-			} else if l := len(args); l != 2 {
-				cmd.Printf("This command takes one argument: <view>\n")
-				os.Exit(1)
 			}
-			exitOnError(cmd, readErr, "Failed to load the alert")
+			exitOnError(cmd, err, "Failed to load the alert")
 
-			viewName := args[0]
-			alert := api.Alert{}
-			alert.Name = name
-			yamlErr := yaml.Unmarshal(content, &alert)
-			exitOnError(cmd, yamlErr, "The alert's format was invalid")
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
+			viewName := args[0]
 
-			_, installErr := client.Alerts().Add(viewName, &alert, force)
-			exitOnError(cmd, installErr, "error installing alert")
+			var alert api.Alert
+			err = yaml.Unmarshal(content, &alert)
+			exitOnError(cmd, err, "Alert format is invalid")
 
-			cmd.Println("Alert installed")
+			if name != "" {
+				alert.Name = name
+			}
+
+			_, err = client.Alerts().Add(viewName, &alert, force)
+			exitOnError(cmd, err, "Error creating alert")
+
+			fmt.Fprintln(cmd.OutOrStdout(), "Alert created")
 		},
 	}
 
 	cmd.Flags().BoolVarP(&force, "force", "f", false, "Overrides any alert with the same name. This can be used for updating alert that are already installed. (See --name)")
 	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the alert to install.")
 	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the alert file from.")
-	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the alert under a specific name, ignoreing the `name` attribute in the alert file.")
+	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the alert under a specific name, ignoring the `name` attribute in the alert file.")
 
 	return &cmd
 }

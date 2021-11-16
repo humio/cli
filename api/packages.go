@@ -66,7 +66,6 @@ func (p *Packages) Validate(viewName string, absPath string) (*ValidationRespons
 	var err error
 
 	isDir, err := isDirectory(absPath)
-
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +75,6 @@ func (p *Packages) Validate(viewName string, absPath string) (*ValidationRespons
 	} else {
 		zipFilePath = absPath
 	}
-
 	if err != nil {
 		return nil, err
 	}
@@ -84,30 +82,26 @@ func (p *Packages) Validate(viewName string, absPath string) (*ValidationRespons
 	urlPath := "api/v1/packages/analyze?view=" + url.QueryEscape(viewName)
 
 	// #nosec G304
-	fileReader, openErr := os.Open(zipFilePath)
-
-	if openErr != nil {
-		return nil, openErr
+	fileReader, err := os.Open(zipFilePath)
+	if err != nil {
+		return nil, err
 	}
 	// #nosec G307
 	defer fileReader.Close()
 
-	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, ZIPContentType)
-
-	if httpErr != nil {
-		return nil, httpErr
+	response, err := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, ZIPContentType)
+	if err != nil {
+		return nil, err
 	}
-
 	if response.StatusCode >= 400 {
 		return nil, fmt.Errorf("bad response. %s", response.Status)
 	}
 
 	var report ValidationResponse
 	decoder := json.NewDecoder(response.Body)
-	decodeErr := decoder.Decode(&report)
-
-	if decodeErr != nil {
-		return nil, decodeErr
+	err = decoder.Decode(&report)
+	if err != nil {
+		return nil, err
 	}
 
 	return &report, nil
@@ -115,7 +109,7 @@ func (p *Packages) Validate(viewName string, absPath string) (*ValidationRespons
 
 // ListInstalled returns a list of installed packages
 func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
-	var q struct {
+	var query struct {
 		Repository struct {
 			InstalledPackages []InstalledPackage
 		} `graphql:"searchDomain(name: $repositoryName)"`
@@ -125,40 +119,34 @@ func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
 		"repositoryName": graphql.String(viewName),
 	}
 
-	graphqlErr := p.client.Query(&q, variables)
-
-	return q.Repository.InstalledPackages, graphqlErr
+	err := p.client.Query(&query, variables)
+	return query.Repository.InstalledPackages, err
 }
 
 // InstallArchive installs a local package (zip file).
 func (p *Packages) InstallArchive(viewName string, pathToZip string) (*ValidationResponse, error) {
 	// #nosec G304
-	fileReader, openErr := os.Open(pathToZip)
-
-	if openErr != nil {
-		return nil, openErr
+	fileReader, err := os.Open(pathToZip)
+	if err != nil {
+		return nil, err
 	}
 	// #nosec G307
 	defer fileReader.Close()
 
 	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(viewName) + "&overwrite=true"
-
-	response, httpErr := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, ZIPContentType)
-
-	if httpErr != nil {
-		return nil, httpErr
+	response, err := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, ZIPContentType)
+	if err != nil {
+		return nil, err
 	}
-
 	if response.StatusCode >= 400 {
 		return nil, detailedInstallationError(response)
 	}
 
 	var report ValidationResponse
 	decoder := json.NewDecoder(response.Body)
-	decodeErr := decoder.Decode(&report)
-
-	if decodeErr != nil {
-		return nil, decodeErr
+	err = decoder.Decode(&report)
+	if err != nil {
+		return nil, err
 	}
 
 	return &report, nil
@@ -170,7 +158,6 @@ func detailedInstallationError(response *http.Response) error {
 	}(response.Body)
 
 	body, err := ioutil.ReadAll(response.Body) // response body is []byte
-
 	if err != nil {
 		return fmt.Errorf("the package could not be installed")
 	}
@@ -206,7 +193,7 @@ type (
 // UninstallPackage uninstalls a package by name.
 func (p *Packages) UninstallPackage(viewName string, packageID string) error {
 
-	var m struct {
+	var mutation struct {
 		StartDataRedistribution struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -218,16 +205,12 @@ func (p *Packages) UninstallPackage(viewName string, packageID string) error {
 		"viewName":  graphql.String(viewName),
 	}
 
-	graphqlErr := p.client.Mutate(&m, variables)
-
-	return graphqlErr
+	return p.client.Mutate(&mutation, variables)
 }
 
 // CreateArchive creates a archive by bundling the files in packageDirPath in a zip file.
 func (p *Packages) CreateArchive(packageDirPath string, targetFileName string) error {
-
 	outFile, err := os.Create(targetFileName)
-
 	if err != nil {
 		return err
 	}
@@ -240,14 +223,12 @@ func (p *Packages) CreateArchive(packageDirPath string, targetFileName string) e
 // InstallFromDirectory installs a package from a directory containing the package files.
 func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView string) (*ValidationResponse, error) {
 	zipFilePath, err := createTempZipFromFolder(packageDirPath)
-
 	if err != nil {
 		return nil, err
 	}
 
 	// #nosec G304
 	zipFile, err := os.Open(zipFilePath)
-
 	if err != nil {
 		return nil, err
 	}
@@ -255,10 +236,6 @@ func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView 
 	// #nosec G307
 	defer zipFile.Close()
 	defer os.Remove(zipFile.Name())
-
-	if err != nil {
-		return nil, err
-	}
 
 	return p.InstallArchive(targetRepoOrView, zipFilePath)
 }
@@ -273,7 +250,6 @@ func createTempZipFromFolder(baseFolder string) (string, error) {
 	defer zipFile.Close()
 
 	err = createZipFromFolder(baseFolder, zipFile)
-
 	if err != nil {
 		return "", err
 	}
@@ -291,12 +267,7 @@ func createZipFromFolder(baseFolder string, outFile *os.File) error {
 		return err
 	}
 
-	// Make sure to check the error on Close.
-	err = w.Close()
-	if err != nil {
-		return err
-	}
-	return nil
+	return w.Close()
 }
 
 func isValidFolderOrFile(name string) bool {

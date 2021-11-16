@@ -20,33 +20,26 @@ import (
 )
 
 func newViewsCreateCmd() *cobra.Command {
-	connections := make(map[string] string)
+	connections := make(map[string]string)
 	description := ""
 
-	c := &cobra.Command{
-		Use:   "create <view-name>",
+	cmd := &cobra.Command{
+		Use:   "create [flags] <view-name>",
 		Short: "Create a view.",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			viewName := args[0]
-
 			client := NewApiClient(cmd)
 
-			apiErr := client.Views().Create(viewName, description, connections)
-			exitOnError(cmd, apiErr, "Error creating view")
-			fmt.Printf("Successfully created view %s\n", viewName)
+			err := client.Views().Create(viewName, description, connections)
+			exitOnError(cmd, err, "Error creating view")
 
-			view, apiErr := client.Views().Get(viewName)
-			exitOnError(cmd, apiErr, "error fetching view")
-
-			printViewTable(view)
-
-			fmt.Println()
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully created view: %q\n", viewName)
 		},
 	}
 
-	c.Flags().StringToStringVar(&connections, "connection", connections, "Sets a repository connection with the chosen filter.")
-	c.Flags().StringVar(&description, "description", description, "Sets an optional description")
+	cmd.Flags().StringToStringVar(&connections, "connection", connections, "Sets a repository connection with the chosen filter.")
+	cmd.Flags().StringVar(&description, "description", description, "Sets an optional description")
 
-	return c
+	return cmd
 }

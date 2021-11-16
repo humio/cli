@@ -2,19 +2,7 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/ryanuber/columnize"
-	"github.com/spf13/cobra"
 )
-
-func printTable(cmd *cobra.Command, rows []string) {
-
-	table := columnize.SimpleFormat(rows)
-
-	cmd.Println()
-	cmd.Println(table)
-	cmd.Println()
-}
 
 func yesNo(isTrue bool) string {
 	if isTrue {

@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/shurcooL/graphql"
 )
@@ -65,13 +66,12 @@ type Cluster struct {
 func (c *Client) Clusters() *Clusters { return &Clusters{client: c} }
 
 func (c *Clusters) Get() (Cluster, error) {
-	var q struct {
+	var query struct {
 		Cluster Cluster
 	}
 
-	graphqlErr := c.client.Query(&q, nil)
-
-	return q.Cluster, graphqlErr
+	err := c.client.Query(&query, nil)
+	return query.Cluster, err
 }
 
 type StoragePartitionInput struct {
@@ -85,7 +85,7 @@ type IngestPartitionInput struct {
 }
 
 func (c *Clusters) UpdateStoragePartitionScheme(desired []StoragePartitionInput) error {
-	var m struct {
+	var mutation struct {
 		UpdateStoragePartitionScheme struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -96,13 +96,11 @@ func (c *Clusters) UpdateStoragePartitionScheme(desired []StoragePartitionInput)
 		"partitions": desired,
 	}
 
-	graphqlErr := c.client.Mutate(&m, variables)
-
-	return graphqlErr
+	return c.client.Mutate(&mutation, variables)
 }
 
 func (c *Clusters) UpdateIngestPartitionScheme(desired []IngestPartitionInput) error {
-	var m struct {
+	var mutation struct {
 		UpdateStoragePartitionScheme struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -113,26 +111,22 @@ func (c *Clusters) UpdateIngestPartitionScheme(desired []IngestPartitionInput) e
 		"partitions": desired,
 	}
 
-	graphqlErr := c.client.Mutate(&m, variables)
-
-	return graphqlErr
+	return c.client.Mutate(&mutation, variables)
 }
 
 func (c *Clusters) StartDataRedistribution() error {
-	var m struct {
+	var mutation struct {
 		StartDataRedistribution struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"startDataRedistribution"`
 	}
 
-	graphqlErr := c.client.Mutate(&m, nil)
-
-	return graphqlErr
+	return c.client.Mutate(&mutation, nil)
 }
 
 func (c *Clusters) ClusterMoveStorageRouteAwayFromNode(nodeID int) error {
-	var m struct {
+	var mutation struct {
 		ClusterMoveStorageRouteAwayFromNode struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -143,13 +137,11 @@ func (c *Clusters) ClusterMoveStorageRouteAwayFromNode(nodeID int) error {
 		"id": graphql.Int(nodeID),
 	}
 
-	graphqlErr := c.client.Mutate(&m, variables)
-
-	return graphqlErr
+	return c.client.Mutate(&mutation, variables)
 }
 
 func (c *Clusters) ClusterMoveIngestRoutesAwayFromNode(nodeID int) error {
-	var m struct {
+	var mutation struct {
 		ClusterMoveIngestRoutesAwayFromNode struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -160,9 +152,7 @@ func (c *Clusters) ClusterMoveIngestRoutesAwayFromNode(nodeID int) error {
 		"id": graphql.Int(nodeID),
 	}
 
-	graphqlErr := c.client.Mutate(&m, variables)
-
-	return graphqlErr
+	return c.client.Mutate(&mutation, variables)
 }
 
 type ClusterNodes struct {
@@ -172,30 +162,29 @@ type ClusterNodes struct {
 func (c *Client) ClusterNodes() *ClusterNodes { return &ClusterNodes{client: c} }
 
 func (n *ClusterNodes) List() ([]ClusterNode, error) {
-	var q struct {
+	var query struct {
 		Cluster struct {
 			Nodes []ClusterNode
 		}
 	}
 
-	graphqlErr := n.client.Query(&q, nil)
-
-	return q.Cluster.Nodes, graphqlErr
+	err := n.client.Query(&query, nil)
+	return query.Cluster.Nodes, err
 }
 
 func (n *ClusterNodes) Get(nodeID int) (ClusterNode, error) {
-	var q struct {
+	var query struct {
 		Cluster struct {
 			Nodes []ClusterNode
 		}
 	}
 
-	graphqlErr := n.client.Query(&q, nil)
-	if graphqlErr != nil {
-		return ClusterNode{}, graphqlErr
+	err := n.client.Query(&query, nil)
+	if err != nil {
+		return ClusterNode{}, err
 	}
 
-	for _, node := range q.Cluster.Nodes {
+	for _, node := range query.Cluster.Nodes {
 		if node.Id == nodeID {
 			return node, nil
 		}
@@ -204,8 +193,11 @@ func (n *ClusterNodes) Get(nodeID int) (ClusterNode, error) {
 	return ClusterNode{}, fmt.Errorf("node id not found in cluster")
 }
 
-func (n *ClusterNodes) Unregister(nodeID int64, force bool) error {
-	var m struct {
+func (n *ClusterNodes) Unregister(nodeID int, force bool) error {
+	if nodeID > math.MaxInt32 {
+		return fmt.Errorf("node id too large")
+	}
+	var mutation struct {
 		ClusterUnregisterNode struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -214,34 +206,30 @@ func (n *ClusterNodes) Unregister(nodeID int64, force bool) error {
 
 	variables := map[string]interface{}{
 		"id":    graphql.Int(nodeID),
-		"force": graphql.Boolean(false),
+		"force": graphql.Boolean(force),
 	}
 
-	graphqlErr := n.client.Mutate(&m, variables)
-
-	return graphqlErr
+	return n.client.Mutate(&mutation, variables)
 }
 
 func (c *Clusters) SuggestedIngestPartitions() ([]IngestPartitionInput, error) {
-	var q struct {
+	var query struct {
 		Cluster struct {
 			SuggestedIngestPartitions []IngestPartitionInput `graphql:"suggestedIngestPartitions"`
 		} `graphql:"cluster"`
 	}
 
-	err := c.client.Query(&q, nil)
-
-	return q.Cluster.SuggestedIngestPartitions, err
+	err := c.client.Query(&query, nil)
+	return query.Cluster.SuggestedIngestPartitions, err
 }
 
 func (c *Clusters) SuggestedStoragePartitions() ([]StoragePartitionInput, error) {
-	var q struct {
+	var query struct {
 		Cluster struct {
 			SuggestedStoragePartitions []StoragePartitionInput `graphql:"suggestedStoragePartitions"`
 		} `graphql:"cluster"`
 	}
 
-	err := c.client.Query(&q, nil)
-
-	return q.Cluster.SuggestedStoragePartitions, err
+	err := c.client.Query(&query, nil)
+	return query.Cluster.SuggestedStoragePartitions, err
 }

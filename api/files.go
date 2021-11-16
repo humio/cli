@@ -25,7 +25,7 @@ type File struct {
 func (c *Client) Files() *Files { return &Files{client: c} }
 
 func (f *Files) List(viewName string) ([]File, error) {
-	var q struct {
+	var query struct {
 		Repository struct {
 			Files []File
 		} `graphql:"repository(name:$viewName)"`
@@ -35,13 +35,12 @@ func (f *Files) List(viewName string) ([]File, error) {
 		"viewName": graphql.String(viewName),
 	}
 
-	err := f.client.Query(&q, variables)
-
-	return q.Repository.Files, err
+	err := f.client.Query(&query, variables)
+	return query.Repository.Files, err
 }
 
 func (f *Files) Delete(viewName string, fileName string) error {
-	var q struct {
+	var query struct {
 		RemoveFile struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -53,9 +52,7 @@ func (f *Files) Delete(viewName string, fileName string) error {
 		"fileName": graphql.String(fileName),
 	}
 
-	err := f.client.Mutate(&q, variables)
-
-	return err
+	return f.client.Mutate(&query, variables)
 }
 
 func (f *Files) Upload(viewName string, fileName string, reader io.Reader) error {

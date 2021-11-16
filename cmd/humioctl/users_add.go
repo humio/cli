@@ -15,8 +15,7 @@
 package main
 
 import (
-	"os"
-
+	"fmt"
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 )
@@ -31,12 +30,10 @@ func newUsersAddCmd() *cobra.Command {
 		Short: "Adds a user. [Root Only]",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-
 			username := args[0]
-
 			client := NewApiClient(cmd)
 
-			user, err := client.Users().Add(username, api.UserChangeSet{
+			_, err := client.Users().Add(username, api.UserChangeSet{
 				IsRoot:      rootFlag.value,
 				FullName:    nameFlag.value,
 				Company:     companyFlag.value,
@@ -44,13 +41,9 @@ func newUsersAddCmd() *cobra.Command {
 				Email:       emailFlag.value,
 				Picture:     pictureFlag.value,
 			})
+			exitOnError(cmd, err, "Error creating the user")
 
-			if err != nil {
-				cmd.Printf("Error creating the user: %s\n", err)
-				os.Exit(1)
-			}
-
-			printUserTable(cmd, user)
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully created user with username %q\n", username)
 		},
 	}
 

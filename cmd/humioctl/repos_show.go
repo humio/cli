@@ -15,27 +15,22 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 func newReposShowCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "show [flags] <repo>",
+		Use:   "show <repo>",
 		Short: "Show details about a repository.",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			repoName := args[0]
-
 			client := NewApiClient(cmd)
 
-			repo, apiErr := client.Repositories().Get(repoName)
-			exitOnError(cmd, apiErr, "error fetching repository")
+			repo, err := client.Repositories().Get(repoName)
+			exitOnError(cmd, err, "Error fetching repository")
 
-			printRepoTable(cmd, repo)
-
-			fmt.Println()
+			printRepoDetailsTable(cmd, repo)
 		},
 	}
 

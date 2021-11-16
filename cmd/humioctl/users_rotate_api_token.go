@@ -6,7 +6,7 @@ import (
 
 func newUsersRotateApiTokenCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "rotate-api-token",
+		Use:   "rotate-api-token <user-id>",
 		Short: "Rotate and retrieve a user's API token [Root Only]",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -17,7 +17,6 @@ func newUsersRotateApiTokenCmd() *cobra.Command {
 			exitOnError(cmd, apiErr, "Error updating user")
 
 			cmd.Printf("New API Token: %s\n", newToken)
-			cmd.Println()
 		},
 	}
 

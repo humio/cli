@@ -108,8 +108,7 @@ func (c *Client) Query(query interface{}, variables map[string]interface{}) erro
 	if err != nil {
 		return err
 	}
-	graphqlErr := client.Query(context.Background(), query, variables)
-	return graphqlErr
+	return client.Query(context.Background(), query, variables)
 }
 
 func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) error {
@@ -117,8 +116,7 @@ func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) 
 	if err != nil {
 		return err
 	}
-	graphqlErr := client.Mutate(context.Background(), mutation, variables)
-	return graphqlErr
+	return client.Mutate(context.Background(), mutation, variables)
 }
 
 // JSONContentType is "application/json"
@@ -145,7 +143,6 @@ func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path
 	}
 
 	headers := c.headers()
-
 	headers["Content-Type"] = contentType
 
 	var client = c.newHTTPClientWithHeaders(headers)

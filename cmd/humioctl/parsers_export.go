@@ -15,10 +15,8 @@
 package main
 
 import (
-	"io/ioutil"
-	"os"
-
 	"github.com/spf13/cobra"
+	"io/ioutil"
 )
 
 func newParsersExportCmd() *cobra.Command {
@@ -31,27 +29,19 @@ func newParsersExportCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
 			parserName := args[1]
+			client := NewApiClient(cmd)
 
 			if outputName == "" {
 				outputName = parserName
 			}
 
-			// Get the HTTP client
-			client := NewApiClient(cmd)
-
-			yamlData, apiErr := client.Parsers().Export(repo, parserName)
-			if apiErr != nil {
-				cmd.Printf("Error fetching parsers: %s\n", apiErr)
-				os.Exit(1)
-			}
+			yamlData, err := client.Parsers().Export(repo, parserName)
+			exitOnError(cmd, err, "Error fetching parsers")
 
 			outFilePath := outputName + ".yaml"
 
-			writeErr := ioutil.WriteFile(outFilePath, []byte(yamlData), 0600)
-			if writeErr != nil {
-				cmd.Printf("Error saving the parser file: %s\n", writeErr)
-				os.Exit(1)
-			}
+			err = ioutil.WriteFile(outFilePath, []byte(yamlData), 0600)
+			exitOnError(cmd, err, "Error saving the parser file")
 		},
 	}
 

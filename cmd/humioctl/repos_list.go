@@ -18,7 +18,6 @@ import (
 	"sort"
 
 	"github.com/humio/cli/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -32,8 +31,8 @@ func newReposListCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
-			repos, apiErr := client.Repositories().List()
-			exitOnError(cmd, apiErr, "error fetching repository")
+			repos, err := client.Repositories().List()
+			exitOnError(cmd, err, "Error fetching repository")
 
 			sort.Slice(repos, func(i, j int) bool {
 				var a, b api.RepoListItem
@@ -56,13 +55,7 @@ func newReposListCmd() *cobra.Command {
 				rows[i] = []string{view.Name, ByteCountDecimal(view.SpaceUsed), view.ID}
 			}
 
-			w := tablewriter.NewWriter(cmd.OutOrStdout())
-			w.SetHeader([]string{"Name", "Space Used", "ID"})
-			w.AppendBulk(rows)
-			w.SetBorder(false)
-
-			w.Render()
-			cmd.Println()
+			printOverviewTable(cmd, []string{"Name", "Space Used", "ID"}, rows)
 		},
 	}
 

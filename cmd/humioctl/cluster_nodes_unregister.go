@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -26,13 +27,15 @@ func newClusterNodesUnregisterCmd() *cobra.Command {
 		Short: "Unregister (remove) a node from the cluster [Root Only]",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			node, parseErr := strconv.ParseInt(args[0], 10, 64)
-			exitOnError(cmd, parseErr, "Not valid node id")
-
 			client := NewApiClient(cmd)
 
-			apiError := client.ClusterNodes().Unregister(node, false)
-			exitOnError(cmd, apiError, "Error removing parser")
+			node, err := strconv.Atoi(args[0])
+			exitOnError(cmd, err, "Not valid node id")
+
+			err = client.ClusterNodes().Unregister(node, false)
+			exitOnError(cmd, err, "Error removing cluster node")
+
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully unregistered node %q\n", node)
 		},
 	}
 

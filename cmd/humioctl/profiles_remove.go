@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"os"
 
-	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -12,27 +12,23 @@ import (
 // usersCmd represents the users command
 func newProfilesRemoveCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "remove <profile-name> [flags]",
+		Use:   "remove <profile>",
 		Short: "Remove a configuration profile",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			profileName := args[0]
 
-			out := prompt.NewPrompt(cmd.OutOrStdout())
-
 			profiles := viper.GetStringMap(viperkey.Profiles)
-
 			if profiles[profileName] == nil {
 				cmd.Println("profile not found")
 				os.Exit(0)
 			}
 
 			delete(profiles, profileName)
+			err := saveConfig()
+			exitOnError(cmd, err, "Error saving config")
 
-			saveErr := saveConfig()
-			exitOnError(cmd, saveErr, "error saving config")
-
-			out.Output("Profile removed: ", profileName)
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed profile: %q\n", profileName)
 		},
 	}
 

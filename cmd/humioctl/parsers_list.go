@@ -15,38 +15,28 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 func newParsersListCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "list [flags] <repo>",
+		Use:   "list <repo>",
 		Short: "List all installed parsers in a repository.",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-
+		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
+
 			parsers, err := client.Parsers().List(repo)
+			exitOnError(cmd, err, "Error fetching parsers")
 
-			if err != nil {
-				return fmt.Errorf("error fetching parsers: %s", err)
-			}
-
-			var output []string
-			output = append(output, "Name | Custom")
+			var rows [][]string
 			for i := 0; i < len(parsers); i++ {
 				parser := parsers[i]
-				output = append(output, fmt.Sprintf("%v | %v", parser.Name, checkmark(!parser.IsBuiltIn)))
+				rows = append(rows, []string{parser.Name, checkmark(!parser.IsBuiltIn)})
 			}
 
-			printTable(cmd, output)
-
-			return nil
+			printOverviewTable(cmd, []string{"Name", "Custom"}, rows)
 		},
 	}
 

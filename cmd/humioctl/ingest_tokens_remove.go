@@ -15,8 +15,7 @@
 package main
 
 import (
-	"os"
-
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -28,20 +27,14 @@ func newIngestTokensRemoveCmd() *cobra.Command {
 		ValidArgs: []string{"repo", "token-name"},
 		Args:      cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			repo := args[0]
-			name := args[1]
-
-			// Get the HTTP client
+			repoName := args[0]
+			tokenName := args[1]
 			client := NewApiClient(cmd)
 
-			err := client.IngestTokens().Remove(repo, name)
+			err := client.IngestTokens().Remove(repoName, tokenName)
+			exitOnError(cmd, err, "Error removing ingest token")
 
-			if err != nil {
-				cmd.Printf("Error removing ingest token: %s\n", err)
-				os.Exit(1)
-			}
-
-			cmd.Println("User Removed")
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed ingest token %q from repository %q\n", tokenName, repoName)
 		},
 	}
 

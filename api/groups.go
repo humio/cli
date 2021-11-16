@@ -10,7 +10,7 @@ type Groups struct {
 }
 
 type Group struct {
-	ID   string
+	ID          string
 	DisplayName string
 }
 
@@ -19,18 +19,18 @@ func (c *Client) Groups() *Groups { return &Groups{client: c} }
 var ErrUserNotFound = errors.New("user not found")
 
 func (g *Groups) List() ([]Group, error) {
-	var q struct {
+	var query struct {
 		Page struct {
 			Groups []Group `graphql:"page"`
 		} `graphql:"groupsPage(pageNumber:1,pageSize:2147483647)"`
 	}
 
-	err := g.client.Query(&q, nil)
+	err := g.client.Query(&query, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return q.Page.Groups, nil
+	return query.Page.Groups, nil
 }
 
 func (g *Groups) AddUserToGroup(groupID string, userID string) error {

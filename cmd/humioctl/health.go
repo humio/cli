@@ -1,12 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/humio/cli/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
-	"io"
 	"os"
 	"sort"
 	"strings"
@@ -22,7 +19,6 @@ type healthCheckResult struct {
 
 func newHealthCmd() *cobra.Command {
 	var (
-		jsonFlag       bool
 		versionFlag    bool
 		uptimeFlag     bool
 		failFlag       bool
@@ -34,19 +30,18 @@ func newHealthCmd() *cobra.Command {
 		Use:   "health",
 		Short: "Health",
 		Args:  cobra.ExactArgs(0),
-
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
 			health, err := client.Health()
-			exitOnError(cmd, err, "error getting health information")
+			exitOnError(cmd, err, "Error getting health information")
 
 			switch {
 			case versionFlag:
-				cmd.Println(health.Version)
+				fmt.Fprintf(cmd.OutOrStdout(), "%s\n", health.Version)
 				return
 			case uptimeFlag:
-				cmd.Println(health.Uptime)
+				fmt.Fprintf(cmd.OutOrStdout(), "%s\n", health.Uptime)
 				return
 			}
 
@@ -69,11 +64,8 @@ func newHealthCmd() *cobra.Command {
 				StatusMessage: health.StatusMessage,
 			}
 
-			if jsonFlag {
-				_ = json.NewEncoder(cmd.OutOrStdout()).Encode(result)
-			} else {
-				encodeAsText(cmd.OutOrStdout(), result)
-			}
+			printHealthDetailsTable(cmd, result)
+			printHealthOverviewTable(cmd, result)
 
 			if failFlag {
 				numDown := 0
@@ -88,7 +80,6 @@ func newHealthCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().BoolVarP(&jsonFlag, "json", "j", false, "Output as json.")
 	cmd.Flags().BoolVar(&versionFlag, "version", false, "Print server version and exit.")
 	cmd.Flags().BoolVar(&uptimeFlag, "uptime", false, "Print uptime and exit.")
 	cmd.Flags().BoolVar(&failFlag, "fail", false, "Set exit code to number of down checks.")
@@ -100,36 +91,38 @@ func newHealthCmd() *cobra.Command {
 	return cmd
 }
 
-func encodeAsText(writer io.Writer, result healthCheckResult) {
-	tw := tablewriter.NewWriter(writer)
-	tw.SetAutoWrapText(false)
-	tw.Append([]string{"STATUS", string(result.Status)})
-	tw.Append([]string{"MESSAGE", result.StatusMessage})
-	tw.Append([]string{"VERSION", result.Version})
-	tw.Append([]string{"UPTIME", result.Uptime})
-	tw.Render()
+func printHealthDetailsTable(cmd *cobra.Command, result healthCheckResult) {
+	details := [][]string{
+		{"Status", string(result.Status)},
+		{"Message", result.StatusMessage},
+		{"Version", result.Version},
+		{"Uptime", result.Uptime},
+	}
 
-	tw = tablewriter.NewWriter(writer)
-	tw.SetAutoWrapText(false)
-	tw.SetHeader([]string{"name", "status", "message", "fields"})
+	printDetailsTable(cmd, details)
+}
 
-	for _, c := range result.Checks {
+func printHealthOverviewTable(cmd *cobra.Command, result healthCheckResult) {
+	var healthChecksNames []string
+	for name := range result.Checks {
+		healthChecksNames = append(healthChecksNames, name)
+	}
+	sort.Strings(healthChecksNames)
+
+	var rows [][]string
+	for _, name := range healthChecksNames {
 		var keys []string
-		for f := range c.Fields {
+		for f := range result.Checks[name].Fields {
 			keys = append(keys, f)
 		}
 		sort.Strings(keys)
 
 		var fields []string
-
 		for _, f := range keys {
-			fields = append(fields, fmt.Sprintf("%s=%q", f, c.Fields[f]))
+			fields = append(fields, fmt.Sprintf("%s=%q", f, result.Checks[name].Fields[f]))
 		}
-
-		row := []string{c.Name, string(c.Status), c.StatusMessage, strings.Join(fields, " ")}
-
-		tw.Append(row)
+		rows = append(rows, []string{result.Checks[name].Name, string(result.Checks[name].Status), result.Checks[name].StatusMessage, strings.Join(fields, " ")})
 	}
 
-	tw.Render()
+	printOverviewTable(cmd, []string{"name", "status", "message", "fields"}, rows)
 }

@@ -60,7 +60,6 @@ func (l *Licenses) Get() (License, error) {
 	}
 
 	err := l.client.Query(&query, nil)
-
 	if err != nil {
 		return nil, err
 	}

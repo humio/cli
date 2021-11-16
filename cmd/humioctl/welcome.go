@@ -26,37 +26,35 @@ func newWelcomeCmd() *cobra.Command {
 			}
 
 			owl := "[purple]" + prompt.Owl() + "[reset]"
-			out.Print((prompt.Colorize(owl)))
-			out.Output("")
+			out.Print(prompt.Colorize(owl))
+			out.BlankLine()
 			out.Title("Welcome to Humio")
-			out.Output("")
+			out.BlankLine()
 			out.Description("This will guide you through setting up the Humio CLI.")
-			out.Output("")
+			out.BlankLine()
 
 			profile, err := collectProfileInfo(cmd)
-			exitOnError(cmd, err, "failed to collect profile info")
+			exitOnError(cmd, err, "Failed to collect profile info")
 
 			viper.Set(viperkey.Address, profile.address)
 			viper.Set(viperkey.Token, profile.token)
 
-			addAccount(out, "default", profile)
+			addAccount("default", profile)
 
 			configFile := viper.ConfigFileUsed()
-			cmd.Println(prompt.Colorize("==> Writing settings to: [purple]" + configFile + "[reset]"))
+			out.Print(prompt.Colorize("==> Writing settings to: [purple]" + configFile + "[reset]"))
 
-			if saveErr := saveConfig(); saveErr != nil {
-				cmd.Printf("Error saving config: %s\n", saveErr)
-				os.Exit(1)
-			}
+			err = saveConfig()
+			exitOnError(cmd, err, "Error saving file")
 
-			cmd.Println()
+			out.BlankLine()
 			out.Description("The authentication info has been saved to the profile 'default'.")
 			out.Description("If you work with multiple user accounts or Humio servers you can")
 			out.Description("add more profiles using `humio profiles add <name>`.")
 
-			cmd.Println()
-			out.Output("Bye bye now! 🎉")
-			cmd.Println()
+			out.BlankLine()
+			out.Print("Bye bye now! 🎉")
+			out.BlankLine()
 		},
 	}
 

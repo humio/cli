@@ -15,38 +15,27 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 func listInstalledPackagesCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "list-installed [flags] <view-or-repo-name>",
+		Use:   "list-installed <repo-or-view>",
 		Short: "List all installed packages in a repository.",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-
-			viewName := args[0]
-
-			// Get the HTTP client
+		Run: func(cmd *cobra.Command, args []string) {
+			repoOrViewName := args[0]
 			client := NewApiClient(cmd)
-			installedPackages, err := client.Packages().ListInstalled(viewName)
 
-			if err != nil {
-				return fmt.Errorf("error fetching packages: %s", err)
+			installedPackages, err := client.Packages().ListInstalled(repoOrViewName)
+			exitOnError(cmd, err, "Error fetching packages")
+
+			var rows [][]string
+			for _, installedPackage := range installedPackages {
+				rows = append(rows, []string{installedPackage.ID, installedPackage.InstalledBy.Username, valueOrEmpty(installedPackage.UpdatedBy.Username), installedPackage.Source, valueOrEmpty(installedPackage.AvailableUpdate)})
 			}
 
-			var output []string
-			output = append(output, "ID | InstalledBy | UpdatedBy | Source | AvailableUpdate")
-			for i := 0; i < len(installedPackages); i++ {
-				installedPackage := installedPackages[i]
-				output = append(output, fmt.Sprintf("%v | %v | %v | %v | %v", installedPackage.ID, installedPackage.InstalledBy.Username, valueOrEmpty(installedPackage.UpdatedBy.Username), installedPackage.Source, valueOrEmpty(installedPackage.AvailableUpdate)))
-			}
-
-			printTable(cmd, output)
-
-			return nil
+			printOverviewTable(cmd, []string{"ID", "Installed By", "Updated By", "Source", "Available Update"}, rows)
 		},
 	}
 

@@ -15,7 +15,6 @@
 package main
 
 import (
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -26,21 +25,15 @@ func newViewsListCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
-			views, apiErr := client.Views().List()
-			exitOnError(cmd, apiErr, "Error while fetching view list")
+			views, err := client.Views().List()
+			exitOnError(cmd, err, "Error while fetching view list")
 
 			rows := make([][]string, len(views))
 			for i, view := range views {
 				rows[i] = []string{view.Name}
 			}
 
-			w := tablewriter.NewWriter(cmd.OutOrStdout())
-			w.AppendBulk(rows)
-			w.SetBorder(false)
-
-			cmd.Println()
-			w.Render()
-			cmd.Println()
+			printOverviewTable(cmd, []string{"Name"}, rows)
 		},
 	}
 }

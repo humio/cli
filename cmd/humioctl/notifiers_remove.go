@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -22,24 +23,22 @@ import (
 
 func newNotifiersRemoveCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "remove [flags] <view> <name>",
+		Use:   "remove <repo-or-view> <name>",
 		Short: "Removes an alert notifier.",
-		Long:  `Removes the alert notifier with name '<name>' in the view with name '<view>'.`,
+		Long:  `Removes the alert notifier with name '<name>' in the view with name '<repo-or-view>'.`,
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			view := args[0]
+			repoOrViewName := args[0]
 			name := args[1]
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			err := client.Notifiers().Delete(view, name)
+			err := client.Notifiers().Delete(repoOrViewName, name)
 			if err != nil {
-				cmd.Printf("Error removing ingest token: %s\n", err)
+				cmd.Printf("Error removing notifier: %s\n", err)
 				os.Exit(1)
 			}
 
-			cmd.Println("Notifier removed")
+			fmt.Fprintln(cmd.OutOrStdout(), "Notifier removed")
 		},
 	}
 

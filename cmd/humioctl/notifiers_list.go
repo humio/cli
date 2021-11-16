@@ -15,38 +15,28 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 func newNotifiersListCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "list [flags] <view>",
-		Short: "List all notifiers in a view.",
+		Use:   "list <repo-or-view>",
+		Short: "List all notifiers in a repository or view.",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-
-			view := args[0]
-
-			// Get the HTTP client
+		Run: func(cmd *cobra.Command, args []string) {
+			repoOrViewName := args[0]
 			client := NewApiClient(cmd)
-			notifiers, err := client.Notifiers().List(view)
 
-			if err != nil {
-				return fmt.Errorf("error fetching notifiers: %s", err)
-			}
+			notifiers, err := client.Notifiers().List(repoOrViewName)
+			exitOnError(cmd, err, "Error fetching notifiers")
 
-			var output []string
-			output = append(output, "Name | Type")
+			var rows [][]string
 			for i := 0; i < len(notifiers); i++ {
 				notifier := notifiers[i]
-				output = append(output, fmt.Sprintf("%v | %v", notifier.Name, notifier.Entity))
+				rows = append(rows, []string{notifier.Name, notifier.Entity})
 			}
 
-			printTable(cmd, output)
-
-			return nil
+			printOverviewTable(cmd, []string{"Name", "Type"}, rows)
 		},
 	}
 

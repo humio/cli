@@ -50,9 +50,7 @@ var (
 )
 
 func newCompletionCmd() *cobra.Command {
-	out := os.Stdout
-
-	shells := []string{}
+	var shells []string
 	for s := range completionShells {
 		shells = append(shells, s)
 	}
@@ -62,7 +60,7 @@ func newCompletionCmd() *cobra.Command {
 		Short: "Generate autocompletions script for the specified shell (bash or zsh)",
 		Long:  completionDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runCompletion(out, cmd, args)
+			return runCompletion(os.Stdout, cmd, args)
 		},
 		ValidArgs: shells,
 	}

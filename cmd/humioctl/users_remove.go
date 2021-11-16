@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -26,13 +27,12 @@ func newUsersRemoveCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			username := args[0]
-
 			client := NewApiClient(cmd)
 
 			removedUser, err := client.Users().Remove(username)
 			exitOnError(cmd, err, "Error removing the user")
 
-			printUserTable(cmd, removedUser)
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed user with username %q with ID %q\n", removedUser.Username, removedUser.ID)
 		},
 	}
 

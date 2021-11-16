@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/humio/cli/prompt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -30,27 +29,20 @@ func newStatusCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
-			serverStatus, serverErr := client.Status()
-			exitOnError(cmd, serverErr, "error getting server status")
+			serverStatus, err := client.Status()
+			exitOnError(cmd, err, "Error getting server status")
 
-			username, usernameErr := client.Viewer().Username()
-			exitOnError(cmd, usernameErr, "error getting the current user")
+			username, err := client.Viewer().Username()
+			exitOnError(cmd, err, "Error getting the current user")
 
-			data := [][]string{
+			details := [][]string{
 				{"Status", formatStatusText(serverStatus.Status)},
 				{"Address", viper.GetString(viperkey.Address)},
 				{"Version", serverStatus.Version},
 				{"Username", username},
 			}
 
-			w := tablewriter.NewWriter(cmd.OutOrStdout())
-			w.AppendBulk(data)
-			w.SetBorder(false)
-			w.SetColumnSeparator(":")
-			w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-
-			w.Render()
-			fmt.Println()
+			printDetailsTable(cmd, details)
 		},
 	}
 

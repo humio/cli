@@ -15,8 +15,6 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -27,42 +25,32 @@ func newClusterShowCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
-			cluster, apiErr := client.Clusters().Get()
-			exitOnError(cmd, apiErr, "error fetching cluster information")
-			printClusterInfo(cmd, cluster)
-			cmd.Println()
+
+			cluster, err := client.Clusters().Get()
+			exitOnError(cmd, err, "Error fetching cluster information")
+
+			rows := [][]string{
+				{
+					"Under replicated segment (Size)",
+					ByteCountDecimal(int64(cluster.UnderReplicatedSegmentSize)),
+					ByteCountDecimal(int64(cluster.TargetUnderReplicatedSegmentSize))},
+				{
+					"Over replicated segment (Size)",
+					ByteCountDecimal(int64(cluster.OverReplicatedSegmentSize)),
+					ByteCountDecimal(int64(cluster.TargetOverReplicatedSegmentSize))},
+				{
+					"Missing segment (Size)",
+					ByteCountDecimal(int64(cluster.MissingSegmentSize)),
+					ByteCountDecimal(int64(cluster.TargetMissingSegmentSize))},
+				{
+					"Properly replicated segment (Size)",
+					ByteCountDecimal(int64(cluster.ProperlyReplicatedSegmentSize)),
+					ByteCountDecimal(int64(cluster.TargetProperlyReplicatedSegmentSize))},
+			}
+
+			printOverviewTable(cmd, []string{"Description", "Current", "Target"}, rows)
 		},
 	}
 
 	return cmd
-}
-
-func printClusterInfo(cmd *cobra.Command, cluster api.Cluster) {
-	cmd.Printf("Cluster information is %.3f seconds old. \nCluster currently consists of %d nodes.\n\n", cluster.ClusterInfoAgeSeconds, len(cluster.Nodes))
-
-	header := []string{"Description", "Current", "Target"}
-	data := [][]string{
-		{
-			"Under replicated segment (Size)",
-			ByteCountDecimal(int64(cluster.UnderReplicatedSegmentSize)),
-			ByteCountDecimal(int64(cluster.TargetUnderReplicatedSegmentSize))},
-		{
-			"Over replicated segment (Size)",
-			ByteCountDecimal(int64(cluster.OverReplicatedSegmentSize)),
-			ByteCountDecimal(int64(cluster.TargetOverReplicatedSegmentSize))},
-		{
-			"Missing segment (Size)",
-			ByteCountDecimal(int64(cluster.MissingSegmentSize)),
-			ByteCountDecimal(int64(cluster.TargetMissingSegmentSize))},
-		{
-			"Properly replicated segment (Size)",
-			ByteCountDecimal(int64(cluster.ProperlyReplicatedSegmentSize)),
-			ByteCountDecimal(int64(cluster.TargetProperlyReplicatedSegmentSize))},
-	}
-
-	w := tablewriter.NewWriter(cmd.OutOrStdout())
-	w.AppendBulk(data)
-	w.SetHeader(header)
-	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-	w.Render()
 }

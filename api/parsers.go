@@ -30,7 +30,7 @@ type ParserListItem struct {
 }
 
 func (p *Parsers) List(repositoryName string) ([]ParserListItem, error) {
-	var q struct {
+	var query struct {
 		Repository struct {
 			Parsers []ParserListItem
 		} `graphql:"repository(name: $repositoryName)"`
@@ -40,14 +40,12 @@ func (p *Parsers) List(repositoryName string) ([]ParserListItem, error) {
 		"repositoryName": graphql.String(repositoryName),
 	}
 
-	graphqlErr := p.client.Query(&q, variables)
-
 	var parsers []ParserListItem
-	if graphqlErr == nil {
-		parsers = q.Repository.Parsers
+	err := p.client.Query(&query, variables)
+	if err == nil {
+		parsers = query.Repository.Parsers
 	}
-
-	return parsers, graphqlErr
+	return parsers, err
 }
 
 func (p *Parsers) Remove(repositoryName string, parserName string) error {
@@ -117,9 +115,9 @@ func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error)
 		"repositoryName": graphql.String(repositoryName),
 	}
 
-	graphqlErr := p.client.Query(&query, variables)
-	if graphqlErr != nil {
-		return nil, graphqlErr
+	err := p.client.Query(&query, variables)
+	if err != nil {
+		return nil, err
 	}
 
 	if query.Repository.Parser == nil {
@@ -152,10 +150,10 @@ func (p *Parsers) Export(repositoryName string, parserName string) (string, erro
 		"repositoryName": graphql.String(repositoryName),
 	}
 
-	graphqlErr := p.client.Query(&query, variables)
+	err := p.client.Query(&query, variables)
 
-	if graphqlErr != nil {
-		return "", graphqlErr
+	if err != nil {
+		return "", err
 	}
 
 	if query.Repository.Parser == nil {

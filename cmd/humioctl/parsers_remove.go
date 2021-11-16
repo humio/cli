@@ -15,22 +15,24 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
 func newParsersRemoveCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "remove [flags] <repo> <parser>",
+		Use:   "remove <repo> <parser>",
 		Short: "Remove (uninstall) a parser from a repository.",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
 			parser := args[1]
-
 			client := NewApiClient(cmd)
 
-			apiError := client.Parsers().Remove(repo, parser)
-			exitOnError(cmd, apiError, "Error removing parser")
+			err := client.Parsers().Remove(repo, parser)
+			exitOnError(cmd, err, "Error removing parser")
+
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed parser %q from repository %q\n", parser, repo)
 		},
 	}
 

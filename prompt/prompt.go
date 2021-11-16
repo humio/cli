@@ -68,33 +68,36 @@ func (p *Prompt) AskSecret(question string) (string, error) {
 	return string(bytes), nil
 }
 
+func (p *Prompt) BlankLine() {
+	fmt.Fprintln(p.Out)
+}
+
 func (p *Prompt) Print(i ...interface{}) {
-	fmt.Fprint(p.Out, "  ")
 	fmt.Fprint(p.Out, i...)
 }
 
-func (p *Prompt) Output(i ...interface{}) {
-	p.Print(fmt.Sprintln(i...))
+func (p *Prompt) Printf(format string, i ...interface{}) {
+	fmt.Fprintf(p.Out, format, i...)
 }
 
 func (p *Prompt) Title(text string) {
 	c := "[underline][bold]" + text + "[reset]"
-	p.Output(Colorize(c))
+	p.Print(Colorize(c))
 }
 
 func (p *Prompt) Description(text string) {
 	c := "[gray]" + text + "[reset]"
-	p.Output(Colorize(c))
+	p.Print(Colorize(c))
 }
 
 func (p *Prompt) Error(text string) {
 	c := "[red]" + text + "[reset]"
-	p.Output(Colorize(c))
+	p.Print(Colorize(c))
 }
 
 func (p *Prompt) Info(text string) {
 	c := "[purple]" + text + "[reset]"
-	p.Output(Colorize(c))
+	p.Print(Colorize(c))
 }
 
 func Colorize(text string) string {

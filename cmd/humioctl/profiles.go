@@ -49,11 +49,8 @@ You can change the default profile using:
 
 			if len(profiles) == 0 {
 				cmd.Println("You have no saved profiles")
-				cmd.Println()
 				cmd.Println("Use `humio profiles add <name>` to add one.")
 			}
-
-			cmd.Println()
 		},
 	}
 

@@ -16,20 +16,20 @@ func newReposUpdateUserGroupCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			repoName := args[0]
 			userName := args[1]
+			client := NewApiClient(cmd)
 
 			var defaultGroups []api.DefaultGroupEnum
 			for _, group := range groups {
 				var defaultGroup api.DefaultGroupEnum
 				if !defaultGroup.ParseString(group) {
-					cmd.Println("the group '%s' was not valid (must be either 'Member', 'Admin' or 'Eliminator')")
+					cmd.Println("The group '%s' was not valid (must be either 'Member', 'Admin' or 'Eliminator')")
 					os.Exit(1)
 				}
 				defaultGroups = append(defaultGroups, defaultGroup)
 			}
 
-			client := NewApiClient(cmd)
-			apiErr := client.Repositories().UpdateUserGroup(repoName, userName, defaultGroups...)
-			exitOnError(cmd, apiErr, "error adding user")
+			err := client.Repositories().UpdateUserGroup(repoName, userName, defaultGroups...)
+			exitOnError(cmd, err, "Error adding user")
 		},
 	}
 	cmd.Flags().StringSliceVarP(&groups, "groups", "g", []string{api.DefaultGroupEnumMember.String()}, "the groups that the user should be added in")

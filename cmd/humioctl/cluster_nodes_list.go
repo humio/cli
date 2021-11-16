@@ -19,7 +19,6 @@ import (
 	"strconv"
 
 	"github.com/humio/cli/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -32,8 +31,8 @@ func newClusterNodesListCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
-			nodes, apiErr := client.ClusterNodes().List()
-			exitOnError(cmd, apiErr, "error fetching cluster nodes")
+			nodes, err := client.ClusterNodes().List()
+			exitOnError(cmd, err, "Error fetching cluster nodes")
 
 			sort.Slice(nodes, func(i, j int) bool {
 				var a, b api.ClusterNode
@@ -47,13 +46,7 @@ func newClusterNodesListCmd() *cobra.Command {
 				rows[i] = []string{strconv.Itoa(node.Id), node.Name, strconv.FormatBool(node.CanBeSafelyUnregistered), node.Zone}
 			}
 
-			w := tablewriter.NewWriter(cmd.OutOrStdout())
-			w.SetHeader([]string{"ID", "Name", "Can be safely unregistered", "Availability Zone"})
-			w.AppendBulk(rows)
-			w.SetBorder(false)
-
-			w.Render()
-			cmd.Println()
+			printOverviewTable(cmd, []string{"ID", "Name", "Can be safely unregistered", "Availability Zone"}, rows)
 		},
 	}
 

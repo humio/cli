@@ -15,7 +15,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -27,13 +26,12 @@ func newViewsDeleteCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			view := args[0]
 			reason := args[1]
-
-			fmt.Printf("Deleting view %s with reason %q\n", view, reason)
-
 			client := NewApiClient(cmd)
 
-			apiError := client.Views().Delete(view, reason)
-			exitOnError(cmd, apiError, "error removing view")
+			err := client.Views().Delete(view, reason)
+			exitOnError(cmd, err, "Error removing view")
+
+			cmd.Printf("Successfully deleted view %s with reason %q\n", view, reason)
 		},
 	}
 }
