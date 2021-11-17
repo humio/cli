@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
-	"strconv"
+	"os"
 	"strings"
+	"time"
 )
 
 func newTransferCmd() *cobra.Command {
@@ -87,6 +89,7 @@ func newTransferJobsCmd() *cobra.Command {
 	cmd.AddCommand(newTransferJobsAddCmd())
 	cmd.AddCommand(newTransferJobsCancelCmd())
 	cmd.AddCommand(newTransferJobsStatusCmd())
+	cmd.AddCommand(newTransferJobsShowCmd())
 
 	return cmd
 }
@@ -101,21 +104,28 @@ func newTransferJobsListCmd() *cobra.Command {
 			jobs, err := client.Transfer().ListTransferJobs()
 			exitOnError(cmd, err, "Error listing transfer jobs")
 
-			var rows [][]string
+			var rows [][]format.Value
 			for _, job := range jobs {
-				at := ""
+				var at *time.Time
 				state := "Active"
 				if job.CompletedAt != nil {
 					state = "Completed"
-					at = job.CompletedAt.String()
+					at = job.CompletedAt
 				} else if job.CancelledAt != nil {
 					state = "Cancelled"
-					at = job.CancelledAt.String()
+					at = job.CancelledAt
 				}
-				rows = append(rows, []string{job.ID, job.SourceClusterURL, strconv.Itoa(job.MaximumParallelDownloads), strconv.Itoa(len(job.Dataspaces)), state, at})
+				rows = append(rows, []format.Value{
+					format.String(job.ID),
+					format.String(job.SourceClusterURL),
+					format.Int(job.MaximumParallelDownloads),
+					format.Int(len(job.Dataspaces)),
+					format.String(state),
+					at,
+				})
 			}
 
-			printOverviewTable(cmd, []string{"ID | Source | Parallel | No. Dataspaces | State | At"}, rows)
+			printOverviewTable(cmd, []string{"ID", "Source", "Parallel", "No. Dataspaces", "State", "At"}, rows)
 		},
 	}
 
@@ -123,29 +133,31 @@ func newTransferJobsListCmd() *cobra.Command {
 }
 
 func detailTransferJob(cmd *cobra.Command, job interface{}) {
-	var details [][]string
+	var details [][]format.Value
 
 	switch j := job.(type) {
 	case api.TransferJob:
-		details = append(details, []string{"ID", j.ID})
-		details = append(details, []string{"Source Cluster", j.SourceClusterURL})
-		details = append(details, []string{"Maximum parallel downloads", strconv.Itoa(j.MaximumParallelDownloads)})
-		details = append(details, []string{"Dataspaces", j.Dataspaces[0]})
-		for _, ds := range j.Dataspaces[1:] {
-			details = append(details, []string{"", ds})
+		details = append(details, []format.Value{format.String("ID"), format.String(j.ID)})
+		details = append(details, []format.Value{format.String("Source Cluster"), format.String(j.SourceClusterURL)})
+		details = append(details, []format.Value{format.String("Maximum parallel downloads"), format.Int(j.MaximumParallelDownloads)})
+		var dataspaces format.MultiValue
+		for _, ds := range j.Dataspaces {
+			dataspaces = append(dataspaces, format.String(ds))
 		}
+		details = append(details, []format.Value{format.String("Dataspaces"), dataspaces})
 		if j.CompletedAt != nil {
-			details = append(details, []string{"Completed At", j.CompletedAt.String()})
+			details = append(details, []format.Value{format.String("Completed At"), j.CompletedAt})
 		}
 		if j.CancelledAt != nil {
-			details = append(details, []string{"Cancelled At", j.CancelledAt.String()})
+			details = append(details, []format.Value{format.String("Cancelled At"), j.CancelledAt})
 		}
 	case api.TransferJobStatus:
-		details = append(details, []string{"Status", j.Status})
-		details = append(details, []string{"Status Line", j.StatusLine})
-		details = append(details, []string{"Running", fmt.Sprint(j.Running)})
-		details = append(details, []string{"Error", j.Error})
-		details = append(details, []string{"Progress", fmt.Sprintf("%d/%d", j.TransferredSegments, j.TotalSegments)})
+		details = append(details, []format.Value{format.String("Status"), format.String(j.Status)})
+		details = append(details, []format.Value{format.String("Status Line"), format.String(j.StatusLine)})
+		details = append(details, []format.Value{format.String("Running"), format.Bool(j.Running)})
+		details = append(details, []format.Value{format.String("Error"), format.String(j.Error)})
+		details = append(details, []format.Value{format.String("Transferred segments"), format.Int(j.TransferredSegments)})
+		details = append(details, []format.Value{format.String("Total segments"), format.Int(j.TotalSegments)})
 	}
 
 	printDetailsTable(cmd, details)
@@ -209,6 +221,36 @@ func newTransferJobsStatusCmd() *cobra.Command {
 			exitOnError(cmd, err, "Error getting status of transfer job")
 
 			detailTransferJob(cmd, job)
+		},
+	}
+
+	return cmd
+}
+
+func newTransferJobsShowCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "show <transfer job id>",
+		Short: "Show a transfer job",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			client := NewApiClient(cmd)
+
+			jobs, err := client.Transfer().ListTransferJobs()
+			exitOnError(cmd, err, "Error getting transfer job")
+
+			var found bool
+			for _, job := range jobs {
+				if job.ID == args[0] {
+					detailTransferJob(cmd, job)
+					found = true
+					break
+				}
+			}
+
+			if !found {
+				cmd.PrintErrln("Transfer job not found")
+				os.Exit(1)
+			}
 		},
 	}
 

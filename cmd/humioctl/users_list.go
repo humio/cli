@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -28,9 +29,15 @@ func newUsersListCmd() *cobra.Command {
 			users, err := client.Users().List()
 			exitOnError(cmd, err, "Error fetching user list")
 
-			rows := make([][]string, len(users))
+			rows := make([][]format.Value, len(users))
 			for i, user := range users {
-				rows[i] = []string{user.Username, user.FullName, yesNo(user.IsRoot), user.CreatedAt, user.ID}
+				rows[i] = []format.Value{
+					format.String(user.Username),
+					format.String(user.FullName),
+					yesNo(user.IsRoot),
+					format.String(user.CreatedAt),
+					format.String(user.ID),
+				}
 			}
 
 			printOverviewTable(cmd, []string{"Username", "Name", "Root", "Created", "ID"}, rows)

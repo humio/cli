@@ -15,7 +15,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/humio/cli/cmd/internal/format"
 
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
@@ -38,14 +38,14 @@ func newReposCmd() *cobra.Command {
 }
 
 func printRepoDetailsTable(cmd *cobra.Command, repo api.Repository) {
-	details := [][]string{
-		{"ID", repo.ID},
-		{"Name", repo.Name},
-		{"Description", repo.Description},
-		{"Space Used", ByteCountDecimal(repo.SpaceUsed)},
-		{"Ingest Retention (Size)", ByteCountDecimal(int64(repo.IngestRetentionSizeGB * 1e9))},
-		{"Storage Retention (Size)", ByteCountDecimal(int64(repo.StorageRetentionSizeGB * 1e9))},
-		{"Retention (Days)", fmt.Sprintf("%d", int64(repo.RetentionDays))},
+	details := [][]format.Value{
+		{format.String("ID"), format.String(repo.ID)},
+		{format.String("Name"), format.String(repo.Name)},
+		{format.String("Description"), format.String(repo.Description)},
+		{format.String("Space Used"), ByteCountDecimal(repo.SpaceUsed)},
+		{format.String("Ingest Retention (Size)"), ByteCountDecimal(repo.IngestRetentionSizeGB * 1e9)},
+		{format.String("Storage Retention (Size)"), ByteCountDecimal(repo.StorageRetentionSizeGB * 1e9)},
+		{format.String("Retention (Days)"), format.Int(repo.RetentionDays)},
 	}
 
 	printDetailsTable(cmd, details)

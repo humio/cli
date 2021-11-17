@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 	"os"
 	"sort"
@@ -92,11 +94,11 @@ func newHealthCmd() *cobra.Command {
 }
 
 func printHealthDetailsTable(cmd *cobra.Command, result healthCheckResult) {
-	details := [][]string{
-		{"Status", string(result.Status)},
-		{"Message", result.StatusMessage},
-		{"Version", result.Version},
-		{"Uptime", result.Uptime},
+	details := [][]format.Value{
+		{format.String("Status"), format.String(result.Status)},
+		{format.String("Message"), format.String(result.StatusMessage)},
+		{format.String("Version"), format.String(result.Version)},
+		{format.String("Uptime"), format.String(result.Uptime)},
 	}
 
 	printDetailsTable(cmd, details)
@@ -109,7 +111,7 @@ func printHealthOverviewTable(cmd *cobra.Command, result healthCheckResult) {
 	}
 	sort.Strings(healthChecksNames)
 
-	var rows [][]string
+	var rows [][]format.Value
 	for _, name := range healthChecksNames {
 		var keys []string
 		for f := range result.Checks[name].Fields {
@@ -117,12 +119,34 @@ func printHealthOverviewTable(cmd *cobra.Command, result healthCheckResult) {
 		}
 		sort.Strings(keys)
 
-		var fields []string
+		fields := HealthFields{}
 		for _, f := range keys {
-			fields = append(fields, fmt.Sprintf("%s=%q", f, result.Checks[name].Fields[f]))
+			fields[f] = format.String(fmt.Sprint(result.Checks[name].Fields[f]))
 		}
-		rows = append(rows, []string{result.Checks[name].Name, string(result.Checks[name].Status), result.Checks[name].StatusMessage, strings.Join(fields, " ")})
+		rows = append(rows, []format.Value{
+			format.String(result.Checks[name].Name),
+			format.String(result.Checks[name].Status),
+			format.String(result.Checks[name].StatusMessage),
+			fields,
+		})
 	}
 
 	printOverviewTable(cmd, []string{"name", "status", "message", "fields"}, rows)
+}
+
+type HealthFields map[string]format.Value
+
+func (h HealthFields) String() string {
+	var s []string
+	for k, v := range h {
+		s = append(s, fmt.Sprintf("%s=%q", k, v.String()))
+	}
+
+	sort.Strings(s)
+
+	return strings.Join(s, " ")
+}
+
+func (h HealthFields) MarshalJSON() ([]byte, error) {
+	return json.Marshal((map[string]format.Value)(h))
 }

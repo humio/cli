@@ -25,6 +25,7 @@ type Parsers struct {
 func (c *Client) Parsers() *Parsers { return &Parsers{client: c} }
 
 type ParserListItem struct {
+	ID        string
 	Name      string
 	IsBuiltIn bool
 }

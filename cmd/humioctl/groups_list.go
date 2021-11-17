@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -14,9 +15,12 @@ func newGroupsList() *cobra.Command {
 			groups, err := client.Groups().List()
 			exitOnError(cmd, err, "Error listing groups")
 
-			rows := make([][]string, len(groups))
+			rows := make([][]format.Value, len(groups))
 			for i, group := range groups {
-				rows[i] = []string{group.DisplayName, group.ID}
+				rows[i] = []format.Value{
+					format.String(group.DisplayName),
+					format.String(group.ID),
+				}
 			}
 
 			printOverviewTable(cmd, []string{"Display Name", "ID"}, rows)

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -30,9 +31,15 @@ func listInstalledPackagesCmd() *cobra.Command {
 			installedPackages, err := client.Packages().ListInstalled(repoOrViewName)
 			exitOnError(cmd, err, "Error fetching packages")
 
-			var rows [][]string
+			var rows [][]format.Value
 			for _, installedPackage := range installedPackages {
-				rows = append(rows, []string{installedPackage.ID, installedPackage.InstalledBy.Username, valueOrEmpty(installedPackage.UpdatedBy.Username), installedPackage.Source, valueOrEmpty(installedPackage.AvailableUpdate)})
+				rows = append(rows, []format.Value{
+					format.String(installedPackage.ID),
+					format.String(installedPackage.InstalledBy.Username),
+					valueOrEmpty(installedPackage.UpdatedBy.Username),
+					format.String(installedPackage.Source),
+					valueOrEmpty(installedPackage.AvailableUpdate),
+				})
 			}
 
 			printOverviewTable(cmd, []string{"ID", "Installed By", "Updated By", "Source", "Available Update"}, rows)

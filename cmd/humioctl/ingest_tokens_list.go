@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -30,10 +31,14 @@ func newIngestTokensListCmd() *cobra.Command {
 			tokens, err := client.IngestTokens().List(repo)
 			exitOnError(cmd, err, "Error fetching token list")
 
-			var rows [][]string
+			var rows [][]format.Value
 			for i := 0; i < len(tokens); i++ {
 				ingestToken := tokens[i]
-				rows = append(rows, []string{ingestToken.Name, ingestToken.Token, valueOrEmpty(ingestToken.AssignedParser)})
+				rows = append(rows, []format.Value{
+					format.String(ingestToken.Name),
+					format.String(ingestToken.Token),
+					valueOrEmpty(ingestToken.AssignedParser),
+				})
 			}
 
 			printOverviewTable(cmd, []string{"Name", "Token", "Assigned Parser"}, rows)

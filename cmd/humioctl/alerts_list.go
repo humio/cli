@@ -15,10 +15,9 @@
 package main
 
 import (
-	"strconv"
-	"strings"
-
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
+	"strings"
 )
 
 func newAlertsListCmd() *cobra.Command {
@@ -41,14 +40,18 @@ func newAlertsListCmd() *cobra.Command {
 				notifierMap[notifier.ID] = notifier.Name
 			}
 
-			var rows [][]string
+			var rows [][]format.Value
 			for i := 0; i < len(alerts); i++ {
 				alert := alerts[i]
 				var notifierNames []string
 				for _, notifierID := range alert.Notifiers {
 					notifierNames = append(notifierNames, notifierMap[notifierID])
 				}
-				rows = append(rows, []string{alert.Name, strconv.FormatBool(!alert.Silenced), alert.Description, strings.Join(notifierNames, ", ")})
+				rows = append(rows, []format.Value{
+					format.String(alert.Name),
+					format.Bool(!alert.Silenced),
+					format.String(alert.Description),
+					format.String(strings.Join(notifierNames, ", "))})
 			}
 
 			printOverviewTable(cmd, []string{"Name", "Enabled", "Description", "Notifiers"}, rows)

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -29,21 +30,21 @@ func newClusterShowCmd() *cobra.Command {
 			cluster, err := client.Clusters().Get()
 			exitOnError(cmd, err, "Error fetching cluster information")
 
-			rows := [][]string{
+			rows := [][]format.Value{
 				{
-					"Under replicated segment (Size)",
+					format.String("Under replicated segment (Size)"),
 					ByteCountDecimal(int64(cluster.UnderReplicatedSegmentSize)),
 					ByteCountDecimal(int64(cluster.TargetUnderReplicatedSegmentSize))},
 				{
-					"Over replicated segment (Size)",
+					format.String("Over replicated segment (Size)"),
 					ByteCountDecimal(int64(cluster.OverReplicatedSegmentSize)),
 					ByteCountDecimal(int64(cluster.TargetOverReplicatedSegmentSize))},
 				{
-					"Missing segment (Size)",
+					format.String("Missing segment (Size)"),
 					ByteCountDecimal(int64(cluster.MissingSegmentSize)),
 					ByteCountDecimal(int64(cluster.TargetMissingSegmentSize))},
 				{
-					"Properly replicated segment (Size)",
+					format.String("Properly replicated segment (Size)"),
 					ByteCountDecimal(int64(cluster.ProperlyReplicatedSegmentSize)),
 					ByteCountDecimal(int64(cluster.TargetProperlyReplicatedSegmentSize))},
 			}
