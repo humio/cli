@@ -5,6 +5,7 @@ import (
 	"github.com/humio/cli/api"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
+	"os"
 	"strings"
 	"time"
 )
@@ -88,6 +89,7 @@ func newTransferJobsCmd() *cobra.Command {
 	cmd.AddCommand(newTransferJobsAddCmd())
 	cmd.AddCommand(newTransferJobsCancelCmd())
 	cmd.AddCommand(newTransferJobsStatusCmd())
+	cmd.AddCommand(newTransferJobsShowCmd())
 
 	return cmd
 }
@@ -219,6 +221,36 @@ func newTransferJobsStatusCmd() *cobra.Command {
 			exitOnError(cmd, err, "Error getting status of transfer job")
 
 			detailTransferJob(cmd, job)
+		},
+	}
+
+	return cmd
+}
+
+func newTransferJobsShowCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "show <transfer job id>",
+		Short: "Show a transfer job",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			client := NewApiClient(cmd)
+
+			jobs, err := client.Transfer().ListTransferJobs()
+			exitOnError(cmd, err, "Error getting transfer job")
+
+			var found bool
+			for _, job := range jobs {
+				if job.ID == args[0] {
+					detailTransferJob(cmd, job)
+					found = true
+					break
+				}
+			}
+
+			if !found {
+				cmd.PrintErrln("Transfer job not found")
+				os.Exit(1)
+			}
 		},
 	}
 
