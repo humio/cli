@@ -25,12 +25,12 @@ func newUsersShowCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			username := args[0]
-
 			client := NewApiClient(cmd)
+
 			user, err := client.Users().Get(username)
 			exitOnError(cmd, err, "Error fetching user")
 
-			printUserTable(cmd, user)
+			printUserDetailsTable(cmd, user)
 		},
 	}
 

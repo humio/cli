@@ -34,7 +34,7 @@ type View struct {
 func (c *Client) Views() *Views { return &Views{client: c} }
 
 func (c *Views) Get(name string) (*View, error) {
-	var q struct {
+	var query struct {
 		Result ViewQueryData `graphql:"searchDomain(name: $name)"`
 	}
 
@@ -42,15 +42,13 @@ func (c *Views) Get(name string) (*View, error) {
 		"name": graphql.String(name),
 	}
 
-	graphqlErr := c.client.Query(&q, variables)
-
-	if graphqlErr != nil {
-		return nil, graphqlErr
+	err := c.client.Query(&query, variables)
+	if err != nil {
+		return nil, err
 	}
 
-	connections := make([]ViewConnection, len(q.Result.ViewInfo.Connections))
-
-	for i, data := range q.Result.ViewInfo.Connections {
+	connections := make([]ViewConnection, len(query.Result.ViewInfo.Connections))
+	for i, data := range query.Result.ViewInfo.Connections {
 		connections[i] = ViewConnection{
 			RepoName: data.Repository.Name,
 			Filter:   data.Filter,
@@ -58,7 +56,7 @@ func (c *Views) Get(name string) (*View, error) {
 	}
 
 	view := View{
-		Name:        q.Result.Name,
+		Name:        query.Result.Name,
 		Connections: connections,
 	}
 
@@ -70,17 +68,17 @@ type ViewListItem struct {
 }
 
 func (c *Views) List() ([]ViewListItem, error) {
-	var q struct {
+	var query struct {
 		View []ViewListItem `graphql:"searchDomains"`
 	}
 
-	graphqlErr := c.client.Query(&q, nil)
+	err := c.client.Query(&query, nil)
 
-	sort.Slice(q.View, func(i, j int) bool {
-		return strings.ToLower(q.View[i].Name) < strings.ToLower(q.View[j].Name)
+	sort.Slice(query.View, func(i, j int) bool {
+		return strings.ToLower(query.View[i].Name) < strings.ToLower(query.View[j].Name)
 	})
 
-	return q.View, graphqlErr
+	return query.View, err
 }
 
 type ViewConnectionInput struct {
@@ -89,7 +87,7 @@ type ViewConnectionInput struct {
 }
 
 func (c *Views) Create(name, description string, connections map[string]string) error {
-	var m struct {
+	var mutation struct {
 		CreateView struct {
 			Name        string
 			Description string
@@ -112,17 +110,11 @@ func (c *Views) Create(name, description string, connections map[string]string) 
 		"connections": viewConnections,
 	}
 
-	err := c.client.Mutate(&m, variables)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return c.client.Mutate(&mutation, variables)
 }
 
 func (c *Views) Delete(name, reason string) error {
-	var m struct {
+	var mutation struct {
 		DeleteSearchDomain struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -133,17 +125,11 @@ func (c *Views) Delete(name, reason string) error {
 		"reason": graphql.String(reason),
 	}
 
-	err := c.client.Mutate(&m, variables)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return c.client.Mutate(&mutation, variables)
 }
 
 func (c *Views) UpdateConnections(name string, connections map[string]string) error {
-	var m struct {
+	var mutation struct {
 		View struct {
 			Name string
 		} `graphql:"updateView(viewName: $viewName, connections: $connections)"`
@@ -164,17 +150,11 @@ func (c *Views) UpdateConnections(name string, connections map[string]string) er
 		"connections": viewConnections,
 	}
 
-	err := c.client.Mutate(&m, variables)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return c.client.Mutate(&mutation, variables)
 }
 
 func (c *Views) UpdateDescription(name string, description string) error {
-	var m struct {
+	var mutation struct {
 		UpdateDescriptionMutation struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -186,11 +166,5 @@ func (c *Views) UpdateDescription(name string, description string) error {
 		"description": graphql.String(description),
 	}
 
-	err := c.client.Mutate(&m, variables)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return c.client.Mutate(&mutation, variables)
 }

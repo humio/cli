@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/humio/cli/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -38,9 +37,8 @@ func newReposCmd() *cobra.Command {
 	return cmd
 }
 
-func printRepoTable(cmd *cobra.Command, repo api.Repository) {
-
-	data := [][]string{
+func printRepoDetailsTable(cmd *cobra.Command, repo api.Repository) {
+	details := [][]string{
 		{"ID", repo.ID},
 		{"Name", repo.Name},
 		{"Description", repo.Description},
@@ -50,10 +48,5 @@ func printRepoTable(cmd *cobra.Command, repo api.Repository) {
 		{"Retention (Days)", fmt.Sprintf("%d", int64(repo.RetentionDays))},
 	}
 
-	w := tablewriter.NewWriter(cmd.OutOrStdout())
-	w.AppendBulk(data)
-	w.SetBorder(false)
-	w.SetColumnSeparator(":")
-	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-	w.Render()
+	printDetailsTable(cmd, details)
 }

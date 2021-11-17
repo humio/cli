@@ -46,19 +46,19 @@ func (a *Alerts) List(viewName string) ([]Alert, error) {
 func (a *Alerts) Update(viewName string, alert *Alert) (*Alert, error) {
 	existingID, err := a.convertAlertNameToID(viewName, alert.Name)
 	if err != nil {
-		return nil, fmt.Errorf("could not convert alert name to id: %v", err)
+		return nil, fmt.Errorf("could not convert alert name to id: %w", err)
 	}
 
 	jsonStr, err := a.marshalToJSON(alert)
 	if err != nil {
-		return nil, fmt.Errorf("unable to convert alert to json string: %v", err)
+		return nil, fmt.Errorf("unable to convert alert to json string: %w", err)
 	}
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, existingID)
 
 	res, err := a.client.HTTPRequest(http.MethodPut, url, bytes.NewBuffer(jsonStr))
 	if err != nil {
-		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %v", viewName, alert.Name, err)
+		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %w", viewName, alert.Name, err)
 	}
 	return a.unmarshalToAlert(res)
 }
@@ -66,7 +66,7 @@ func (a *Alerts) Update(viewName string, alert *Alert) (*Alert, error) {
 func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert, error) {
 	nameAlreadyInUse, err := a.alertNameInUse(viewName, alert.Name)
 	if err != nil {
-		return nil, fmt.Errorf("could not determine if alert name is in use: %v", err)
+		return nil, fmt.Errorf("could not determine if alert name is in use: %w", err)
 	}
 
 	if nameAlreadyInUse {
@@ -78,14 +78,14 @@ func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert
 
 	jsonStr, err := a.marshalToJSON(alert)
 	if err != nil {
-		return nil, fmt.Errorf("unable to convert alert to json string: %v", err)
+		return nil, fmt.Errorf("unable to convert alert to json string: %w", err)
 	}
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alerts/", viewName)
 
 	res, err := a.client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(jsonStr))
 	if err != nil {
-		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %v", viewName, alert.Name, err)
+		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %w", viewName, alert.Name, err)
 	}
 
 	return a.unmarshalToAlert(res)
@@ -101,7 +101,7 @@ func (a *Alerts) Get(viewName, alertName string) (*Alert, error) {
 
 	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("could not get alert with id %s, got: %v", alertID, err)
+		return nil, fmt.Errorf("could not get alert with id %s, got: %w", alertID, err)
 	}
 
 	return a.unmarshalToAlert(res)
@@ -121,8 +121,9 @@ func (a *Alerts) Delete(viewName, alertName string) error {
 	}
 
 	if err != nil || res.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("could not delete alert in view %s with id %s, got: %v", viewName, alertID, err)
+		return fmt.Errorf("could not delete alert in view %s with id %s, got: %w", viewName, alertID, err)
 	}
+
 	return nil
 }
 
@@ -134,7 +135,7 @@ func (a *Alerts) marshalToJSON(alert *Alert) ([]byte, error) {
 
 	jsonStr, err := json.Marshal(alert)
 	if err != nil {
-		return nil, fmt.Errorf("unable to convert alert to json string: %v", err)
+		return nil, fmt.Errorf("unable to convert alert to json string: %w", err)
 	}
 	return jsonStr, nil
 }
@@ -149,7 +150,7 @@ func (a *Alerts) unmarshalToAlertList(res *http.Response) ([]Alert, error) {
 
 	err = json.Unmarshal(body, &alertList)
 	if err != nil {
-		return alertList, fmt.Errorf("error in json response: %v. response: %v", err, string(body))
+		return alertList, fmt.Errorf("error in json response: %w. response: %v", err, string(body))
 	}
 
 	return alertList, nil
@@ -165,7 +166,7 @@ func (a *Alerts) unmarshalToAlert(res *http.Response) (*Alert, error) {
 
 	err = json.Unmarshal(body, &alert)
 	if err != nil {
-		return &alert, fmt.Errorf("error in json response: %v. response: %v", err, string(body))
+		return &alert, fmt.Errorf("error in json response: %w. response: %v", err, string(body))
 	}
 	return &alert, nil
 }
@@ -173,7 +174,7 @@ func (a *Alerts) unmarshalToAlert(res *http.Response) (*Alert, error) {
 func (a *Alerts) convertAlertNameToID(viewName, alertName string) (string, error) {
 	listOfAlerts, err := a.List(viewName)
 	if err != nil {
-		return "", fmt.Errorf("could not list all alerts for view %s: %v", viewName, err)
+		return "", fmt.Errorf("could not list all alerts for view %s: %w", viewName, err)
 	}
 	for _, v := range listOfAlerts {
 		if v.Name == alertName {
@@ -186,7 +187,7 @@ func (a *Alerts) convertAlertNameToID(viewName, alertName string) (string, error
 func (a *Alerts) alertNameInUse(viewName, alertName string) (bool, error) {
 	listOfAlerts, err := a.List(viewName)
 	if err != nil {
-		return true, fmt.Errorf("could not list all alerts for view %s: %v", viewName, err)
+		return true, fmt.Errorf("could not list all alerts for view %s: %w", viewName, err)
 	}
 	for _, v := range listOfAlerts {
 		if v.Name == alertName {

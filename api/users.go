@@ -33,17 +33,16 @@ type UserChangeSet struct {
 func (c *Client) Users() *Users { return &Users{client: c} }
 
 func (u *Users) List() ([]User, error) {
-	var q struct {
+	var query struct {
 		Users []User `graphql:"users"`
 	}
 
-	graphqlErr := u.client.Query(&q, nil)
-
-	return q.Users, graphqlErr
+	err := u.client.Query(&query, nil)
+	return query.Users, err
 }
 
 func (u *Users) Get(username string) (User, error) {
-	var q struct {
+	var query struct {
 		Users []User `graphql:"users(search: $username)"`
 	}
 
@@ -51,13 +50,12 @@ func (u *Users) Get(username string) (User, error) {
 		"username": graphql.String(username),
 	}
 
-	graphqlErr := u.client.Query(&q, variables)
-
-	if graphqlErr != nil {
-		return User{}, graphqlErr
+	err := u.client.Query(&query, variables)
+	if err != nil {
+		return User{}, err
 	}
 
-	for _, user := range q.Users {
+	for _, user := range query.Users {
 		if user.Username == username {
 			return user, nil
 		}
@@ -71,9 +69,8 @@ func (u *Users) Update(username string, changeset UserChangeSet) (User, error) {
 		Result struct{ User User } `graphql:"updateUser(input: {username: $username, company: $company, isRoot: $isRoot, fullName: $fullName, picture: $picture, email: $email, countryCode: $countryCode})"`
 	}
 
-	graphqlErr := u.client.Mutate(&mutation, userChangesetToVars(username, changeset))
-
-	return mutation.Result.User, graphqlErr
+	err := u.client.Mutate(&mutation, userChangesetToVars(username, changeset))
+	return mutation.Result.User, err
 }
 
 func (u *Users) Add(username string, changeset UserChangeSet) (User, error) {
@@ -84,9 +81,9 @@ func (u *Users) Add(username string, changeset UserChangeSet) (User, error) {
 		} `graphql:"addUserV2(input: {username: $username, company: $company, isRoot: $isRoot, fullName: $fullName, picture: $picture, email: $email, countryCode: $countryCode})"`
 	}
 
-	graphqlErr := u.client.Mutate(&mutation, userChangesetToVars(username, changeset))
-	if graphqlErr != nil {
-		return User{}, graphqlErr
+	err := u.client.Mutate(&mutation, userChangesetToVars(username, changeset))
+	if err != nil {
+		return User{}, err
 	}
 
 	return u.Get(username)
@@ -103,9 +100,8 @@ func (u *Users) Remove(username string) (User, error) {
 		"username": graphql.String(username),
 	}
 
-	graphqlErr := u.client.Mutate(&mutation, variables)
-
-	return mutation.Result.User, graphqlErr
+	err := u.client.Mutate(&mutation, variables)
+	return mutation.Result.User, err
 }
 
 func (u *Users) RotateUserApiTokenAndGet(userID string) (string, error) {
@@ -122,7 +118,6 @@ func (u *Users) RotateUserApiTokenAndGet(userID string) (string, error) {
 	}
 
 	err := u.client.Mutate(&mutation, variables)
-
 	if err != nil {
 		return "", err
 	}

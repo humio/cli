@@ -17,7 +17,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 )
 
@@ -33,30 +32,15 @@ You can associate a parser with the ingest token using the --parser flag.
 Assigning a parser will make all data sent to Humio using this ingest token
 use the assigned parser at ingest time.`,
 		Args: cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
 			name := args[1]
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			token, err := client.IngestTokens().Add(repo, name, parserName)
+			ingestToken, err := client.IngestTokens().Add(repo, name, parserName)
+			exitOnError(cmd, err, "Error adding ingest token")
 
-			if err != nil {
-				return fmt.Errorf("error adding ingest token: %s", err)
-			}
-
-			var output []string
-			output = append(output, "Name | Token | Assigned Parser")
-			output = append(output, fmt.Sprintf("%v | %v | %v", token.Name, token.Token, valueOrEmpty(token.AssignedParser)))
-
-			table := columnize.SimpleFormat(output)
-
-			cmd.Println()
-			cmd.Println(table)
-			cmd.Println()
-
-			return nil
+			fmt.Fprintf(cmd.OutOrStdout(), "Added ingest token %q with parser %q: %s\n", ingestToken.Name, valueOrEmpty(ingestToken.AssignedParser), ingestToken.Token)
 		},
 	}
 

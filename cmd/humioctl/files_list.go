@@ -1,31 +1,29 @@
 package main
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 )
 
 func newFilesListCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list <view name>",
+		Use:   "list <view-name>",
 		Short: "List uploaded files in a view.",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
 			files, err := client.Files().List(args[0])
-			exitOnError(cmd, err, "error listing files")
+			exitOnError(cmd, err, "Error listing files")
 
-			table := []string{"ID | Name | Content Hash"}
+			var rows [][]string
 
 			for _, file := range files {
-				table = append(table, fmt.Sprintf("%s | %s | %s", file.ID, file.Name, file.ContentHash))
+				rows = append(rows, []string{file.Name, file.ContentHash, file.ID})
 			}
 
-			printTable(cmd, table)
+			printOverviewTable(cmd, []string{"Name", "Content Hash", "ID"}, rows)
 		},
 	}
 
 	return cmd
 }
-

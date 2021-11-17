@@ -45,14 +45,14 @@ func (n *Notifiers) Update(viewName string, notifier *Notifier) (*Notifier, erro
 	if notifier.ID == "" {
 		existingID, err := n.convertNotifierNameToID(viewName, notifier.Name)
 		if err != nil {
-			return nil, fmt.Errorf("could not convert notifier name to id: %v", err)
+			return nil, fmt.Errorf("could not convert notifier name to id: %w", err)
 		}
 		notifier.ID = existingID
 	}
 
 	jsonStr, err := n.marshalToJSON(notifier)
 	if err != nil {
-		return nil, fmt.Errorf("unable to convert notifier to json string: %v", err)
+		return nil, fmt.Errorf("unable to convert notifier to json string: %w", err)
 	}
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/%s", viewName, notifier.ID)
@@ -68,7 +68,7 @@ func (n *Notifiers) Update(viewName string, notifier *Notifier) (*Notifier, erro
 func (n *Notifiers) Add(viewName string, notifier *Notifier, force bool) (*Notifier, error) {
 	nameAlreadyInUse, err := n.notifierNameInUse(viewName, notifier.Name)
 	if err != nil {
-		return nil, fmt.Errorf("could not determine if notifier name is in use: %v", err)
+		return nil, fmt.Errorf("could not determine if notifier name is in use: %w", err)
 	}
 	if nameAlreadyInUse {
 		if !force {
@@ -79,7 +79,7 @@ func (n *Notifiers) Add(viewName string, notifier *Notifier, force bool) (*Notif
 
 	jsonStr, err := n.marshalToJSON(notifier)
 	if err != nil {
-		return nil, fmt.Errorf("unable to convert notifier to json string: %v", err)
+		return nil, fmt.Errorf("unable to convert notifier to json string: %w", err)
 	}
 
 	url := fmt.Sprintf("api/v1/repositories/%s/alertnotifiers/", viewName)
@@ -133,15 +133,16 @@ func (n *Notifiers) Delete(viewName, notifierName string) error {
 	}
 
 	if err != nil || res.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("could not delete notifier in view %s with id %s, got: %v", viewName, notifierID, err)
+		return fmt.Errorf("could not delete notifier in view %s with id %s, got: %w", viewName, notifierID, err)
 	}
+
 	return nil
 }
 
 func (n *Notifiers) marshalToJSON(notifier *Notifier) ([]byte, error) {
 	jsonStr, err := json.Marshal(notifier)
 	if err != nil {
-		return nil, fmt.Errorf("unable to convert notifier to json string: %v", err)
+		return nil, fmt.Errorf("unable to convert notifier to json string: %w", err)
 	}
 	return jsonStr, nil
 }
@@ -168,7 +169,7 @@ func (n *Notifiers) unmarshalToNotifier(res *http.Response) (*Notifier, error) {
 	}
 
 	if err = json.Unmarshal(body, &notifier); err != nil {
-		return &notifier, fmt.Errorf("error in json response: %v. response: %v", err, string(body))
+		return &notifier, fmt.Errorf("error in json response: %w. response: %v", err, string(body))
 	}
 
 	return &notifier, nil
@@ -177,7 +178,7 @@ func (n *Notifiers) unmarshalToNotifier(res *http.Response) (*Notifier, error) {
 func (n *Notifiers) convertNotifierNameToID(viewName, notifierName string) (string, error) {
 	listOfNotifiers, err := n.List(viewName)
 	if err != nil {
-		return "", fmt.Errorf("could not list all notifiers for view %s: %v", viewName, err)
+		return "", fmt.Errorf("could not list all notifiers for view %s: %w", viewName, err)
 	}
 	for _, v := range listOfNotifiers {
 		if v.Name == notifierName {
@@ -190,7 +191,7 @@ func (n *Notifiers) convertNotifierNameToID(viewName, notifierName string) (stri
 func (n *Notifiers) notifierNameInUse(viewName, notifierName string) (bool, error) {
 	listOfNotifiers, err := n.List(viewName)
 	if err != nil {
-		return true, fmt.Errorf("could not list all notifiers for view %s: %v", viewName, err)
+		return true, fmt.Errorf("could not list all notifiers for view %s: %w", viewName, err)
 	}
 	for _, v := range listOfNotifiers {
 		if v.Name == notifierName {

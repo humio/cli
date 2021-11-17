@@ -1,6 +1,9 @@
 package main
 
-import "github.com/spf13/cobra"
+import (
+	"fmt"
+	"github.com/spf13/cobra"
+)
 
 func newGroupsAddUserCmd() *cobra.Command {
 	return &cobra.Command{
@@ -8,10 +11,14 @@ func newGroupsAddUserCmd() *cobra.Command {
 		Short: "Add user to group.",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
+			groupID := args[0]
+			userID := args[1]
 			client := NewApiClient(cmd)
 
-			err := client.Groups().AddUserToGroup(args[0], args[1])
-			exitOnError(cmd, err, "error adding user to group")
+			err := client.Groups().AddUserToGroup(groupID, userID)
+			exitOnError(cmd, err, "Error adding user to group")
+
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully added user %q to group %q\n", userID, groupID)
 		},
 	}
 }

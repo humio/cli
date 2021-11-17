@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -13,17 +12,14 @@ func newGroupsList() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			groups, err := client.Groups().List()
-			exitOnError(cmd, err, "error listing groups")
+			exitOnError(cmd, err, "Error listing groups")
 
-			rows := make([]string, len(groups))
+			rows := make([][]string, len(groups))
 			for i, group := range groups {
-				rows[i] = fmt.Sprintf("%s | %s", group.ID, group.DisplayName)
+				rows[i] = []string{group.DisplayName, group.ID}
 			}
 
-			printTable(cmd, append([]string{
-				"ID | Display name"},
-				rows...,
-			))
+			printOverviewTable(cmd, []string{"Display Name", "ID"}, rows)
 		},
 	}
 }

@@ -15,7 +15,7 @@
 package main
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -26,36 +26,32 @@ func newAlertsListCmd() *cobra.Command {
 		Use:   "list [flags] <view>",
 		Short: "List all alerts in a view.",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-
+		Run: func(cmd *cobra.Command, args []string) {
 			view := args[0]
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
-			alerts, err := client.Alerts().List(view)
 
-			if err != nil {
-				return fmt.Errorf("error fetching alerts: %s", err)
+			alerts, err := client.Alerts().List(view)
+			exitOnError(cmd, err, "Error fetching alerts")
+
+			notifiers, err := client.Notifiers().List(view)
+			exitOnError(cmd, err, "Unable to fetch notifier details")
+
+			var notifierMap = map[string]string{}
+			for _, notifier := range notifiers {
+				notifierMap[notifier.ID] = notifier.Name
 			}
 
-			var output []string
-			output = append(output, "Name | Enabled | Description | Notifiers")
+			var rows [][]string
 			for i := 0; i < len(alerts); i++ {
 				alert := alerts[i]
 				var notifierNames []string
 				for _, notifierID := range alert.Notifiers {
-					notifier, err := client.Notifiers().GetByID(view, notifierID)
-					if err != nil {
-						return fmt.Errorf("could not get details for notifier with id %s: %v", notifierID, err)
-					}
-					notifierNames = append(notifierNames, notifier.Name)
+					notifierNames = append(notifierNames, notifierMap[notifierID])
 				}
-				output = append(output, fmt.Sprintf("%v | %v | %v | %v", alert.Name, !alert.Silenced, alert.Description, strings.Join(notifierNames, ", ")))
+				rows = append(rows, []string{alert.Name, strconv.FormatBool(!alert.Silenced), alert.Description, strings.Join(notifierNames, ", ")})
 			}
 
-			printTable(cmd, output)
-
-			return nil
+			printOverviewTable(cmd, []string{"Name", "Enabled", "Description", "Notifiers"}, rows)
 		},
 	}
 

@@ -15,23 +15,22 @@ func (c *Client) Transfer() *Transfer { return &Transfer{client: c} }
 var ErrManagedGroupDoesNotExist = errors.New("managed export group does not exist")
 
 func (t *Transfer) GetManagedExportGroup() (string, error) {
-	var q struct {
+	var query struct {
 		ManagedRolesAndGroupsForExport *struct {
 			GroupID string
 		} `graphql:"managedRolesAndGroupsForExport"`
 	}
 
-	err := t.client.Query(&q, nil)
-
+	err := t.client.Query(&query, nil)
 	if err != nil {
 		return "", err
 	}
 
-	if q.ManagedRolesAndGroupsForExport == nil {
+	if query.ManagedRolesAndGroupsForExport == nil {
 		return "", ErrManagedGroupDoesNotExist
 	}
 
-	return q.ManagedRolesAndGroupsForExport.GroupID, nil
+	return query.ManagedRolesAndGroupsForExport.GroupID, nil
 }
 
 func (t *Transfer) CreateManagedExportGroup() (string, error) {
@@ -68,16 +67,16 @@ type TransferJob struct {
 }
 
 func (t *Transfer) ListTransferJobs() ([]TransferJob, error) {
-	var q struct {
+	var query struct {
 		TransferJobs []TransferJob `graphql:"transferJobs"`
 	}
 
-	err := t.client.Query(&q, nil)
+	err := t.client.Query(&query, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return q.TransferJobs, nil
+	return query.TransferJobs, nil
 }
 
 type AddTransferJobResponse struct {
@@ -138,7 +137,7 @@ type TransferJobStatus struct {
 }
 
 func (t *Transfer) GetTransferJobStatus(transferJobID string) (TransferJobStatus, error) {
-	var q struct {
+	var query struct {
 		TransferJobStatus TransferJobStatus `graphql:"transferJobStatus(transferJobId: $transferJobId)"`
 	}
 
@@ -146,7 +145,7 @@ func (t *Transfer) GetTransferJobStatus(transferJobID string) (TransferJobStatus
 		"transferJobId": graphql.String(transferJobID),
 	}
 
-	err := t.client.Query(&q, variables)
+	err := t.client.Query(&query, variables)
 
-	return q.TransferJobStatus, err
+	return query.TransferJobStatus, err
 }

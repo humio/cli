@@ -15,36 +15,28 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 func newNotifiersShowCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "show [flags] <view> <name>",
-		Short: "Show details about a notifier in a view.",
+		Use:   "show <repo-or-view> <name>",
+		Short: "Show details about a notifier in a repository or view.",
 		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-
-			view := args[0]
+		Run: func(cmd *cobra.Command, args []string) {
+			repoOrViewName := args[0]
 			name := args[1]
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
-			notifier, err := client.Notifiers().Get(view, name)
 
-			if err != nil {
-				return fmt.Errorf("error fetching notifier: %s", err)
+			notifier, err := client.Notifiers().Get(repoOrViewName, name)
+			exitOnError(cmd, err, "Error fetching notifier")
+
+			details := [][]string{
+				{"Name", notifier.Name},
+				{"EntityType", notifier.Entity},
 			}
 
-			var output []string
-			output = append(output, "Name | EntityType")
-			output = append(output, fmt.Sprintf("%v | %v", notifier.Name, notifier.Entity))
-
-			printTable(cmd, output)
-
-			return nil
+			printDetailsTable(cmd, details)
 		},
 	}
 

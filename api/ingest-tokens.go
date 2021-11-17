@@ -38,7 +38,6 @@ func (i *IngestTokens) List(repo string) ([]IngestToken, error) {
 	}
 
 	err := i.client.Query(&query, variables)
-
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +97,6 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName s
 	}
 
 	err := i.client.Mutate(&mutation, variables)
-
 	if err != nil {
 		return nil, err
 	}
@@ -107,22 +105,41 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName s
 }
 
 func (i *IngestTokens) Update(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
-	var mutation struct {
-		Result struct {
-			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
-		} `graphql:"assignIngestToken(repositoryName: $repositoryName, tokenName: $tokenName, parserName: $parserName)"`
-	}
+	if parserName == "" {
+		var mutation struct {
+			Result struct {
+				// We have to make a selection, so just take __typename
+				Typename graphql.String `graphql:"__typename"`
+			} `graphql:"unassignIngestToken(repositoryName: $repositoryName, tokenName: $tokenName)"`
+		}
 
-	variables := map[string]interface{}{
-		"tokenName":      graphql.String(tokenName),
-		"repositoryName": graphql.String(repositoryName),
-		"parserName":     graphql.String(parserName),
-	}
+		variables := map[string]interface{}{
+			"tokenName":      graphql.String(tokenName),
+			"repositoryName": graphql.String(repositoryName),
+		}
 
-	err := i.client.Mutate(&mutation, variables)
-	if err != nil {
-		return nil, err
+		err := i.client.Mutate(&mutation, variables)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		var mutation struct {
+			Result struct {
+				// We have to make a selection, so just take __typename
+				Typename graphql.String `graphql:"__typename"`
+			} `graphql:"assignIngestToken(repositoryName: $repositoryName, tokenName: $tokenName, parserName: $parserName)"`
+		}
+
+		variables := map[string]interface{}{
+			"tokenName":      graphql.String(tokenName),
+			"repositoryName": graphql.String(repositoryName),
+			"parserName":     graphql.String(parserName),
+		}
+
+		err := i.client.Mutate(&mutation, variables)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return i.Get(repositoryName, tokenName)

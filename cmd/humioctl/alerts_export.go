@@ -15,11 +15,9 @@
 package main
 
 import (
-	"io/ioutil"
-	"os"
-
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
+	"io/ioutil"
 )
 
 func newAlertsExportCmd() *cobra.Command {
@@ -32,32 +30,21 @@ func newAlertsExportCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			view := args[0]
 			alertName := args[1]
+			client := NewApiClient(cmd)
 
 			if outputName == "" {
 				outputName = alertName
 			}
 
-			// Get the HTTP client
-			client := NewApiClient(cmd)
+			alert, err := client.Alerts().Get(view, alertName)
+			exitOnError(cmd, err, "Error fetching alert")
 
-			alert, apiErr := client.Alerts().Get(view, alertName)
-			if apiErr != nil {
-				cmd.Printf("Error fetching alert: %s\n", apiErr)
-				os.Exit(1)
-			}
+			yamlData, err := yaml.Marshal(&alert)
+			exitOnError(cmd, err, "Failed to serialize the alert")
 
-			yamlData, yamlErr := yaml.Marshal(&alert)
-			if yamlErr != nil {
-				cmd.Printf("Failed to serialize the alert: %s\n", yamlErr)
-				os.Exit(1)
-			}
 			outFilePath := outputName + ".yaml"
-
-			writeErr := ioutil.WriteFile(outFilePath, yamlData, 0600)
-			if writeErr != nil {
-				cmd.Printf("Error saving the alert file: %s\n", writeErr)
-				os.Exit(1)
-			}
+			err = ioutil.WriteFile(outFilePath, yamlData, 0600)
+			exitOnError(cmd, err, "Error saving the alert file")
 		},
 	}
 

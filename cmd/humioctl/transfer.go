@@ -10,8 +10,8 @@ import (
 
 func newTransferCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "transfer",
-		Short: "Cluster transfers [Experimental]",
+		Use:    "transfer",
+		Short:  "Cluster transfers [Experimental]",
 		Hidden: true,
 	}
 
@@ -32,10 +32,9 @@ func newTransferCreateManagedExportGroupCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			groupID, err := client.Transfer().CreateManagedExportGroup()
-			exitOnError(cmd, err, "error creating managed group")
-			fmt.Printf("Group ID: %v\n", groupID)
+			exitOnError(cmd, err, "Error creating managed export group")
 
-			cmd.Println()
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully created managed export group with group ID: %v\n", groupID)
 		},
 	}
 
@@ -51,10 +50,9 @@ func newTransferGetManagedExportGroupCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			groupID, err := client.Transfer().GetManagedExportGroup()
-			exitOnError(cmd, err, "error retrieving managed group")
-			fmt.Printf("Group ID: %v\n", groupID)
+			exitOnError(cmd, err, "Error retrieving managed export group")
 
-			cmd.Println()
+			fmt.Fprintf(cmd.OutOrStdout(), "Group ID: %v\n", groupID)
 		},
 	}
 
@@ -70,9 +68,9 @@ func newTransferRemoveManagedExportGroupCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Transfer().RemoveManagedExportGroup()
-			exitOnError(cmd, err, "error removing managed group")
+			exitOnError(cmd, err, "Error removing managed export group")
 
-			cmd.Println()
+			fmt.Fprintln(cmd.OutOrStdout(), "Successfully removed managed export group")
 		},
 	}
 
@@ -101,9 +99,9 @@ func newTransferJobsListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			jobs, err := client.Transfer().ListTransferJobs()
-			exitOnError(cmd, err, "error listing transfer jobs")
+			exitOnError(cmd, err, "Error listing transfer jobs")
 
-			rows := []string{"ID | Source | Parallel | No. Dataspaces | State | At"}
+			var rows [][]string
 			for _, job := range jobs {
 				at := ""
 				state := "Active"
@@ -114,9 +112,10 @@ func newTransferJobsListCmd() *cobra.Command {
 					state = "Cancelled"
 					at = job.CancelledAt.String()
 				}
-				rows = append(rows, fmt.Sprintf("%s | %s | %d | %d | %s | %s", job.ID, job.SourceClusterURL, job.MaximumParallelDownloads, len(job.Dataspaces), state, at))
+				rows = append(rows, []string{job.ID, job.SourceClusterURL, strconv.Itoa(job.MaximumParallelDownloads), strconv.Itoa(len(job.Dataspaces)), state, at})
 			}
-			printTable(cmd, rows)
+
+			printOverviewTable(cmd, []string{"ID | Source | Parallel | No. Dataspaces | State | At"}, rows)
 		},
 	}
 
@@ -124,56 +123,52 @@ func newTransferJobsListCmd() *cobra.Command {
 }
 
 func detailTransferJob(cmd *cobra.Command, job interface{}) {
-	var details [][2]string
+	var details [][]string
 
 	switch j := job.(type) {
 	case api.TransferJob:
-		details = append(details, [2]string{"ID", j.ID})
-		details = append(details, [2]string{"Source Cluster", j.SourceClusterURL})
-		details = append(details, [2]string{"Maximum parallel downloads", strconv.Itoa(j.MaximumParallelDownloads)})
-		details = append(details, [2]string{"Dataspaces", j.Dataspaces[0]})
+		details = append(details, []string{"ID", j.ID})
+		details = append(details, []string{"Source Cluster", j.SourceClusterURL})
+		details = append(details, []string{"Maximum parallel downloads", strconv.Itoa(j.MaximumParallelDownloads)})
+		details = append(details, []string{"Dataspaces", j.Dataspaces[0]})
 		for _, ds := range j.Dataspaces[1:] {
-			details = append(details, [2]string{"", ds})
+			details = append(details, []string{"", ds})
 		}
 		if j.CompletedAt != nil {
-			details = append(details, [2]string{"Completed At", j.CompletedAt.String()})
+			details = append(details, []string{"Completed At", j.CompletedAt.String()})
 		}
 		if j.CancelledAt != nil {
-			details = append(details, [2]string{"Cancelled At", j.CancelledAt.String()})
+			details = append(details, []string{"Cancelled At", j.CancelledAt.String()})
 		}
 	case api.TransferJobStatus:
-		details = append(details, [2]string{"Status", j.Status})
-		details = append(details, [2]string{"Status Line", j.StatusLine})
-		details = append(details, [2]string{"Running", fmt.Sprint(j.Running)})
-		details = append(details, [2]string{"Error", j.Error})
-		details = append(details, [2]string{"Progress", fmt.Sprintf("%d/%d", j.TransferredSegments, j.TotalSegments)})
+		details = append(details, []string{"Status", j.Status})
+		details = append(details, []string{"Status Line", j.StatusLine})
+		details = append(details, []string{"Running", fmt.Sprint(j.Running)})
+		details = append(details, []string{"Error", j.Error})
+		details = append(details, []string{"Progress", fmt.Sprintf("%d/%d", j.TransferredSegments, j.TotalSegments)})
 	}
 
-	var rows []string
-	for _, d := range details {
-		rows = append(rows, fmt.Sprintf("%s | %s", d[0], d[1]))
-	}
-
-	printTable(cmd, rows)
+	printDetailsTable(cmd, details)
 }
 
 func newTransferJobsAddCmd() *cobra.Command {
 	var (
 		setTargetAsNewMaster     bool
-		onlyTransferDataspaces     bool
+		onlyTransferDataspaces   bool
 		maximumParallelDownloads int
 	)
 
 	cmd := &cobra.Command{
-		Use:   "add <source cluster url> <source cluster token> <destination organization id> <dataspaceID[,dataspaceID]*>",
+		Use:   "add [flags] <source cluster url> <source cluster token> <destination organization id> <dataspaceID[,dataspaceID]*>",
 		Short: "Add jobs",
 		Args:  cobra.ExactArgs(4),
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
 			jobs, err := client.Transfer().AddTransferJob(args[0], args[1], args[2], strings.Split(args[3], ","), maximumParallelDownloads, setTargetAsNewMaster, onlyTransferDataspaces)
-			exitOnError(cmd, err, "error creating transfer job")
-			cmd.Printf("Added transfer job with ID: %s", jobs.ID)
+			exitOnError(cmd, err, "Error creating transfer job")
+
+			fmt.Fprintf(cmd.OutOrStdout(), "Added transfer job with ID: %s\n", jobs.ID)
 		},
 	}
 
@@ -193,7 +188,7 @@ func newTransferJobsCancelCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			job, err := client.Transfer().CancelTransferJob(args[0])
-			exitOnError(cmd, err, "error cancelling transfer job")
+			exitOnError(cmd, err, "Error cancelling transfer job")
 
 			detailTransferJob(cmd, job)
 		},
@@ -211,7 +206,7 @@ func newTransferJobsStatusCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			job, err := client.Transfer().GetTransferJobStatus(args[0])
-			exitOnError(cmd, err, "error getting status of transfer job")
+			exitOnError(cmd, err, "Error getting status of transfer job")
 
 			detailTransferJob(cmd, job)
 		},

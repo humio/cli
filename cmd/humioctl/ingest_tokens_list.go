@@ -15,10 +15,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 )
 
@@ -29,29 +25,18 @@ func newIngestTokensListCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
 
 			tokens, err := client.IngestTokens().List(repo)
+			exitOnError(cmd, err, "Error fetching token list")
 
-			if err != nil {
-				cmd.Printf("Error fetching token list: %s\n", err)
-				os.Exit(1)
-			}
-
-			var output []string
-			output = append(output, "Name | Token | Assigned Parser")
+			var rows [][]string
 			for i := 0; i < len(tokens); i++ {
-				token := tokens[i]
-				output = append(output, fmt.Sprintf("%v | %v | %v", token.Name, token.Token, valueOrEmpty(token.AssignedParser)))
+				ingestToken := tokens[i]
+				rows = append(rows, []string{ingestToken.Name, ingestToken.Token, valueOrEmpty(ingestToken.AssignedParser)})
 			}
 
-			table := columnize.SimpleFormat(output)
-
-			cmd.Println()
-			cmd.Println(table)
-			cmd.Println()
+			printOverviewTable(cmd, []string{"Name", "Token", "Assigned Parser"}, rows)
 		},
 	}
 

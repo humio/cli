@@ -16,30 +16,23 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 func newReposCreateCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "create [flags] <repo>",
+		Use:   "create <repo>",
 		Short: "Create a repository.",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			repoName := args[0]
-
 			client := NewApiClient(cmd)
 
-			apiErr := client.Repositories().Create(repoName)
-			exitOnError(cmd, apiErr, "error creating repository")
-			fmt.Printf("Sucessfully created repo %s\n", repoName)
+			err := client.Repositories().Create(repoName)
+			exitOnError(cmd, err, "Error creating repository")
 
-			repo, apiErr := client.Repositories().Get(repoName)
-			exitOnError(cmd, apiErr, "error fetching repository")
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully created repo %s\n", repoName)
 
-			printRepoTable(cmd, repo)
-
-			fmt.Println()
 		},
 	}
 

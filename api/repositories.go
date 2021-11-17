@@ -24,7 +24,7 @@ type Repository struct {
 func (c *Client) Repositories() *Repositories { return &Repositories{client: c} }
 
 func (r *Repositories) Get(name string) (Repository, error) {
-	var q struct {
+	var query struct {
 		Repository Repository `graphql:"repository(name: $name)"`
 	}
 
@@ -32,14 +32,14 @@ func (r *Repositories) Get(name string) (Repository, error) {
 		"name": graphql.String(name),
 	}
 
-	graphqlErr := r.client.Query(&q, variables)
+	err := r.client.Query(&query, variables)
 
-	if graphqlErr != nil {
+	if err != nil {
 		// The graphql error message is vague if the repo already exists, so add a hint.
-		return q.Repository, fmt.Errorf("%+v. Does the repo already exist?", graphqlErr)
+		return query.Repository, fmt.Errorf("%w. Does the repo already exist?", err)
 	}
 
-	return q.Repository, nil
+	return query.Repository, nil
 }
 
 type RepoListItem struct {
@@ -49,17 +49,16 @@ type RepoListItem struct {
 }
 
 func (r *Repositories) List() ([]RepoListItem, error) {
-	var q struct {
+	var query struct {
 		Repositories []RepoListItem `graphql:"repositories"`
 	}
 
-	graphqlErr := r.client.Query(&q, nil)
-
-	return q.Repositories, graphqlErr
+	err := r.client.Query(&query, nil)
+	return query.Repositories, err
 }
 
 func (r *Repositories) Create(name string) error {
-	var m struct {
+	var mutation struct {
 		CreateRepository struct {
 			Repository Repository
 		} `graphql:"createRepository(name: $name)"`
@@ -69,11 +68,10 @@ func (r *Repositories) Create(name string) error {
 		"name": graphql.String(name),
 	}
 
-	graphqlErr := r.client.Mutate(&m, variables)
-
-	if graphqlErr != nil {
+	err := r.client.Mutate(&mutation, variables)
+	if err != nil {
 		// The graphql error message is vague if the repo already exists, so add a hint.
-		return fmt.Errorf("%+v. Does the repo already exist?", graphqlErr)
+		return fmt.Errorf("%w. Does the repo already exist?", err)
 	}
 
 	return nil
@@ -89,7 +87,7 @@ func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error
 		return fmt.Errorf("repository contains data and data deletion not allowed")
 	}
 
-	var m struct {
+	var mutation struct {
 		DeleteSearchDomain struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -100,13 +98,7 @@ func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error
 		"reason": graphql.String(reason),
 	}
 
-	err = r.client.Mutate(&m, variables)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return r.client.Mutate(&mutation, variables)
 }
 
 type DefaultGroupEnum string
@@ -164,7 +156,7 @@ func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays flo
 	}
 	safeToDelete := allowDataDeletion || existingRepo.SpaceUsed == 0
 
-	var m struct {
+	var mutation struct {
 		UpdateRetention struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -183,12 +175,7 @@ func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays flo
 		variables["retentionInDays"] = graphql.Float(retentionInDays)
 	}
 
-	err = r.client.Mutate(&m, variables)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return r.client.Mutate(&mutation, variables)
 }
 
 func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB float64, allowDataDeletion bool) error {
@@ -198,7 +185,7 @@ func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB floa
 	}
 	safeToDelete := allowDataDeletion || existingRepo.SpaceUsed == 0
 
-	var m struct {
+	var mutation struct {
 		UpdateRetention struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -217,12 +204,7 @@ func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB floa
 		variables["storageInGB"] = graphql.Float(storageInGB)
 	}
 
-	err = r.client.Mutate(&m, variables)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return r.client.Mutate(&mutation, variables)
 }
 
 func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float64, allowDataDeletion bool) error {
@@ -232,7 +214,7 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 	}
 	safeToDelete := allowDataDeletion || existingRepo.SpaceUsed == 0
 
-	var m struct {
+	var mutation struct {
 		UpdateRetention struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -251,16 +233,11 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 		variables["ingestInGB"] = graphql.Float(ingestInGB)
 	}
 
-	err = r.client.Mutate(&m, variables)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return r.client.Mutate(&mutation, variables)
 }
 
 func (r *Repositories) UpdateDescription(name, description string) error {
-	var m struct {
+	var mutation struct {
 		UpdateDescription struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
@@ -272,11 +249,5 @@ func (r *Repositories) UpdateDescription(name, description string) error {
 		"description": graphql.String(description),
 	}
 
-	err := r.client.Mutate(&m, variables)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return r.client.Mutate(&mutation, variables)
 }

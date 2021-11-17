@@ -9,22 +9,15 @@ $(BIN_PATH): $(GOFILES)
 all: build
 
 $(BIN_PATH): FORCE
-	@echo "--> Building Humio CLI"
 	go build -o $(BIN_PATH) ./cmd/humioctl
 
 build: $(BIN_PATH)
 
-build-windows:
-	@echo "--> Building Humio CLI (Windows)"
-	GOOS=windows GOARCH=amd64 go build -o $(BIN_PATH).exe ./cmd/humioctl
-
 clean:
-	@echo "--> Cleaning"
 	go clean
 	@rm -rf bin/
 
 snapshot:
-	@echo "--> Building snapshot"
 	goreleaser build --rm-dist --snapshot
 	@rm -rf bin/
 
@@ -37,6 +30,6 @@ e2e: $(BIN_PATH)
 e2e-upcoming: $(BIN_PATH)
 	./e2e/run-upcoming-features.bash
 
-.PHONY: build clean snapshot run e2e e2e-upcoming build-windows FORCE
+.PHONY: build clean snapshot run e2e e2e-upcoming FORCE
 
 FORCE:

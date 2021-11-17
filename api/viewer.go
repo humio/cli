@@ -14,8 +14,8 @@ func (c *Viewer) Username() (string, error) {
 		}
 	}
 
-	graphqlErr := c.client.Query(&query, nil)
-	return query.Viewer.Username, graphqlErr
+	err := c.client.Query(&query, nil)
+	return query.Viewer.Username, err
 }
 
 // ApiToken fetches the api token for the user who is currently authenticated.
@@ -26,6 +26,6 @@ func (c *Viewer) ApiToken() (string, error) {
 		}
 	}
 
-	graphqlErr := c.client.Query(&query, nil)
-	return query.Viewer.ApiToken, graphqlErr
+	err := c.client.Query(&query, nil)
+	return query.Viewer.ApiToken, err
 }

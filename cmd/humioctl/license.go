@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/humio/cli/api"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -34,24 +33,17 @@ func newLicenseCmd() *cobra.Command {
 	return cmd
 }
 
-func printLicenseInfo(cmd *cobra.Command, license api.License) {
-
-	var data [][]string
+func printLicenseDetailsTable(cmd *cobra.Command, license api.License) {
+	var details [][]string
 
 	if onprem, ok := license.(api.OnPremLicense); ok {
-		data = append(data, []string{"License ID", onprem.ID})
-		data = append(data, []string{"Issued To", onprem.IssuedTo})
-		data = append(data, []string{"Number Of Seats", fmt.Sprintf("%d", onprem.NumberOfSeats)})
+		details = append(details, []string{"License ID", onprem.ID})
+		details = append(details, []string{"Issued To", onprem.IssuedTo})
+		details = append(details, []string{"Number Of Seats", fmt.Sprintf("%d", onprem.NumberOfSeats)})
 	}
 
-	data = append(data, []string{"Issued At", license.IssuedAt()})
-	data = append(data, []string{"Expires At", license.ExpiresAt()})
+	details = append(details, []string{"Issued At", license.IssuedAt()})
+	details = append(details, []string{"Expires At", license.ExpiresAt()})
 
-	w := tablewriter.NewWriter(cmd.OutOrStdout())
-	w.AppendBulk(data)
-	w.SetBorder(false)
-	w.SetColumnSeparator(":")
-	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-
-	w.Render()
+	printDetailsTable(cmd, details)
 }

@@ -13,7 +13,7 @@ func newFilesUploadCmd() *cobra.Command {
 	)
 
 	cmd := &cobra.Command{
-		Use: "upload <view name> <input file>",
+		Use: "upload <view-name> <input-file>",
 		Long: `Upload a file to a view.
 
 Specify '-' as the input file to read from stdin.`,
@@ -37,13 +37,13 @@ Specify '-' as the input file to read from stdin.`,
 			} else {
 				var err error
 				reader, err = os.Open(args[1])
-				exitOnError(cmd, err, "error opening input file")
+				exitOnError(cmd, err, "Error opening input file")
 			}
 
 			client := NewApiClient(cmd)
 
 			err := client.Files().Upload(args[0], fileName, reader)
-			exitOnError(cmd, err, "error uploading file")
+			exitOnError(cmd, err, "Error uploading file")
 		},
 	}
 
@@ -51,4 +51,3 @@ Specify '-' as the input file to read from stdin.`,
 
 	return cmd
 }
-

@@ -17,7 +17,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +24,7 @@ func newIngestTokensUpdateCmd() *cobra.Command {
 	var parserName string
 
 	cmd := &cobra.Command{
-		Use:   "update [flags] <repository-name> <token-name>",
+		Use:   "update [flags] <repository> <token>",
 		Short: "Update an ingest token to a repository.",
 		Long: `Updates the parser of an ingest token with name <token name> in repository <repo>.
 
@@ -35,30 +34,15 @@ use the assigned parser at ingest time.
 
 If parser is not specified, the ingest token will not be associated with a parser.`,
 		Args: cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			repositoryName := args[0]
 			tokenName := args[1]
-
-			// Get the HTTP client
 			client := NewApiClient(cmd)
 
-			token, err := client.IngestTokens().Update(repositoryName, tokenName, parserName)
+			ingestToken, err := client.IngestTokens().Update(repositoryName, tokenName, parserName)
+			exitOnError(cmd, err, "Error updating ingest token")
 
-			if err != nil {
-				return fmt.Errorf("error updating ingest token: %s", err)
-			}
-
-			var output []string
-			output = append(output, "Name | Token | Assigned Parser")
-			output = append(output, fmt.Sprintf("%v | %v | %v", token.Name, token.Token, valueOrEmpty(token.AssignedParser)))
-
-			table := columnize.SimpleFormat(output)
-
-			cmd.Println()
-			cmd.Println(table)
-			cmd.Println()
-
-			return nil
+			fmt.Fprintf(cmd.OutOrStdout(), "Updated ingest token %q to use parser %q\n", ingestToken.Name, valueOrEmpty(ingestToken.AssignedParser))
 		},
 	}
 

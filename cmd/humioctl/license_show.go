@@ -27,14 +27,14 @@ func newLicenseShowCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
-			license, apiErr := client.Licenses().Get()
+			license, err := client.Licenses().Get()
 			noLicense := api.OnPremLicense{}
 			if license == noLicense {
-				apiErr = errors.New("no license currently installed")
+				err = errors.New("no license currently installed")
 			}
-			exitOnError(cmd, apiErr, "error fetching the license")
-			printLicenseInfo(cmd, license)
-			cmd.Println()
+			exitOnError(cmd, err, "Error fetching the license")
+
+			printLicenseDetailsTable(cmd, license)
 		},
 	}
 

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -28,11 +29,12 @@ func newReposDeleteCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
 			reason := args[1]
-
 			client := NewApiClient(cmd)
 
-			apiError := client.Repositories().Delete(repo, reason, allowDataDeletionFlag)
-			exitOnError(cmd, apiError, "error removing repository")
+			err := client.Repositories().Delete(repo, reason, allowDataDeletionFlag)
+			exitOnError(cmd, err, "Error removing repository")
+
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully deleted repository: %q\n", repo)
 		},
 	}
 

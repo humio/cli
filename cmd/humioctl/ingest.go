@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func tailFile(filepath string, quiet bool, seekToEnd bool, handler shipper.LineHandler) error {
+func tailFile(cmd *cobra.Command, filepath string, quiet bool, seekToEnd bool, handler shipper.LineHandler) error {
 	tailConfig := tail.Config{Follow: true}
 	if seekToEnd {
 		tailConfig.Location = &tail.SeekInfo{Offset: 0, Whence: io.SeekEnd}
@@ -36,7 +36,7 @@ func tailFile(filepath string, quiet bool, seekToEnd bool, handler shipper.LineH
 	for line := range t.Lines {
 		handler.HandleLine(line.Text)
 		if !quiet {
-			fmt.Println(line.Text)
+			fmt.Fprintln(cmd.OutOrStdout(), line.Text)
 		}
 	}
 
@@ -80,8 +80,8 @@ func waitForInterrupt() {
 	// and then notify the program that it can finish.
 	go func() {
 		sig := <-sigs
-		fmt.Println()
-		fmt.Println(sig)
+		log.Println()
+		log.Println(sig)
 		close(done)
 	}()
 
@@ -164,15 +164,15 @@ has the same effect.`,
 				}
 			}
 
-			// Open the browser (First so it has a chance to load)
+			// Open the browser
 			if openBrowser {
 				browserURL, err := client.Address().Parse(fmt.Sprintf("%s/search?live=true&start=1d&query=%s", repo, key))
 				if err != nil {
-					fmt.Println(fmt.Errorf("could not open browser: %v", err))
+					cmd.PrintErrf("Could not parse url: %v\n", err)
 				}
 				err = open.Start(browserURL.String())
 				if err != nil {
-					fmt.Println(fmt.Errorf("could not open browser: %v", err))
+					cmd.PrintErrf("Could not open browser: %v\n", err)
 				}
 			}
 
@@ -192,7 +192,7 @@ has the same effect.`,
 				BatchSizeLines:      batchSizeLines,
 				BatchSizeBytes:      batchSizeBytes,
 				BatchTimeout:        time.Duration(batchTimeoutMs) * time.Millisecond,
-				Logger:              log.Printf,
+				Logger:              log.New(cmd.ErrOrStderr(), "", log.LstdFlags).Printf,
 			}
 
 			if failOnError {
@@ -222,7 +222,7 @@ has the same effect.`,
 
 			var err error
 			if filepath != "" {
-				err = tailFile(filepath, quiet, tailSeekToEnd, lineHandler)
+				err = tailFile(cmd, filepath, quiet, tailSeekToEnd, lineHandler)
 			} else {
 				err = streamStdin(repo, quiet, lineHandler)
 			}

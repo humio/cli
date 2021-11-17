@@ -15,7 +15,7 @@ type Organization struct {
 func (c *Client) Organizations() *Organizations { return &Organizations{client: c} }
 
 func (o *Organizations) CreateOrganization(name string) (Organization, error) {
-	var m struct {
+	var mutation struct {
 		CreateOrganization Organization `graphql:"createEmptyOrganization(name: $name)"`
 	}
 
@@ -23,7 +23,7 @@ func (o *Organizations) CreateOrganization(name string) (Organization, error) {
 		"name": graphql.String(name),
 	}
 
-	err := o.client.Mutate(&m, variables)
+	err := o.client.Mutate(&mutation, variables)
 
-	return m.CreateOrganization, err
+	return mutation.CreateOrganization, err
 }

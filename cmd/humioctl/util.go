@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/olekukonko/tablewriter"
 	"net/url"
 	"os"
 	"strconv"
@@ -127,4 +128,20 @@ func (sf *float64PtrFlag) String() string {
 
 func (sf *float64PtrFlag) Type() string {
 	return "float64"
+}
+
+func printDetailsTable(cmd *cobra.Command, data [][]string) {
+	w := tablewriter.NewWriter(cmd.OutOrStdout())
+	w.AppendBulk(data)
+	w.SetBorder(false)
+	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
+	w.Render()
+}
+
+func printOverviewTable(cmd *cobra.Command, header []string, data [][]string) {
+	w := tablewriter.NewWriter(cmd.OutOrStdout())
+	w.AppendBulk(data)
+	w.SetBorder(false)
+	w.SetHeader(header)
+	w.Render()
 }

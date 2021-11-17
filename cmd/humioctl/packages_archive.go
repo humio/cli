@@ -16,50 +16,35 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
-
-	"github.com/humio/cli/prompt"
 
 	"github.com/spf13/cobra"
 )
 
 func archivePackageCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "archive [flags] <package-dir> <output-file>",
+		Use:   "archive <package-dir> <output-file>",
 		Short: "Create a zip containing the content of a package directory.",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			out := prompt.NewPrompt(cmd.OutOrStdout())
 			dirPath := args[0]
 			outPath := args[1]
+			client := NewApiClient(cmd)
 
 			if !filepath.IsAbs(dirPath) {
 				var err error
 				dirPath, err = filepath.Abs(dirPath)
-				if err != nil {
-					out.Error(fmt.Sprintf("Invalid path: %s", err))
-					os.Exit(1)
-				}
+				exitOnError(cmd, err, "Invalid path")
 				dirPath += "/"
 			}
 
-			out.Info(fmt.Sprintf("Reading package in: %s", dirPath))
+			err := client.Packages().CreateArchive(dirPath, outPath)
+			exitOnError(cmd, err, "Errors creating archive")
 
-			// Get the HTTP client
-			client := NewApiClient(cmd)
+			absoluteOutPath, err := filepath.Abs(outPath)
+			exitOnError(cmd, err, fmt.Sprintf("Could not find path: %s", outPath))
 
-			createErr := client.Packages().CreateArchive(dirPath, outPath)
-			if createErr != nil {
-				out.Error(fmt.Sprintf("Errors creating archive: %s", createErr))
-				os.Exit(1)
-			}
-
-			absoluteOutPath, pathErr := filepath.Abs(outPath)
-			if pathErr != nil {
-				out.Error(fmt.Sprintf("Could not find path %s", outPath))
-			}
-			out.Info(fmt.Sprintf("Wrote archive to %s", absoluteOutPath))
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully wrote archive to: %q\n", absoluteOutPath)
 		},
 	}
 

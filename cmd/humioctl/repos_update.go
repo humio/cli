@@ -23,41 +23,38 @@ import (
 func newReposUpdateCmd() *cobra.Command {
 	var allowDataDeletionFlag bool
 	var descriptionFlag stringPtrFlag
-	var retentionTimeFlag, ingestSizeBasedRetentionFlag, storageSizeBasedretentionFlag float64PtrFlag
+	var retentionTimeFlag, ingestSizeBasedRetentionFlag, storageSizeBasedRetentionFlag float64PtrFlag
 
 	cmd := cobra.Command{
-		Use:   "update",
+		Use:   "update [flags] <repo>",
 		Short: "Updates the settings of a repository",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			repoName := args[0]
+			client := NewApiClient(cmd)
 
-			if descriptionFlag.value == nil && retentionTimeFlag.value == nil && ingestSizeBasedRetentionFlag.value == nil && storageSizeBasedretentionFlag.value == nil {
-				exitOnError(cmd, fmt.Errorf("you must specify at least one flag to update"), "nothing specifed to update")
+			if descriptionFlag.value == nil && retentionTimeFlag.value == nil && ingestSizeBasedRetentionFlag.value == nil && storageSizeBasedRetentionFlag.value == nil {
+				exitOnError(cmd, fmt.Errorf("you must specify at least one flag to update"), "Nothing specified to update")
 			}
 
-			client := NewApiClient(cmd)
 			if descriptionFlag.value != nil {
 				err := client.Repositories().UpdateDescription(repoName, *descriptionFlag.value)
-				exitOnError(cmd, err, "error updating repository description")
+				exitOnError(cmd, err, "Error updating repository description")
 			}
 			if retentionTimeFlag.value != nil {
 				err := client.Repositories().UpdateTimeBasedRetention(repoName, *retentionTimeFlag.value, allowDataDeletionFlag)
-				exitOnError(cmd, err, "error updating repository retention time in days")
+				exitOnError(cmd, err, "Error updating repository retention time in days")
 			}
 			if ingestSizeBasedRetentionFlag.value != nil {
 				err := client.Repositories().UpdateIngestBasedRetention(repoName, *ingestSizeBasedRetentionFlag.value, allowDataDeletionFlag)
-				exitOnError(cmd, err, "error updating repository ingest size based retention")
+				exitOnError(cmd, err, "Error updating repository ingest size based retention")
 			}
-			if storageSizeBasedretentionFlag.value != nil {
-				err := client.Repositories().UpdateStorageBasedRetention(repoName, *storageSizeBasedretentionFlag.value, allowDataDeletionFlag)
-				exitOnError(cmd, err, "error updating repository storage size based retention")
+			if storageSizeBasedRetentionFlag.value != nil {
+				err := client.Repositories().UpdateStorageBasedRetention(repoName, *storageSizeBasedRetentionFlag.value, allowDataDeletionFlag)
+				exitOnError(cmd, err, "Error updating repository storage size based retention")
 			}
 
-			repo, apiErr := client.Repositories().Get(repoName)
-			exitOnError(cmd, apiErr, "error fetching repository")
-			printRepoTable(cmd, repo)
-			fmt.Println()
+			fmt.Fprintf(cmd.OutOrStdout(), "Successfully updated repository %q\n", repoName)
 		},
 	}
 
@@ -65,7 +62,7 @@ func newReposUpdateCmd() *cobra.Command {
 	cmd.Flags().Var(&descriptionFlag, "description", "The description of the repository.")
 	cmd.Flags().Var(&retentionTimeFlag, "retention-time", "The retention time in days for the repository.")
 	cmd.Flags().Var(&ingestSizeBasedRetentionFlag, "ingest-size-based-retention", "The ingest size based retention for the repository.")
-	cmd.Flags().Var(&storageSizeBasedretentionFlag, "storage-size-based-retention", "The storage size based retention for the repository.")
+	cmd.Flags().Var(&storageSizeBasedRetentionFlag, "storage-size-based-retention", "The storage size based retention for the repository.")
 
 	return &cmd
 }

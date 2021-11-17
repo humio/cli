@@ -20,20 +20,17 @@ import (
 
 func newViewsShowCmd() *cobra.Command {
 	cmd := cobra.Command{
-		Use:   "show [flags] <view>",
+		Use:   "show <view>",
 		Short: "Show details about a view.",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			viewName := args[0]
-
 			client := NewApiClient(cmd)
 
-			view, apiErr := client.Views().Get(viewName)
-			exitOnError(cmd, apiErr, "Error fetching view")
+			view, err := client.Views().Get(viewName)
+			exitOnError(cmd, err, "Error fetching view")
 
-			printViewTable(view)
-
-			printViewConnectionsTable(view)
+			printViewConnectionsTable(cmd, view)
 		},
 	}
 
