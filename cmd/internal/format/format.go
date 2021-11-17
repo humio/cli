@@ -120,7 +120,11 @@ func ValuesToStrings(sliceOfValues [][]Value) [][]string {
 	for _, values := range sliceOfValues {
 		var strings []string
 		for _, value := range values {
-			strings = append(strings, value.String())
+			if value != nil {
+				strings = append(strings, value.String())
+			} else {
+				strings = append(strings, "")
+			}
 		}
 		result = append(result, strings)
 	}
