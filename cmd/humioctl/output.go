@@ -48,13 +48,6 @@ func (v valueOrEmpty) MarshalJSON() ([]byte, error) {
 	return json.Marshal(string(v))
 }
 
-//func valueOrEmpty(v string) string {
-//	if v == "" {
-//		return "-"
-//	}
-//	return v
-//}
-
 type ByteCountDecimal int64
 
 func (b ByteCountDecimal) String() string {

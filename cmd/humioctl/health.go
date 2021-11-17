@@ -122,7 +122,6 @@ func printHealthOverviewTable(cmd *cobra.Command, result healthCheckResult) {
 		fields := HealthFields{}
 		for _, f := range keys {
 			fields[f] = format.String(fmt.Sprint(result.Checks[name].Fields[f]))
-			//fields = append(fields, fmt.Sprintf("%s=%q", f, result.Checks[name].Fields[f]))
 		}
 		rows = append(rows, []format.Value{
 			format.String(result.Checks[name].Name),
@@ -149,12 +148,5 @@ func (h HealthFields) String() string {
 }
 
 func (h HealthFields) MarshalJSON() ([]byte, error) {
-	//m := make(map[string]interface{})
-	//for k, v := range h {
-	//	m[k] = v
-	//}
-	//
-	//json.
-
 	return json.Marshal((map[string]format.Value)(h))
 }

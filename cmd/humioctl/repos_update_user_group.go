@@ -22,7 +22,7 @@ func newReposUpdateUserGroupCmd() *cobra.Command {
 			for _, group := range groups {
 				var defaultGroup api.DefaultGroupEnum
 				if !defaultGroup.ParseString(group) {
-					cmd.Printf("The group '%s' was not valid (must be either 'Member', 'Admin' or 'Eliminator')\n", group)
+					cmd.PrintErrf("The group '%s' was not valid (must be either 'Member', 'Admin' or 'Eliminator')\n", group)
 					os.Exit(1)
 				}
 				defaultGroups = append(defaultGroups, defaultGroup)
