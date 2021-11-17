@@ -15,11 +15,10 @@
 package main
 
 import (
-	"sort"
-	"strconv"
-
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
+	"sort"
 )
 
 func newClusterNodesListCmd() *cobra.Command {
@@ -41,9 +40,14 @@ func newClusterNodesListCmd() *cobra.Command {
 				return a.Name < b.Name
 			})
 
-			rows := make([][]string, len(nodes))
+			rows := make([][]format.Value, len(nodes))
 			for i, node := range nodes {
-				rows[i] = []string{strconv.Itoa(node.Id), node.Name, strconv.FormatBool(node.CanBeSafelyUnregistered), node.Zone}
+				rows[i] = []format.Value{
+					format.Int(node.Id),
+					format.String(node.Name),
+					format.Bool(node.CanBeSafelyUnregistered),
+					format.String(node.Zone),
+				}
 			}
 
 			printOverviewTable(cmd, []string{"ID", "Name", "Can be safely unregistered", "Availability Zone"}, rows)

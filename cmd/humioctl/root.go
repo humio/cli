@@ -97,6 +97,7 @@ Common Management Commands:
 	rootCmd.PersistentFlags().StringVar(&caCertificateFile, "ca-certificate-file", "", "File path to a file containing the CA certificate in PEM format. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().BoolVar(&insecure, "insecure", false, "By default, all encrypted connections will verify that the hostname in the TLS certificate matches the name from the URL. Set this to true to ignore hostname validation.")
 	rootCmd.PersistentFlags().StringVar(&proxyOrganization, "proxy-organization", "", "Commands are executed in the specified organization.")
+	rootCmd.PersistentFlags().String("format", "", "Change output format of commands, if supported. Valid formats: json")
 
 	_ = viper.BindPFlag(viperkey.Address, rootCmd.PersistentFlags().Lookup("address"))
 	_ = viper.BindPFlag(viperkey.Token, rootCmd.PersistentFlags().Lookup("token"))

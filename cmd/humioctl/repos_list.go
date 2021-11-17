@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"sort"
 
 	"github.com/humio/cli/api"
@@ -50,9 +51,13 @@ func newReposListCmd() *cobra.Command {
 				return a.Name < b.Name
 			})
 
-			rows := make([][]string, len(repos))
+			rows := make([][]format.Value, len(repos))
 			for i, view := range repos {
-				rows[i] = []string{view.Name, ByteCountDecimal(view.SpaceUsed), view.ID}
+				rows[i] = []format.Value{
+					format.String(view.Name),
+					ByteCountDecimal(view.SpaceUsed),
+					format.String(view.ID),
+				}
 			}
 
 			printOverviewTable(cmd, []string{"Name", "Space Used", "ID"}, rows)

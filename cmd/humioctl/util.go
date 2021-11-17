@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/olekukonko/tablewriter"
+	"github.com/humio/cli/cmd/internal/format"
 	"net/url"
 	"os"
 	"strconv"
@@ -130,18 +130,10 @@ func (sf *float64PtrFlag) Type() string {
 	return "float64"
 }
 
-func printDetailsTable(cmd *cobra.Command, data [][]string) {
-	w := tablewriter.NewWriter(cmd.OutOrStdout())
-	w.AppendBulk(data)
-	w.SetBorder(false)
-	w.SetColumnAlignment([]int{tablewriter.ALIGN_RIGHT, tablewriter.ALIGN_LEFT})
-	w.Render()
+func printDetailsTable(cmd *cobra.Command, data [][]format.Value) {
+	format.FormatterFromCommand(cmd).Details(data)
 }
 
-func printOverviewTable(cmd *cobra.Command, header []string, data [][]string) {
-	w := tablewriter.NewWriter(cmd.OutOrStdout())
-	w.AppendBulk(data)
-	w.SetBorder(false)
-	w.SetHeader(header)
-	w.Render()
+func printOverviewTable(cmd *cobra.Command, header []string, data [][]format.Value) {
+	format.FormatterFromCommand(cmd).Table(header, data)
 }

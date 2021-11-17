@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -15,10 +16,14 @@ func newFilesListCmd() *cobra.Command {
 			files, err := client.Files().List(args[0])
 			exitOnError(cmd, err, "Error listing files")
 
-			var rows [][]string
+			var rows [][]format.Value
 
 			for _, file := range files {
-				rows = append(rows, []string{file.Name, file.ContentHash, file.ID})
+				rows = append(rows, []format.Value{
+					format.String(file.Name),
+					format.String(file.ContentHash),
+					format.String(file.ID),
+				})
 			}
 
 			printOverviewTable(cmd, []string{"Name", "Content Hash", "ID"}, rows)

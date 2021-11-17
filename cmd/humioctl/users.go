@@ -16,6 +16,7 @@ package main
 
 import (
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -36,15 +37,15 @@ func newUsersCmd() *cobra.Command {
 }
 
 func printUserDetailsTable(cmd *cobra.Command, user api.User) {
-	details := [][]string{
-		{"Username", user.Username},
-		{"Name", user.FullName},
-		{"Is Root", yesNo(user.IsRoot)},
-		{"Email", user.Email},
-		{"Created At", user.CreatedAt},
-		{"Country Code", user.CountryCode},
-		{"Company", user.Company},
-		{"ID", user.ID},
+	details := [][]format.Value{
+		{format.String("Username"), format.String(user.Username)},
+		{format.String("Name"), format.String(user.FullName)},
+		{format.String("Is Root"), yesNo(user.IsRoot)},
+		{format.String("Email"), format.String(user.Email)},
+		{format.String("Created At"), format.String(user.CreatedAt)},
+		{format.String("Country Code"), format.String(user.CountryCode)},
+		{format.String("Company"), format.String(user.Company)},
+		{format.String("ID"), format.String(user.ID)},
 	}
 
 	printDetailsTable(cmd, details)

@@ -15,7 +15,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/humio/cli/cmd/internal/format"
 
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
@@ -34,16 +34,16 @@ func newLicenseCmd() *cobra.Command {
 }
 
 func printLicenseDetailsTable(cmd *cobra.Command, license api.License) {
-	var details [][]string
+	var details [][]format.Value
 
 	if onprem, ok := license.(api.OnPremLicense); ok {
-		details = append(details, []string{"License ID", onprem.ID})
-		details = append(details, []string{"Issued To", onprem.IssuedTo})
-		details = append(details, []string{"Number Of Seats", fmt.Sprintf("%d", onprem.NumberOfSeats)})
+		details = append(details, []format.Value{format.String("License ID"), format.String(onprem.ID)})
+		details = append(details, []format.Value{format.String("Issued To"), format.String(onprem.IssuedTo)})
+		details = append(details, []format.Value{format.String("Number Of Seats"), format.Int(onprem.NumberOfSeats)})
 	}
 
-	details = append(details, []string{"Issued At", license.IssuedAt()})
-	details = append(details, []string{"Expires At", license.ExpiresAt()})
+	details = append(details, []format.Value{format.String("Issued At"), format.String(license.IssuedAt())})
+	details = append(details, []format.Value{format.String("Expires At"), format.String(license.ExpiresAt())})
 
 	printDetailsTable(cmd, details)
 }

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -30,10 +31,10 @@ func newNotifiersListCmd() *cobra.Command {
 			notifiers, err := client.Notifiers().List(repoOrViewName)
 			exitOnError(cmd, err, "Error fetching notifiers")
 
-			var rows [][]string
+			var rows [][]format.Value
 			for i := 0; i < len(notifiers); i++ {
 				notifier := notifiers[i]
-				rows = append(rows, []string{notifier.Name, notifier.Entity})
+				rows = append(rows, []format.Value{format.String(notifier.Name), format.String(notifier.Entity)})
 			}
 
 			printOverviewTable(cmd, []string{"Name", "Type"}, rows)

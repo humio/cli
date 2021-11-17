@@ -16,6 +16,7 @@ package main
 
 import (
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -39,9 +40,13 @@ func printViewConnectionsTable(cmd *cobra.Command, view *api.View) {
 		return
 	}
 
-	var rows [][]string
+	var rows [][]format.Value
 	for _, conn := range view.Connections {
-		rows = append(rows, []string{view.Name, conn.RepoName, conn.Filter})
+		rows = append(rows, []format.Value{
+			format.String(view.Name),
+			format.String(conn.RepoName),
+			format.String(conn.Filter),
+		})
 	}
 
 	printOverviewTable(cmd, []string{"View", "Repository", "Query Prefix"}, rows)

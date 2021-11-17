@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -30,13 +31,17 @@ func newParsersListCmd() *cobra.Command {
 			parsers, err := client.Parsers().List(repo)
 			exitOnError(cmd, err, "Error fetching parsers")
 
-			var rows [][]string
+			var rows [][]format.Value
 			for i := 0; i < len(parsers); i++ {
 				parser := parsers[i]
-				rows = append(rows, []string{parser.Name, checkmark(!parser.IsBuiltIn)})
+				rows = append(rows, []format.Value{
+					format.String(parser.Name),
+					checkmark(!parser.IsBuiltIn),
+					format.String(parser.ID),
+				})
 			}
 
-			printOverviewTable(cmd, []string{"Name", "Custom"}, rows)
+			printOverviewTable(cmd, []string{"Name", "Custom", "ID"}, rows)
 		},
 	}
 

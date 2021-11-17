@@ -15,10 +15,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
-	"strconv"
 )
 
 func newClusterNodesCmd() *cobra.Command {
@@ -35,30 +34,30 @@ func newClusterNodesCmd() *cobra.Command {
 }
 
 func printClusterNodeDetailsTable(cmd *cobra.Command, node api.ClusterNode) {
-	details := [][]string{
-		{"ID", strconv.Itoa(node.Id)},
-		{"Name", node.Name},
-		{"URI", node.Uri},
-		{"UUID", node.Uuid},
-		{"Cluster info age (Seconds)", fmt.Sprintf("%.3f", node.ClusterInfoAgeSeconds)},
-		{"Inbound segment (Size)", ByteCountDecimal(int64(node.InboundSegmentSize))},
-		{"Outbound segment (Size)", ByteCountDecimal(int64(node.OutboundSegmentSize))},
-		{"Storage Divergence (Size)", ByteCountDecimal(int64(node.StorageDivergence))},
-		{"Can be safely unregistered", strconv.FormatBool(node.CanBeSafelyUnregistered)},
-		{"Current size", ByteCountDecimal(int64(node.CurrentSize))},
-		{"Primary size", ByteCountDecimal(int64(node.PrimarySize))},
-		{"Secondary size", ByteCountDecimal(int64(node.SecondarySize))},
-		{"Total size of primary", ByteCountDecimal(int64(node.TotalSizeOfPrimary))},
-		{"Total size of secondary", ByteCountDecimal(int64(node.TotalSizeOfSecondary))},
-		{"Free on primary", ByteCountDecimal(int64(node.FreeOnPrimary))},
-		{"Free on secondary", ByteCountDecimal(int64(node.FreeOnSecondary))},
-		{"WIP size", ByteCountDecimal(int64(node.WipSize))},
-		{"Target size", ByteCountDecimal(int64(node.TargetSize))},
-		{"Reapply target size", ByteCountDecimal(int64(node.Reapply_targetSize))},
-		{"Solitary segment size", ByteCountDecimal(int64(node.SolitarySegmentSize))},
-		{"Is available", strconv.FormatBool(node.IsAvailable)},
-		{"Last heartbeat", node.LastHeartbeat},
-		{"Availability Zone", node.Zone},
+	details := [][]format.Value{
+		{format.String("ID"), format.Int(node.Id)},
+		{format.String("Name"), format.String(node.Name)},
+		{format.String("URI"), format.String(node.Uri)},
+		{format.String("UUID"), format.String(node.Uuid)},
+		{format.String("Cluster info age (Seconds)"), format.Float(node.ClusterInfoAgeSeconds)},
+		{format.String("Inbound segment (Size)"), ByteCountDecimal(node.InboundSegmentSize)},
+		{format.String("Outbound segment (Size)"), ByteCountDecimal(node.OutboundSegmentSize)},
+		{format.String("Storage Divergence (Size)"), ByteCountDecimal(node.StorageDivergence)},
+		{format.String("Can be safely unregistered"), format.Bool(node.CanBeSafelyUnregistered)},
+		{format.String("Current size"), ByteCountDecimal(node.CurrentSize)},
+		{format.String("Primary size"), ByteCountDecimal(node.PrimarySize)},
+		{format.String("Secondary size"), ByteCountDecimal(node.SecondarySize)},
+		{format.String("Total size of primary"), ByteCountDecimal(node.TotalSizeOfPrimary)},
+		{format.String("Total size of secondary"), ByteCountDecimal(node.TotalSizeOfSecondary)},
+		{format.String("Free on primary"), ByteCountDecimal(node.FreeOnPrimary)},
+		{format.String("Free on secondary"), ByteCountDecimal(node.FreeOnSecondary)},
+		{format.String("WIP size"), ByteCountDecimal(node.WipSize)},
+		{format.String("Target size"), ByteCountDecimal(node.TargetSize)},
+		{format.String("Reapply target size"), ByteCountDecimal(node.Reapply_targetSize)},
+		{format.String("Solitary segment size"), ByteCountDecimal(node.SolitarySegmentSize)},
+		{format.String("Is available"), format.Bool(node.IsAvailable)},
+		{format.String("Last heartbeat"), format.String(node.LastHeartbeat)},
+		{format.String("Availability Zone"), format.String(node.Zone)},
 	}
 
 	printDetailsTable(cmd, details)

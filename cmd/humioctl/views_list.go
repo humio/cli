@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -28,9 +29,9 @@ func newViewsListCmd() *cobra.Command {
 			views, err := client.Views().List()
 			exitOnError(cmd, err, "Error while fetching view list")
 
-			rows := make([][]string, len(views))
+			rows := make([][]format.Value, len(views))
 			for i, view := range views {
-				rows[i] = []string{view.Name}
+				rows[i] = []format.Value{format.String(view.Name)}
 			}
 
 			printOverviewTable(cmd, []string{"Name"}, rows)

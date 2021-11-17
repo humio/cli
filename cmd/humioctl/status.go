@@ -15,8 +15,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -35,11 +37,11 @@ func newStatusCmd() *cobra.Command {
 			username, err := client.Viewer().Username()
 			exitOnError(cmd, err, "Error getting the current user")
 
-			details := [][]string{
-				{"Status", formatStatusText(serverStatus.Status)},
-				{"Address", viper.GetString(viperkey.Address)},
-				{"Version", serverStatus.Version},
-				{"Username", username},
+			details := [][]format.Value{
+				{format.String("Status"), StatusText(serverStatus.Status)},
+				{format.String("Address"), format.String(viper.GetString(viperkey.Address))},
+				{format.String("Version"), format.String(serverStatus.Version)},
+				{format.String("Username"), format.String(username)},
 			}
 
 			printDetailsTable(cmd, details)
@@ -52,13 +54,19 @@ func newStatusCmd() *cobra.Command {
 	return cmd
 }
 
-func formatStatusText(statusText string) string {
-	switch statusText {
+type StatusText string
+
+func (s StatusText) String() string {
+	switch s {
 	case "OK":
 		return prompt.Colorize("[green]OK[reset]")
 	case "WARN":
 		return prompt.Colorize("[yellow]WARN[reset]")
 	default:
-		return prompt.Colorize(fmt.Sprintf("[red]%s[reset]", statusText))
+		return prompt.Colorize(fmt.Sprintf("[red]%s[reset]", string(s)))
 	}
+}
+
+func (s StatusText) MarshalJSON() ([]byte, error) {
+	return json.Marshal(string(s))
 }
