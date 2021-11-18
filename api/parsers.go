@@ -10,7 +10,7 @@ type ParserTestCase struct {
 }
 
 type Parser struct {
-	Id        string
+	ID        string
 	Name      string
 	Tests     []string `yaml:",omitempty"`
 	Example   string   `yaml:",omitempty"`
@@ -99,10 +99,10 @@ func (p *Parsers) Add(repositoryName string, parser *Parser, force bool) error {
 }
 
 func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error) {
-
 	var query struct {
 		Repository struct {
 			Parser *struct {
+				ID         string
 				Name       string
 				SourceCode string
 				TestData   []string
@@ -126,6 +126,7 @@ func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error)
 	}
 
 	parser := Parser{
+		ID:        query.Repository.Parser.ID,
 		Name:      query.Repository.Parser.Name,
 		Tests:     query.Repository.Parser.TestData,
 		Script:    query.Repository.Parser.SourceCode,
