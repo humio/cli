@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ func newIngestTokensShowCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			ingestToken, err := client.IngestTokens().Get(repo, name)
-			exitOnError(cmd, err, "Error fetching ingest token")
+			helpers.ExitOnError(cmd, err, "Error fetching ingest token")
 
 			details := [][]format.Value{
 				{format.String("Name"), format.String(ingestToken.Name)},

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +28,7 @@ func newViewsListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			views, err := client.Views().List()
-			exitOnError(cmd, err, "Error while fetching view list")
+			helpers.ExitOnError(cmd, err, "Error while fetching view list")
 
 			rows := make([][]format.Value, len(views))
 			for i, view := range views {

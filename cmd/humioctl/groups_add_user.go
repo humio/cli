@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +17,7 @@ func newGroupsAddUserCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Groups().AddUserToGroup(groupID, userID)
-			exitOnError(cmd, err, "Error adding user to group")
+			helpers.ExitOnError(cmd, err, "Error adding user to group")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully added user %q to group %q\n", userID, groupID)
 		},

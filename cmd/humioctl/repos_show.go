@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +29,7 @@ func newReposShowCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			repo, err := client.Repositories().Get(repoName)
-			exitOnError(cmd, err, "Error fetching repository")
+			helpers.ExitOnError(cmd, err, "Error fetching repository")
 
 			printRepoDetailsTable(cmd, repo)
 		},

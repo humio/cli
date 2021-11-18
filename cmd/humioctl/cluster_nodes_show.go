@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -30,10 +31,10 @@ func newClusterNodesShowCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			id, err := strconv.Atoi(nodeID)
-			exitOnError(cmd, err, "Could not parse node id")
+			helpers.ExitOnError(cmd, err, "Could not parse node id")
 
 			node, err := client.ClusterNodes().Get(id)
-			exitOnError(cmd, err, "Error fetching node information")
+			helpers.ExitOnError(cmd, err, "Error fetching node information")
 
 			printClusterNodeDetailsTable(cmd, node)
 		},

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +17,7 @@ func newGroupsRemoveUserCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Groups().RemoveUserFromGroup(groupID, userID)
-			exitOnError(cmd, err, "Error removing user from group")
+			helpers.ExitOnError(cmd, err, "Error removing user from group")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed user %q to group %q\n", userID, groupID)
 		},

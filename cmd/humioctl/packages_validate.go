@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"os"
 	"path/filepath"
 
@@ -44,12 +45,12 @@ repository or view to validate the package against.
 			if !filepath.IsAbs(dirPath) {
 				var err error
 				dirPath, err = filepath.Abs(dirPath)
-				exitOnError(cmd, err, "Invalid path")
+				helpers.ExitOnError(cmd, err, "Invalid path")
 				dirPath += "/"
 			}
 
 			validationResult, err := client.Packages().Validate(repoOrViewName, dirPath)
-			exitOnError(cmd, err, "Errors validating package")
+			helpers.ExitOnError(cmd, err, "Errors validating package")
 
 			if !validationResult.IsValid() {
 				printValidation(cmd, validationResult)

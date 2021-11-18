@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -37,14 +38,14 @@ func newAlertsExportCmd() *cobra.Command {
 			}
 
 			alert, err := client.Alerts().Get(view, alertName)
-			exitOnError(cmd, err, "Error fetching alert")
+			helpers.ExitOnError(cmd, err, "Error fetching alert")
 
 			yamlData, err := yaml.Marshal(&alert)
-			exitOnError(cmd, err, "Failed to serialize the alert")
+			helpers.ExitOnError(cmd, err, "Failed to serialize the alert")
 
 			outFilePath := outputName + ".yaml"
 			err = ioutil.WriteFile(outFilePath, yamlData, 0600)
-			exitOnError(cmd, err, "Error saving the alert file")
+			helpers.ExitOnError(cmd, err, "Error saving the alert file")
 		},
 	}
 

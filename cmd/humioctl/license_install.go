@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"io/ioutil"
 	"os"
 
@@ -38,7 +39,7 @@ func newLicenseInstallCmd() *cobra.Command {
 
 				// #nosec G304
 				licenseBytes, err := ioutil.ReadFile(filepath)
-				exitOnError(cmd, err, "Error reading license file")
+				helpers.ExitOnError(cmd, err, "Error reading license file")
 
 				licenseString = string(licenseBytes)
 			} else if license != "" {
@@ -51,7 +52,7 @@ func newLicenseInstallCmd() *cobra.Command {
 			}
 
 			err := client.Licenses().Install(licenseString)
-			exitOnError(cmd, err, "Error installing license")
+			helpers.ExitOnError(cmd, err, "Error installing license")
 
 			fmt.Fprintln(cmd.OutOrStdout(), "Successfully installed license")
 		},

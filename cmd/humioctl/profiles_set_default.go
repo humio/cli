@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -16,14 +17,14 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 			profileName := args[0]
 
 			profile, err := loadProfile(profileName)
-			exitOnError(cmd, err, "Profile not found")
+			helpers.ExitOnError(cmd, err, "Profile not found")
 			viper.Set(viperkey.Address, profile.address)
 			viper.Set(viperkey.Token, profile.token)
 			viper.Set(viperkey.CACertificateFile, profile.caCertificate)
 			viper.Set(viperkey.Insecure, profile.insecure)
 
 			err = saveConfig()
-			exitOnError(cmd, err, "Error saving config")
+			helpers.ExitOnError(cmd, err, "Error saving config")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Default profile set to %q\n", profileName)
 			fmt.Fprintf(cmd.OutOrStdout(), "Address: %s\n", viper.GetString(viperkey.Address))

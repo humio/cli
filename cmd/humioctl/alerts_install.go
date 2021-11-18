@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -64,21 +65,21 @@ Use the --force flag to update existing alerts with conflicting names.
 					os.Exit(1)
 				}
 			}
-			exitOnError(cmd, err, "Failed to load the alert")
+			helpers.ExitOnError(cmd, err, "Failed to load the alert")
 
 			client := NewApiClient(cmd)
 			viewName := args[0]
 
 			var alert api.Alert
 			err = yaml.Unmarshal(content, &alert)
-			exitOnError(cmd, err, "Alert format is invalid")
+			helpers.ExitOnError(cmd, err, "Alert format is invalid")
 
 			if name != "" {
 				alert.Name = name
 			}
 
 			_, err = client.Alerts().Add(viewName, &alert, force)
-			exitOnError(cmd, err, "Error creating alert")
+			helpers.ExitOnError(cmd, err, "Error creating alert")
 
 			fmt.Fprintln(cmd.OutOrStdout(), "Alert created")
 		},

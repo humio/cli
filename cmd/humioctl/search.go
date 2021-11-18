@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/prompt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -124,7 +125,7 @@ func newSearchCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			exitOnError(cmd, err, "error running search")
+			helpers.ExitOnError(cmd, err, "error running search")
 		},
 	}
 

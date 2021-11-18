@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +29,7 @@ func newViewsShowCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			view, err := client.Views().Get(viewName)
-			exitOnError(cmd, err, "Error fetching view")
+			helpers.ExitOnError(cmd, err, "Error fetching view")
 
 			printViewConnectionsTable(cmd, view)
 		},

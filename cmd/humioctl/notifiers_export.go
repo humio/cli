@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -37,14 +38,14 @@ func newNotifiersExportCmd() *cobra.Command {
 			}
 
 			notifier, err := client.Notifiers().Get(repoOrViewName, notifierName)
-			exitOnError(cmd, err, "Error fetching notifier")
+			helpers.ExitOnError(cmd, err, "Error fetching notifier")
 
 			yamlData, err := yaml.Marshal(&notifier)
-			exitOnError(cmd, err, "Failed to serialize the notifier")
+			helpers.ExitOnError(cmd, err, "Failed to serialize the notifier")
 
 			outFilePath := outputName + ".yaml"
 			err = ioutil.WriteFile(outFilePath, yamlData, 0600)
-			exitOnError(cmd, err, "Error saving the notifier file")
+			helpers.ExitOnError(cmd, err, "Error saving the notifier file")
 		},
 	}
 

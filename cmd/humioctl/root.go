@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"io/ioutil"
 	"net/url"
 	"os"
@@ -159,7 +160,7 @@ func initConfig() {
 	// If the user has specified a profile flag, load it.
 	if profileFlag != "" {
 		profile, err := loadProfile(profileFlag)
-		exitOnError(rootCmd, err, "Failed to load profile")
+		helpers.ExitOnError(rootCmd, err, "Failed to load profile")
 
 		// Explicitly bound address or token have precedence
 		if address == "" {
@@ -179,14 +180,14 @@ func initConfig() {
 	if tokenFile != "" {
 		// #nosec G304
 		tokenFileContent, err := ioutil.ReadFile(tokenFile)
-		exitOnError(rootCmd, err, "Error loading token file")
+		helpers.ExitOnError(rootCmd, err, "Error loading token file")
 		viper.Set(viperkey.Token, string(tokenFileContent))
 	}
 
 	if caCertificateFile != "" {
 		// #nosec G304
 		caCertificateFileContent, err := ioutil.ReadFile(caCertificateFile)
-		exitOnError(rootCmd, err, "Error loading CA certificate file")
+		helpers.ExitOnError(rootCmd, err, "Error loading CA certificate file")
 		viper.Set(viperkey.CACertificate, string(caCertificateFileContent))
 	}
 
@@ -197,7 +198,7 @@ func initConfig() {
 
 func NewApiClient(cmd *cobra.Command, opts ...func(config *api.Config)) *api.Client {
 	client, err := newApiClientE(opts...)
-	exitOnError(cmd, err, "Error creating HTTP client")
+	helpers.ExitOnError(cmd, err, "Error creating HTTP client")
 	return client
 }
 
@@ -226,5 +227,5 @@ func newApiClientE(opts ...func(config *api.Config)) (*api.Client, error) {
 func main() {
 	SetVersion(version, commit, date)
 	err := rootCmd.Execute()
-	exitOnError(rootCmd, err, "Unable to execute command")
+	helpers.ExitOnError(rootCmd, err, "Unable to execute command")
 }

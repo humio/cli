@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 	"strings"
@@ -30,10 +31,10 @@ func newAlertsListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			alerts, err := client.Alerts().List(view)
-			exitOnError(cmd, err, "Error fetching alerts")
+			helpers.ExitOnError(cmd, err, "Error fetching alerts")
 
 			notifiers, err := client.Notifiers().List(view)
-			exitOnError(cmd, err, "Unable to fetch notifier details")
+			helpers.ExitOnError(cmd, err, "Unable to fetch notifier details")
 
 			var notifierMap = map[string]string{}
 			for _, notifier := range notifiers {

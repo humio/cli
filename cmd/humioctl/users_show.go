@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +29,7 @@ func newUsersShowCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			user, err := client.Users().Get(username)
-			exitOnError(cmd, err, "Error fetching user")
+			helpers.ExitOnError(cmd, err, "Error fetching user")
 
 			printUserDetailsTable(cmd, user)
 		},

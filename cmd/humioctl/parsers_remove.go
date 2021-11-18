@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +31,7 @@ func newParsersRemoveCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Parsers().Remove(repo, parser)
-			exitOnError(cmd, err, "Error removing parser")
+			helpers.ExitOnError(cmd, err, "Error removing parser")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed parser %q from repository %q\n", parser, repo)
 		},

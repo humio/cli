@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +32,7 @@ func newAlertsRemoveCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Alerts().Delete(viewName, alertName)
-			exitOnError(cmd, err, "Error removing alert")
+			helpers.ExitOnError(cmd, err, "Error removing alert")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed alert %q from view %q\n", alertName, viewName)
 		},

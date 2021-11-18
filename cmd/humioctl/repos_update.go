@@ -16,14 +16,16 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/customflags"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 
 	"github.com/spf13/cobra"
 )
 
 func newReposUpdateCmd() *cobra.Command {
 	var allowDataDeletionFlag bool
-	var descriptionFlag stringPtrFlag
-	var retentionTimeFlag, ingestSizeBasedRetentionFlag, storageSizeBasedRetentionFlag float64PtrFlag
+	var descriptionFlag customflags.StringPtrFlag
+	var retentionTimeFlag, ingestSizeBasedRetentionFlag, storageSizeBasedRetentionFlag customflags.Float64PtrFlag
 
 	cmd := cobra.Command{
 		Use:   "update [flags] <repo>",
@@ -33,25 +35,25 @@ func newReposUpdateCmd() *cobra.Command {
 			repoName := args[0]
 			client := NewApiClient(cmd)
 
-			if descriptionFlag.value == nil && retentionTimeFlag.value == nil && ingestSizeBasedRetentionFlag.value == nil && storageSizeBasedRetentionFlag.value == nil {
-				exitOnError(cmd, fmt.Errorf("you must specify at least one flag to update"), "Nothing specified to update")
+			if descriptionFlag.Value == nil && retentionTimeFlag.Value == nil && ingestSizeBasedRetentionFlag.Value == nil && storageSizeBasedRetentionFlag.Value == nil {
+				helpers.ExitOnError(cmd, fmt.Errorf("you must specify at least one flag to update"), "Nothing specified to update")
 			}
 
-			if descriptionFlag.value != nil {
-				err := client.Repositories().UpdateDescription(repoName, *descriptionFlag.value)
-				exitOnError(cmd, err, "Error updating repository description")
+			if descriptionFlag.Value != nil {
+				err := client.Repositories().UpdateDescription(repoName, *descriptionFlag.Value)
+				helpers.ExitOnError(cmd, err, "Error updating repository description")
 			}
-			if retentionTimeFlag.value != nil {
-				err := client.Repositories().UpdateTimeBasedRetention(repoName, *retentionTimeFlag.value, allowDataDeletionFlag)
-				exitOnError(cmd, err, "Error updating repository retention time in days")
+			if retentionTimeFlag.Value != nil {
+				err := client.Repositories().UpdateTimeBasedRetention(repoName, *retentionTimeFlag.Value, allowDataDeletionFlag)
+				helpers.ExitOnError(cmd, err, "Error updating repository retention time in days")
 			}
-			if ingestSizeBasedRetentionFlag.value != nil {
-				err := client.Repositories().UpdateIngestBasedRetention(repoName, *ingestSizeBasedRetentionFlag.value, allowDataDeletionFlag)
-				exitOnError(cmd, err, "Error updating repository ingest size based retention")
+			if ingestSizeBasedRetentionFlag.Value != nil {
+				err := client.Repositories().UpdateIngestBasedRetention(repoName, *ingestSizeBasedRetentionFlag.Value, allowDataDeletionFlag)
+				helpers.ExitOnError(cmd, err, "Error updating repository ingest size based retention")
 			}
-			if storageSizeBasedRetentionFlag.value != nil {
-				err := client.Repositories().UpdateStorageBasedRetention(repoName, *storageSizeBasedRetentionFlag.value, allowDataDeletionFlag)
-				exitOnError(cmd, err, "Error updating repository storage size based retention")
+			if storageSizeBasedRetentionFlag.Value != nil {
+				err := client.Repositories().UpdateStorageBasedRetention(repoName, *storageSizeBasedRetentionFlag.Value, allowDataDeletionFlag)
+				helpers.ExitOnError(cmd, err, "Error updating repository storage size based retention")
 			}
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully updated repository %q\n", repoName)

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +30,7 @@ func newParsersListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			parsers, err := client.Parsers().List(repo)
-			exitOnError(cmd, err, "Error fetching parsers")
+			helpers.ExitOnError(cmd, err, "Error fetching parsers")
 
 			var rows [][]format.Value
 			for i := 0; i < len(parsers); i++ {

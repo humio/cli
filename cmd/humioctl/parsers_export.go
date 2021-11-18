@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 	"io/ioutil"
 )
@@ -36,12 +37,12 @@ func newParsersExportCmd() *cobra.Command {
 			}
 
 			yamlData, err := client.Parsers().Export(repo, parserName)
-			exitOnError(cmd, err, "Error fetching parsers")
+			helpers.ExitOnError(cmd, err, "Error fetching parsers")
 
 			outFilePath := outputName + ".yaml"
 
 			err = ioutil.WriteFile(outFilePath, []byte(yamlData), 0600)
-			exitOnError(cmd, err, "Error saving the parser file")
+			helpers.ExitOnError(cmd, err, "Error saving the parser file")
 		},
 	}
 

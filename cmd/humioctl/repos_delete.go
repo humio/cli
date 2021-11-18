@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +33,7 @@ func newReposDeleteCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Repositories().Delete(repo, reason, allowDataDeletionFlag)
-			exitOnError(cmd, err, "Error removing repository")
+			helpers.ExitOnError(cmd, err, "Error removing repository")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully deleted repository: %q\n", repo)
 		},

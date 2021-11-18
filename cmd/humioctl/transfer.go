@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 	"os"
@@ -34,7 +35,7 @@ func newTransferCreateManagedExportGroupCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			groupID, err := client.Transfer().CreateManagedExportGroup()
-			exitOnError(cmd, err, "Error creating managed export group")
+			helpers.ExitOnError(cmd, err, "Error creating managed export group")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully created managed export group with group ID: %v\n", groupID)
 		},
@@ -52,7 +53,7 @@ func newTransferGetManagedExportGroupCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			groupID, err := client.Transfer().GetManagedExportGroup()
-			exitOnError(cmd, err, "Error retrieving managed export group")
+			helpers.ExitOnError(cmd, err, "Error retrieving managed export group")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Group ID: %v\n", groupID)
 		},
@@ -70,7 +71,7 @@ func newTransferRemoveManagedExportGroupCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Transfer().RemoveManagedExportGroup()
-			exitOnError(cmd, err, "Error removing managed export group")
+			helpers.ExitOnError(cmd, err, "Error removing managed export group")
 
 			fmt.Fprintln(cmd.OutOrStdout(), "Successfully removed managed export group")
 		},
@@ -102,7 +103,7 @@ func newTransferJobsListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			jobs, err := client.Transfer().ListTransferJobs()
-			exitOnError(cmd, err, "Error listing transfer jobs")
+			helpers.ExitOnError(cmd, err, "Error listing transfer jobs")
 
 			var rows [][]format.Value
 			for _, job := range jobs {
@@ -178,7 +179,7 @@ func newTransferJobsAddCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			jobs, err := client.Transfer().AddTransferJob(args[0], args[1], args[2], strings.Split(args[3], ","), maximumParallelDownloads, setTargetAsNewMaster, onlyTransferDataspaces)
-			exitOnError(cmd, err, "Error creating transfer job")
+			helpers.ExitOnError(cmd, err, "Error creating transfer job")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Added transfer job with ID: %s\n", jobs.ID)
 		},
@@ -200,7 +201,7 @@ func newTransferJobsCancelCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			job, err := client.Transfer().CancelTransferJob(args[0])
-			exitOnError(cmd, err, "Error cancelling transfer job")
+			helpers.ExitOnError(cmd, err, "Error cancelling transfer job")
 
 			detailTransferJob(cmd, job)
 		},
@@ -218,7 +219,7 @@ func newTransferJobsStatusCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			job, err := client.Transfer().GetTransferJobStatus(args[0])
-			exitOnError(cmd, err, "Error getting status of transfer job")
+			helpers.ExitOnError(cmd, err, "Error getting status of transfer job")
 
 			detailTransferJob(cmd, job)
 		},
@@ -236,7 +237,7 @@ func newTransferJobsShowCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			jobs, err := client.Transfer().ListTransferJobs()
-			exitOnError(cmd, err, "Error getting transfer job")
+			helpers.ExitOnError(cmd, err, "Error getting transfer job")
 
 			var found bool
 			for _, job := range jobs {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +17,7 @@ func newFilesDeleteCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Files().Delete(viewName, fileName)
-			exitOnError(cmd, err, "Error deleting file")
+			helpers.ExitOnError(cmd, err, "Error deleting file")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully deleted file %q in repo %q\n", fileName, viewName)
 		},

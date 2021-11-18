@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 	"io"
 	"os"
@@ -21,7 +22,7 @@ func newFilesDownloadCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			reader, err := client.Files().Download(viewName, fileName)
-			exitOnError(cmd, err, "Error downloading file")
+			helpers.ExitOnError(cmd, err, "Error downloading file")
 
 			var writer io.Writer
 			if saveAs == "-" || saveAs == "" {
@@ -29,11 +30,11 @@ func newFilesDownloadCmd() *cobra.Command {
 			} else {
 				var err error
 				writer, err = os.Create(saveAs)
-				exitOnError(cmd, err, "Error opening output file")
+				helpers.ExitOnError(cmd, err, "Error opening output file")
 			}
 
 			_, err = io.Copy(writer, reader)
-			exitOnError(cmd, err, "Error writing output")
+			helpers.ExitOnError(cmd, err, "Error writing output")
 		},
 	}
 

@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +33,7 @@ func newViewsCreateCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Views().Create(viewName, description, connections)
-			exitOnError(cmd, err, "Error creating view")
+			helpers.ExitOnError(cmd, err, "Error creating view")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully created view: %q\n", viewName)
 		},

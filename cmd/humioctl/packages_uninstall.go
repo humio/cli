@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +31,7 @@ func uninstallPackageCmd() *cobra.Command {
 			packageName := args[1]
 
 			err := client.Packages().UninstallPackage(repoOrViewName, packageName)
-			exitOnError(cmd, err, "Errors uninstalling package")
+			helpers.ExitOnError(cmd, err, "Errors uninstalling package")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully uninstalled package %s from view/repo %s\n", packageName, repoOrViewName)
 		},

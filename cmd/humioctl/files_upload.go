@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 	"io"
 	"os"
@@ -37,13 +38,13 @@ Specify '-' as the input file to read from stdin.`,
 			} else {
 				var err error
 				reader, err = os.Open(args[1])
-				exitOnError(cmd, err, "Error opening input file")
+				helpers.ExitOnError(cmd, err, "Error opening input file")
 			}
 
 			client := NewApiClient(cmd)
 
 			err := client.Files().Upload(args[0], fileName, reader)
-			exitOnError(cmd, err, "Error uploading file")
+			helpers.ExitOnError(cmd, err, "Error uploading file")
 		},
 	}
 

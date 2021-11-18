@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -62,21 +63,21 @@ Use the --force flag to update existing parsers with conflicting names.
 					os.Exit(1)
 				}
 			}
-			exitOnError(cmd, err, "Failed to load the notifier")
+			helpers.ExitOnError(cmd, err, "Failed to load the notifier")
 
 			client := NewApiClient(cmd)
 			viewName := args[0]
 
 			notifier := api.Notifier{}
 			err = yaml.Unmarshal(content, &notifier)
-			exitOnError(cmd, err, "The notifier's format was invalid")
+			helpers.ExitOnError(cmd, err, "The notifier's format was invalid")
 
 			if name != "" {
 				notifier.Name = name
 			}
 
 			_, err = client.Notifiers().Add(viewName, &notifier, force)
-			exitOnError(cmd, err, "Error installing notifier")
+			helpers.ExitOnError(cmd, err, "Error installing notifier")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully installed notifier with name: %q\n", notifier.Name)
 		},

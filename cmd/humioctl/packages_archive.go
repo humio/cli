@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -34,15 +35,15 @@ func archivePackageCmd() *cobra.Command {
 			if !filepath.IsAbs(dirPath) {
 				var err error
 				dirPath, err = filepath.Abs(dirPath)
-				exitOnError(cmd, err, "Invalid path")
+				helpers.ExitOnError(cmd, err, "Invalid path")
 				dirPath += "/"
 			}
 
 			err := client.Packages().CreateArchive(dirPath, outPath)
-			exitOnError(cmd, err, "Errors creating archive")
+			helpers.ExitOnError(cmd, err, "Errors creating archive")
 
 			absoluteOutPath, err := filepath.Abs(outPath)
-			exitOnError(cmd, err, fmt.Sprintf("Could not find path: %s", outPath))
+			helpers.ExitOnError(cmd, err, fmt.Sprintf("Could not find path: %s", outPath))
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully wrote archive to: %q\n", absoluteOutPath)
 		},

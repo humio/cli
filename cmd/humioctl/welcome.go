@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"os"
 
@@ -34,7 +35,7 @@ func newWelcomeCmd() *cobra.Command {
 			out.BlankLine()
 
 			profile, err := collectProfileInfo(cmd)
-			exitOnError(cmd, err, "Failed to collect profile info")
+			helpers.ExitOnError(cmd, err, "Failed to collect profile info")
 
 			viper.Set(viperkey.Address, profile.address)
 			viper.Set(viperkey.Token, profile.token)
@@ -45,7 +46,7 @@ func newWelcomeCmd() *cobra.Command {
 			out.Print(prompt.Colorize("==> Writing settings to: [purple]" + configFile + "[reset]"))
 
 			err = saveConfig()
-			exitOnError(cmd, err, "Error saving file")
+			helpers.ExitOnError(cmd, err, "Error saving file")
 
 			out.BlankLine()
 			out.Description("The authentication info has been saved to the profile 'default'.")

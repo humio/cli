@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -46,13 +47,13 @@ Zip File URL.
 
 			if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
 				downloadedFile, err := getURLPackage(path)
-				exitOnError(cmd, err, fmt.Sprintf("Failed to download file to path: %s", path))
+				helpers.ExitOnError(cmd, err, fmt.Sprintf("Failed to download file to path: %s", path))
 
 				path = downloadedFile.Name()
 			}
 
 			isDir, err := isDirectory(path)
-			exitOnError(cmd, err, "Errors installing archive")
+			helpers.ExitOnError(cmd, err, "Errors installing archive")
 
 			var validationResult *api.ValidationResponse
 			if isDir {
@@ -60,7 +61,7 @@ Zip File URL.
 			} else {
 				validationResult, err = client.Packages().InstallArchive(repoOrViewName, path)
 			}
-			exitOnError(cmd, err, "Errors installing archive")
+			helpers.ExitOnError(cmd, err, "Errors installing archive")
 
 			if !validationResult.IsValid() {
 				printValidation(cmd, validationResult)

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 	"os"
@@ -36,7 +37,7 @@ func newHealthCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			health, err := client.Health()
-			exitOnError(cmd, err, "Error getting health information")
+			helpers.ExitOnError(cmd, err, "Error getting health information")
 
 			switch {
 			case versionFlag:

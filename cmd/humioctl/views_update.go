@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 
 	"github.com/spf13/cobra"
 )
@@ -33,17 +34,17 @@ func newViewsUpdateCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			if len(connections) == 0 && description == "" {
-				exitOnError(cmd, fmt.Errorf("you must specify at least one flag"), "Nothing specified to update")
+				helpers.ExitOnError(cmd, fmt.Errorf("you must specify at least one flag"), "Nothing specified to update")
 			}
 
 			if len(connections) > 0 {
 				err := client.Views().UpdateConnections(viewName, connections)
-				exitOnError(cmd, err, "Error updating view connections")
+				helpers.ExitOnError(cmd, err, "Error updating view connections")
 			}
 
 			if description != "" {
 				err := client.Views().UpdateDescription(viewName, description)
-				exitOnError(cmd, err, "Error updating view description")
+				helpers.ExitOnError(cmd, err, "Error updating view description")
 			}
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully updated view %q\n", viewName)

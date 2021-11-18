@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +33,7 @@ func newIngestTokensRemoveCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.IngestTokens().Remove(repoName, tokenName)
-			exitOnError(cmd, err, "Error removing ingest token")
+			helpers.ExitOnError(cmd, err, "Error removing ingest token")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed ingest token %q from repository %q\n", tokenName, repoName)
 		},

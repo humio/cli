@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -28,7 +29,7 @@ func newClusterShowCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			cluster, err := client.Clusters().Get()
-			exitOnError(cmd, err, "Error fetching cluster information")
+			helpers.ExitOnError(cmd, err, "Error fetching cluster information")
 
 			rows := [][]format.Value{
 				{

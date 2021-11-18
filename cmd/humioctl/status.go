@@ -17,6 +17,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/humio/cli/prompt"
@@ -32,10 +33,10 @@ func newStatusCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 			serverStatus, err := client.Status()
-			exitOnError(cmd, err, "Error getting server status")
+			helpers.ExitOnError(cmd, err, "Error getting server status")
 
 			username, err := client.Viewer().Username()
-			exitOnError(cmd, err, "Error getting the current user")
+			helpers.ExitOnError(cmd, err, "Error getting the current user")
 
 			details := [][]format.Value{
 				{format.String("Status"), StatusText(serverStatus.Status)},

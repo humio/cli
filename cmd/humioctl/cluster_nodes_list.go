@@ -16,6 +16,7 @@ package main
 
 import (
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 	"sort"
@@ -31,7 +32,7 @@ func newClusterNodesListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			nodes, err := client.ClusterNodes().List()
-			exitOnError(cmd, err, "Error fetching cluster nodes")
+			helpers.ExitOnError(cmd, err, "Error fetching cluster nodes")
 
 			sort.Slice(nodes, func(i, j int) bool {
 				var a, b api.ClusterNode

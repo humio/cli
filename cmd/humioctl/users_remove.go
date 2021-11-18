@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +31,7 @@ func newUsersRemoveCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			removedUser, err := client.Users().Remove(username)
-			exitOnError(cmd, err, "Error removing the user")
+			helpers.ExitOnError(cmd, err, "Error removing the user")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed user with username %q with ID %q\n", removedUser.Username, removedUser.ID)
 		},

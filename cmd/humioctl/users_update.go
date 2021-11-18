@@ -17,13 +17,15 @@ package main
 import (
 	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/humioctl/internal/customflags"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
 func newUsersUpdateCmd() *cobra.Command {
-	var rootFlag boolPtrFlag
-	var nameFlag, companyFlag, emailFlag, countryCodeFlag stringPtrFlag
-	var pictureFlag urlPtrFlag
+	var rootFlag customflags.BoolPtrFlag
+	var nameFlag, companyFlag, emailFlag, countryCodeFlag customflags.StringPtrFlag
+	var pictureFlag customflags.UrlPtrFlag
 
 	cmd := cobra.Command{
 		Use:   "update [flags] <username>",
@@ -34,14 +36,14 @@ func newUsersUpdateCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			_, apiErr := client.Users().Update(userName, api.UserChangeSet{
-				IsRoot:      rootFlag.value,
-				FullName:    nameFlag.value,
-				Company:     companyFlag.value,
-				CountryCode: countryCodeFlag.value,
-				Email:       emailFlag.value,
-				Picture:     pictureFlag.value,
+				IsRoot:      rootFlag.Value,
+				FullName:    nameFlag.Value,
+				Company:     companyFlag.Value,
+				CountryCode: countryCodeFlag.Value,
+				Email:       emailFlag.Value,
+				Picture:     pictureFlag.Value,
 			})
-			exitOnError(cmd, apiErr, "Error updating user")
+			helpers.ExitOnError(cmd, apiErr, "Error updating user")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully updated user with username %q\n", userName)
 		},

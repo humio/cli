@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +30,7 @@ func newNotifiersListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			notifiers, err := client.Notifiers().List(repoOrViewName)
-			exitOnError(cmd, err, "Error fetching notifiers")
+			helpers.ExitOnError(cmd, err, "Error fetching notifiers")
 
 			var rows [][]format.Value
 			for i := 0; i < len(notifiers); i++ {

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +30,7 @@ func newViewsDeleteCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Views().Delete(view, reason)
-			exitOnError(cmd, err, "Error removing view")
+			helpers.ExitOnError(cmd, err, "Error removing view")
 
 			cmd.Printf("Successfully deleted view %s with reason %q\n", view, reason)
 		},

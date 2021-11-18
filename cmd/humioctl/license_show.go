@@ -17,6 +17,7 @@ package main
 import (
 	"errors"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -32,7 +33,7 @@ func newLicenseShowCmd() *cobra.Command {
 			if license == noLicense {
 				err = errors.New("no license currently installed")
 			}
-			exitOnError(cmd, err, "Error fetching the license")
+			helpers.ExitOnError(cmd, err, "Error fetching the license")
 
 			printLicenseDetailsTable(cmd, license)
 		},

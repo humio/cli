@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/humio/cli/prompt"
 	"github.com/skratchdot/open-golang/open"
@@ -27,12 +28,12 @@ func newProfilesAddCmd() *cobra.Command {
 			profileName := args[0]
 
 			profile, err := collectProfileInfo(cmd)
-			exitOnError(cmd, err, "Failed to collect profile info")
+			helpers.ExitOnError(cmd, err, "Failed to collect profile info")
 
 			addAccount(profileName, profile)
 
 			err = saveConfig()
-			exitOnError(cmd, err, "Error saving config")
+			helpers.ExitOnError(cmd, err, "Error saving config")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully added profile with name %q\n", profileName)
 		},
@@ -117,7 +118,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 		var err error
 		out.BlankLine()
 		addr, err = out.Ask("Address (default: https://cloud.humio.com/ [Hit Enter])")
-		exitOnError(cmd, err, "Error reading humio server address")
+		helpers.ExitOnError(cmd, err, "Error reading humio server address")
 
 		if addr == "" {
 			addr = "https://cloud.humio.com/"
@@ -147,15 +148,15 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 				out.Description("If left empty it is not possible to validate TLS certificate chain.")
 
 				caCertificateFilePath, err := out.Ask("Absolute path on local disk to CA certificate in PEM format")
-				exitOnError(cmd, err, "Error reading Humio CA certificate file path")
+				helpers.ExitOnError(cmd, err, "Error reading Humio CA certificate file path")
 				if caCertificateFilePath != "" {
 					// Read the file
 					// #nosec G304
 					caCertContent, err := ioutil.ReadFile(caCertificateFilePath)
-					exitOnError(cmd, err, "Error reading Humio CA certificate file path")
+					helpers.ExitOnError(cmd, err, "Error reading Humio CA certificate file path")
 					block, _ := pem.Decode(caCertContent)
 					if block == nil {
-						exitOnError(cmd, fmt.Errorf("expected PEM block"), "Expected PEM encoded CA certificate file")
+						helpers.ExitOnError(cmd, fmt.Errorf("expected PEM block"), "Expected PEM encoded CA certificate file")
 					}
 					caCertificate = string(caCertContent)
 					clientConfig.CACertificatePEM = caCertificate
@@ -172,7 +173,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 				out.Info("Disable hostname verification for TLS connections?")
 				out.Description("By default all connections will verify the hostname, but this option allows you to disable this if required.")
 				insecureString, err := out.Ask("Do you want to disable hostname verification? Type 'yes' to disable hostname verification")
-				exitOnError(cmd, err, "Error reading humio ca certificate file path")
+				helpers.ExitOnError(cmd, err, "Error reading humio ca certificate file path")
 				if insecureString == "yes" {
 					out.Print("Disabling hostname verification.")
 					insecure = true
@@ -216,7 +217,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 	for {
 		var err error
 		token, err = out.AskSecret("API Token")
-		exitOnError(cmd, err, "Error reading token")
+		helpers.ExitOnError(cmd, err, "Error reading token")
 
 		// Create a new API client with the token
 		config := api.DefaultConfig()

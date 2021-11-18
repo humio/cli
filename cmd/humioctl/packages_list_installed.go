@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +30,7 @@ func listInstalledPackagesCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			installedPackages, err := client.Packages().ListInstalled(repoOrViewName)
-			exitOnError(cmd, err, "Error fetching packages")
+			helpers.ExitOnError(cmd, err, "Error fetching packages")
 
 			var rows [][]format.Value
 			for _, installedPackage := range installedPackages {

@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"sort"
 
@@ -33,7 +34,7 @@ func newReposListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			repos, err := client.Repositories().List()
-			exitOnError(cmd, err, "Error fetching repository")
+			helpers.ExitOnError(cmd, err, "Error fetching repository")
 
 			sort.Slice(repos, func(i, j int) bool {
 				var a, b api.RepoListItem

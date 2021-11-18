@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -27,7 +28,7 @@ func newUsersListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			users, err := client.Users().List()
-			exitOnError(cmd, err, "Error fetching user list")
+			helpers.ExitOnError(cmd, err, "Error fetching user list")
 
 			rows := make([][]format.Value, len(users))
 			for i, user := range users {

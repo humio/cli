@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +30,7 @@ func newReposCreateCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			err := client.Repositories().Create(repoName)
-			exitOnError(cmd, err, "Error creating repository")
+			helpers.ExitOnError(cmd, err, "Error creating repository")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully created repo %s\n", repoName)
 

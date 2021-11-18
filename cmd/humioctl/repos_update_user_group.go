@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"os"
 
 	"github.com/humio/cli/api"
@@ -29,7 +30,7 @@ func newReposUpdateUserGroupCmd() *cobra.Command {
 			}
 
 			err := client.Repositories().UpdateUserGroup(repoName, userName, defaultGroups...)
-			exitOnError(cmd, err, "Error adding user")
+			helpers.ExitOnError(cmd, err, "Error adding user")
 		},
 	}
 	cmd.Flags().StringSliceVarP(&groups, "groups", "g", []string{api.DefaultGroupEnumMember.String()}, "the groups that the user should be added in")

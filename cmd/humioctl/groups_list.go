@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +14,7 @@ func newGroupsList() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			groups, err := client.Groups().List()
-			exitOnError(cmd, err, "Error listing groups")
+			helpers.ExitOnError(cmd, err, "Error listing groups")
 
 			rows := make([][]format.Value, len(groups))
 			for i, group := range groups {

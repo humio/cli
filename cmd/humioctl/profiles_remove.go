@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"os"
 
@@ -26,7 +27,7 @@ func newProfilesRemoveCmd() *cobra.Command {
 
 			delete(profiles, profileName)
 			err := saveConfig()
-			exitOnError(cmd, err, "Error saving config")
+			helpers.ExitOnError(cmd, err, "Error saving config")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed profile: %q\n", profileName)
 		},

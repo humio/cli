@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +15,7 @@ func newFilesListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			files, err := client.Files().List(args[0])
-			exitOnError(cmd, err, "Error listing files")
+			helpers.ExitOnError(cmd, err, "Error listing files")
 
 			var rows [][]format.Value
 

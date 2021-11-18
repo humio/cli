@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +15,7 @@ func newUsersRotateApiTokenCmd() *cobra.Command {
 
 			client := NewApiClient(cmd)
 			newToken, apiErr := client.Users().RotateUserApiTokenAndGet(userID)
-			exitOnError(cmd, apiErr, "Error updating user")
+			helpers.ExitOnError(cmd, apiErr, "Error updating user")
 
 			cmd.Printf("New API Token: %s\n", newToken)
 		},

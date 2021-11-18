@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +30,7 @@ func newIngestTokensListCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			tokens, err := client.IngestTokens().List(repo)
-			exitOnError(cmd, err, "Error fetching token list")
+			helpers.ExitOnError(cmd, err, "Error fetching token list")
 
 			var rows [][]format.Value
 			for i := 0; i < len(tokens); i++ {

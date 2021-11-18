@@ -15,6 +15,7 @@
 package main
 
 import (
+	"github.com/humio/cli/cmd/humioctl/internal/helpers"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -57,21 +58,21 @@ Use the --force flag to update existing parsers with conflicting names.
 				cmd.PrintErrf("If you only provide repo you must specify --file or --url\n")
 				os.Exit(1)
 			}
-			exitOnError(cmd, err, "Failed to load the parser")
+			helpers.ExitOnError(cmd, err, "Failed to load the parser")
 
 			repositoryName := args[0]
 			client := NewApiClient(cmd)
 
 			parser := api.Parser{}
 			err = yaml.Unmarshal(content, &parser)
-			exitOnError(cmd, err, "The parser's format was invalid")
+			helpers.ExitOnError(cmd, err, "The parser's format was invalid")
 
 			if name != "" {
 				parser.Name = name
 			}
 
 			err = client.Parsers().Add(repositoryName, &parser, force)
-			exitOnError(cmd, err, "Error installing parser")
+			helpers.ExitOnError(cmd, err, "Error installing parser")
 		},
 	}
 
