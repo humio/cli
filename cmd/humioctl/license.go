@@ -45,5 +45,5 @@ func printLicenseDetailsTable(cmd *cobra.Command, license api.License) {
 	details = append(details, []format.Value{format.String("Issued At"), format.String(license.IssuedAt())})
 	details = append(details, []format.Value{format.String("Expires At"), format.String(license.ExpiresAt())})
 
-	printDetailsTable(cmd, details)
+	format.PrintDetailsTable(cmd, details)
 }

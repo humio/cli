@@ -23,7 +23,7 @@ func newGroupsList() *cobra.Command {
 				}
 			}
 
-			printOverviewTable(cmd, []string{"Display Name", "ID"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Display Name", "ID"}, rows)
 		},
 	}
 }

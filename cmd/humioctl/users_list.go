@@ -34,13 +34,13 @@ func newUsersListCmd() *cobra.Command {
 				rows[i] = []format.Value{
 					format.String(user.Username),
 					format.String(user.FullName),
-					yesNo(user.IsRoot),
+					format.YesNo(user.IsRoot),
 					format.String(user.CreatedAt),
 					format.String(user.ID),
 				}
 			}
 
-			printOverviewTable(cmd, []string{"Username", "Name", "Root", "Created", "ID"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Username", "Name", "Root", "Created", "ID"}, rows)
 		},
 	}
 }

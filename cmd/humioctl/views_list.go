@@ -34,7 +34,7 @@ func newViewsListCmd() *cobra.Command {
 				rows[i] = []format.Value{format.String(view.Name)}
 			}
 
-			printOverviewTable(cmd, []string{"Name"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Name"}, rows)
 		},
 	}
 }

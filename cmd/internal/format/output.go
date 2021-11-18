@@ -1,46 +1,46 @@
-package main
+package format
 
 import (
 	"encoding/json"
 	"fmt"
 )
 
-type yesNo bool
+type YesNo bool
 
-func (y yesNo) String() string {
+func (y YesNo) String() string {
 	if y {
 		return "yes"
 	}
 	return "no"
 }
 
-func (y yesNo) MarshalJSON() ([]byte, error) {
+func (y YesNo) MarshalJSON() ([]byte, error) {
 	return json.Marshal(bool(y))
 }
 
-type checkmark bool
+type Checkmark bool
 
-func (c checkmark) String() string {
+func (c Checkmark) String() string {
 	if c {
 		return "✓"
 	}
 	return ""
 }
 
-func (c checkmark) MarshalJSON() ([]byte, error) {
+func (c Checkmark) MarshalJSON() ([]byte, error) {
 	return json.Marshal(bool(c))
 }
 
-type valueOrEmpty string
+type ValueOrEmpty string
 
-func (v valueOrEmpty) String() string {
+func (v ValueOrEmpty) String() string {
 	if string(v) == "" {
 		return "-"
 	}
 	return string(v)
 }
 
-func (v valueOrEmpty) MarshalJSON() ([]byte, error) {
+func (v ValueOrEmpty) MarshalJSON() ([]byte, error) {
 	if string(v) == "" {
 		return []byte("null"), nil
 	}

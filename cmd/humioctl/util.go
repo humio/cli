@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/humio/cli/cmd/internal/format"
 	"net/url"
 	"os"
 	"strconv"
@@ -128,12 +127,4 @@ func (sf *float64PtrFlag) String() string {
 
 func (sf *float64PtrFlag) Type() string {
 	return "float64"
-}
-
-func printDetailsTable(cmd *cobra.Command, data [][]format.Value) {
-	format.FormatterFromCommand(cmd).Details(data)
-}
-
-func printOverviewTable(cmd *cobra.Command, header []string, data [][]format.Value) {
-	format.FormatterFromCommand(cmd).Table(header, data)
 }

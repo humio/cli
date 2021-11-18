@@ -50,7 +50,7 @@ func newClusterNodesListCmd() *cobra.Command {
 				}
 			}
 
-			printOverviewTable(cmd, []string{"ID", "Name", "Can be safely unregistered", "Availability Zone"}, rows)
+			format.PrintOverviewTable(cmd, []string{"ID", "Name", "Can be safely unregistered", "Availability Zone"}, rows)
 		},
 	}
 

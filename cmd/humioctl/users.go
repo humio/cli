@@ -40,7 +40,7 @@ func printUserDetailsTable(cmd *cobra.Command, user api.User) {
 	details := [][]format.Value{
 		{format.String("Username"), format.String(user.Username)},
 		{format.String("Name"), format.String(user.FullName)},
-		{format.String("Is Root"), yesNo(user.IsRoot)},
+		{format.String("Is Root"), format.YesNo(user.IsRoot)},
 		{format.String("Email"), format.String(user.Email)},
 		{format.String("Created At"), format.String(user.CreatedAt)},
 		{format.String("Country Code"), format.String(user.CountryCode)},
@@ -48,5 +48,5 @@ func printUserDetailsTable(cmd *cobra.Command, user api.User) {
 		{format.String("ID"), format.String(user.ID)},
 	}
 
-	printDetailsTable(cmd, details)
+	format.PrintDetailsTable(cmd, details)
 }

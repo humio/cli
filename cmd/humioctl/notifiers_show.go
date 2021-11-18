@@ -37,7 +37,7 @@ func newNotifiersShowCmd() *cobra.Command {
 				{format.String("EntityType"), format.String(notifier.Entity)},
 			}
 
-			printDetailsTable(cmd, details)
+			format.PrintDetailsTable(cmd, details)
 		},
 	}
 

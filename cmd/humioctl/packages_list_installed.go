@@ -36,13 +36,13 @@ func listInstalledPackagesCmd() *cobra.Command {
 				rows = append(rows, []format.Value{
 					format.String(installedPackage.ID),
 					format.String(installedPackage.InstalledBy.Username),
-					valueOrEmpty(installedPackage.UpdatedBy.Username),
+					format.ValueOrEmpty(installedPackage.UpdatedBy.Username),
 					format.String(installedPackage.Source),
-					valueOrEmpty(installedPackage.AvailableUpdate),
+					format.ValueOrEmpty(installedPackage.AvailableUpdate),
 				})
 			}
 
-			printOverviewTable(cmd, []string{"ID", "Installed By", "Updated By", "Source", "Available Update"}, rows)
+			format.PrintOverviewTable(cmd, []string{"ID", "Installed By", "Updated By", "Source", "Available Update"}, rows)
 		},
 	}
 

@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/internal/format"
 
 	"github.com/spf13/cobra"
 )
@@ -40,7 +41,7 @@ use the assigned parser at ingest time.`,
 			ingestToken, err := client.IngestTokens().Add(repo, name, parserName)
 			exitOnError(cmd, err, "Error adding ingest token")
 
-			fmt.Fprintf(cmd.OutOrStdout(), "Added ingest token %q with parser %q: %s\n", ingestToken.Name, valueOrEmpty(ingestToken.AssignedParser), ingestToken.Token)
+			fmt.Fprintf(cmd.OutOrStdout(), "Added ingest token %q with parser %q: %s\n", ingestToken.Name, format.ValueOrEmpty(ingestToken.AssignedParser), ingestToken.Token)
 		},
 	}
 

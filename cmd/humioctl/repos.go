@@ -42,11 +42,11 @@ func printRepoDetailsTable(cmd *cobra.Command, repo api.Repository) {
 		{format.String("ID"), format.String(repo.ID)},
 		{format.String("Name"), format.String(repo.Name)},
 		{format.String("Description"), format.String(repo.Description)},
-		{format.String("Space Used"), ByteCountDecimal(repo.SpaceUsed)},
-		{format.String("Ingest Retention (Size)"), ByteCountDecimal(repo.IngestRetentionSizeGB * 1e9)},
-		{format.String("Storage Retention (Size)"), ByteCountDecimal(repo.StorageRetentionSizeGB * 1e9)},
+		{format.String("Space Used"), format.ByteCountDecimal(repo.SpaceUsed)},
+		{format.String("Ingest Retention (Size)"), format.ByteCountDecimal(repo.IngestRetentionSizeGB * 1e9)},
+		{format.String("Storage Retention (Size)"), format.ByteCountDecimal(repo.StorageRetentionSizeGB * 1e9)},
 		{format.String("Retention (Days)"), format.Int(repo.RetentionDays)},
 	}
 
-	printDetailsTable(cmd, details)
+	format.PrintDetailsTable(cmd, details)
 }

@@ -37,7 +37,7 @@ func newNotifiersListCmd() *cobra.Command {
 				rows = append(rows, []format.Value{format.String(notifier.Name), format.String(notifier.Entity)})
 			}
 
-			printOverviewTable(cmd, []string{"Name", "Type"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Name", "Type"}, rows)
 		},
 	}
 

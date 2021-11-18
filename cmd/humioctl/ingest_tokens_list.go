@@ -37,11 +37,11 @@ func newIngestTokensListCmd() *cobra.Command {
 				rows = append(rows, []format.Value{
 					format.String(ingestToken.Name),
 					format.String(ingestToken.Token),
-					valueOrEmpty(ingestToken.AssignedParser),
+					format.ValueOrEmpty(ingestToken.AssignedParser),
 				})
 			}
 
-			printOverviewTable(cmd, []string{"Name", "Token", "Assigned Parser"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Name", "Token", "Assigned Parser"}, rows)
 		},
 	}
 

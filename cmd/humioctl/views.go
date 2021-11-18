@@ -49,5 +49,5 @@ func printViewConnectionsTable(cmd *cobra.Command, view *api.View) {
 		})
 	}
 
-	printOverviewTable(cmd, []string{"View", "Repository", "Query Prefix"}, rows)
+	format.PrintOverviewTable(cmd, []string{"View", "Repository", "Query Prefix"}, rows)
 }

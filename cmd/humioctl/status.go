@@ -44,7 +44,7 @@ func newStatusCmd() *cobra.Command {
 				{format.String("Username"), format.String(username)},
 			}
 
-			printDetailsTable(cmd, details)
+			format.PrintDetailsTable(cmd, details)
 		},
 	}
 

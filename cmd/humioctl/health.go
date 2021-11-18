@@ -101,7 +101,7 @@ func printHealthDetailsTable(cmd *cobra.Command, result healthCheckResult) {
 		{format.String("Uptime"), format.String(result.Uptime)},
 	}
 
-	printDetailsTable(cmd, details)
+	format.PrintDetailsTable(cmd, details)
 }
 
 func printHealthOverviewTable(cmd *cobra.Command, result healthCheckResult) {
@@ -131,7 +131,7 @@ func printHealthOverviewTable(cmd *cobra.Command, result healthCheckResult) {
 		})
 	}
 
-	printOverviewTable(cmd, []string{"name", "status", "message", "fields"}, rows)
+	format.PrintOverviewTable(cmd, []string{"name", "status", "message", "fields"}, rows)
 }
 
 type HealthFields map[string]format.Value

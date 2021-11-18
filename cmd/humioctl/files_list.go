@@ -26,7 +26,7 @@ func newFilesListCmd() *cobra.Command {
 				})
 			}
 
-			printOverviewTable(cmd, []string{"Name", "Content Hash", "ID"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Name", "Content Hash", "ID"}, rows)
 		},
 	}
 

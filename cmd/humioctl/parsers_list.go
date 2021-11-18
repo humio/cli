@@ -36,12 +36,12 @@ func newParsersListCmd() *cobra.Command {
 				parser := parsers[i]
 				rows = append(rows, []format.Value{
 					format.String(parser.Name),
-					checkmark(!parser.IsBuiltIn),
+					format.Checkmark(!parser.IsBuiltIn),
 					format.String(parser.ID),
 				})
 			}
 
-			printOverviewTable(cmd, []string{"Name", "Custom", "ID"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Name", "Custom", "ID"}, rows)
 		},
 	}
 

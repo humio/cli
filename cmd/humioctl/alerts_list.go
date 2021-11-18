@@ -54,7 +54,7 @@ func newAlertsListCmd() *cobra.Command {
 					format.String(strings.Join(notifierNames, ", "))})
 			}
 
-			printOverviewTable(cmd, []string{"Name", "Enabled", "Description", "Notifiers"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Name", "Enabled", "Description", "Notifiers"}, rows)
 		},
 	}
 

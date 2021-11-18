@@ -125,7 +125,7 @@ func newTransferJobsListCmd() *cobra.Command {
 				})
 			}
 
-			printOverviewTable(cmd, []string{"ID", "Source", "Parallel", "No. Dataspaces", "State", "At"}, rows)
+			format.PrintOverviewTable(cmd, []string{"ID", "Source", "Parallel", "No. Dataspaces", "State", "At"}, rows)
 		},
 	}
 
@@ -160,7 +160,7 @@ func detailTransferJob(cmd *cobra.Command, job interface{}) {
 		details = append(details, []format.Value{format.String("Total segments"), format.Int(j.TotalSegments)})
 	}
 
-	printDetailsTable(cmd, details)
+	format.PrintDetailsTable(cmd, details)
 }
 
 func newTransferJobsAddCmd() *cobra.Command {

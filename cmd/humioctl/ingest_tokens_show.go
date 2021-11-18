@@ -37,7 +37,7 @@ func newIngestTokensShowCmd() *cobra.Command {
 				{format.String("Token"), format.String(ingestToken.Token)},
 				{format.String("Assigned Parser"), format.String(ingestToken.AssignedParser)},
 			}
-			printDetailsTable(cmd, details)
+			format.PrintDetailsTable(cmd, details)
 		},
 	}
 

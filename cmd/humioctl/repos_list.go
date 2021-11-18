@@ -55,12 +55,12 @@ func newReposListCmd() *cobra.Command {
 			for i, view := range repos {
 				rows[i] = []format.Value{
 					format.String(view.Name),
-					ByteCountDecimal(view.SpaceUsed),
+					format.ByteCountDecimal(view.SpaceUsed),
 					format.String(view.ID),
 				}
 			}
 
-			printOverviewTable(cmd, []string{"Name", "Space Used", "ID"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Name", "Space Used", "ID"}, rows)
 		},
 	}
 

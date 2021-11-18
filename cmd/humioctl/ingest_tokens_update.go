@@ -16,6 +16,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/humio/cli/cmd/internal/format"
 
 	"github.com/spf13/cobra"
 )
@@ -42,7 +43,7 @@ If parser is not specified, the ingest token will not be associated with a parse
 			ingestToken, err := client.IngestTokens().Update(repositoryName, tokenName, parserName)
 			exitOnError(cmd, err, "Error updating ingest token")
 
-			fmt.Fprintf(cmd.OutOrStdout(), "Updated ingest token %q to use parser %q\n", ingestToken.Name, valueOrEmpty(ingestToken.AssignedParser))
+			fmt.Fprintf(cmd.OutOrStdout(), "Updated ingest token %q to use parser %q\n", ingestToken.Name, format.ValueOrEmpty(ingestToken.AssignedParser))
 		},
 	}
 

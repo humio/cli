@@ -33,23 +33,23 @@ func newClusterShowCmd() *cobra.Command {
 			rows := [][]format.Value{
 				{
 					format.String("Under replicated segment (Size)"),
-					ByteCountDecimal(int64(cluster.UnderReplicatedSegmentSize)),
-					ByteCountDecimal(int64(cluster.TargetUnderReplicatedSegmentSize))},
+					format.ByteCountDecimal(int64(cluster.UnderReplicatedSegmentSize)),
+					format.ByteCountDecimal(int64(cluster.TargetUnderReplicatedSegmentSize))},
 				{
 					format.String("Over replicated segment (Size)"),
-					ByteCountDecimal(int64(cluster.OverReplicatedSegmentSize)),
-					ByteCountDecimal(int64(cluster.TargetOverReplicatedSegmentSize))},
+					format.ByteCountDecimal(int64(cluster.OverReplicatedSegmentSize)),
+					format.ByteCountDecimal(int64(cluster.TargetOverReplicatedSegmentSize))},
 				{
 					format.String("Missing segment (Size)"),
-					ByteCountDecimal(int64(cluster.MissingSegmentSize)),
-					ByteCountDecimal(int64(cluster.TargetMissingSegmentSize))},
+					format.ByteCountDecimal(int64(cluster.MissingSegmentSize)),
+					format.ByteCountDecimal(int64(cluster.TargetMissingSegmentSize))},
 				{
 					format.String("Properly replicated segment (Size)"),
-					ByteCountDecimal(int64(cluster.ProperlyReplicatedSegmentSize)),
-					ByteCountDecimal(int64(cluster.TargetProperlyReplicatedSegmentSize))},
+					format.ByteCountDecimal(int64(cluster.ProperlyReplicatedSegmentSize)),
+					format.ByteCountDecimal(int64(cluster.TargetProperlyReplicatedSegmentSize))},
 			}
 
-			printOverviewTable(cmd, []string{"Description", "Current", "Target"}, rows)
+			format.PrintOverviewTable(cmd, []string{"Description", "Current", "Target"}, rows)
 		},
 	}
 
