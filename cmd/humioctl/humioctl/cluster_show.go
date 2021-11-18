@@ -24,7 +24,7 @@ func newClusterShowCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show",
 		Short: "Show the information about the current Humio cluster",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 

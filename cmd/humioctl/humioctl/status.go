@@ -29,7 +29,7 @@ func newStatusCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "status",
 		Short: "Shows general status information",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 			serverStatus, err := client.Status()
@@ -48,9 +48,6 @@ func newStatusCmd() *cobra.Command {
 			format2.PrintDetailsTable(cmd, details)
 		},
 	}
-
-	cmd.AddCommand(newLicenseInstallCmd())
-	cmd.AddCommand(newLicenseShowCmd())
 
 	return cmd
 }

@@ -25,7 +25,7 @@ func newLicenseShowCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show",
 		Short: "Show the current Humio license installed",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 			license, err := client.Licenses().Get()

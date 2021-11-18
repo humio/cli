@@ -34,7 +34,7 @@ You can change the default profile using:
 
   $ humioctl profiles set-default <name>
     `,
-		Args: cobra.ExactArgs(0),
+		Args: cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			profiles := viper.GetStringMap(viperkey.Profiles)
 

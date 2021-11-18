@@ -16,7 +16,7 @@ func newWelcomeCmd() *cobra.Command {
 		Use:    "welcome",
 		Hidden: true,
 		Short:  "Creates the 'default' profile",
-		Args:   cobra.ExactArgs(0),
+		Args:   cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			var err error
 			profiles := viper.GetStringMap(viperkey.Profiles)

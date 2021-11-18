@@ -30,7 +30,7 @@ func newTransferCreateManagedExportGroupCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-managed-export-group",
 		Short: "Create a group that has an attached role with permission to export the organization through the cluster transfer API.",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
@@ -48,7 +48,7 @@ func newTransferGetManagedExportGroupCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-managed-export-group",
 		Short: "Get the id of the managed export group.",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
@@ -66,7 +66,7 @@ func newTransferRemoveManagedExportGroupCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove-managed-export-group",
 		Short: "Remove the managed export group.",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 

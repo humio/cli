@@ -29,7 +29,7 @@ func newReposListCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "list [flags]",
 		Short: "List repositories.",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			client := NewApiClient(cmd)
 
