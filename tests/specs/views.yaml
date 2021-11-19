@@ -1,0 +1,95 @@
+commands:
+- id: views_create
+  name: [views, create]
+  inputOutput:
+  - id: testview
+    input:
+      args: ['{RANDOM_IDENTIFIER}', --connection, developer=*]
+    output:
+      exitCode: 0
+      stdout:
+        regex: '^Successfully created view: "(?P<viewname>\S+)"\s*\n+$'
+      stderr:
+        empty: true
+- id: views_delete
+  name: [views, delete]
+  inputOutput:
+  - id: nonexisting
+    input:
+      args: [nonexistingviewname, reason]
+    output:
+      exitCode: 1
+      stdout:
+        empty: true
+      stderr:
+        regex: '^Error removing view: There were errors in the input\.\s*\n+$'
+  - id: testview
+    uses:
+    - views_create.testview.viewname
+    input:
+      args: ['{views_create.testview.viewname}', reason]
+    output:
+      exitCode: 0
+      stdout:
+        empty: true
+      stderr:
+        regex: ^Successfully deleted view \S+ with reason "reason"\s*\n+$
+- id: views_show
+  name: [views, show]
+  inputOutput:
+  - id: testview
+    uses:
+    - views_create.testview.viewname
+    before:
+    - views_delete.testview
+    input:
+      args: ['{views_create.testview.viewname}']
+    output:
+      exitCode: 0
+      stdout:
+        jsonArray:
+          min: 1
+          json:
+            strict: true
+            keys:
+            - name: queryPrefix
+              required: true
+              value:
+                string: true
+                regex: ^\*$
+            - name: repository
+              required: true
+              value:
+                string: true
+                regex: ^developer$
+            - name: view
+              required: true
+              value:
+                string: true
+      stderr:
+        empty: true
+- id: views_list
+  name: [views, list]
+  inputOutput:
+    - id: testview
+      after:
+        - views_create.testview
+      before:
+        - views_delete.testview
+      input:
+        args: []
+      output:
+        exitCode: 0
+        stdout:
+          jsonArray:
+            min: 1
+            json:
+              strict: true
+              keys:
+                - name: name
+                  required: true
+                  value:
+                    string: true
+                    exampleValue: developer
+        stderr:
+          empty: true
