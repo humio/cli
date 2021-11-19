@@ -79,21 +79,28 @@ func toIngestToken(data ingestTokenData) *IngestToken {
 }
 
 func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
-	var mutation struct {
-		Result struct {
-			IngestToken ingestTokenData
-		} `graphql:"addIngestToken(repositoryName: $repositoryName, name: $tokenName, parser: $parserName)"`
-	}
-
-	var parserNameArg *graphql.String
-	if parserName != "" {
-		parserNameArg = graphql.NewString(graphql.String(parserName))
-	}
-
 	variables := map[string]interface{}{
 		"tokenName":      graphql.String(tokenName),
 		"repositoryName": graphql.String(repositoryName),
-		"parserName":     parserNameArg,
+		"parserId":       (*graphql.String)(nil),
+	}
+
+	if parserName != "" {
+		parser, err := i.client.Parsers().Get(repositoryName, parserName)
+		if err != nil {
+			return nil, fmt.Errorf("unable to look up parser id for parser name %q: %w", parserName, err)
+		}
+		variables["parserId"] = graphql.String(parser.ID)
+	}
+
+	var mutation struct {
+		IngestToken struct {
+			Name   string
+			Token  string
+			Parser struct {
+				Name string
+			}
+		} `graphql:"addIngestTokenV2(input: { repositoryName: $repositoryName, name: $tokenName, parserId: $parserId})"`
 	}
 
 	err := i.client.Mutate(&mutation, variables)
@@ -101,7 +108,13 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName s
 		return nil, err
 	}
 
-	return toIngestToken(mutation.Result.IngestToken), err
+	ingestToken := IngestToken{
+		Name:           mutation.IngestToken.Name,
+		Token:          mutation.IngestToken.Token,
+		AssignedParser: mutation.IngestToken.Parser.Name,
+	}
+
+	return &ingestToken, nil
 }
 
 func (i *IngestTokens) Update(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
