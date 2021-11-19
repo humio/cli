@@ -3,6 +3,7 @@ package format
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/iancoleman/strcase"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"io"
@@ -159,7 +160,8 @@ func (j JSONFormatter) Details(rows [][]Value) {
 		if len(row) < 2 {
 			continue
 		}
-		m[row[0].String()], err = json.Marshal(row[1])
+		key := strcase.ToLowerCamel(row[0].String())
+		m[key], err = json.Marshal(row[1])
 		if err != nil {
 			panic(err)
 		}
@@ -171,13 +173,18 @@ func (j JSONFormatter) Details(rows [][]Value) {
 }
 
 func (j JSONFormatter) Table(header []string, rows [][]Value) {
+	keys := make([]string, len(header))
+	for i := range header {
+		keys[i] = strcase.ToLowerCamel(header[i])
+	}
+
 	var err error
 	m := make([]map[string]json.RawMessage, 0, len(rows))
 
 	for _, row := range rows {
-		r := make(map[string]json.RawMessage, len(header))
-		for i := range header {
-			r[header[i]], err = json.Marshal(row[i])
+		r := make(map[string]json.RawMessage, len(keys))
+		for i := range keys {
+			r[keys[i]], err = json.Marshal(row[i])
 			if err != nil {
 				panic(err)
 			}
