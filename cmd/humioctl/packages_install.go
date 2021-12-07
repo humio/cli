@@ -82,7 +82,7 @@ func isDirectory(path string) (bool, error) {
 }
 
 func getURLPackage(url string) (*os.File, error) {
-	// Github URLs should have the .got suffix removed
+	// Github URLs should have the .git suffix removed
 	if strings.HasPrefix(url, "https://github.com") || strings.HasPrefix(url, "http://github.com") {
 		url = strings.TrimSuffix(url, ".git")
 	}
