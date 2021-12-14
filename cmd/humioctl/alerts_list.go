@@ -32,29 +32,29 @@ func newAlertsListCmd() *cobra.Command {
 			alerts, err := client.Alerts().List(view)
 			exitOnError(cmd, err, "Error fetching alerts")
 
-			notifiers, err := client.Notifiers().List(view)
+			actions, err := client.Actions().List(view)
 			exitOnError(cmd, err, "Unable to fetch notifier details")
 
 			var notifierMap = map[string]string{}
-			for _, notifier := range notifiers {
-				notifierMap[notifier.ID] = notifier.Name
+			for _, action := range actions {
+				notifierMap[action.ID] = action.Name
 			}
 
 			var rows [][]format.Value
 			for i := 0; i < len(alerts); i++ {
 				alert := alerts[i]
 				var notifierNames []string
-				for _, notifierID := range alert.Notifiers {
+				for _, notifierID := range alert.Actions {
 					notifierNames = append(notifierNames, notifierMap[notifierID])
 				}
 				rows = append(rows, []format.Value{
 					format.String(alert.Name),
-					format.Bool(!alert.Silenced),
+					format.Bool(alert.Enabled),
 					format.String(alert.Description),
 					format.String(strings.Join(notifierNames, ", "))})
 			}
 
-			printOverviewTable(cmd, []string{"Name", "Enabled", "Description", "Notifiers"}, rows)
+			printOverviewTable(cmd, []string{"Name", "Enabled", "Description", "Actions"}, rows)
 		},
 	}
 

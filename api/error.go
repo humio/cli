@@ -6,6 +6,8 @@ type EntityType string
 
 const (
 	EntityTypeParser EntityType = "parser"
+	EntityTypeAction EntityType = "action"
+	EntityTypeAlert  EntityType = "alert"
 )
 
 func (e EntityType) String() string {
@@ -32,6 +34,20 @@ func (e EntityNotFound) Error() string {
 func ParserNotFound(name string) error {
 	return EntityNotFound{
 		entityType: EntityTypeParser,
+		key:        name,
+	}
+}
+
+func ActionNotFound(name string) error {
+	return EntityNotFound{
+		entityType: EntityTypeAction,
+		key:        name,
+	}
+}
+
+func AlertNotFound(name string) error {
+	return EntityNotFound{
+		entityType: EntityTypeAlert,
 		key:        name,
 	}
 }

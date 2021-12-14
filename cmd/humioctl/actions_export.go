@@ -20,35 +20,35 @@ import (
 	"io/ioutil"
 )
 
-func newNotifiersExportCmd() *cobra.Command {
+func newActionsExportCmd() *cobra.Command {
 	var outputName string
 
 	cmd := cobra.Command{
-		Use:   "export [flags] <repo-or-view> <notifier>",
-		Short: "Export a notifier <notifier> in <repo-or-view> to a file.",
+		Use:   "export [flags] <repo-or-view> <action>",
+		Short: "Export an action <action> in <repo-or-view> to a file.",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			repoOrViewName := args[0]
-			notifierName := args[1]
+			actionName := args[1]
 			client := NewApiClient(cmd)
 
 			if outputName == "" {
-				outputName = notifierName
+				outputName = actionName
 			}
 
-			notifier, err := client.Notifiers().Get(repoOrViewName, notifierName)
-			exitOnError(cmd, err, "Error fetching notifier")
+			action, err := client.Actions().Get(repoOrViewName, actionName)
+			exitOnError(cmd, err, "Error fetching action")
 
-			yamlData, err := yaml.Marshal(&notifier)
-			exitOnError(cmd, err, "Failed to serialize the notifier")
+			yamlData, err := yaml.Marshal(&action)
+			exitOnError(cmd, err, "Failed to serialize the action")
 
 			outFilePath := outputName + ".yaml"
 			err = ioutil.WriteFile(outFilePath, yamlData, 0600)
-			exitOnError(cmd, err, "Error saving the notifier file")
+			exitOnError(cmd, err, "Error saving the action file")
 		},
 	}
 
-	cmd.Flags().StringVarP(&outputName, "output", "o", "", "The file path where the notifier should be written. Defaults to ./<notifier-name>.yaml")
+	cmd.Flags().StringVarP(&outputName, "output", "o", "", "The file path where the action should be written. Defaults to ./<action-name>.yaml")
 
 	return &cmd
 }

@@ -27,7 +27,6 @@ import (
 
 func newAlertsInstallCmd() *cobra.Command {
 	var (
-		force               bool
 		filePath, url, name string
 	)
 
@@ -77,14 +76,13 @@ Use the --force flag to update existing alerts with conflicting names.
 				alert.Name = name
 			}
 
-			_, err = client.Alerts().Add(viewName, &alert, force)
+			_, err = client.Alerts().Add(viewName, &alert)
 			exitOnError(cmd, err, "Error creating alert")
 
 			fmt.Fprintln(cmd.OutOrStdout(), "Alert created")
 		},
 	}
 
-	cmd.Flags().BoolVarP(&force, "force", "f", false, "Overrides any alert with the same name. This can be used for updating alert that are already installed. (See --name)")
 	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the alert to install.")
 	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the alert file from.")
 	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the alert under a specific name, ignoring the `name` attribute in the alert file.")

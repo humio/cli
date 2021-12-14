@@ -121,7 +121,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newStatusCmd())
 	rootCmd.AddCommand(newHealthCmd())
 	rootCmd.AddCommand(newClusterCmd())
-	rootCmd.AddCommand(newNotifiersCmd())
+	rootCmd.AddCommand(newActionsCmd())
 	rootCmd.AddCommand(newAlertsCmd())
 	rootCmd.AddCommand(newPackagesCmd())
 	rootCmd.AddCommand(newGroupsCmd())
