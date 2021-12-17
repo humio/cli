@@ -1,30 +1,27 @@
 package api
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	"github.com/shurcooL/graphql"
 )
 
-type HumioQuery struct {
-	QueryString string `yaml:"queryString" json:"queryString"`
-	Start       string `yaml:"start"       json:"start"`
-	End         string `yaml:"end"         json:"end"`
-	IsLive      bool   `yaml:"isLive"      json:"isLive"`
+type Alert struct {
+	ID                 string   `graphql:"id"                 yaml:"-"                     json:"id"`
+	Name               string   `graphql:"name"               yaml:"name"                  json:"name"`
+	QueryString        string   `graphql:"queryString"        yaml:"queryString"           json:"queryString"`
+	QueryStart         string   `graphql:"queryStart"         yaml:"queryStart"            json:"queryStart"`
+	ThrottleField      string   `graphql:"throttleField"      yaml:"throttleField"         json:"throttleField"`
+	TimeOfLastTrigger  int      `graphql:"timeOfLastTrigger"  yaml:"timeOfLastTrigger"     json:"timeOfLastTrigger"`
+	IsStarred          bool     `graphql:"isStarred"          yaml:"isStarred"             json:"isStarred"`
+	Description        string   `graphql:"description"        yaml:"description,omitempty" json:"description"`
+	ThrottleTimeMillis int      `graphql:"throttleTimeMillis" yaml:"throttleTimeMillis"    json:"throttleTimeMillis"`
+	Enabled            bool     `graphql:"enabled"            yaml:"enabled"               json:"enabled"`
+	Actions            []string `graphql:"actions"            yaml:"actions"               json:"actions"`
+	Labels             []string `graphql:"labels"             yaml:"labels,omitempty"      json:"labels,omitempty"`
+	LastError          string   `graphql:"lastError"          yaml:"lastError"             json:"lastError"`
 }
 
-type Alert struct {
-	ID                 string     `yaml:"-"                     json:"id"`
-	Name               string     `yaml:"name"                  json:"name"`
-	Query              HumioQuery `yaml:"query"                 json:"query"`
-	Description        string     `yaml:"description,omitempty" json:"description"`
-	ThrottleTimeMillis int        `yaml:"throttleTimeMillis"    json:"throttleTimeMillis"`
-	Silenced           bool       `yaml:"silenced"              json:"silenced"`
-	Notifiers          []string   `yaml:"notifiers"             json:"notifiers"`
-	Labels             []string   `yaml:"labels,omitempty"      json:"labels,omitempty"`
-}
+type Long int64
 
 type Alerts struct {
 	client *Client
@@ -33,166 +30,182 @@ type Alerts struct {
 func (c *Client) Alerts() *Alerts { return &Alerts{client: c} }
 
 func (a *Alerts) List(viewName string) ([]Alert, error) {
-	url := fmt.Sprintf("api/v1/repositories/%s/alerts", viewName)
-
-	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
-	if err != nil {
-		return []Alert{}, err
+	var query struct {
+		SearchDomain struct {
+			Alerts []Alert `graphql:"alerts"`
+		} `graphql:"searchDomain(name: $viewName)"`
 	}
 
-	return a.unmarshalToAlertList(res)
+	variables := map[string]interface{}{
+		"viewName": graphql.String(viewName),
+	}
+
+	err := a.client.Query(&query, variables)
+	return query.SearchDomain.Alerts, err
 }
 
-func (a *Alerts) Update(viewName string, alert *Alert) (*Alert, error) {
-	existingID, err := a.convertAlertNameToID(viewName, alert.Name)
-	if err != nil {
-		return nil, fmt.Errorf("could not convert alert name to id: %w", err)
+func (a *Alerts) Update(viewName string, newAlert *Alert) (*Alert, error) {
+	if newAlert == nil {
+		return nil, fmt.Errorf("newAlert must not be nil")
 	}
 
-	jsonStr, err := a.marshalToJSON(alert)
-	if err != nil {
-		return nil, fmt.Errorf("unable to convert alert to json string: %w", err)
+	if newAlert.ID == "" {
+		return nil, fmt.Errorf("newAlert must have non-empty newAlert id")
 	}
 
-	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, existingID)
-
-	res, err := a.client.HTTPRequest(http.MethodPut, url, bytes.NewBuffer(jsonStr))
-	if err != nil {
-		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %w", viewName, alert.Name, err)
+	var mutation struct {
+		Alert `graphql:"updateAlert(input: { id: $id, viewName: $viewName, name: $alertName, description: $description, queryString: $queryString, queryStart: $queryStart, throttleTimeMillis: $throttleTimeMillis, throttleField: $throttleField, enabled: $enabled, actions: $actions, labels: $labels })"`
 	}
-	return a.unmarshalToAlert(res)
+
+	actions := make([]graphql.String, len(newAlert.Actions))
+	labels := make([]graphql.String, len(newAlert.Labels))
+	var throttleField *graphql.String
+	for i, action := range newAlert.Actions {
+		actions[i] = graphql.String(action)
+	}
+	for i, label := range newAlert.Labels {
+		labels[i] = graphql.String(label)
+	}
+	if newAlert.ThrottleField != "" {
+		field := graphql.String(newAlert.ThrottleField)
+		throttleField = &field
+	}
+	variables := map[string]interface{}{
+		"id":                 graphql.String(newAlert.ID),
+		"viewName":           graphql.String(viewName),
+		"alertName":          graphql.String(newAlert.Name),
+		"description":        graphql.String(newAlert.Description),
+		"queryString":        graphql.String(newAlert.QueryString),
+		"queryStart":         graphql.String(newAlert.QueryStart),
+		"throttleField":      throttleField,
+		"throttleTimeMillis": Long(newAlert.ThrottleTimeMillis),
+		"enabled":            graphql.Boolean(newAlert.Enabled),
+		"actions":            actions,
+		"labels":             labels,
+	}
+
+	err := a.client.Mutate(&mutation, variables)
+	if err != nil {
+		return nil, err
+	}
+
+	alert := Alert{
+		ID:                 mutation.Alert.ID,
+		Name:               mutation.Alert.Name,
+		QueryString:        mutation.Alert.QueryString,
+		QueryStart:         mutation.Alert.QueryStart,
+		ThrottleField:      mutation.Alert.ThrottleField,
+		TimeOfLastTrigger:  mutation.Alert.TimeOfLastTrigger,
+		IsStarred:          mutation.Alert.IsStarred,
+		Description:        mutation.Alert.Description,
+		ThrottleTimeMillis: mutation.Alert.ThrottleTimeMillis,
+		Enabled:            mutation.Alert.Enabled,
+		Actions:            mutation.Alert.Actions,
+		Labels:             mutation.Alert.Labels,
+		LastError:          mutation.Alert.LastError,
+	}
+
+	return &alert, nil
 }
 
-func (a *Alerts) Add(viewName string, alert *Alert, updateExisting bool) (*Alert, error) {
-	nameAlreadyInUse, err := a.alertNameInUse(viewName, alert.Name)
-	if err != nil {
-		return nil, fmt.Errorf("could not determine if alert name is in use: %w", err)
+func (a *Alerts) Add(viewName string, newAlert *Alert) (*Alert, error) {
+	if newAlert == nil {
+		return nil, fmt.Errorf("newAlert must not be nil")
 	}
-
-	if nameAlreadyInUse {
-		if !updateExisting {
-			return nil, fmt.Errorf("alert with name %s already exists", alert.Name)
-		}
-		return a.Update(viewName, alert)
-	}
-
-	jsonStr, err := a.marshalToJSON(alert)
-	if err != nil {
-		return nil, fmt.Errorf("unable to convert alert to json string: %w", err)
-	}
-
-	url := fmt.Sprintf("api/v1/repositories/%s/alerts/", viewName)
-
-	res, err := a.client.HTTPRequest(http.MethodPost, url, bytes.NewBuffer(jsonStr))
-	if err != nil {
-		return nil, fmt.Errorf("could not add alert in view %s with name %s, got: %w", viewName, alert.Name, err)
-	}
-
-	return a.unmarshalToAlert(res)
-}
-
-func (a *Alerts) Get(viewName, alertName string) (*Alert, error) {
-	alertID, err := a.convertAlertNameToID(viewName, alertName)
-	if err != nil {
-		return nil, fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, alertName)
-	}
-
-	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, alertID)
-
-	res, err := a.client.HTTPRequest(http.MethodGet, url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("could not get alert with id %s, got: %w", alertID, err)
-	}
-
-	return a.unmarshalToAlert(res)
-}
-
-func (a *Alerts) Delete(viewName, alertName string) error {
-	alertID, err := a.convertAlertNameToID(viewName, alertName)
-	if err != nil {
-		return fmt.Errorf("could not find a notifier in view %s with name: %s", viewName, alertName)
-	}
-
-	url := fmt.Sprintf("api/v1/repositories/%s/alerts/%s", viewName, alertID)
-
-	res, err := a.client.HTTPRequest(http.MethodDelete, url, nil)
-	if err != nil {
-		return err
-	}
-
-	if err != nil || res.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("could not delete alert in view %s with id %s, got: %w", viewName, alertID, err)
-	}
-
-	return nil
-}
-
-func (a *Alerts) marshalToJSON(alert *Alert) ([]byte, error) {
-	// Humio requires notifiers to be specified even if no notifier is desired
-	if alert.Notifiers == nil {
-		alert.Notifiers = []string{}
-	}
-
-	jsonStr, err := json.Marshal(alert)
-	if err != nil {
-		return nil, fmt.Errorf("unable to convert alert to json string: %w", err)
-	}
-	return jsonStr, nil
-}
-
-func (a *Alerts) unmarshalToAlertList(res *http.Response) ([]Alert, error) {
-	var alertList []Alert
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return alertList, err
-	}
-
-	err = json.Unmarshal(body, &alertList)
-	if err != nil {
-		return alertList, fmt.Errorf("error in json response: %w. response: %v", err, string(body))
-	}
-
-	return alertList, nil
-}
-
-func (a *Alerts) unmarshalToAlert(res *http.Response) (*Alert, error) {
 	var alert Alert
 
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return &alert, err
+	var mutation struct {
+		Alert `graphql:"createAlert(input: { viewName: $viewName, name: $alertName, description: $description, queryString: $queryString, queryStart: $queryStart, throttleTimeMillis: $throttleTimeMillis, throttleField: $throttleField, enabled: $enabled, actions: $actions, labels: $labels })"`
 	}
 
-	err = json.Unmarshal(body, &alert)
+	actions := make([]graphql.String, len(newAlert.Actions))
+	labels := make([]graphql.String, len(newAlert.Labels))
+	var throttleField *graphql.String
+	for i, action := range newAlert.Actions {
+		actions[i] = graphql.String(action)
+	}
+	for i, label := range newAlert.Labels {
+		labels[i] = graphql.String(label)
+	}
+	if newAlert.ThrottleField != "" {
+		field := graphql.String(newAlert.ThrottleField)
+		throttleField = &field
+	}
+	variables := map[string]interface{}{
+		"viewName":           graphql.String(viewName),
+		"alertName":          graphql.String(newAlert.Name),
+		"description":        graphql.String(newAlert.Description),
+		"queryString":        graphql.String(newAlert.QueryString),
+		"queryStart":         graphql.String(newAlert.QueryStart),
+		"throttleTimeMillis": Long(newAlert.ThrottleTimeMillis),
+		"throttleField":      throttleField,
+		"enabled":            graphql.Boolean(newAlert.Enabled),
+		"actions":            actions,
+		"labels":             labels,
+	}
+
+	err := a.client.Mutate(&mutation, variables)
 	if err != nil {
-		return &alert, fmt.Errorf("error in json response: %w. response: %v", err, string(body))
+		return nil, err
+	}
+
+	alert = Alert{
+		ID:                 mutation.Alert.ID,
+		Name:               mutation.Alert.Name,
+		QueryString:        mutation.Alert.QueryString,
+		QueryStart:         mutation.Alert.QueryStart,
+		ThrottleField:      mutation.Alert.ThrottleField,
+		TimeOfLastTrigger:  mutation.Alert.TimeOfLastTrigger,
+		IsStarred:          mutation.Alert.IsStarred,
+		Description:        mutation.Alert.Description,
+		ThrottleTimeMillis: mutation.Alert.ThrottleTimeMillis,
+		Enabled:            mutation.Alert.Enabled,
+		Actions:            mutation.Alert.Actions,
+		Labels:             mutation.Alert.Labels,
+		LastError:          mutation.Alert.LastError,
 	}
 	return &alert, nil
 }
 
-func (a *Alerts) convertAlertNameToID(viewName, alertName string) (string, error) {
-	listOfAlerts, err := a.List(viewName)
+func (a *Alerts) Get(viewName, alertName string) (*Alert, error) {
+	alerts, err := a.List(viewName)
 	if err != nil {
-		return "", fmt.Errorf("could not list all alerts for view %s: %w", viewName, err)
+		return nil, fmt.Errorf("unable to list alerts: %w", err)
 	}
-	for _, v := range listOfAlerts {
-		if v.Name == alertName {
-			return v.ID, nil
+	for _, alert := range alerts {
+		if alert.Name == alertName {
+			return &alert, nil
 		}
 	}
-	return "", fmt.Errorf("could not find an alert in view %s with name: %s", viewName, alertName)
+
+	return nil, AlertNotFound(alertName)
+
 }
 
-func (a *Alerts) alertNameInUse(viewName, alertName string) (bool, error) {
-	listOfAlerts, err := a.List(viewName)
+func (a *Alerts) Delete(viewName, alertName string) error {
+	actions, err := a.List(viewName)
 	if err != nil {
-		return true, fmt.Errorf("could not list all alerts for view %s: %w", viewName, err)
+		return fmt.Errorf("unable to list alerts: %w", err)
 	}
-	for _, v := range listOfAlerts {
-		if v.Name == alertName {
-			return true, nil
+	var alertId string
+	for _, alert := range actions {
+		if alert.Name == alertName {
+			alertId = alert.ID
+			break
 		}
 	}
-	return false, nil
+	if alertId == "" {
+		return fmt.Errorf("unable to find alert")
+	}
+
+	var mutation struct {
+		DeleteAction bool `graphql:"deleteAlert(input: { viewName: $viewName, id: $alertId })"`
+	}
+
+	variables := map[string]interface{}{
+		"viewName": graphql.String(viewName),
+		"alertId":  graphql.String(alertId),
+	}
+
+	return a.client.Mutate(&mutation, variables)
 }

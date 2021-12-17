@@ -19,22 +19,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newNotifiersShowCmd() *cobra.Command {
+func newActionsShowCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "show <repo-or-view> <name>",
-		Short: "Show details about a notifier in a repository or view.",
+		Short: "Show details about an action in a repository or view.",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			repoOrViewName := args[0]
 			name := args[1]
 			client := NewApiClient(cmd)
 
-			notifier, err := client.Notifiers().Get(repoOrViewName, name)
-			exitOnError(cmd, err, "Error fetching notifier")
+			action, err := client.Actions().Get(repoOrViewName, name)
+			exitOnError(cmd, err, "Error fetching action")
 
 			details := [][]format.Value{
-				{format.String("Name"), format.String(notifier.Name)},
-				{format.String("EntityType"), format.String(notifier.Entity)},
+				{format.String("Name"), format.String(action.Name)},
+				{format.String("Type"), format.String(action.Type)},
 			}
 
 			printDetailsTable(cmd, details)

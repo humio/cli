@@ -19,22 +19,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newNotifiersListCmd() *cobra.Command {
+func newActionsListCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "list <repo-or-view>",
-		Short: "List all notifiers in a repository or view.",
+		Short: "List all actions in a repository or view.",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			repoOrViewName := args[0]
 			client := NewApiClient(cmd)
 
-			notifiers, err := client.Notifiers().List(repoOrViewName)
-			exitOnError(cmd, err, "Error fetching notifiers")
+			actions, err := client.Actions().List(repoOrViewName)
+			exitOnError(cmd, err, "Error fetching actions")
 
 			var rows [][]format.Value
-			for i := 0; i < len(notifiers); i++ {
-				notifier := notifiers[i]
-				rows = append(rows, []format.Value{format.String(notifier.Name), format.String(notifier.Entity)})
+			for i := 0; i < len(actions); i++ {
+				action := actions[i]
+				rows = append(rows, []format.Value{format.String(action.Name), format.String(action.Type)})
 			}
 
 			printOverviewTable(cmd, []string{"Name", "Type"}, rows)

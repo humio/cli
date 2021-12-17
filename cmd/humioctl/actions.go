@@ -15,32 +15,20 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 )
 
-func newNotifiersRemoveCmd() *cobra.Command {
+func newActionsCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "remove <repo-or-view> <name>",
-		Short: "Removes an alert notifier.",
-		Long:  `Removes the alert notifier with name '<name>' in the view with name '<repo-or-view>'.`,
-		Args:  cobra.ExactArgs(2),
-		Run: func(cmd *cobra.Command, args []string) {
-			repoOrViewName := args[0]
-			name := args[1]
-			client := NewApiClient(cmd)
-
-			err := client.Notifiers().Delete(repoOrViewName, name)
-			if err != nil {
-				cmd.Printf("Error removing notifier: %s\n", err)
-				os.Exit(1)
-			}
-
-			fmt.Fprintln(cmd.OutOrStdout(), "Notifier removed")
-		},
+		Use:   "actions",
+		Short: "Manage actions",
 	}
+
+	cmd.AddCommand(newActionsListCmd())
+	cmd.AddCommand(newActionsShowCmd())
+	cmd.AddCommand(newActionsRemoveCmd())
+	cmd.AddCommand(newActionsInstallCmd())
+	cmd.AddCommand(newActionsExportCmd())
 
 	return cmd
 }

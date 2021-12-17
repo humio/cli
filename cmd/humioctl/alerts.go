@@ -28,6 +28,7 @@ func newAlertsCmd() *cobra.Command {
 	cmd.AddCommand(newAlertsInstallCmd())
 	cmd.AddCommand(newAlertsExportCmd())
 	cmd.AddCommand(newAlertsRemoveCmd())
+	cmd.AddCommand(newAlertsShowCmd())
 
 	return cmd
 }
