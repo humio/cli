@@ -26,10 +26,25 @@ func newViewsCreateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create [flags] <view-name>",
 		Short: "Create a view.",
+		Long: `Creates a view with the provided arguments.
+
+The "description" flag is a string, and the "connections" flag is a comma-separated list of key-value pairs
+where the key is the repository name and the value being the filter applied to the queries in that repository.
+If you want to query all events you can specify a wildcard as the filter.
+
+Here's an example that updates a view named "important-view" to search all data in the two repositories,
+namely "repo1" and "repo2":
+
+  $ humioctl views update important-view --connection "repo1=*,repo2=*" --description "very important view"
+`,
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			viewName := args[0]
 			client := NewApiClient(cmd)
+
+			if len(connections) == 0 {
+				exitOnError(cmd, fmt.Errorf("you must specify at least view connection"), "Error creating view")
+			}
 
 			err := client.Views().Create(viewName, description, connections)
 			exitOnError(cmd, err, "Error creating view")
