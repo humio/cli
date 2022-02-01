@@ -34,7 +34,7 @@ $ nix-env -i humioctl
 ### Any OS (via Go)
 
 ```bash
-$ go get github.com/humio/cli/cmd/humioctl
+$ go install github.com/humio/cli/cmd/humioctl@latest
 ```
 
 ### Manual installation
