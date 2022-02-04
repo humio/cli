@@ -118,10 +118,10 @@ load './node_modules/bats-assert/load'
   $humioctl alerts list humio
 }
 
-# Notifiers
+# Actions
 
-@test "notifiers list" {
-  $humioctl alerts list humio
+@test "actions list" {
+  $humioctl actions list humio
 }
 
 # Ingest Token Commands
@@ -131,6 +131,19 @@ load './node_modules/bats-assert/load'
   assert_success
   assert_output -p "test123"
   assert_output -p "kv"
+}
+
+@test "ingest-tokens update change parser" {
+  $humioctl ingest-tokens add humio "updateParser" --parser "kv"
+  run $humioctl ingest-tokens update humio "updateParser" --parser "json"
+  assert_output -p "updateParser"
+  assert_output -p "json"
+}
+
+@test "ingest-tokens update remove parser" {
+  $humioctl ingest-tokens add humio "removeParser" --parser "kv"
+  run $humioctl ingest-tokens update humio "removeParser"
+  assert_output -p "removeParser"
 }
 
 @test "ingest-tokens list" {
