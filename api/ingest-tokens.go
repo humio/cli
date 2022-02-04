@@ -140,18 +140,22 @@ func (i *IngestTokens) Update(repositoryName string, tokenName string, parserNam
 			Result struct {
 				// We have to make a selection, so just take __typename
 				Typename graphql.String `graphql:"__typename"`
-			} `graphql:"assignIngestToken(repositoryName: $repositoryName, tokenName: $tokenName, parserName: $parserName)"`
+			} `graphql:"assignParserToIngestToken(input: { repositoryName: $repositoryName, tokenName: $tokenName, parserId: $parserId })"`
 		}
 
+		parser, err := i.client.Parsers().Get(repositoryName, parserName)
+		if err != nil {
+			return nil, fmt.Errorf("unable to look up parser id for parser name %q: %w", parserName, err)
+		}
 		variables := map[string]interface{}{
 			"tokenName":      graphql.String(tokenName),
 			"repositoryName": graphql.String(repositoryName),
-			"parserName":     graphql.String(parserName),
+			"parserId":       graphql.String(parser.ID),
 		}
 
-		err := i.client.Mutate(&mutation, variables)
-		if err != nil {
-			return nil, err
+		err2 := i.client.Mutate(&mutation, variables)
+		if err2 != nil {
+			return nil, err2
 		}
 	}
 
