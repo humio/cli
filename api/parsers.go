@@ -54,12 +54,17 @@ func (p *Parsers) Remove(repositoryName string, parserName string) error {
 		RemoveParser struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
-		} `graphql:"removeParser(input: { name: $name, repositoryName: $repositoryName })"`
+		} `graphql:"removeParser(input: { id: $id, repositoryName: $repositoryName })"`
+	}
+
+	parser, err := p.client.Parsers().Get(repositoryName, parserName)
+	if err != nil {
+		return err
 	}
 
 	variables := map[string]interface{}{
 		"repositoryName": graphql.String(repositoryName),
-		"name":           graphql.String(parserName),
+		"id":             graphql.String(parser.ID),
 	}
 
 	return p.client.Mutate(&mutation, variables)

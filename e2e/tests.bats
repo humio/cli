@@ -152,3 +152,17 @@ load './node_modules/bats-assert/load'
   assert_success
   assert_output -p "Assigned Parser"
 }
+
+# Parser Commands
+
+@test "parser install" {
+  run $humioctl parsers install --file parsers/accesslog2.yaml humio
+  assert_success
+}
+
+@test "parser remove" {
+  $humioctl parsers install --file parsers/accesslog2.yaml --name accesslog3 humio
+  run $humioctl parsers remove humio accesslog3
+  assert_success
+  assert_output -p "Successfully removed parser \"accesslog3\" from repository \"humio\""
+}
