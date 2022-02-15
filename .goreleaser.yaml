@@ -9,6 +9,10 @@ builds:
       - linux
     goarch:
       - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
 
 release:
   # Repo in which the release will be created.
