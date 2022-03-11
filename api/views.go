@@ -17,7 +17,8 @@ type ViewConnection struct {
 }
 
 type ViewQueryData struct {
-	Name     string
+	Name        string
+	Description string
 	ViewInfo struct {
 		Connections []struct {
 			Repository struct{ Name string }
@@ -28,6 +29,7 @@ type ViewQueryData struct {
 
 type View struct {
 	Name        string
+	Description string
 	Connections []ViewConnection
 }
 
@@ -57,6 +59,7 @@ func (c *Views) Get(name string) (*View, error) {
 
 	view := View{
 		Name:        query.Result.Name,
+		Description: query.Result.Description,
 		Connections: connections,
 	}
 
