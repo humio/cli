@@ -19,7 +19,7 @@ type ViewConnection struct {
 type ViewQueryData struct {
 	Name        string
 	Description string
-	ViewInfo struct {
+	ViewInfo    struct {
 		Connections []struct {
 			Repository struct{ Name string }
 			Filter     string
