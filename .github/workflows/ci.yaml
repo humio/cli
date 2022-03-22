@@ -13,7 +13,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17
+        go-version: 1.18
     - name: Build snapshot with GoReleaser
       uses: goreleaser/goreleaser-action@v2
       with:
@@ -22,7 +22,7 @@ jobs:
     - name: Run Gosec Security Scanner
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin
-        go get github.com/securego/gosec/cmd/gosec
+        go install github.com/securego/gosec/cmd/gosec@latest
         gosec ./...
     - name: Run Staticcheck
       uses: dominikh/staticcheck-action@v1.1.0
