@@ -7,7 +7,6 @@ require (
 	github.com/hpcloud/tail v1.0.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/olekukonko/tablewriter v0.0.1
-	github.com/ryanuber/columnize v2.1.0+incompatible
 	github.com/shurcooL/graphql v0.0.0-20181231061246-d48a9a75455f
 	github.com/skratchdot/open-golang v0.0.0-20190402232053-79abb63cd66e
 	github.com/spf13/cobra v0.0.5
@@ -15,7 +14,7 @@ require (
 	golang.org/x/crypto v0.0.0-20191029031824-8986dd9e96cf
 	golang.org/x/sync v0.0.0-20181221193216-37e7f081c4d4
 	golang.org/x/sys v0.0.0-20190412213103-97732733099d
-	gopkg.in/yaml.v2 v2.2.4
+	gopkg.in/yaml.v2 v2.2.8
 )
 
 require (
