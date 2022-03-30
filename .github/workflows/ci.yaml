@@ -22,7 +22,7 @@ jobs:
     - name: Run Gosec Security Scanner
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin
-        go install github.com/securego/gosec/cmd/gosec@latest
+        go install github.com/securego/gosec/v2/cmd/gosec@latest
         gosec ./...
     - name: Run Staticcheck
       uses: dominikh/staticcheck-action@v1.1.0
