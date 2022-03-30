@@ -28,6 +28,7 @@ func newFilesDownloadCmd() *cobra.Command {
 				writer = cmd.OutOrStdout()
 			} else {
 				var err error
+				// #nosec G304
 				writer, err = os.Create(saveAs)
 				exitOnError(cmd, err, "Error opening output file")
 			}

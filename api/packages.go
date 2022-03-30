@@ -210,6 +210,7 @@ func (p *Packages) UninstallPackage(viewName string, packageID string) error {
 
 // CreateArchive creates a archive by bundling the files in packageDirPath in a zip file.
 func (p *Packages) CreateArchive(packageDirPath string, targetFileName string) error {
+	// #nosec G304
 	outFile, err := os.Create(targetFileName)
 	if err != nil {
 		return err
