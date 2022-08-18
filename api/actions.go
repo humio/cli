@@ -23,64 +23,64 @@ type Actions struct {
 }
 
 type EmailAction struct {
-	Recipients      []string `graphql:"emailRecipients: recipients"`
-	SubjectTemplate string   `graphql:"emailSubjectTemplate: subjectTemplate"`
-	BodyTemplate    string   `graphql:"emailBodyTemplate: bodyTemplate"`
-	UseProxy        bool     `graphql:"emailUseProxy: useProxy"`
+	Recipients      []string `graphql:"emailRecipients: recipients" yaml:"recipients,omitempty" json:"recipients,omitempty"`
+	SubjectTemplate string   `graphql:"emailSubjectTemplate: subjectTemplate" yaml:"subjectTemplate,omitempty" json:"subjectTemplate,omitempty"`
+	BodyTemplate    string   `graphql:"emailBodyTemplate: bodyTemplate" yaml:"bodyTemplate,omitempty" json:"bodyTemplate,omitempty"`
+	UseProxy        bool     `graphql:"emailUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
 type HumioRepoAction struct {
-	IngestToken string `graphql:"humioRepoIngestToken: ingestToken"`
+	IngestToken string `graphql:"humioRepoIngestToken: ingestToken" yaml:"ingestToken,omitempty" json:"ingestToken,omitempty"`
 }
 
 type OpsGenieAction struct {
-	ApiUrl   string `graphql:"opsGenieApiUrl: apiUrl"`
-	GenieKey string `graphql:"opsGenieGenieKey: genieKey"`
-	UseProxy bool   `graphql:"opsGenieUseProxy: useProxy"`
+	ApiUrl   string `graphql:"opsGenieApiUrl: apiUrl" yaml:"apiUrl,omitempty" json:"apiUrl,omitempty"`
+	GenieKey string `graphql:"opsGenieGenieKey: genieKey" yaml:"genieKey,omitempty" json:"genieKey,omitempty"`
+	UseProxy bool   `graphql:"opsGenieUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
 type PagerDutyAction struct {
-	Severity   string `graphql:"pagerDutySeverity: severity"`
-	RoutingKey string `graphql:"pagerDutyRoutingKey: routingKey"`
-	UseProxy   bool   `graphql:"pagerDutyUseProxy: useProxy"`
+	Severity   string `graphql:"pagerDutySeverity: severity" yaml:"severity,omitempty" json:"severity,omitempty"`
+	RoutingKey string `graphql:"pagerDutyRoutingKey: routingKey" yaml:"routingKey,omitempty" json:"routingKey,omitempty"`
+	UseProxy   bool   `graphql:"pagerDutyUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
 type SlackFieldEntryInput struct {
-	FieldName string `graphql:"fieldName" json:"fieldName"`
-	Value     string `graphql:"value"     json:"value"`
+	FieldName string `graphql:"fieldName" yaml:"fieldName" json:"fieldName"`
+	Value     string `graphql:"value"     yaml:"value" json:"value"`
 }
 
 type SlackAction struct {
-	Url      string                 `graphql:"slackUrl: url"`
-	Fields   []SlackFieldEntryInput `graphql:"slackFields: fields"`
-	UseProxy bool                   `graphql:"slackUseProxy: useProxy"`
+	Url      string                 `graphql:"slackUrl: url" yaml:"url,omitempty" json:"url,omitempty"`
+	Fields   []SlackFieldEntryInput `graphql:"slackFields: fields" yaml:"fields,omitempty" json:"fields,omitempty"`
+	UseProxy bool                   `graphql:"slackUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
 type SlackPostMessageAction struct {
-	ApiToken string                 `graphql:"slackPostMessageApiToken: apiToken"`
-	Channels []string               `graphql:"slackPostMessageChannels: channels"`
-	Fields   []SlackFieldEntryInput `graphql:"slackPostMessageFields: fields"`
-	UseProxy bool                   `graphql:"slackPostMessageUseProxy: useProxy"`
+	ApiToken string                 `graphql:"slackPostMessageApiToken: apiToken" yaml:"apiToken,omitempty" json:"apiToken,omitempty"`
+	Channels []string               `graphql:"slackPostMessageChannels: channels" yaml:"channels,omitempty" json:"channels,omitempty"`
+	Fields   []SlackFieldEntryInput `graphql:"slackPostMessageFields: fields" yaml:"fields,omitempty" json:"fields,omitempty"`
+	UseProxy bool                   `graphql:"slackPostMessageUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
 type VictorOpsAction struct {
-	MessageType string `graphql:"victorOpsMessageType: messageType"`
-	NotifyUrl   string `graphql:"victorOpsNotifyUrl: notifyUrl"`
-	UseProxy    bool   `graphql:"victorOpsUseProxy: useProxy"`
+	MessageType string `graphql:"victorOpsMessageType: messageType" yaml:"messageType,omitempty" json:"messageType,omitempty"`
+	NotifyUrl   string `graphql:"victorOpsNotifyUrl: notifyUrl" yaml:"notifyUrl,omitempty" json:"notifyUrl,omitempty"`
+	UseProxy    bool   `graphql:"victorOpsUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
 type HttpHeaderEntryInput struct {
-	Header string `graphql:"header"  json:"header"`
-	Value  string `graphql:"value"   json:"value"`
+	Header string `graphql:"header"  yaml:"header" json:"header"`
+	Value  string `graphql:"value"   yaml:"value" json:"value"`
 }
 
 type WebhookAction struct {
-	Method       string                 `graphql:"webhookMethod: method"`
-	Url          string                 `graphql:"webhookUrl: url"`
-	Headers      []HttpHeaderEntryInput `graphql:"webhookHeaders: headers"`
-	BodyTemplate string                 `graphql:"webhookBodyTemplate: bodyTemplate"`
-	IgnoreSSL    bool                   `graphql:"webhookIgnoreSSL: ignoreSSL"`
-	UseProxy     bool                   `graphql:"webhookUseProxy: useProxy"`
+	Method       string                 `graphql:"webhookMethod: method" yaml:"method,omitempty" json:"method,omitempty"`
+	Url          string                 `graphql:"webhookUrl: url" yaml:"url,omitempty" json:"url,omitempty"`
+	Headers      []HttpHeaderEntryInput `graphql:"webhookHeaders: headers" yaml:"headers,omitempty" json:"headers,omitempty"`
+	BodyTemplate string                 `graphql:"webhookBodyTemplate: bodyTemplate" yaml:"bodyTemplate,omitempty" json:"bodyTemplate,omitempty"`
+	IgnoreSSL    bool                   `graphql:"webhookIgnoreSSL: ignoreSSL" yaml:"ignoreSSL,omitempty" json:"ignoreSSL,omitempty"`
+	UseProxy     bool                   `graphql:"webhookUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
 type Action struct {
