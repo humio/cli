@@ -35,6 +35,7 @@ func newActionsShowCmd() *cobra.Command {
 			details := [][]format.Value{
 				{format.String("Name"), format.String(action.Name)},
 				{format.String("Type"), format.String(action.Type)},
+				{format.String("ID"), format.String(action.ID)},
 			}
 
 			printDetailsTable(cmd, details)
