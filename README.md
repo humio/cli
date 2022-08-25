@@ -120,7 +120,7 @@ HUMIO_CA_CERTIFICATE=<ca-certificate>
 
 # If access to the Humio server uses an untrusted certificate and you
 # are unable to provide a CA certificate, you can disable TLS certificate verification.
-# NB: This should only ever be used on test/sandbox clusters where you are in full
+# NB: This should only ever be used on test clusters where you are in full
 # control of the involved systems and underlying network.
 # Do not use this for prodution use-cases.
 HUMIO_INSECURE=<bool>
