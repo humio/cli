@@ -31,7 +31,6 @@ load './node_modules/bats-assert/load'
   run $humioctl views list
   assert_success
   assert_output -p "humio-audit"
-  assert_output -p "sandbox"
 }
 
 @test "views show" {

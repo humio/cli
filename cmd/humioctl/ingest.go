@@ -97,12 +97,10 @@ func newIngestCmd() *cobra.Command {
 	var retries, batchSizeLines, batchSizeBytes, batchTimeoutMs int
 
 	cmd := cobra.Command{
-		Use:   "ingest [flags] [<repo>]",
+		Use:   "ingest [flags] repo",
 		Short: "Send data to Humio.",
 		Long: `Listens to stdin and sends all input to the repository <repo>.
 If the --ingest-token flag is specified, the repo associated with the ingest token will be used.
-Otherwise, if <repo> is not specified, Humio will use your 'sandbox' repository as
-destination.
 
 It can be handy to specify the parser to be used to ingest the
 data on arrival - i.e. the type of data you are sending.
@@ -120,11 +118,10 @@ has the same effect.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var repo string
 
-			// Default to sending to the sandbox
 			if l := len(args); l == 1 {
 				repo = args[0]
 			} else {
-				repo = "sandbox"
+				log.Fatal("Must specify repo to ingest data")
 			}
 
 			var opts []func(config *api.Config)
