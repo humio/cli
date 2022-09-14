@@ -26,9 +26,9 @@ func (c *Client) Files() *Files { return &Files{client: c} }
 
 func (f *Files) List(viewName string) ([]File, error) {
 	var query struct {
-		Repository struct {
+		SearchDomain struct {
 			Files []File
-		} `graphql:"repository(name:$viewName)"`
+		} `graphql:"searchDomain(name:$viewName)"`
 	}
 
 	variables := map[string]interface{}{
@@ -36,7 +36,7 @@ func (f *Files) List(viewName string) ([]File, error) {
 	}
 
 	err := f.client.Query(&query, variables)
-	return query.Repository.Files, err
+	return query.SearchDomain.Files, err
 }
 
 func (f *Files) Delete(viewName string, fileName string) error {
