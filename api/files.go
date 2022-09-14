@@ -66,7 +66,7 @@ func (f *Files) Upload(viewName string, fileName string, reader io.Reader) error
 
 	eg.Go(func() error {
 		var err error
-		resp, err = f.client.HTTPRequestContext(ctx, http.MethodPost, fmt.Sprintf("api/v1/dataspaces/%s/files", url.QueryEscape(viewName)), pr, multipartWriter.FormDataContentType())
+		resp, err = f.client.HTTPRequestContext(ctx, http.MethodPost, fmt.Sprintf("api/v1/dataspaces/%s/files", url.PathEscape(viewName)), pr, multipartWriter.FormDataContentType())
 		return err
 	})
 
@@ -99,7 +99,7 @@ func (f *Files) Upload(viewName string, fileName string, reader io.Reader) error
 }
 
 func (f *Files) Download(viewName string, fileName string) (io.Reader, error) {
-	resp, err := f.client.HTTPRequest(http.MethodGet, fmt.Sprintf("api/v1/dataspaces/%s/files/%s", url.QueryEscape(viewName), url.QueryEscape(fileName)), nil)
+	resp, err := f.client.HTTPRequest(http.MethodGet, fmt.Sprintf("api/v1/dataspaces/%s/files/%s", url.PathEscape(viewName), url.PathEscape(fileName)), nil)
 	if err != nil {
 		return nil, err
 	}
