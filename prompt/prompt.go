@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"syscall"
 
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -58,7 +59,7 @@ func (p *Prompt) Confirm(text string) bool {
 
 func (p *Prompt) AskSecret(question string) (string, error) {
 	p.Print(question + ": ")
-	bytes, err := terminal.ReadPassword(0)
+	bytes, err := terminal.ReadPassword(int(syscall.Stdin))
 
 	if err != nil {
 		return "", err
