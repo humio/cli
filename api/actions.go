@@ -488,7 +488,7 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 
 		err := n.client.Mutate(&mutation, variables)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("createEmailAction failed, vars=%#+v, err=%w", variables, err)
 		}
 
 		action := Action{
@@ -522,7 +522,7 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 
 		err := n.client.Mutate(&mutation, variables)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("createHumioRepoAction failed, vars=%#+v, err=%w", variables, err)
 		}
 
 		action := Action{
@@ -555,7 +555,7 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 
 		err := n.client.Mutate(&mutation, variables)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("createOpsGenieAction failed, vars=%#+v, err=%w", variables, err)
 		}
 
 		action := Action{
@@ -590,7 +590,7 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 
 		err := n.client.Mutate(&mutation, variables)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("createPagerDutyAction failed, vars=%#+v, err=%w", variables, err)
 		}
 
 		action := Action{
@@ -632,7 +632,7 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 
 		err := n.client.Mutate(&mutation, variables)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("createSlackAction failed, vars=%#+v, err=%w", variables, err)
 		}
 
 		action := Action{
@@ -679,7 +679,7 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 
 		err := n.client.Mutate(&mutation, variables)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("createSlackPostMessageAction failed, vars=%#+v, err=%w", variables, err)
 		}
 
 		action := Action{
@@ -715,7 +715,7 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 
 		err := n.client.Mutate(&mutation, variables)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("createVictorOpsAction failed, vars=%#+v, err=%w", variables, err)
 		}
 
 		action := Action{
@@ -760,7 +760,7 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 
 		err := n.client.Mutate(&mutation, variables)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("createWebhookAction failed, vars=%#+v, err=%w", variables, err)
 		}
 
 		action := Action{
