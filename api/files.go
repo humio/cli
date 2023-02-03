@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
-	"github.com/shurcooL/graphql"
+	"github.com/SaaldjorMike/graphql"
 	"golang.org/x/sync/errgroup"
 	"io"
 	"io/ioutil"

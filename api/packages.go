@@ -14,7 +14,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/shurcooL/graphql"
+	"github.com/SaaldjorMike/graphql"
 )
 
 // Packages is a API client for working with Humio packages.

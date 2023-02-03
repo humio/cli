@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/shurcooL/graphql"
+	"github.com/SaaldjorMike/graphql"
 )
 
 type ParserTestCase struct {

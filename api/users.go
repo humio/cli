@@ -2,7 +2,7 @@ package api
 
 import (
 	"errors"
-	"github.com/shurcooL/graphql"
+	"github.com/SaaldjorMike/graphql"
 )
 
 type Users struct {

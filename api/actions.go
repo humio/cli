@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/shurcooL/graphql"
+	"github.com/SaaldjorMike/graphql"
 )
 
 const (

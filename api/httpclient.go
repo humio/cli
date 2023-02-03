@@ -9,7 +9,7 @@ import (
 )
 
 // We must our own http.Client which adds the authorization header in all requests sent to Humio.
-// We use the approach described here: https://github.com/shurcooL/graphql/issues/28#issuecomment-464713908
+// We use the approach described here: https://github.com/SaaldjorMike/graphql/issues/28#issuecomment-464713908
 
 type headerTransport struct {
 	base    http.RoundTripper

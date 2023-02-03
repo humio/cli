@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/shurcooL/graphql"
+	"github.com/SaaldjorMike/graphql"
 )
 
 type Repositories struct {

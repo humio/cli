@@ -1,6 +1,6 @@
 package api
 
-import "github.com/shurcooL/graphql"
+import "github.com/SaaldjorMike/graphql"
 
 type FeatureFlag string
 

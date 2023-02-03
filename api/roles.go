@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	"github.com/shurcooL/graphql"
+	"github.com/SaaldjorMike/graphql"
 )
 
 type Roles struct {

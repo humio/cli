@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/shurcooL/graphql"
+	"github.com/SaaldjorMike/graphql"
 )
 
 type Clusters struct {

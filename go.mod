@@ -3,11 +3,11 @@ module github.com/humio/cli
 go 1.18
 
 require (
+	github.com/SaaldjorMike/graphql v0.0.0-20230203135340-387d7336e95c
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/hpcloud/tail v1.0.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/olekukonko/tablewriter v0.0.1
-	github.com/shurcooL/graphql v0.0.0-20181231061246-d48a9a75455f
 	github.com/skratchdot/open-golang v0.0.0-20190402232053-79abb63cd66e
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.5.0

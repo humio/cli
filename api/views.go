@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/shurcooL/graphql"
+	"github.com/SaaldjorMike/graphql"
 )
 
 type Views struct {
