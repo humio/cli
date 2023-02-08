@@ -24,6 +24,7 @@ func newSearchCmd() *cobra.Command {
 		end        string
 		live       bool
 		fmtStr     string
+		noWrap     bool
 		noProgress bool
 	)
 
@@ -79,7 +80,7 @@ func newSearchCmd() *cobra.Command {
 				}
 
 				if result.Metadata.IsAggregate {
-					printer = newAggregatePrinter(cmd.OutOrStdout())
+					printer = newAggregatePrinter(cmd.OutOrStdout(), noWrap)
 				} else {
 					printer = newEventListPrinter(cmd.OutOrStdout(), fmtStr)
 				}
@@ -135,6 +136,7 @@ func newSearchCmd() *cobra.Command {
 		"Insert fields by wrapping field names in brackets, e.g. {@timestamp}\n"+
 		"Limited format modifiers are supported such as {@timestamp:40} which will right align and left pad @timestamp to 40 characters.\n"+
 		"{@timestamp:-40} left aligns and right pads to 40 characters.")
+	cmd.Flags().BoolVarP(&noWrap, "no-wrap", "n", false, "Do not autowrap long strings.")
 	cmd.Flags().BoolVar(&noProgress, "no-progress", false, "Do not should progress information.")
 
 	return cmd
@@ -343,11 +345,13 @@ func (p *eventListPrinter) print(result api.QueryResult) {
 type aggregatePrinter struct {
 	w       io.Writer
 	columns []string
+	noWrap  bool
 }
 
-func newAggregatePrinter(w io.Writer) *aggregatePrinter {
+func newAggregatePrinter(w io.Writer, noWrap bool) *aggregatePrinter {
 	return &aggregatePrinter{
-		w: w,
+		w:      w,
+		noWrap: noWrap,
 	}
 }
 
@@ -383,6 +387,7 @@ func (p *aggregatePrinter) print(result api.QueryResult) {
 	t.SetBorder(false)
 	t.SetHeader(p.columns)
 	t.SetHeaderLine(false)
+	t.SetAutoWrapText(!p.noWrap)
 
 	for _, e := range result.Events {
 		var r []string
