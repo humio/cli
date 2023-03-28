@@ -1,10 +1,5 @@
 package api
 
-import (
-	"fmt"
-	"github.com/shurcooL/graphql"
-)
-
 type Roles struct {
 	client *Client
 }
