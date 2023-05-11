@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -73,7 +73,7 @@ func (q QueryJobs) Create(repository string, query Query) (string, error) {
 
 	switch resp.StatusCode {
 	case http.StatusBadRequest:
-		body, err := ioutil.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return "", err
 		}

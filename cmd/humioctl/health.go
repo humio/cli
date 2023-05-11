@@ -3,12 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/internal/format"
-	"github.com/spf13/cobra"
 	"os"
 	"sort"
 	"strings"
+
+	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/internal/format"
+	"github.com/spf13/cobra"
 )
 
 type healthCheckResult struct {

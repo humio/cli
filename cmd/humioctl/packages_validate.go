@@ -20,7 +20,6 @@ import (
 	"path/filepath"
 
 	"github.com/humio/cli/api"
-
 	"github.com/spf13/cobra"
 )
 

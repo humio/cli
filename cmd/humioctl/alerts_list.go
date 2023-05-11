@@ -15,9 +15,10 @@
 package main
 
 import (
+	"strings"
+
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 func newAlertsListCmd() *cobra.Command {

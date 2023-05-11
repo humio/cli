@@ -15,8 +15,9 @@
 package main
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
-	"io/ioutil"
 )
 
 func newParsersExportCmd() *cobra.Command {
@@ -40,7 +41,7 @@ func newParsersExportCmd() *cobra.Command {
 
 			outFilePath := outputName + ".yaml"
 
-			err = ioutil.WriteFile(outFilePath, []byte(yamlData), 0600)
+			err = os.WriteFile(outFilePath, []byte(yamlData), 0600)
 			exitOnError(cmd, err, "Error saving the parser file")
 		},
 	}

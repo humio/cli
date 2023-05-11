@@ -17,6 +17,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/humio/cli/cmd/internal/format"
 	"github.com/humio/cli/prompt"

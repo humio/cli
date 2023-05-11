@@ -3,11 +3,12 @@ package format
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
 )
 
 func FormatterFromCommand(cmd *cobra.Command) Formatter {

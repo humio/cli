@@ -16,7 +16,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -37,7 +36,7 @@ func newLicenseInstallCmd() *cobra.Command {
 				filepath := args[0]
 
 				// #nosec G304
-				licenseBytes, err := ioutil.ReadFile(filepath)
+				licenseBytes, err := os.ReadFile(filepath)
 				exitOnError(cmd, err, "Error reading license file")
 
 				licenseString = string(licenseBytes)

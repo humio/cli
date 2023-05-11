@@ -3,13 +3,13 @@ package shipper
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/humio/cli/api"
-	"golang.org/x/sync/errgroup"
 	"io"
-	"io/ioutil"
 	"math"
 	"net/http"
 	"time"
+
+	"github.com/humio/cli/api"
+	"golang.org/x/sync/errgroup"
 )
 
 type eventList struct {
@@ -143,7 +143,7 @@ func (s *LogShipper) sendBatch(messages []string) {
 		}
 
 		if resp.StatusCode > 400 {
-			responseData, err := ioutil.ReadAll(resp.Body)
+			responseData, err := io.ReadAll(resp.Body)
 
 			if err != nil {
 				return fmt.Errorf("error reading http response body: %w", err)
@@ -152,7 +152,7 @@ func (s *LogShipper) sendBatch(messages []string) {
 			return fmt.Errorf("bad response while sending events (status='%s'): %s", resp.Status, responseData)
 		} else {
 			// discard the response in order to re-use the connection
-			_, _ = io.Copy(ioutil.Discard, resp.Body)
+			_, _ = io.Copy(io.Discard, resp.Body)
 			_ = resp.Body.Close()
 		}
 

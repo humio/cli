@@ -15,10 +15,10 @@
 package main
 
 import (
-	"github.com/humio/cli/cmd/internal/format"
 	"sort"
 
 	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 

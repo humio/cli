@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/internal/format"
-	"github.com/spf13/cobra"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/humio/cli/api"
+	"github.com/humio/cli/cmd/internal/format"
+	"github.com/spf13/cobra"
 )
 
 func newTransferCmd() *cobra.Command {

@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -157,7 +156,7 @@ func detailedInstallationError(response *http.Response) error {
 		_ = Body.Close()
 	}(response.Body)
 
-	body, err := ioutil.ReadAll(response.Body) // response body is []byte
+	body, err := io.ReadAll(response.Body) // response body is []byte
 	if err != nil {
 		return fmt.Errorf("the package could not be installed")
 	}
@@ -243,7 +242,7 @@ func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView 
 
 func createTempZipFromFolder(baseFolder string) (string, error) {
 	tempDir := os.TempDir()
-	zipFile, err := ioutil.TempFile(tempDir, "humio-package.*.zip")
+	zipFile, err := os.CreateTemp(tempDir, "humio-package.*.zip")
 	if err != nil {
 		return "", err
 	}
@@ -277,7 +276,7 @@ func isValidFolderOrFile(name string) bool {
 
 func addFiles(w *zip.Writer, basePath string, baseInZip string) error {
 	// Open the Directory
-	files, err := ioutil.ReadDir(basePath)
+	files, err := os.ReadDir(basePath)
 	if err != nil {
 		return err
 	}

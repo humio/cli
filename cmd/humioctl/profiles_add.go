@@ -5,16 +5,16 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"net/url"
+	"os"
+	"path/filepath"
+
 	"github.com/humio/cli/api"
 	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/humio/cli/prompt"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
-	"net/url"
-	"os"
-	"path/filepath"
 )
 
 // usersCmd represents the users command
@@ -151,7 +151,7 @@ func collectProfileInfo(cmd *cobra.Command) (*login, error) {
 				if caCertificateFilePath != "" {
 					// Read the file
 					// #nosec G304
-					caCertContent, err := ioutil.ReadFile(caCertificateFilePath)
+					caCertContent, err := os.ReadFile(caCertificateFilePath)
 					exitOnError(cmd, err, "Error reading Humio CA certificate file path")
 					block, _ := pem.Decode(caCertContent)
 					if block == nil {

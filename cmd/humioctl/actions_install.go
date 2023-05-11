@@ -16,13 +16,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 func newActionsInstallCmd() *cobra.Command {
@@ -90,7 +90,7 @@ Use the --force flag to update existing actions with conflicting names.
 
 func getActionFromFile(filePath string) ([]byte, error) {
 	// #nosec G304
-	return ioutil.ReadFile(filePath)
+	return os.ReadFile(filePath)
 }
 
 func getURLAction(url string) ([]byte, error) {
@@ -104,5 +104,5 @@ func getURLAction(url string) ([]byte, error) {
 	defer func() {
 		_ = response.Body.Close()
 	}()
-	return ioutil.ReadAll(response.Body)
+	return io.ReadAll(response.Body)
 }
