@@ -103,6 +103,8 @@ func getURLAlert(url string) ([]byte, error) {
 		return nil, err
 	}
 
-	defer response.Body.Close()
+	defer func() {
+		_ = response.Body.Close()
+	}()
 	return ioutil.ReadAll(response.Body)
 }

@@ -98,7 +98,9 @@ func getURLPackage(url string) (*os.File, error) {
 		return nil, fmt.Errorf("error downloading file %s: %s", zipBallURL, response.Status)
 	}
 
-	defer response.Body.Close()
+	defer func() {
+		_ = response.Body.Close()
+	}()
 	zipContent, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, err

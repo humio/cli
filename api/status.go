@@ -23,7 +23,9 @@ func (c *Client) Status() (*StatusResponse, error) {
 		return nil, err
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	if resp.StatusCode >= 400 {
 		return nil, fmt.Errorf("error getting server status: %s", resp.Status)
