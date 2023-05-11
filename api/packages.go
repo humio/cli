@@ -194,7 +194,7 @@ type (
 func (p *Packages) UninstallPackage(viewName string, packageID string) error {
 
 	var mutation struct {
-		StartDataRedistribution struct {
+		UninstallPackage struct {
 			// We have to make a selection, so just take __typename
 			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"uninstallPackage(packageId: $packageId, viewName: $viewName)"`

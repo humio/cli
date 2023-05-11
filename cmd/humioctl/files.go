@@ -17,4 +17,3 @@ func newFilesCmd() *cobra.Command {
 
 	return cmd
 }
-

@@ -19,7 +19,6 @@ type ClusterNode struct {
 	ClusterInfoAgeSeconds   float64
 	InboundSegmentSize      float64
 	OutboundSegmentSize     float64
-	StorageDivergence       float64
 	CanBeSafelyUnregistered bool
 	CurrentSize             float64
 	PrimarySize             float64
@@ -30,7 +29,6 @@ type ClusterNode struct {
 	FreeOnSecondary         float64
 	WipSize                 float64
 	TargetSize              float64
-	Reapply_targetSize      float64
 	SolitarySegmentSize     float64
 	IsAvailable             bool
 	LastHeartbeat           string
@@ -60,7 +58,7 @@ type Cluster struct {
 	TargetMissingSegmentSize            float64
 	TargetProperlyReplicatedSegmentSize float64
 	IngestPartitions                    []IngestPartition
-	StoragePartitions                   []StoragePartition
+	StoragePartitions                   []StoragePartition // Deprecated: returns dummy data as of LogScale 1.88
 }
 
 func (c *Client) Clusters() *Clusters { return &Clusters{client: c} }
@@ -84,6 +82,7 @@ type IngestPartitionInput struct {
 	NodeIDs []graphql.Int `json:"nodeIds"`
 }
 
+// Deprecated: returns dummy data as of LogScale 1.88
 func (c *Clusters) UpdateStoragePartitionScheme(desired []StoragePartitionInput) error {
 	var mutation struct {
 		UpdateStoragePartitionScheme struct {
@@ -99,6 +98,7 @@ func (c *Clusters) UpdateStoragePartitionScheme(desired []StoragePartitionInput)
 	return c.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: returns dummy data as of LogScale 1.80
 func (c *Clusters) UpdateIngestPartitionScheme(desired []IngestPartitionInput) error {
 	var mutation struct {
 		UpdateStoragePartitionScheme struct {
@@ -114,6 +114,7 @@ func (c *Clusters) UpdateIngestPartitionScheme(desired []IngestPartitionInput) e
 	return c.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: returns dummy data as of LogScale 1.88
 func (c *Clusters) StartDataRedistribution() error {
 	var mutation struct {
 		StartDataRedistribution struct {
@@ -125,6 +126,7 @@ func (c *Clusters) StartDataRedistribution() error {
 	return c.client.Mutate(&mutation, nil)
 }
 
+// Deprecated: returns dummy data as of LogScale 1.88
 func (c *Clusters) ClusterMoveStorageRouteAwayFromNode(nodeID int) error {
 	var mutation struct {
 		ClusterMoveStorageRouteAwayFromNode struct {
@@ -140,6 +142,7 @@ func (c *Clusters) ClusterMoveStorageRouteAwayFromNode(nodeID int) error {
 	return c.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: returns dummy data as of LogScale 1.80
 func (c *Clusters) ClusterMoveIngestRoutesAwayFromNode(nodeID int) error {
 	var mutation struct {
 		ClusterMoveIngestRoutesAwayFromNode struct {
@@ -212,6 +215,7 @@ func (n *ClusterNodes) Unregister(nodeID int, force bool) error {
 	return n.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: returns dummy data as of LogScale 1.80
 func (c *Clusters) SuggestedIngestPartitions() ([]IngestPartitionInput, error) {
 	var query struct {
 		Cluster struct {
@@ -223,6 +227,7 @@ func (c *Clusters) SuggestedIngestPartitions() ([]IngestPartitionInput, error) {
 	return query.Cluster.SuggestedIngestPartitions, err
 }
 
+// Deprecated: returns dummy data as of LogScale 1.88
 func (c *Clusters) SuggestedStoragePartitions() ([]StoragePartitionInput, error) {
 	var query struct {
 		Cluster struct {
