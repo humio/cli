@@ -25,7 +25,7 @@ jobs:
         go install github.com/securego/gosec/v2/cmd/gosec@latest
         gosec ./...
     - name: Run Staticcheck
-      uses: dominikh/staticcheck-action@v1.1.0
+      uses: dominikh/staticcheck-action@v1.3.0
       with:
-        version: "2022.1"
+        version: "2023.1.3"
         install-go: false
