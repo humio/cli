@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 func newFeatureFlagsEnableCmd() *cobra.Command {

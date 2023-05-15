@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/spf13/cobra"
 	"io"
 	"os"
+
+	"github.com/spf13/cobra"
 )
 
 func newFilesDownloadCmd() *cobra.Command {

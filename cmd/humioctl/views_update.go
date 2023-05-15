@@ -38,7 +38,7 @@ namely "repo1" and "repo2":
 
   $ humioctl views update important-view --connection "repo1=*,repo2=*" --description "very important view"
 `,
-		Args:  cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			viewName := args[0]
 			client := NewApiClient(cmd)

@@ -15,9 +15,10 @@
 package main
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
-	yaml "gopkg.in/yaml.v2"
-	"io/ioutil"
+	"gopkg.in/yaml.v2"
 )
 
 func newAlertsExportCmd() *cobra.Command {
@@ -43,7 +44,7 @@ func newAlertsExportCmd() *cobra.Command {
 			exitOnError(cmd, err, "Failed to serialize the alert")
 
 			outFilePath := outputName + ".yaml"
-			err = ioutil.WriteFile(outFilePath, yamlData, 0600)
+			err = os.WriteFile(outFilePath, yamlData, 0600)
 			exitOnError(cmd, err, "Error saving the alert file")
 		},
 	}

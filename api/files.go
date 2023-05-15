@@ -3,13 +3,13 @@ package api
 import (
 	"context"
 	"fmt"
-	"github.com/shurcooL/graphql"
-	"golang.org/x/sync/errgroup"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/url"
+
+	"github.com/shurcooL/graphql"
+	"golang.org/x/sync/errgroup"
 )
 
 type Files struct {
@@ -91,7 +91,7 @@ func (f *Files) Upload(viewName string, fileName string, reader io.Reader) error
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		return fmt.Errorf("server responded with %s: %s", resp.Status, string(body))
 	}
 
@@ -105,7 +105,7 @@ func (f *Files) Download(viewName string, fileName string) (io.Reader, error) {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		return nil, fmt.Errorf("server responded with %s: %s", resp.Status, string(body))
 	}
 

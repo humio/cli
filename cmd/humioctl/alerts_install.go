@@ -16,13 +16,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 func newAlertsInstallCmd() *cobra.Command {
@@ -92,7 +92,7 @@ Use the --force flag to update existing alerts with conflicting names.
 
 func getAlertFromFile(filePath string) ([]byte, error) {
 	// #nosec G304
-	return ioutil.ReadFile(filePath)
+	return os.ReadFile(filePath)
 }
 
 func getURLAlert(url string) ([]byte, error) {
@@ -103,6 +103,8 @@ func getURLAlert(url string) ([]byte, error) {
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	return ioutil.ReadAll(response.Body)
+	defer func() {
+		_ = response.Body.Close()
+	}()
+	return io.ReadAll(response.Body)
 }

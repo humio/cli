@@ -16,15 +16,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"os"
 	"path"
 
-	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
-
 	"github.com/humio/cli/api"
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -179,14 +177,14 @@ func initConfig() {
 
 	if tokenFile != "" {
 		// #nosec G304
-		tokenFileContent, err := ioutil.ReadFile(tokenFile)
+		tokenFileContent, err := os.ReadFile(tokenFile)
 		exitOnError(rootCmd, err, "Error loading token file")
 		viper.Set(viperkey.Token, string(tokenFileContent))
 	}
 
 	if caCertificateFile != "" {
 		// #nosec G304
-		caCertificateFileContent, err := ioutil.ReadFile(caCertificateFile)
+		caCertificateFileContent, err := os.ReadFile(caCertificateFile)
 		exitOnError(rootCmd, err, "Error loading CA certificate file")
 		viper.Set(viperkey.CACertificate, string(caCertificateFileContent))
 	}

@@ -3,11 +3,11 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/humio/cli/cmd/internal/format"
 	"net/url"
 	"os"
 	"strconv"
 
+	"github.com/humio/cli/cmd/internal/format"
 	"github.com/spf13/cobra"
 )
 

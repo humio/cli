@@ -16,7 +16,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -98,14 +98,16 @@ func getURLPackage(url string) (*os.File, error) {
 		return nil, fmt.Errorf("error downloading file %s: %s", zipBallURL, response.Status)
 	}
 
-	defer response.Body.Close()
-	zipContent, err := ioutil.ReadAll(response.Body)
+	defer func() {
+		_ = response.Body.Close()
+	}()
+	zipContent, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	tempDir := os.TempDir()
-	zipFile, err := ioutil.TempFile(tempDir, "humio-package.*.zip")
+	zipFile, err := os.CreateTemp(tempDir, "humio-package.*.zip")
 	if err != nil {
 		return nil, err
 	}

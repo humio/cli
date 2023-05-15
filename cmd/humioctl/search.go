@@ -3,10 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/prompt"
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
 	"io"
 	"math"
 	"os"
@@ -16,6 +12,11 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/humio/cli/api"
+	"github.com/humio/cli/prompt"
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
 )
 
 func newSearchCmd() *cobra.Command {

@@ -2,8 +2,9 @@ package api
 
 import (
 	"errors"
-	"github.com/shurcooL/graphql"
 	"time"
+
+	"github.com/shurcooL/graphql"
 )
 
 type Transfer struct {

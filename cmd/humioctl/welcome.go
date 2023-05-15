@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"os"
 
+	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
 	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

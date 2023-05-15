@@ -15,13 +15,13 @@
 package main
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 
 	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 func newParsersInstallCmd() *cobra.Command {
@@ -85,7 +85,7 @@ Use the --force flag to update existing parsers with conflicting names.
 
 func getParserFromFile(filePath string) ([]byte, error) {
 	// #nosec G304
-	return ioutil.ReadFile(filePath)
+	return os.ReadFile(filePath)
 }
 
 func getURLParser(url string) ([]byte, error) {
@@ -94,7 +94,9 @@ func getURLParser(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer response.Body.Close()
+	defer func() {
+		_ = response.Body.Close()
+	}()
 
-	return ioutil.ReadAll(response.Body)
+	return io.ReadAll(response.Body)
 }

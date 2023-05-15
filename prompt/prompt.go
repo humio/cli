@@ -9,7 +9,7 @@ import (
 	"strings"
 	"syscall"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 type Prompt struct {
@@ -59,7 +59,7 @@ func (p *Prompt) Confirm(text string) bool {
 
 func (p *Prompt) AskSecret(question string) (string, error) {
 	p.Print(question + ": ")
-	bytes, err := terminal.ReadPassword(int(syscall.Stdin))
+	bytes, err := term.ReadPassword(int(syscall.Stdin))
 
 	if err != nil {
 		return "", err

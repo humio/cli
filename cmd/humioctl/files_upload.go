@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/spf13/cobra"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/cobra"
 )
 
 func newFilesUploadCmd() *cobra.Command {

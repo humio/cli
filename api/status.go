@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -23,13 +23,15 @@ func (c *Client) Status() (*StatusResponse, error) {
 		return nil, err
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	if resp.StatusCode >= 400 {
 		return nil, fmt.Errorf("error getting server status: %s", resp.Status)
 	}
 
-	jsonData, err := ioutil.ReadAll(resp.Body)
+	jsonData, err := io.ReadAll(resp.Body)
 
 	if err != nil {
 		return nil, err
