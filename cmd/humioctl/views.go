@@ -31,6 +31,7 @@ func newViewsCmd() *cobra.Command {
 	cmd.AddCommand(newViewsCreateCmd())
 	cmd.AddCommand(newViewsUpdateCmd())
 	cmd.AddCommand(newViewsDeleteCmd())
+	cmd.AddCommand(newViewsAssignRoleGroupCmd())
 
 	return cmd
 }

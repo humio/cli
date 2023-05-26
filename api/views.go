@@ -18,6 +18,7 @@ type ViewConnection struct {
 
 type ViewQueryData struct {
 	Name        string
+	ID          string
 	Description string
 	ViewInfo    struct {
 		Connections []struct {
@@ -29,6 +30,7 @@ type ViewQueryData struct {
 
 type View struct {
 	Name        string
+	ID          string
 	Description string
 	Connections []ViewConnection
 }
@@ -59,6 +61,7 @@ func (c *Views) Get(name string) (*View, error) {
 
 	view := View{
 		Name:        query.Result.Name,
+		ID:          query.Result.ID,
 		Description: query.Result.Description,
 		Connections: connections,
 	}
@@ -167,6 +170,31 @@ func (c *Views) UpdateDescription(name string, description string) error {
 	variables := map[string]interface{}{
 		"name":        graphql.String(name),
 		"description": graphql.String(description),
+	}
+
+	return c.client.Mutate(&mutation, variables)
+}
+
+func (c *Views) AssignRoleToGroup(viewName, groupID, roleID string) error {
+	viewData, err := c.Get(viewName)
+
+	if err != nil {
+		return err
+	}
+
+	viewID := viewData.ID
+
+	var mutation struct {
+		AssignRoleToGroup struct {
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
+		} `graphql:"assignRoleToGroup(input:{viewId: $viewId, groupId: $groupId, roleId: $roleId})"`
+	}
+
+	variables := map[string]interface{}{
+		"viewId": graphql.String(viewID),
+		"groupId": graphql.String(groupID),
+		"roleId": graphql.String(roleID),
 	}
 
 	return c.client.Mutate(&mutation, variables)

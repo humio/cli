@@ -34,6 +34,28 @@ func (g *Groups) List() ([]Group, error) {
 	return query.Page.Groups, nil
 }
 
+func (g *Groups) Get(name string) (*Group, error) {
+	var query struct {
+		Result Group `graphql:"groupByDisplayName(displayName: $displayName)"`
+	}
+
+	variables := map[string]interface{}{
+		"displayName": graphql.String(name),
+	}
+
+	err := g.client.Query(&query, variables)
+	if err != nil {
+		return nil, err
+	}
+
+	group := Group{
+		ID: query.Result.ID,
+		DisplayName: query.Result.DisplayName,
+	}
+
+	return &group, nil
+}
+
 func (g *Groups) AddUserToGroup(groupID string, userID string) error {
 	var mutation struct {
 		AddUsersToGroup struct {
