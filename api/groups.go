@@ -49,7 +49,7 @@ func (g *Groups) Get(name string) (*Group, error) {
 	}
 
 	group := Group{
-		ID: query.Result.ID,
+		ID:          query.Result.ID,
 		DisplayName: query.Result.DisplayName,
 	}
 

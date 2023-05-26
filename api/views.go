@@ -192,9 +192,9 @@ func (c *Views) AssignRoleToGroup(viewName, groupID, roleID string) error {
 	}
 
 	variables := map[string]interface{}{
-		"viewId": graphql.String(viewID),
+		"viewId":  graphql.String(viewID),
 		"groupId": graphql.String(groupID),
-		"roleId": graphql.String(roleID),
+		"roleId":  graphql.String(roleID),
 	}
 
 	return c.client.Mutate(&mutation, variables)

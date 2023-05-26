@@ -11,13 +11,13 @@ type Roles struct {
 }
 
 type Role struct {
-	ID                string   `graphql:"id"`
-	DisplayName       string   `graphql:"displayName"`
-	Color             string   `graphql:"color"`
-	Description       string   `graphql:"description`
-	ViewPermissions   []string `graphql:"viewPermissions"`
-	SystemPermissions []string `graphql:"systemPermissions`
-	OrganizationPermissions    []string `graphql:"organizationPermissions`
+	ID                      string   `graphql:"id"`
+	DisplayName             string   `graphql:"displayName"`
+	Color                   string   `graphql:"color"`
+	Description             string   `graphql:"description`
+	ViewPermissions         []string `graphql:"viewPermissions"`
+	SystemPermissions       []string `graphql:"systemPermissions`
+	OrganizationPermissions []string `graphql:"organizationPermissions`
 }
 
 func (c *Client) Roles() *Roles { return &Roles{client: c} }
@@ -31,7 +31,7 @@ func (r *Roles) List() ([]Role, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var RolesList []Role
 	if err == nil {
 		RolesList = query.Roles
