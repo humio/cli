@@ -238,9 +238,12 @@ func (b *queryResultProgressBar) Finish() {
 }
 
 type queryResultProgressJson struct {
+	Timestamp   int64   `json:"timestamp"`
 	StartMillis int64   `json:"startMillis"`
 	Repo        string  `json:"repo"`
 	QueryString string  `json:"queryString"`
+	Start       uint64  `json:"start"`
+	End         uint64  `json:"end"`
 	TotalWork   uint64  `json:"totalWork"`
 	WorkDone    uint64  `json:"workDone"`
 	TimeMillis  uint64  `json:"timeMillis"`
@@ -258,10 +261,15 @@ func printQueryResultProgressJson(result api.QueryResult, args []string, startMi
 		bpsValue = float64(result.Metadata.ProcessedBytes) / float64(result.Metadata.TimeMillis) * 1000
 	}
 
+	timestamp := time.Now().UnixMilli()
+
 	jsonResult := &queryResultProgressJson{
+		Timestamp:   timestamp,
 		StartMillis: startMillis,
 		Repo:        args[0],
 		QueryString: args[1],
+		Start:       result.Metadata.QueryStart,
+		End:         result.Metadata.QueryEnd,
 		TotalWork:   result.Metadata.TotalWork,
 		WorkDone:    result.Metadata.WorkDone,
 		TimeMillis:  result.Metadata.TimeMillis,
