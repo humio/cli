@@ -14,10 +14,10 @@ type Role struct {
 	ID                      string   `graphql:"id"`
 	DisplayName             string   `graphql:"displayName"`
 	Color                   string   `graphql:"color"`
-	Description             string   `graphql:"description`
+	Description             string   `graphql:"description"`
 	ViewPermissions         []string `graphql:"viewPermissions"`
-	SystemPermissions       []string `graphql:"systemPermissions`
-	OrganizationPermissions []string `graphql:"organizationPermissions`
+	SystemPermissions       []string `graphql:"systemPermissions"`
+	OrganizationPermissions []string `graphql:"organizationPermissions"`
 }
 
 func (c *Client) Roles() *Roles { return &Roles{client: c} }
