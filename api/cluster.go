@@ -3,8 +3,6 @@ package api
 import (
 	"fmt"
 	"math"
-
-	"github.com/shurcooL/graphql"
 )
 
 type Clusters struct {
@@ -73,13 +71,13 @@ func (c *Clusters) Get() (Cluster, error) {
 }
 
 type StoragePartitionInput struct {
-	ID      graphql.Int   `json:"id"`
-	NodeIDs []graphql.Int `json:"nodeIds"`
+	ID      int32   `json:"id"`
+	NodeIDs []int32 `json:"nodeIds"`
 }
 
 type IngestPartitionInput struct {
-	ID      graphql.Int   `json:"id"`
-	NodeIDs []graphql.Int `json:"nodeIds"`
+	ID      int32   `json:"id"`
+	NodeIDs []int32 `json:"nodeIds"`
 }
 
 // Deprecated: returns dummy data as of LogScale 1.88
@@ -87,7 +85,7 @@ func (c *Clusters) UpdateStoragePartitionScheme(desired []StoragePartitionInput)
 	var mutation struct {
 		UpdateStoragePartitionScheme struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"updateStoragePartitionScheme(partitions: $partitions)"`
 	}
 
@@ -103,7 +101,7 @@ func (c *Clusters) UpdateIngestPartitionScheme(desired []IngestPartitionInput) e
 	var mutation struct {
 		UpdateStoragePartitionScheme struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"updateIngestPartitionScheme(partitions: $partitions)"`
 	}
 
@@ -119,7 +117,7 @@ func (c *Clusters) StartDataRedistribution() error {
 	var mutation struct {
 		StartDataRedistribution struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"startDataRedistribution"`
 	}
 
@@ -131,12 +129,12 @@ func (c *Clusters) ClusterMoveStorageRouteAwayFromNode(nodeID int) error {
 	var mutation struct {
 		ClusterMoveStorageRouteAwayFromNode struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"clusterMoveStorageRouteAwayFromNode(nodeID: $id)"`
 	}
 
 	variables := map[string]interface{}{
-		"id": graphql.Int(nodeID),
+		"id": int32(nodeID),
 	}
 
 	return c.client.Mutate(&mutation, variables)
@@ -147,12 +145,12 @@ func (c *Clusters) ClusterMoveIngestRoutesAwayFromNode(nodeID int) error {
 	var mutation struct {
 		ClusterMoveIngestRoutesAwayFromNode struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"clusterMoveIngestRoutesAwayFromNode(nodeID: $id)"`
 	}
 
 	variables := map[string]interface{}{
-		"id": graphql.Int(nodeID),
+		"id": int32(nodeID),
 	}
 
 	return c.client.Mutate(&mutation, variables)
@@ -203,13 +201,13 @@ func (n *ClusterNodes) Unregister(nodeID int, force bool) error {
 	var mutation struct {
 		ClusterUnregisterNode struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"clusterUnregisterNode(force: $force, nodeID: $id)"`
 	}
 
 	variables := map[string]interface{}{
-		"id":    graphql.Int(nodeID),
-		"force": graphql.Boolean(force),
+		"id":    int32(nodeID),
+		"force": force,
 	}
 
 	return n.client.Mutate(&mutation, variables)

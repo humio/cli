@@ -1,7 +1,5 @@
 package api
 
-import "github.com/shurcooL/graphql"
-
 type FeatureFlag string
 
 type FeatureFlags struct {
@@ -65,7 +63,7 @@ func (f *FeatureFlags) EnableForOrganization(organizationID string, flag Feature
 
 	variables := map[string]interface{}{
 		"feature": flag,
-		"orgId":   graphql.String(organizationID),
+		"orgId":   organizationID,
 	}
 
 	return f.c.Mutate(&mutation, variables)
@@ -78,7 +76,7 @@ func (f *FeatureFlags) DisableForOrganization(organizationID string, flag Featur
 
 	variables := map[string]interface{}{
 		"feature": flag,
-		"orgId":   graphql.String(organizationID),
+		"orgId":   organizationID,
 	}
 
 	return f.c.Mutate(&mutation, variables)
@@ -91,7 +89,7 @@ func (f *FeatureFlags) EnableForUser(userID string, flag FeatureFlag) error {
 
 	variables := map[string]interface{}{
 		"feature": flag,
-		"userId":  graphql.String(userID),
+		"userId":  userID,
 	}
 
 	return f.c.Mutate(&mutation, variables)
@@ -104,7 +102,7 @@ func (f *FeatureFlags) DisableForUser(userID string, flag FeatureFlag) error {
 
 	variables := map[string]interface{}{
 		"feature": flag,
-		"userId":  graphql.String(userID),
+		"userId":  userID,
 	}
 
 	return f.c.Mutate(&mutation, variables)

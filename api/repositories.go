@@ -3,8 +3,6 @@ package api
 import (
 	"fmt"
 	"strings"
-
-	"github.com/shurcooL/graphql"
 )
 
 type Repositories struct {
@@ -29,7 +27,7 @@ func (r *Repositories) Get(name string) (Repository, error) {
 	}
 
 	variables := map[string]interface{}{
-		"name": graphql.String(name),
+		"name": name,
 	}
 
 	err := r.client.Query(&query, variables)
@@ -65,7 +63,7 @@ func (r *Repositories) Create(name string) error {
 	}
 
 	variables := map[string]interface{}{
-		"name": graphql.String(name),
+		"name": name,
 	}
 
 	err := r.client.Mutate(&mutation, variables)
@@ -90,12 +88,12 @@ func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error
 	var mutation struct {
 		DeleteSearchDomain struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"deleteSearchDomain(name: $name, deleteMessage: $reason)"`
 	}
 	variables := map[string]interface{}{
-		"name":   graphql.String(name),
-		"reason": graphql.String(reason),
+		"name":   name,
+		"reason": reason,
 	}
 
 	return r.client.Mutate(&mutation, variables)
@@ -137,12 +135,12 @@ func (r *Repositories) UpdateUserGroup(name, username string, groups ...DefaultG
 	var mutation struct {
 		UpdateDefaultGroupMembershipsMutation struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"updateDefaultGroupMemberships(input: {viewName: $name, userName: $username, groups: $groups})"`
 	}
 	variables := map[string]interface{}{
-		"name":     graphql.String(name),
-		"username": graphql.String(username),
+		"name":     name,
+		"username": username,
 		"groups":   groups,
 	}
 
@@ -159,12 +157,12 @@ func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays flo
 	var mutation struct {
 		UpdateRetention struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"updateRetention(repositoryName: $name, timeBasedRetention: $retentionInDays)"`
 	}
 	variables := map[string]interface{}{
-		"name":            graphql.String(name),
-		"retentionInDays": (*graphql.Float)(nil),
+		"name":            name,
+		"retentionInDays": (*float64)(nil),
 	}
 	if retentionInDays > 0 {
 		if retentionInDays < existingRepo.RetentionDays || existingRepo.RetentionDays == 0 {
@@ -172,7 +170,7 @@ func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays flo
 				return fmt.Errorf("repository contains data and data deletion not allowed")
 			}
 		}
-		variables["retentionInDays"] = graphql.Float(retentionInDays)
+		variables["retentionInDays"] = retentionInDays
 	}
 
 	return r.client.Mutate(&mutation, variables)
@@ -188,12 +186,12 @@ func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB floa
 	var mutation struct {
 		UpdateRetention struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"updateRetention(repositoryName: $name, storageSizeBasedRetention: $storageInGB)"`
 	}
 	variables := map[string]interface{}{
-		"name":        graphql.String(name),
-		"storageInGB": (*graphql.Float)(nil),
+		"name":        name,
+		"storageInGB": (*float64)(nil),
 	}
 	if storageInGB > 0 {
 		if storageInGB < existingRepo.StorageRetentionSizeGB || existingRepo.StorageRetentionSizeGB == 0 {
@@ -201,7 +199,7 @@ func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB floa
 				return fmt.Errorf("repository contains data and data deletion not allowed")
 			}
 		}
-		variables["storageInGB"] = graphql.Float(storageInGB)
+		variables["storageInGB"] = storageInGB
 	}
 
 	return r.client.Mutate(&mutation, variables)
@@ -217,12 +215,12 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 	var mutation struct {
 		UpdateRetention struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"updateRetention(repositoryName: $name, ingestSizeBasedRetention: $ingestInGB)"`
 	}
 	variables := map[string]interface{}{
-		"name":       graphql.String(name),
-		"ingestInGB": (*graphql.Float)(nil),
+		"name":       name,
+		"ingestInGB": (*float64)(nil),
 	}
 	if ingestInGB > 0 {
 		if ingestInGB < existingRepo.IngestRetentionSizeGB || existingRepo.IngestRetentionSizeGB == 0 {
@@ -230,7 +228,7 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 				return fmt.Errorf("repository contains data and data deletion not allowed")
 			}
 		}
-		variables["ingestInGB"] = graphql.Float(ingestInGB)
+		variables["ingestInGB"] = ingestInGB
 	}
 
 	return r.client.Mutate(&mutation, variables)
@@ -240,13 +238,13 @@ func (r *Repositories) UpdateDescription(name, description string) error {
 	var mutation struct {
 		UpdateDescription struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"updateDescriptionForSearchDomain(name: $name, newDescription: $description)"`
 	}
 
 	variables := map[string]interface{}{
-		"name":        graphql.String(name),
-		"description": graphql.String(description),
+		"name":        name,
+		"description": description,
 	}
 
 	return r.client.Mutate(&mutation, variables)

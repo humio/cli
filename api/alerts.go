@@ -2,8 +2,6 @@ package api
 
 import (
 	"fmt"
-
-	"github.com/shurcooL/graphql"
 )
 
 type Alert struct {
@@ -15,14 +13,16 @@ type Alert struct {
 	TimeOfLastTrigger  int      `graphql:"timeOfLastTrigger"  yaml:"timeOfLastTrigger"     json:"timeOfLastTrigger"`
 	IsStarred          bool     `graphql:"isStarred"          yaml:"isStarred"             json:"isStarred"`
 	Description        string   `graphql:"description"        yaml:"description,omitempty" json:"description"`
-	ThrottleTimeMillis int      `graphql:"throttleTimeMillis" yaml:"throttleTimeMillis"    json:"throttleTimeMillis"`
+	ThrottleTimeMillis Long     `graphql:"throttleTimeMillis" yaml:"throttleTimeMillis"    json:"throttleTimeMillis"`
 	Enabled            bool     `graphql:"enabled"            yaml:"enabled"               json:"enabled"`
 	Actions            []string `graphql:"actions"            yaml:"actions"               json:"actions"`
-	Labels             []string `graphql:"labels"             yaml:"labels,omitempty"      json:"labels,omitempty"`
+	Labels             []string `graphql:"labels"             yaml:"labels"                json:"labels"`
 	LastError          string   `graphql:"lastError"          yaml:"lastError"             json:"lastError"`
 }
 
 type Long int64
+
+func (l Long) GetGraphQLType() string { return "Long" }
 
 type Alerts struct {
 	client *Client
@@ -38,7 +38,7 @@ func (a *Alerts) List(viewName string) ([]Alert, error) {
 	}
 
 	variables := map[string]interface{}{
-		"viewName": graphql.String(viewName),
+		"viewName": viewName,
 	}
 
 	err := a.client.Query(&query, variables)
@@ -58,29 +58,25 @@ func (a *Alerts) Update(viewName string, newAlert *Alert) (*Alert, error) {
 		Alert `graphql:"updateAlert(input: { id: $id, viewName: $viewName, name: $alertName, description: $description, queryString: $queryString, queryStart: $queryStart, throttleTimeMillis: $throttleTimeMillis, throttleField: $throttleField, enabled: $enabled, actions: $actions, labels: $labels })"`
 	}
 
-	actions := make([]graphql.String, len(newAlert.Actions))
-	labels := make([]graphql.String, len(newAlert.Labels))
-	var throttleField *graphql.String
-	for i, action := range newAlert.Actions {
-		actions[i] = graphql.String(action)
-	}
-	for i, label := range newAlert.Labels {
-		labels[i] = graphql.String(label)
-	}
+	actions := make([]string, len(newAlert.Actions))
+	labels := make([]string, len(newAlert.Labels))
+	var throttleField *string
+	copy(actions, newAlert.Actions)
+	copy(labels, newAlert.Labels)
 	if newAlert.ThrottleField != "" {
-		field := graphql.String(newAlert.ThrottleField)
+		field := newAlert.ThrottleField
 		throttleField = &field
 	}
 	variables := map[string]interface{}{
-		"id":                 graphql.String(newAlert.ID),
-		"viewName":           graphql.String(viewName),
-		"alertName":          graphql.String(newAlert.Name),
-		"description":        graphql.String(newAlert.Description),
-		"queryString":        graphql.String(newAlert.QueryString),
-		"queryStart":         graphql.String(newAlert.QueryStart),
+		"id":                 newAlert.ID,
+		"viewName":           viewName,
+		"alertName":          newAlert.Name,
+		"description":        newAlert.Description,
+		"queryString":        newAlert.QueryString,
+		"queryStart":         newAlert.QueryStart,
 		"throttleField":      throttleField,
-		"throttleTimeMillis": Long(newAlert.ThrottleTimeMillis),
-		"enabled":            graphql.Boolean(newAlert.Enabled),
+		"throttleTimeMillis": newAlert.ThrottleTimeMillis,
+		"enabled":            newAlert.Enabled,
 		"actions":            actions,
 		"labels":             labels,
 	}
@@ -119,28 +115,25 @@ func (a *Alerts) Add(viewName string, newAlert *Alert) (*Alert, error) {
 		Alert `graphql:"createAlert(input: { viewName: $viewName, name: $alertName, description: $description, queryString: $queryString, queryStart: $queryStart, throttleTimeMillis: $throttleTimeMillis, throttleField: $throttleField, enabled: $enabled, actions: $actions, labels: $labels })"`
 	}
 
-	actions := make([]graphql.String, len(newAlert.Actions))
-	labels := make([]graphql.String, len(newAlert.Labels))
-	var throttleField *graphql.String
-	for i, action := range newAlert.Actions {
-		actions[i] = graphql.String(action)
-	}
-	for i, label := range newAlert.Labels {
-		labels[i] = graphql.String(label)
-	}
+	actions := make([]string, len(newAlert.Actions))
+	labels := make([]string, len(newAlert.Labels))
+	var throttleField *string
+	copy(actions, newAlert.Actions)
+	copy(labels, newAlert.Labels)
 	if newAlert.ThrottleField != "" {
-		field := graphql.String(newAlert.ThrottleField)
+		field := newAlert.ThrottleField
 		throttleField = &field
 	}
+
 	variables := map[string]interface{}{
-		"viewName":           graphql.String(viewName),
-		"alertName":          graphql.String(newAlert.Name),
-		"description":        graphql.String(newAlert.Description),
-		"queryString":        graphql.String(newAlert.QueryString),
-		"queryStart":         graphql.String(newAlert.QueryStart),
-		"throttleTimeMillis": Long(newAlert.ThrottleTimeMillis),
+		"viewName":           viewName,
+		"alertName":          newAlert.Name,
+		"description":        newAlert.Description,
+		"queryString":        newAlert.QueryString,
+		"queryStart":         newAlert.QueryStart,
+		"throttleTimeMillis": newAlert.ThrottleTimeMillis,
 		"throttleField":      throttleField,
-		"enabled":            graphql.Boolean(newAlert.Enabled),
+		"enabled":            newAlert.Enabled,
 		"actions":            actions,
 		"labels":             labels,
 	}
@@ -204,8 +197,8 @@ func (a *Alerts) Delete(viewName, alertName string) error {
 	}
 
 	variables := map[string]interface{}{
-		"viewName": graphql.String(viewName),
-		"alertId":  graphql.String(alertId),
+		"viewName": viewName,
+		"alertId":  alertId,
 	}
 
 	return a.client.Mutate(&mutation, variables)

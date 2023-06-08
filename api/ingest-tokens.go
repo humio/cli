@@ -2,8 +2,6 @@ package api
 
 import (
 	"fmt"
-
-	"github.com/shurcooL/graphql"
 )
 
 type IngestTokens struct {
@@ -34,7 +32,7 @@ func (i *IngestTokens) List(repo string) ([]IngestToken, error) {
 	}
 
 	variables := map[string]interface{}{
-		"repositoryName": graphql.String(repo),
+		"repositoryName": repo,
 	}
 
 	err := i.client.Query(&query, variables)
@@ -80,9 +78,9 @@ func toIngestToken(data ingestTokenData) *IngestToken {
 
 func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
 	variables := map[string]interface{}{
-		"tokenName":      graphql.String(tokenName),
-		"repositoryName": graphql.String(repositoryName),
-		"parserId":       (*graphql.String)(nil),
+		"tokenName":      tokenName,
+		"repositoryName": repositoryName,
+		"parserId":       (*string)(nil),
 	}
 
 	if parserName != "" {
@@ -90,7 +88,7 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName s
 		if err != nil {
 			return nil, fmt.Errorf("unable to look up parser id for parser name %q: %w", parserName, err)
 		}
-		variables["parserId"] = graphql.String(parser.ID)
+		variables["parserId"] = parser.ID
 	}
 
 	var mutation struct {
@@ -122,13 +120,13 @@ func (i *IngestTokens) Update(repositoryName string, tokenName string, parserNam
 		var mutation struct {
 			Result struct {
 				// We have to make a selection, so just take __typename
-				Typename graphql.String `graphql:"__typename"`
+				Typename string `graphql:"__typename"`
 			} `graphql:"unassignIngestToken(repositoryName: $repositoryName, tokenName: $tokenName)"`
 		}
 
 		variables := map[string]interface{}{
-			"tokenName":      graphql.String(tokenName),
-			"repositoryName": graphql.String(repositoryName),
+			"tokenName":      tokenName,
+			"repositoryName": repositoryName,
 		}
 
 		err := i.client.Mutate(&mutation, variables)
@@ -139,7 +137,7 @@ func (i *IngestTokens) Update(repositoryName string, tokenName string, parserNam
 		var mutation struct {
 			Result struct {
 				// We have to make a selection, so just take __typename
-				Typename graphql.String `graphql:"__typename"`
+				Typename string `graphql:"__typename"`
 			} `graphql:"assignParserToIngestToken(input: { repositoryName: $repositoryName, tokenName: $tokenName, parserId: $parserId })"`
 		}
 
@@ -148,9 +146,9 @@ func (i *IngestTokens) Update(repositoryName string, tokenName string, parserNam
 			return nil, fmt.Errorf("unable to look up parser id for parser name %q: %w", parserName, err)
 		}
 		variables := map[string]interface{}{
-			"tokenName":      graphql.String(tokenName),
-			"repositoryName": graphql.String(repositoryName),
-			"parserId":       graphql.String(parser.ID),
+			"tokenName":      tokenName,
+			"repositoryName": repositoryName,
+			"parserId":       parser.ID,
 		}
 
 		err2 := i.client.Mutate(&mutation, variables)
@@ -166,13 +164,13 @@ func (i *IngestTokens) Remove(repositoryName string, tokenName string) error {
 	var mutation struct {
 		Result struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"removeIngestToken(repositoryName: $repositoryName, name: $tokenName)"`
 	}
 
 	variables := map[string]interface{}{
-		"tokenName":      graphql.String(tokenName),
-		"repositoryName": graphql.String(repositoryName),
+		"tokenName":      tokenName,
+		"repositoryName": repositoryName,
 	}
 
 	return i.client.Mutate(&mutation, variables)
