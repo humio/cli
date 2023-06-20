@@ -2,8 +2,6 @@ package api
 
 import (
 	"errors"
-
-	"github.com/shurcooL/graphql"
 )
 
 type Groups struct {
@@ -46,8 +44,8 @@ func (g *Groups) AddUserToGroup(groupID string, userID string) error {
 	}
 
 	variables := map[string]interface{}{
-		"userID":  graphql.String(userID),
-		"groupID": graphql.String(groupID),
+		"userID":  userID,
+		"groupID": groupID,
 	}
 
 	err := g.client.Mutate(&mutation, variables)
@@ -80,8 +78,8 @@ func (g *Groups) RemoveUserFromGroup(groupID string, userID string) error {
 	}
 
 	variables := map[string]interface{}{
-		"userID":  graphql.String(userID),
-		"groupID": graphql.String(groupID),
+		"userID":  userID,
+		"groupID": groupID,
 	}
 
 	return g.client.Mutate(&mutation, variables)

@@ -12,8 +12,6 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-
-	"github.com/shurcooL/graphql"
 )
 
 // Packages is a API client for working with Humio packages.
@@ -115,7 +113,7 @@ func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
 	}
 
 	variables := map[string]interface{}{
-		"repositoryName": graphql.String(viewName),
+		"repositoryName": viewName,
 	}
 
 	err := p.client.Query(&query, variables)
@@ -195,13 +193,13 @@ func (p *Packages) UninstallPackage(viewName string, packageID string) error {
 	var mutation struct {
 		UninstallPackage struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"uninstallPackage(packageId: $packageId, viewName: $viewName)"`
 	}
 
 	variables := map[string]interface{}{
 		"packageId": UnversionedPackageSpecifier(packageID),
-		"viewName":  graphql.String(viewName),
+		"viewName":  viewName,
 	}
 
 	return p.client.Mutate(&mutation, variables)

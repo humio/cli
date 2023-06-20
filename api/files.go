@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/shurcooL/graphql"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -32,7 +31,7 @@ func (f *Files) List(viewName string) ([]File, error) {
 	}
 
 	variables := map[string]interface{}{
-		"viewName": graphql.String(viewName),
+		"viewName": viewName,
 	}
 
 	err := f.client.Query(&query, variables)
@@ -43,13 +42,13 @@ func (f *Files) Delete(viewName string, fileName string) error {
 	var query struct {
 		RemoveFile struct {
 			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
+			Typename string `graphql:"__typename"`
 		} `graphql:"removeFile(name:$viewName, fileName: $fileName)"`
 	}
 
 	variables := map[string]interface{}{
-		"viewName": graphql.String(viewName),
-		"fileName": graphql.String(fileName),
+		"viewName": viewName,
+		"fileName": fileName,
 	}
 
 	return f.client.Mutate(&query, variables)

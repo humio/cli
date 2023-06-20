@@ -3,8 +3,6 @@ package api
 import (
 	"fmt"
 	"reflect"
-
-	"github.com/shurcooL/graphql"
 )
 
 const (
@@ -108,7 +106,7 @@ func (n *Actions) List(viewName string) ([]Action, error) {
 	}
 
 	variables := map[string]interface{}{
-		"viewName": graphql.String(viewName),
+		"viewName": viewName,
 	}
 
 	err := n.client.Query(&query, variables)
@@ -138,18 +136,16 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 			} `graphql:"updateEmailAction(input: { id: $id, viewName: $viewName, name: $actionName, recipients: $recipients, subjectTemplate: $subjectTemplate, bodyTemplate: $bodyTemplate, useProxy: $useProxy })"`
 		}
 
-		recipientsGQL := make([]graphql.String, len(newAction.EmailAction.Recipients))
-		for i, recipient := range newAction.EmailAction.Recipients {
-			recipientsGQL[i] = graphql.String(recipient)
-		}
+		recipientsGQL := make([]string, len(newAction.EmailAction.Recipients))
+		copy(recipientsGQL, newAction.EmailAction.Recipients)
 		variables := map[string]interface{}{
-			"id":              graphql.String(currentAction.ID),
-			"viewName":        graphql.String(viewName),
-			"actionName":      graphql.String(newAction.Name),
+			"id":              currentAction.ID,
+			"viewName":        viewName,
+			"actionName":      newAction.Name,
 			"recipients":      recipientsGQL,
-			"subjectTemplate": graphql.String(newAction.EmailAction.SubjectTemplate),
-			"bodyTemplate":    graphql.String(newAction.EmailAction.BodyTemplate),
-			"useProxy":        graphql.Boolean(newAction.EmailAction.UseProxy),
+			"subjectTemplate": newAction.EmailAction.SubjectTemplate,
+			"bodyTemplate":    newAction.EmailAction.BodyTemplate,
+			"useProxy":        newAction.EmailAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -181,10 +177,10 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 		}
 
 		variables := map[string]interface{}{
-			"id":          graphql.String(currentAction.ID),
-			"viewName":    graphql.String(viewName),
-			"actionName":  graphql.String(newAction.Name),
-			"ingestToken": graphql.String(newAction.HumioRepoAction.IngestToken),
+			"id":          currentAction.ID,
+			"viewName":    viewName,
+			"actionName":  newAction.Name,
+			"ingestToken": newAction.HumioRepoAction.IngestToken,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -213,12 +209,12 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 		}
 
 		variables := map[string]interface{}{
-			"id":         graphql.String(currentAction.ID),
-			"viewName":   graphql.String(viewName),
-			"actionName": graphql.String(newAction.Name),
-			"apiUrl":     graphql.String(newAction.OpsGenieAction.ApiUrl),
-			"genieKey":   graphql.String(newAction.OpsGenieAction.GenieKey),
-			"useProxy":   graphql.Boolean(newAction.OpsGenieAction.UseProxy),
+			"id":         currentAction.ID,
+			"viewName":   viewName,
+			"actionName": newAction.Name,
+			"apiUrl":     newAction.OpsGenieAction.ApiUrl,
+			"genieKey":   newAction.OpsGenieAction.GenieKey,
+			"useProxy":   newAction.OpsGenieAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -249,12 +245,12 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 		}
 
 		variables := map[string]interface{}{
-			"id":         graphql.String(currentAction.ID),
-			"viewName":   graphql.String(viewName),
-			"actionName": graphql.String(newAction.Name),
-			"severity":   graphql.String(newAction.PagerDutyAction.Severity),
-			"routingKey": graphql.String(newAction.PagerDutyAction.RoutingKey),
-			"useProxy":   graphql.Boolean(newAction.PagerDutyAction.UseProxy),
+			"id":         currentAction.ID,
+			"viewName":   viewName,
+			"actionName": newAction.Name,
+			"severity":   newAction.PagerDutyAction.Severity,
+			"routingKey": newAction.PagerDutyAction.RoutingKey,
+			"useProxy":   newAction.PagerDutyAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -292,12 +288,12 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 			}
 		}
 		variables := map[string]interface{}{
-			"id":         graphql.String(currentAction.ID),
-			"viewName":   graphql.String(viewName),
-			"actionName": graphql.String(newAction.Name),
-			"url":        graphql.String(newAction.SlackAction.Url),
+			"id":         currentAction.ID,
+			"viewName":   viewName,
+			"actionName": newAction.Name,
+			"url":        newAction.SlackAction.Url,
 			"fields":     fieldsGQL,
-			"useProxy":   graphql.Boolean(newAction.SlackAction.UseProxy),
+			"useProxy":   newAction.SlackAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -327,10 +323,8 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 			} `graphql:"updateSlackPostMessageAction(input: { id: $id, viewName: $viewName, name: $actionName, apiToken: $apiToken, channels: $channels, fields: $fields, useProxy: $useProxy })"`
 		}
 
-		channelsGQL := make([]graphql.String, len(newAction.SlackPostMessageAction.Channels))
-		for k, v := range newAction.SlackPostMessageAction.Channels {
-			channelsGQL[k] = graphql.String(v)
-		}
+		channelsGQL := make([]string, len(newAction.SlackPostMessageAction.Channels))
+		copy(channelsGQL, newAction.SlackPostMessageAction.Channels)
 		fieldsGQL := make([]SlackFieldEntryInput, len(newAction.SlackPostMessageAction.Fields))
 		for k, v := range newAction.SlackPostMessageAction.Fields {
 			fieldsGQL[k] = SlackFieldEntryInput{
@@ -339,13 +333,13 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 			}
 		}
 		variables := map[string]interface{}{
-			"id":         graphql.String(currentAction.ID),
-			"viewName":   graphql.String(viewName),
-			"actionName": graphql.String(newAction.Name),
-			"apiToken":   graphql.String(newAction.SlackPostMessageAction.ApiToken),
+			"id":         currentAction.ID,
+			"viewName":   viewName,
+			"actionName": newAction.Name,
+			"apiToken":   newAction.SlackPostMessageAction.ApiToken,
 			"channels":   channelsGQL,
 			"fields":     fieldsGQL,
-			"useProxy":   graphql.Boolean(newAction.SlackPostMessageAction.UseProxy),
+			"useProxy":   newAction.SlackPostMessageAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -377,12 +371,12 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 		}
 
 		variables := map[string]interface{}{
-			"id":          graphql.String(currentAction.ID),
-			"viewName":    graphql.String(viewName),
-			"actionName":  graphql.String(newAction.Name),
-			"messageType": graphql.String(newAction.VictorOpsAction.MessageType),
-			"notifyUrl":   graphql.String(newAction.VictorOpsAction.NotifyUrl),
-			"useProxy":    graphql.Boolean(newAction.VictorOpsAction.UseProxy),
+			"id":          currentAction.ID,
+			"viewName":    viewName,
+			"actionName":  newAction.Name,
+			"messageType": newAction.VictorOpsAction.MessageType,
+			"notifyUrl":   newAction.VictorOpsAction.NotifyUrl,
+			"useProxy":    newAction.VictorOpsAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -420,15 +414,15 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 			}
 		}
 		variables := map[string]interface{}{
-			"id":           graphql.String(currentAction.ID),
-			"viewName":     graphql.String(viewName),
-			"actionName":   graphql.String(newAction.Name),
-			"url":          graphql.String(newAction.WebhookAction.Url),
-			"method":       graphql.String(newAction.WebhookAction.Method),
+			"id":           currentAction.ID,
+			"viewName":     viewName,
+			"actionName":   newAction.Name,
+			"url":          newAction.WebhookAction.Url,
+			"method":       newAction.WebhookAction.Method,
 			"headers":      headersGQL,
-			"bodyTemplate": graphql.String(newAction.WebhookAction.BodyTemplate),
-			"ignoreSSL":    graphql.Boolean(newAction.WebhookAction.IgnoreSSL),
-			"useProxy":     graphql.Boolean(newAction.WebhookAction.UseProxy),
+			"bodyTemplate": newAction.WebhookAction.BodyTemplate,
+			"ignoreSSL":    newAction.WebhookAction.IgnoreSSL,
+			"useProxy":     newAction.WebhookAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -473,17 +467,15 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 			} `graphql:"createEmailAction(input: { viewName: $viewName, name: $actionName, recipients: $recipients, subjectTemplate: $subjectTemplate, bodyTemplate: $bodyTemplate, useProxy: $useProxy })"`
 		}
 
-		recipientsGQL := make([]graphql.String, len(newAction.EmailAction.Recipients))
-		for i, recipient := range newAction.EmailAction.Recipients {
-			recipientsGQL[i] = graphql.String(recipient)
-		}
+		recipientsGQL := make([]string, len(newAction.EmailAction.Recipients))
+		copy(recipientsGQL, newAction.EmailAction.Recipients)
 		variables := map[string]interface{}{
-			"viewName":        graphql.String(viewName),
-			"actionName":      graphql.String(newAction.Name),
+			"viewName":        viewName,
+			"actionName":      newAction.Name,
 			"recipients":      recipientsGQL,
-			"subjectTemplate": graphql.String(newAction.EmailAction.SubjectTemplate),
-			"bodyTemplate":    graphql.String(newAction.EmailAction.BodyTemplate),
-			"useProxy":        graphql.Boolean(newAction.EmailAction.UseProxy),
+			"subjectTemplate": newAction.EmailAction.SubjectTemplate,
+			"bodyTemplate":    newAction.EmailAction.BodyTemplate,
+			"useProxy":        newAction.EmailAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -515,9 +507,9 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 		}
 
 		variables := map[string]interface{}{
-			"viewName":    graphql.String(viewName),
-			"actionName":  graphql.String(newAction.Name),
-			"ingestToken": graphql.String(newAction.HumioRepoAction.IngestToken),
+			"viewName":    viewName,
+			"actionName":  newAction.Name,
+			"ingestToken": newAction.HumioRepoAction.IngestToken,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -546,11 +538,11 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 		}
 
 		variables := map[string]interface{}{
-			"viewName":   graphql.String(viewName),
-			"actionName": graphql.String(newAction.Name),
-			"apiUrl":     graphql.String(newAction.OpsGenieAction.ApiUrl),
-			"genieKey":   graphql.String(newAction.OpsGenieAction.GenieKey),
-			"useProxy":   graphql.Boolean(newAction.OpsGenieAction.UseProxy),
+			"viewName":   viewName,
+			"actionName": newAction.Name,
+			"apiUrl":     newAction.OpsGenieAction.ApiUrl,
+			"genieKey":   newAction.OpsGenieAction.GenieKey,
+			"useProxy":   newAction.OpsGenieAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -581,11 +573,11 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 		}
 
 		variables := map[string]interface{}{
-			"viewName":   graphql.String(viewName),
-			"actionName": graphql.String(newAction.Name),
-			"severity":   graphql.String(newAction.PagerDutyAction.Severity),
-			"routingKey": graphql.String(newAction.PagerDutyAction.RoutingKey),
-			"useProxy":   graphql.Boolean(newAction.PagerDutyAction.UseProxy),
+			"viewName":   viewName,
+			"actionName": newAction.Name,
+			"severity":   newAction.PagerDutyAction.Severity,
+			"routingKey": newAction.PagerDutyAction.RoutingKey,
+			"useProxy":   newAction.PagerDutyAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -623,11 +615,11 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 			}
 		}
 		variables := map[string]interface{}{
-			"viewName":   graphql.String(viewName),
-			"actionName": graphql.String(newAction.Name),
-			"url":        graphql.String(newAction.SlackAction.Url),
+			"viewName":   viewName,
+			"actionName": newAction.Name,
+			"url":        newAction.SlackAction.Url,
 			"fields":     fieldsGQL,
-			"useProxy":   graphql.Boolean(newAction.SlackAction.UseProxy),
+			"useProxy":   newAction.SlackAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -657,10 +649,8 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 			} `graphql:"createSlackPostMessageAction(input: { viewName: $viewName, name: $actionName, apiToken: $apiToken, channels: $channels, fields: $fields, useProxy: $useProxy })"`
 		}
 
-		channelsGQL := make([]graphql.String, len(newAction.SlackPostMessageAction.Channels))
-		for k, v := range newAction.SlackPostMessageAction.Channels {
-			channelsGQL[k] = graphql.String(v)
-		}
+		channelsGQL := make([]string, len(newAction.SlackPostMessageAction.Channels))
+		copy(channelsGQL, newAction.SlackPostMessageAction.Channels)
 		fieldsGQL := make([]SlackFieldEntryInput, len(newAction.SlackPostMessageAction.Fields))
 		for k, v := range newAction.SlackPostMessageAction.Fields {
 			fieldsGQL[k] = SlackFieldEntryInput{
@@ -669,12 +659,12 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 			}
 		}
 		variables := map[string]interface{}{
-			"viewName":   graphql.String(viewName),
-			"actionName": graphql.String(newAction.Name),
-			"apiToken":   graphql.String(newAction.SlackPostMessageAction.ApiToken),
+			"viewName":   viewName,
+			"actionName": newAction.Name,
+			"apiToken":   newAction.SlackPostMessageAction.ApiToken,
 			"channels":   channelsGQL,
 			"fields":     fieldsGQL,
-			"useProxy":   graphql.Boolean(newAction.SlackPostMessageAction.UseProxy),
+			"useProxy":   newAction.SlackPostMessageAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -706,11 +696,11 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 		}
 
 		variables := map[string]interface{}{
-			"viewName":    graphql.String(viewName),
-			"actionName":  graphql.String(newAction.Name),
-			"messageType": graphql.String(newAction.VictorOpsAction.MessageType),
-			"notifyUrl":   graphql.String(newAction.VictorOpsAction.NotifyUrl),
-			"useProxy":    graphql.Boolean(newAction.VictorOpsAction.UseProxy),
+			"viewName":    viewName,
+			"actionName":  newAction.Name,
+			"messageType": newAction.VictorOpsAction.MessageType,
+			"notifyUrl":   newAction.VictorOpsAction.NotifyUrl,
+			"useProxy":    newAction.VictorOpsAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -748,14 +738,14 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 			}
 		}
 		variables := map[string]interface{}{
-			"viewName":     graphql.String(viewName),
-			"actionName":   graphql.String(newAction.Name),
-			"url":          graphql.String(newAction.WebhookAction.Url),
-			"method":       graphql.String(newAction.WebhookAction.Method),
+			"viewName":     viewName,
+			"actionName":   newAction.Name,
+			"url":          newAction.WebhookAction.Url,
+			"method":       newAction.WebhookAction.Method,
 			"headers":      headersGQL,
-			"bodyTemplate": graphql.String(newAction.WebhookAction.BodyTemplate),
-			"ignoreSSL":    graphql.Boolean(newAction.WebhookAction.IgnoreSSL),
-			"useProxy":     graphql.Boolean(newAction.WebhookAction.UseProxy),
+			"bodyTemplate": newAction.WebhookAction.BodyTemplate,
+			"ignoreSSL":    newAction.WebhookAction.IgnoreSSL,
+			"useProxy":     newAction.WebhookAction.UseProxy,
 		}
 
 		err := n.client.Mutate(&mutation, variables)
@@ -804,8 +794,8 @@ func (n *Actions) GetByID(viewName, actionID string) (*Action, error) {
 	}
 
 	variables := map[string]interface{}{
-		"viewName": graphql.String(viewName),
-		"actionId": graphql.String(actionID),
+		"viewName": viewName,
+		"actionId": actionID,
 	}
 
 	err := n.client.Query(&query, variables)
@@ -841,8 +831,8 @@ func (n *Actions) Delete(viewName, actionName string) error {
 	}
 
 	variables := map[string]interface{}{
-		"viewName": graphql.String(viewName),
-		"actionId": graphql.String(actionID),
+		"viewName": viewName,
+		"actionId": actionID,
 	}
 
 	return n.client.Mutate(&mutation, variables)

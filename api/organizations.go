@@ -1,7 +1,5 @@
 package api
 
-import "github.com/shurcooL/graphql"
-
 type Organizations struct {
 	client *Client
 }
@@ -20,7 +18,7 @@ func (o *Organizations) CreateOrganization(name string) (Organization, error) {
 	}
 
 	variables := map[string]interface{}{
-		"name": graphql.String(name),
+		"name": name,
 	}
 
 	err := o.client.Mutate(&mutation, variables)

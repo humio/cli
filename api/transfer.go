@@ -3,8 +3,6 @@ package api
 import (
 	"errors"
 	"time"
-
-	"github.com/shurcooL/graphql"
 )
 
 type Transfer struct {
@@ -89,24 +87,19 @@ func (t *Transfer) AddTransferJob(sourceClusterURL string, sourceClusterToken st
 		AddTransferJob AddTransferJobResponse `graphql:"addTransferJob(input: {sourceClusterUrl: $sourceClusterUrl, sourceClusterToken: $sourceClusterToken, destinationOrganizationId: $destinationOrganizationId, dataspaces: $dataspaces, maximumParallelDownloads: $maximumParallelDownloads, setTargetClusterAsNewMaster: $setTargetClusterAsNewMaster, onlyTransferDataspaces: $onlyTransferDataspaces})"`
 	}
 
-	ds := make([]graphql.String, len(dataspaces))
-	for i := range dataspaces {
-		ds[i] = graphql.String(dataspaces[i])
-	}
-
 	variables := map[string]interface{}{
-		"sourceClusterUrl":            graphql.String(sourceClusterURL),
-		"sourceClusterToken":          graphql.String(sourceClusterToken),
-		"destinationOrganizationId":   graphql.String(destinationOrganizationID),
-		"dataspaces":                  ds,
-		"setTargetClusterAsNewMaster": graphql.Boolean(setTargetAsNewMaster),
-		"onlyTransferDataspaces":      graphql.Boolean(onlyTransferDataspaces),
+		"sourceClusterUrl":            sourceClusterURL,
+		"sourceClusterToken":          sourceClusterToken,
+		"destinationOrganizationId":   destinationOrganizationID,
+		"dataspaces":                  dataspaces,
+		"setTargetClusterAsNewMaster": setTargetAsNewMaster,
+		"onlyTransferDataspaces":      onlyTransferDataspaces,
 	}
 
 	if maximumParallelDownloads > 0 {
-		variables["maximumParallelDownloads"] = graphql.Int(maximumParallelDownloads)
+		variables["maximumParallelDownloads"] = int32(maximumParallelDownloads)
 	} else {
-		variables["maximumParallelDownloads"] = (*graphql.Int)(nil)
+		variables["maximumParallelDownloads"] = (*int32)(nil)
 	}
 
 	err := t.client.Mutate(&mutation, variables)
@@ -120,7 +113,7 @@ func (t *Transfer) CancelTransferJob(transferJobID string) (TransferJob, error) 
 	}
 
 	variables := map[string]interface{}{
-		"transferJobId": graphql.String(transferJobID),
+		"transferJobId": transferJobID,
 	}
 
 	err := t.client.Mutate(&mutation, variables)
@@ -143,7 +136,7 @@ func (t *Transfer) GetTransferJobStatus(transferJobID string) (TransferJobStatus
 	}
 
 	variables := map[string]interface{}{
-		"transferJobId": graphql.String(transferJobID),
+		"transferJobId": transferJobID,
 	}
 
 	err := t.client.Query(&query, variables)
