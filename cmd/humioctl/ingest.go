@@ -46,7 +46,7 @@ func tailFile(cmd *cobra.Command, filepath string, quiet bool, seekToEnd bool, h
 	return err
 }
 
-func streamStdin(repo string, quiet bool, handler shipper.LineHandler) error {
+func streamStdin(repo string, quiet bool, handler shipper.LineHandler, ingestBufferSize int) error {
 	log.Println("Humio Attached to StdIn, Forwarding to '" + repo + "'")
 
 	var reader io.Reader = os.Stdin
@@ -55,6 +55,11 @@ func streamStdin(repo string, quiet bool, handler shipper.LineHandler) error {
 	}
 
 	scanner := bufio.NewScanner(reader)
+
+	// Create the ingest buffer
+	buf := make([]byte, ingestBufferSize)
+	scanner.Buffer(buf, ingestBufferSize)
+
 	for scanner.Scan() {
 		handler.HandleLine(scanner.Text())
 	}
@@ -93,7 +98,7 @@ func waitForInterrupt() {
 func newIngestCmd() *cobra.Command {
 	var parserName, filepath, label, ingestToken, multiLineBeginsWith, multiLineContinuesWith, fieldsJson string
 	var openBrowser, noSession, quiet, failOnError, tailSeekToEnd bool
-	var retries, batchSizeLines, batchSizeBytes, batchTimeoutMs int
+	var retries, batchSizeLines, batchSizeBytes, batchTimeoutMs, ingestBufferSize int
 
 	cmd := cobra.Command{
 		Use:   "ingest [flags] repo",
@@ -220,7 +225,7 @@ has the same effect.`,
 			if filepath != "" {
 				err = tailFile(cmd, filepath, quiet, tailSeekToEnd, lineHandler)
 			} else {
-				err = streamStdin(repo, quiet, lineHandler)
+				err = streamStdin(repo, quiet, lineHandler, ingestBufferSize)
 			}
 
 			sender.Finish()
@@ -246,6 +251,7 @@ has the same effect.`,
 	cmd.Flags().IntVarP(&batchSizeLines, "batch-lines", "L", 500, "Max number of events to send in one batch.")
 	cmd.Flags().IntVarP(&batchSizeBytes, "batch-bytes", "B", 1024*1024, "Max number of bytes to send in one batch.")
 	cmd.Flags().IntVarP(&batchTimeoutMs, "batch-timeout", "T", 100, "Max duration in milliseconds to wait before sending an incomplete batch.")
+	cmd.Flags().IntVarP(&ingestBufferSize, "ingest-buffer-size", "", 1*1024*1024, "Sets the maximum event size.")
 	cmd.Flags().StringVarP(&multiLineBeginsWith, "multiline-begins-with", "", "", "Operate in multi line mode. Each multi line event starts with the specified regexp pattern.")
 	cmd.Flags().StringVarP(&multiLineContinuesWith, "multiline-continues-with", "", "", "Operate in multi line mode. Each multi line event is continued with the specified regexp pattern.")
 	cmd.Flags().StringVarP(&fieldsJson, "fields-json", "J", "", "Add the supplied json object to each object as structured fields.")
