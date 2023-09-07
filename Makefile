@@ -18,7 +18,7 @@ clean:
 	@rm -rf bin/
 
 snapshot:
-	goreleaser build --rm-dist --snapshot
+	goreleaser build --clean --snapshot
 	@rm -rf bin/
 
 run: $(BIN_PATH)
