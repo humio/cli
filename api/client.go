@@ -4,13 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	graphql "github.com/cli/shurcooL-graphql"
 	"io"
 	"net"
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/hasura/go-graphql-client"
 )
 
 const defaultUserAgent = "Humio-go-client/unknown"
@@ -147,4 +146,20 @@ func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path
 
 	var client = c.newHTTPClientWithHeaders(headers)
 	return client.Do(req)
+}
+
+func optBoolArg(v *bool) *graphql.Boolean {
+	var argPtr *graphql.Boolean
+	if v != nil {
+		argPtr = graphql.NewBoolean(graphql.Boolean(*v))
+	}
+	return argPtr
+}
+
+func optStringArg(v *string) *graphql.String {
+	var argPtr *graphql.String
+	if v != nil {
+		argPtr = graphql.NewString(graphql.String(*v))
+	}
+	return argPtr
 }

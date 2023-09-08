@@ -1,5 +1,7 @@
 package api
 
+import graphql "github.com/cli/shurcooL-graphql"
+
 type Licenses struct {
 	client *Client
 }
@@ -32,11 +34,11 @@ func (l *Licenses) Install(license string) error {
 	var mutation struct {
 		UpdateLicenseKey struct {
 			// We have to make a selection, so just take __typename
-			Typename string `graphql:"__typename"`
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"updateLicenseKey(license: $license)"`
 	}
 	variables := map[string]interface{}{
-		"license": license,
+		"license": graphql.String(license),
 	}
 
 	return l.client.Mutate(&mutation, variables)

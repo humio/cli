@@ -1,5 +1,7 @@
 package api
 
+import graphql "github.com/cli/shurcooL-graphql"
+
 type ParserTestCase struct {
 	Input  string
 	Output map[string]string
@@ -34,7 +36,7 @@ func (p *Parsers) List(repositoryName string) ([]ParserListItem, error) {
 	}
 
 	variables := map[string]interface{}{
-		"repositoryName": repositoryName,
+		"repositoryName": graphql.String(repositoryName),
 	}
 
 	var parsers []ParserListItem
@@ -49,7 +51,7 @@ func (p *Parsers) Remove(repositoryName string, parserName string) error {
 	var mutation struct {
 		RemoveParser struct {
 			// We have to make a selection, so just take __typename
-			Typename string `graphql:"__typename"`
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"removeParser(input: { id: $id, repositoryName: $repositoryName })"`
 	}
 
@@ -59,8 +61,8 @@ func (p *Parsers) Remove(repositoryName string, parserName string) error {
 	}
 
 	variables := map[string]interface{}{
-		"repositoryName": repositoryName,
-		"id":             parser.ID,
+		"repositoryName": graphql.String(repositoryName),
+		"id":             graphql.String(parser.ID),
 	}
 
 	return p.client.Mutate(&mutation, variables)
@@ -71,23 +73,29 @@ func (p *Parsers) Add(repositoryName string, parser *Parser, force bool) error {
 	var mutation struct {
 		CreateParser struct {
 			// We have to make a selection, so just take __typename
-			Typename string `graphql:"__typename"`
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"createParser(input: { name: $name, repositoryName: $repositoryName, testData: $testData, tagFields: $tagFields, sourceCode: $sourceCode, force: $force})"`
 	}
 
-	tagFieldsGQL := make([]string, len(parser.TagFields))
-	copy(tagFieldsGQL, parser.TagFields)
+	tagFieldsGQL := make([]graphql.String, len(parser.TagFields))
 
-	testsGQL := make([]string, len(parser.Tests))
-	copy(testsGQL, parser.Tests)
+	for i, field := range parser.TagFields {
+		tagFieldsGQL[i] = graphql.String(field)
+	}
+
+	testsGQL := make([]graphql.String, len(parser.Tests))
+
+	for i, field := range parser.Tests {
+		testsGQL[i] = graphql.String(field)
+	}
 
 	variables := map[string]interface{}{
-		"name":           parser.Name,
-		"sourceCode":     parser.Script,
-		"repositoryName": repositoryName,
+		"name":           graphql.String(parser.Name),
+		"sourceCode":     graphql.String(parser.Script),
+		"repositoryName": graphql.String(repositoryName),
 		"testData":       testsGQL,
 		"tagFields":      tagFieldsGQL,
-		"force":          force,
+		"force":          graphql.Boolean(force),
 	}
 
 	return p.client.Mutate(&mutation, variables)
@@ -107,8 +115,8 @@ func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error)
 	}
 
 	variables := map[string]interface{}{
-		"parserName":     parserName,
-		"repositoryName": repositoryName,
+		"parserName":     graphql.String(parserName),
+		"repositoryName": graphql.String(repositoryName),
 	}
 
 	err := p.client.Query(&query, variables)
@@ -143,8 +151,8 @@ func (p *Parsers) Export(repositoryName string, parserName string) (string, erro
 	}
 
 	variables := map[string]interface{}{
-		"parserName":     parserName,
-		"repositoryName": repositoryName,
+		"parserName":     graphql.String(parserName),
+		"repositoryName": graphql.String(repositoryName),
 	}
 
 	err := p.client.Query(&query, variables)

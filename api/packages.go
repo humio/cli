@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	graphql "github.com/cli/shurcooL-graphql"
 	"io"
 	"net/http"
 	"net/url"
@@ -113,7 +114,7 @@ func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
 	}
 
 	variables := map[string]interface{}{
-		"repositoryName": viewName,
+		"repositoryName": graphql.String(viewName),
 	}
 
 	err := p.client.Query(&query, variables)
@@ -193,13 +194,13 @@ func (p *Packages) UninstallPackage(viewName string, packageID string) error {
 	var mutation struct {
 		UninstallPackage struct {
 			// We have to make a selection, so just take __typename
-			Typename string `graphql:"__typename"`
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"uninstallPackage(packageId: $packageId, viewName: $viewName)"`
 	}
 
 	variables := map[string]interface{}{
 		"packageId": UnversionedPackageSpecifier(packageID),
-		"viewName":  viewName,
+		"viewName":  graphql.String(viewName),
 	}
 
 	return p.client.Mutate(&mutation, variables)

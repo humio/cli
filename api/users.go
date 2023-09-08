@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 type Users struct {
@@ -46,7 +47,7 @@ func (u *Users) Get(username string) (User, error) {
 	}
 
 	variables := map[string]interface{}{
-		"username": username,
+		"username": graphql.String(username),
 	}
 
 	err := u.client.Query(&query, variables)
@@ -76,7 +77,7 @@ func (u *Users) Add(username string, changeset UserChangeSet) (User, error) {
 	var mutation struct {
 		Result struct {
 			// We have to make a selection, so just take __typename
-			Typename string `graphql:"__typename"`
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"addUserV2(input: {username: $username, company: $company, isRoot: $isRoot, fullName: $fullName, picture: $picture, email: $email, countryCode: $countryCode})"`
 	}
 
@@ -96,7 +97,7 @@ func (u *Users) Remove(username string) (User, error) {
 	}
 
 	variables := map[string]interface{}{
-		"username": username,
+		"username": graphql.String(username),
 	}
 
 	err := u.client.Mutate(&mutation, variables)
@@ -113,7 +114,7 @@ func (u *Users) RotateUserApiTokenAndGet(userID string) (string, error) {
 	}
 
 	variables := map[string]interface{}{
-		"id": userID,
+		"id": graphql.String(userID),
 	}
 
 	err := u.client.Mutate(&mutation, variables)
@@ -126,12 +127,12 @@ func (u *Users) RotateUserApiTokenAndGet(userID string) (string, error) {
 
 func userChangesetToVars(username string, changeset UserChangeSet) map[string]interface{} {
 	return map[string]interface{}{
-		"username":    username,
-		"isRoot":      changeset.IsRoot,
-		"fullName":    changeset.FullName,
-		"company":     changeset.Company,
-		"countryCode": changeset.CountryCode,
-		"email":       changeset.Email,
-		"picture":     changeset.Picture,
+		"username":    graphql.String(username),
+		"isRoot":      optBoolArg(changeset.IsRoot),
+		"fullName":    optStringArg(changeset.FullName),
+		"company":     optStringArg(changeset.Company),
+		"countryCode": optStringArg(changeset.CountryCode),
+		"email":       optStringArg(changeset.Email),
+		"picture":     optStringArg(changeset.Picture),
 	}
 }

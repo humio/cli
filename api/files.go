@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	graphql "github.com/cli/shurcooL-graphql"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -31,7 +32,7 @@ func (f *Files) List(viewName string) ([]File, error) {
 	}
 
 	variables := map[string]interface{}{
-		"viewName": viewName,
+		"viewName": graphql.String(viewName),
 	}
 
 	err := f.client.Query(&query, variables)
@@ -42,13 +43,13 @@ func (f *Files) Delete(viewName string, fileName string) error {
 	var query struct {
 		RemoveFile struct {
 			// We have to make a selection, so just take __typename
-			Typename string `graphql:"__typename"`
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"removeFile(name:$viewName, fileName: $fileName)"`
 	}
 
 	variables := map[string]interface{}{
-		"viewName": viewName,
-		"fileName": fileName,
+		"viewName": graphql.String(viewName),
+		"fileName": graphql.String(fileName),
 	}
 
 	return f.client.Mutate(&query, variables)
