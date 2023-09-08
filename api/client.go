@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/hasura/go-graphql-client"
+	"github.com/cli/shurcooL-graphql"
 )
 
 const defaultUserAgent = "Humio-go-client/unknown"
