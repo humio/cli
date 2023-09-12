@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 type Roles struct {
@@ -42,19 +43,25 @@ func (r *Roles) Create(role *Role) error {
 		Role `graphql:"createRole(input: {displayName: $displayName, viewPermissions: $permissions, color: $color, systemPermissions: $systemPermissions, organizationPermissions: $orgPermissions})"`
 	}
 
-	viewPermissions := make([]string, len(role.ViewPermissions))
-	copy(viewPermissions, role.ViewPermissions)
+	viewPermissions := make([]graphql.String, len(role.ViewPermissions))
+	for i, permission := range role.ViewPermissions {
+		viewPermissions[i] = graphql.String(permission)
+	}
 
-	systemPermissions := make([]string, len(role.SystemPermissions))
-	copy(systemPermissions, role.SystemPermissions)
+	systemPermissions := make([]graphql.String, len(role.SystemPermissions))
+	for i, permission := range role.SystemPermissions {
+		systemPermissions[i] = graphql.String(permission)
+	}
 
-	orgPermissions := make([]string, len(role.OrgPermissions))
-	copy(orgPermissions, role.OrgPermissions)
+	orgPermissions := make([]graphql.String, len(role.OrgPermissions))
+	for i, permission := range role.OrgPermissions {
+		orgPermissions[i] = graphql.String(permission)
+	}
 
 	variables := map[string]interface{}{
-		"displayName":       role.DisplayName,
-		"color":             role.Color,
-		"description":       role.Description,
+		"displayName":       graphql.String(role.DisplayName),
+		"color":             graphql.String(role.Color),
+		"description":       graphql.String(role.Description),
 		"viewPermissions":   viewPermissions,
 		"systemPermissions": systemPermissions,
 		"orgPermissions":    orgPermissions,
@@ -77,20 +84,26 @@ func (r *Roles) Update(rolename string, newRole *Role) error {
 		Role `graphql:"updateRole(input: {roleId: $roleId, displayName: $displayName, color: $color, description: $description, viewPermissions: $viewPermissions, systemPermissions: $systemPermissions, organizationPermissions: $orgPermissions})"`
 	}
 
-	viewPermissions := make([]string, len(newRole.ViewPermissions))
-	copy(viewPermissions, newRole.ViewPermissions)
+	viewPermissions := make([]graphql.String, len(newRole.ViewPermissions))
+	for i, permission := range newRole.ViewPermissions {
+		viewPermissions[i] = graphql.String(permission)
+	}
 
-	systemPermissions := make([]string, len(newRole.SystemPermissions))
-	copy(systemPermissions, newRole.SystemPermissions)
+	systemPermissions := make([]graphql.String, len(newRole.SystemPermissions))
+	for i, permission := range newRole.SystemPermissions {
+		systemPermissions[i] = graphql.String(permission)
+	}
 
-	orgPermissions := make([]string, len(newRole.OrgPermissions))
-	copy(orgPermissions, newRole.OrgPermissions)
+	orgPermissions := make([]graphql.String, len(newRole.OrgPermissions))
+	for i, permission := range newRole.OrgPermissions {
+		orgPermissions[i] = graphql.String(permission)
+	}
 
 	variables := map[string]interface{}{
-		"roleId":                  roleId,
-		"displayName":             newRole.DisplayName,
-		"color":                   newRole.Color,
-		"description":             newRole.Description,
+		"roleId":                  graphql.String(roleId),
+		"displayName":             graphql.String(newRole.DisplayName),
+		"color":                   graphql.String(newRole.Color),
+		"description":             graphql.String(newRole.Description),
 		"viewPermissions":         viewPermissions,
 		"systemPermissions":       systemPermissions,
 		"organizationPermissions": orgPermissions,
@@ -103,7 +116,7 @@ func (r *Roles) RemoveRole(rolename string) error {
 	var mutation struct {
 		RemoveRole struct {
 			// We have to make a selection, so just take __typename
-			Typename string `graphql:"__typename"`
+			Typename graphql.String `graphql:"__typename"`
 		} `graphql:"removeRole(input: {roleId: $roleId})"`
 	}
 
@@ -113,7 +126,7 @@ func (r *Roles) RemoveRole(rolename string) error {
 	}
 
 	variables := map[string]interface{}{
-		"roleId": role.ID,
+		"roleId": graphql.String(role.ID),
 	}
 
 	return r.client.Mutate(mutation, variables)
@@ -130,7 +143,7 @@ func (r *Roles) Get(rolename string) (*Role, error) {
 	}
 
 	variables := map[string]interface{}{
-		"roleId": roleId,
+		"roleId": graphql.String(roleId),
 	}
 
 	err = r.client.Query(query, variables)
