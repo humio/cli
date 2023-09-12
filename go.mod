@@ -39,6 +39,6 @@ require (
 )
 
 replace (
-	golang.org/x/image v0.0.0-20190802002840-cff245a6509b => golang.org/x/image v0.5.0
+	golang.org/x/image v0.0.0-20190802002840-cff245a6509b => golang.org/x/image v0.10.0
 	golang.org/x/net v0.10.0 => golang.org/x/net v0.13.0
 )
