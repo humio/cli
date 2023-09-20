@@ -13,7 +13,7 @@ func newUsersRotateApiTokenCmd() *cobra.Command {
 			userID := args[0]
 
 			client := NewApiClient(cmd)
-			newToken, apiErr := client.Users().RotateUserApiTokenAndGet(userID)
+			newToken, apiErr := client.Users().RotateToken(userID)
 			exitOnError(cmd, apiErr, "Error updating user")
 
 			cmd.Printf("New API Token: %s\n", newToken)

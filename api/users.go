@@ -104,13 +104,9 @@ func (u *Users) Remove(username string) (User, error) {
 	return mutation.Result.User, err
 }
 
-func (u *Users) RotateUserApiTokenAndGet(userID string) (string, error) {
+func (u *Users) RotateToken(userID string) (string, error) {
 	var mutation struct {
-		RotateUserApiTokenMutation struct {
-			RotateUserApiToken struct {
-				Token string
-			} `graphql:"rotateUserApiToken"`
-		} `graphql:"rotateUserApiTokenAndGet(input:{id:$id})"`
+		Token string `graphql:"rotateToken(input:{id:$id})"`
 	}
 
 	variables := map[string]interface{}{
@@ -122,7 +118,7 @@ func (u *Users) RotateUserApiTokenAndGet(userID string) (string, error) {
 		return "", err
 	}
 
-	return mutation.RotateUserApiTokenMutation.RotateUserApiToken.Token, nil
+	return mutation.Token, nil
 }
 
 func userChangesetToVars(username string, changeset UserChangeSet) map[string]interface{} {
