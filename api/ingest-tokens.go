@@ -77,15 +77,15 @@ func toIngestToken(data ingestTokenData) *IngestToken {
 	}
 }
 
-func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
+func (i *IngestTokens) Add(repositoryName string, tokenName string, parser string) (*IngestToken, error) {
 	variables := map[string]interface{}{
 		"tokenName":      graphql.String(tokenName),
 		"repositoryName": graphql.String(repositoryName),
-		"parserName":     (*graphql.String)(nil),
+		"parser":         (*graphql.String)(nil),
 	}
 
-	if parserName != "" {
-		variables["parserName"] = graphql.String(parserName)
+	if parser != "" {
+		variables["parser"] = graphql.String(parser)
 	}
 
 	var mutation struct {
@@ -95,7 +95,7 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName s
 			Parser struct {
 				Name string
 			}
-		} `graphql:"addIngestTokenV3(input: { repositoryName: $repositoryName, name: $tokenName, parser: $parserName})"`
+		} `graphql:"addIngestTokenV3(input: { repositoryName: $repositoryName, name: $tokenName, parser: $parser})"`
 	}
 
 	err := i.client.Mutate(&mutation, variables)
@@ -112,8 +112,8 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parserName s
 	return &ingestToken, nil
 }
 
-func (i *IngestTokens) Update(repositoryName string, tokenName string, parserName string) (*IngestToken, error) {
-	if parserName == "" {
+func (i *IngestTokens) Update(repositoryName string, tokenName string, parser string) (*IngestToken, error) {
+	if parser == "" {
 		var mutation struct {
 			Result struct {
 				// We have to make a selection, so just take __typename
@@ -135,17 +135,13 @@ func (i *IngestTokens) Update(repositoryName string, tokenName string, parserNam
 			Result struct {
 				// We have to make a selection, so just take __typename
 				Typename graphql.String `graphql:"__typename"`
-			} `graphql:"assignParserToIngestToken(input: { repositoryName: $repositoryName, tokenName: $tokenName, parserId: $parserId })"`
+			} `graphql:"assignParserToIngestTokenV2(input: { repositoryName: $repositoryName, tokenName: $tokenName, parser: $parser })"`
 		}
 
-		parser, err := i.client.Parsers().Get(repositoryName, parserName)
-		if err != nil {
-			return nil, fmt.Errorf("unable to look up parser id for parser name %q: %w", parserName, err)
-		}
 		variables := map[string]interface{}{
 			"tokenName":      graphql.String(tokenName),
 			"repositoryName": graphql.String(repositoryName),
-			"parserId":       graphql.String(parser.ID),
+			"parser":         graphql.String(parser),
 		}
 
 		err2 := i.client.Mutate(&mutation, variables)
