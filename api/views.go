@@ -89,7 +89,7 @@ type ViewConnectionInput struct {
 	Filter         graphql.String `json:"filter"`
 }
 
-func (c *Views) Create(name, description string, connections map[string]string) error {
+func (c *Views) Create(name, description string, connections map[string][]string) error {
 	var mutation struct {
 		CreateView struct {
 			Name        string
@@ -98,13 +98,15 @@ func (c *Views) Create(name, description string, connections map[string]string) 
 	}
 
 	var viewConnections []ViewConnectionInput
-	for k, v := range connections {
-		viewConnections = append(
-			viewConnections,
-			ViewConnectionInput{
-				RepositoryName: graphql.String(k),
-				Filter:         graphql.String(v),
-			})
+	for repo, conns := range connections {
+		for _, conn := range conns {
+			viewConnections = append(
+				viewConnections,
+				ViewConnectionInput{
+					RepositoryName: graphql.String(repo),
+					Filter:         graphql.String(conn),
+				})
+		}
 	}
 
 	variables := map[string]interface{}{
