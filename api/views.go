@@ -1,9 +1,10 @@
 package api
 
 import (
-	graphql "github.com/cli/shurcooL-graphql"
 	"sort"
 	"strings"
+
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 type Views struct {
@@ -130,7 +131,7 @@ func (c *Views) Delete(name, reason string) error {
 	return c.client.Mutate(&mutation, variables)
 }
 
-func (c *Views) UpdateConnections(name string, connections map[string]string) error {
+func (c *Views) UpdateConnections(name string, connections map[string][]string) error {
 	var mutation struct {
 		View struct {
 			Name string
@@ -138,13 +139,15 @@ func (c *Views) UpdateConnections(name string, connections map[string]string) er
 	}
 
 	var viewConnections []ViewConnectionInput
-	for k, v := range connections {
-		viewConnections = append(
-			viewConnections,
-			ViewConnectionInput{
-				RepositoryName: graphql.String(k),
-				Filter:         graphql.String(v),
-			})
+	for repo, conns := range connections {
+		for _, conn := range conns {
+			viewConnections = append(
+				viewConnections,
+				ViewConnectionInput{
+					RepositoryName: graphql.String(repo),
+					Filter:         graphql.String(conn),
+				})
+		}
 	}
 
 	variables := map[string]interface{}{

@@ -21,7 +21,8 @@ import (
 )
 
 func newViewsUpdateCmd() *cobra.Command {
-	connections := make(map[string]string)
+	connsFlag := make(map[string]string)
+	connections := make(map[string][]string)
 	description := ""
 
 	cmd := cobra.Command{
@@ -43,11 +44,14 @@ namely "repo1" and "repo2":
 			viewName := args[0]
 			client := NewApiClient(cmd)
 
-			if len(connections) == 0 && description == "" {
+			if len(connsFlag) == 0 && description == "" {
 				exitOnError(cmd, fmt.Errorf("you must specify at least one flag"), "Nothing specified to update")
 			}
 
-			if len(connections) > 0 {
+			if len(connsFlag) > 0 {
+				for k, v := range connsFlag {
+					connections[k] = append(connections[k], v)
+				}
 				err := client.Views().UpdateConnections(viewName, connections)
 				exitOnError(cmd, err, "Error updating view connections")
 			}
@@ -61,7 +65,7 @@ namely "repo1" and "repo2":
 		},
 	}
 
-	cmd.Flags().StringToStringVar(&connections, "connection", connections, "Sets a repository connection with the chosen filter.")
+	cmd.Flags().StringToStringVar(&connsFlag, "connection", connsFlag, "Sets a repository connection with the chosen filter.")
 	cmd.Flags().StringVar(&description, "description", description, "Sets the view description.")
 
 	return &cmd
