@@ -1,9 +1,10 @@
 package api
 
 import (
-	graphql "github.com/cli/shurcooL-graphql"
 	"sort"
 	"strings"
+
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 type Views struct {
@@ -66,7 +67,8 @@ func (c *Views) Get(name string) (*View, error) {
 }
 
 type ViewListItem struct {
-	Name string
+	Name     string
+	Typename string `graphql:"__typename"`
 }
 
 func (c *Views) List() ([]ViewListItem, error) {

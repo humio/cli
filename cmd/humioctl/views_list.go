@@ -19,8 +19,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const viewTypeName = "View"
+
 func newViewsListCmd() *cobra.Command {
-	return &cobra.Command{
+	var viewOnly bool
+
+	cmd := cobra.Command{
 		Use:   "list",
 		Short: "Lists all views you have access to",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -31,10 +35,18 @@ func newViewsListCmd() *cobra.Command {
 
 			rows := make([][]format.Value, len(views))
 			for i, view := range views {
-				rows[i] = []format.Value{format.String(view.Name)}
+				if viewOnly && view.Typename == viewTypeName {
+					rows[i] = []format.Value{format.String(view.Name)}
+				} else {
+					rows[i] = []format.Value{format.String(view.Name)}
+				}
 			}
 
 			printOverviewTable(cmd, []string{"Name"}, rows)
 		},
 	}
+
+	cmd.Flags().BoolVar(&viewOnly, "only-views", false, "Display only Views (i.e. do not include Repositories).")
+
+	return &cmd
 }
