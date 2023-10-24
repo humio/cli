@@ -21,7 +21,8 @@ import (
 )
 
 func newViewsCreateCmd() *cobra.Command {
-	connections := make(map[string]string)
+	connsFlag := make(map[string]string)
+	connections := make(map[string][]string)
 	description := ""
 
 	cmd := &cobra.Command{
@@ -33,18 +34,22 @@ The "description" flag is a string, and the "connections" flag is a comma-separa
 where the key is the repository name and the value being the filter applied to the queries in that repository.
 If you want to query all events you can specify a wildcard as the filter.
 
-Here's an example that updates a view named "important-view" to search all data in the two repositories,
+Here's an example that creates a view named "important-view" to search all data in the two repositories,
 namely "repo1" and "repo2":
 
-  $ humioctl views update important-view --connection "repo1=*,repo2=*" --description "very important view"
+  $ humioctl views create important-view --connection "repo1=*,repo2=*" --description "very important view"
 `,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			viewName := args[0]
 			client := NewApiClient(cmd)
 
-			if len(connections) == 0 {
+			if len(connsFlag) == 0 {
 				exitOnError(cmd, fmt.Errorf("you must specify at least view connection"), "Error creating view")
+			}
+
+			for k, v := range connsFlag {
+				connections[k] = append(connections[k], v)
 			}
 
 			err := client.Views().Create(viewName, description, connections)
@@ -54,7 +59,7 @@ namely "repo1" and "repo2":
 		},
 	}
 
-	cmd.Flags().StringToStringVar(&connections, "connection", connections, "Sets a repository connection with the chosen filter.")
+	cmd.Flags().StringToStringVar(&connsFlag, "connection", connsFlag, "Sets a repository connection with the chosen filter.")
 	cmd.Flags().StringVar(&description, "description", description, "Sets an optional description")
 
 	return cmd
