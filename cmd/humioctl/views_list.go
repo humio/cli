@@ -35,8 +35,10 @@ func newViewsListCmd() *cobra.Command {
 
 			rows := make([][]format.Value, len(views))
 			for i, view := range views {
-				if viewOnly && view.Typename == viewTypeName {
-					rows[i] = []format.Value{format.String(view.Name)}
+				if viewOnly {
+					if view.Typename == viewTypeName {
+						rows[i] = []format.Value{format.String(view.Name)}
+					}
 				} else {
 					rows[i] = []format.Value{format.String(view.Name)}
 				}
