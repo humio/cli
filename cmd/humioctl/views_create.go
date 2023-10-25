@@ -16,13 +16,16 @@ package main
 
 import (
 	"fmt"
+	graphql "github.com/cli/shurcooL-graphql"
+	"github.com/humio/cli/api"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
 
 func newViewsCreateCmd() *cobra.Command {
-	connsFlag := make(map[string]string)
-	connections := make(map[string][]string)
+	connsFlag := []string{}
+	connections := []api.ViewConnectionInput{}
 	description := ""
 
 	cmd := &cobra.Command{
@@ -37,7 +40,7 @@ If you want to query all events you can specify a wildcard as the filter.
 Here's an example that creates a view named "important-view" to search all data in the two repositories,
 namely "repo1" and "repo2":
 
-  $ humioctl views create important-view --connection "repo1=*,repo2=*" --description "very important view"
+  $ humioctl views create important-view --connection "repo1=*" --connection "repo2=*" --description "very important view"
 `,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -48,8 +51,21 @@ namely "repo1" and "repo2":
 				exitOnError(cmd, fmt.Errorf("you must specify at least view connection"), "Error creating view")
 			}
 
-			for k, v := range connsFlag {
-				connections[k] = append(connections[k], v)
+			for _, v := range connsFlag {
+				parts := strings.SplitN(v, "=", 2)
+				if len(parts) != 2 {
+					exitOnError(cmd, fmt.Errorf("all connections must follow the format: <repoName>=<filterString>"), "Error updating view connections")
+				}
+
+				repo := parts[0]
+				filter := parts[1]
+
+				connections = append(
+					connections,
+					api.ViewConnectionInput{
+						RepositoryName: graphql.String(repo),
+						Filter:         graphql.String(filter),
+					})
 			}
 
 			err := client.Views().Create(viewName, description, connections)
@@ -59,7 +75,7 @@ namely "repo1" and "repo2":
 		},
 	}
 
-	cmd.Flags().StringToStringVar(&connsFlag, "connection", connsFlag, "Sets a repository connection with the chosen filter.")
+	cmd.Flags().StringArrayVar(&connsFlag, "connection", connsFlag, "Sets a repository connection with the chosen filter in format: <repoName>=<filterString>")
 	cmd.Flags().StringVar(&description, "description", description, "Sets an optional description")
 
 	return cmd

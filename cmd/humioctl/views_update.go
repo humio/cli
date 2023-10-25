@@ -16,13 +16,17 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/humio/cli/api"
+
+	graphql "github.com/cli/shurcooL-graphql"
 	"github.com/spf13/cobra"
 )
 
 func newViewsUpdateCmd() *cobra.Command {
-	connsFlag := make(map[string]string)
-	connections := make(map[string][]string)
+	connsFlag := []string{}
+	connections := []api.ViewConnectionInput{}
 	description := ""
 
 	cmd := cobra.Command{
@@ -30,14 +34,13 @@ func newViewsUpdateCmd() *cobra.Command {
 		Short: "Updates the settings of a view",
 		Long: `Updates the settings of a view with the provided arguments.
 
-The "description" flag is a string, and the "connections" flag is a comma-separated list of key-value pairs
-where the key is the repository name and the value being the filter applied to the queries in that repository.
+The "description" flag can be specified multiple times for adding multiple connections to the view.
 If you want to query all events you can specify a wildcard as the filter.
 
 Here's an example that updates a view named "important-view" to search all data in the two repositories,
 namely "repo1" and "repo2":
 
-  $ humioctl views update important-view --connection "repo1=*,repo2=*" --description "very important view"
+  $ humioctl views update important-view --connection "repo1=*" --connection="repo2=*" --description "very important view"
 `,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -49,8 +52,21 @@ namely "repo1" and "repo2":
 			}
 
 			if len(connsFlag) > 0 {
-				for k, v := range connsFlag {
-					connections[k] = append(connections[k], v)
+				for _, v := range connsFlag {
+					parts := strings.SplitN(v, "=", 2)
+					if len(parts) != 2 {
+						exitOnError(cmd, fmt.Errorf("all connections must follow the format: <repoName>=<filterString>"), "Error updating view connections")
+					}
+
+					repo := parts[0]
+					filter := parts[1]
+
+					connections = append(
+						connections,
+						api.ViewConnectionInput{
+							RepositoryName: graphql.String(repo),
+							Filter:         graphql.String(filter),
+						})
 				}
 				err := client.Views().UpdateConnections(viewName, connections)
 				exitOnError(cmd, err, "Error updating view connections")
@@ -65,7 +81,7 @@ namely "repo1" and "repo2":
 		},
 	}
 
-	cmd.Flags().StringToStringVar(&connsFlag, "connection", connsFlag, "Sets a repository connection with the chosen filter.")
+	cmd.Flags().StringArrayVar(&connsFlag, "connection", connsFlag, "Sets a repository connection with the chosen filter in format: <repoName>=<filterString>")
 	cmd.Flags().StringVar(&description, "description", description, "Sets the view description.")
 
 	return &cmd

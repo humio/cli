@@ -89,7 +89,7 @@ type ViewConnectionInput struct {
 	Filter         graphql.String `json:"filter"`
 }
 
-func (c *Views) Create(name, description string, connections map[string][]string) error {
+func (c *Views) Create(name, description string, connections []ViewConnectionInput) error {
 	var mutation struct {
 		CreateView struct {
 			Name        string
@@ -97,22 +97,10 @@ func (c *Views) Create(name, description string, connections map[string][]string
 		} `graphql:"createView(name: $name, description: $description, connections: $connections)"`
 	}
 
-	var viewConnections []ViewConnectionInput
-	for repo, conns := range connections {
-		for _, conn := range conns {
-			viewConnections = append(
-				viewConnections,
-				ViewConnectionInput{
-					RepositoryName: graphql.String(repo),
-					Filter:         graphql.String(conn),
-				})
-		}
-	}
-
 	variables := map[string]interface{}{
 		"name":        graphql.String(name),
 		"description": graphql.String(description),
-		"connections": viewConnections,
+		"connections": connections,
 	}
 
 	return c.client.Mutate(&mutation, variables)
@@ -133,28 +121,16 @@ func (c *Views) Delete(name, reason string) error {
 	return c.client.Mutate(&mutation, variables)
 }
 
-func (c *Views) UpdateConnections(name string, connections map[string][]string) error {
+func (c *Views) UpdateConnections(name string, connections []ViewConnectionInput) error {
 	var mutation struct {
 		View struct {
 			Name string
 		} `graphql:"updateView(viewName: $viewName, connections: $connections)"`
 	}
 
-	var viewConnections []ViewConnectionInput
-	for repo, conns := range connections {
-		for _, conn := range conns {
-			viewConnections = append(
-				viewConnections,
-				ViewConnectionInput{
-					RepositoryName: graphql.String(repo),
-					Filter:         graphql.String(conn),
-				})
-		}
-	}
-
 	variables := map[string]interface{}{
 		"viewName":    graphql.String(name),
-		"connections": viewConnections,
+		"connections": connections,
 	}
 
 	return c.client.Mutate(&mutation, variables)
