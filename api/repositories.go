@@ -77,13 +77,8 @@ func (r *Repositories) Create(name string) error {
 }
 
 func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error {
-	existingRepo, err := r.Get(name)
-	if err != nil {
-		return err
-	}
-	safeToDelete := allowDataDeletion || existingRepo.SpaceUsed == 0
-	if !safeToDelete {
-		return fmt.Errorf("repository contains data and data deletion not allowed")
+	if !allowDataDeletion {
+		return fmt.Errorf("repository may contain data and data deletion not enabled")
 	}
 
 	var mutation struct {
@@ -153,7 +148,6 @@ func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays flo
 	if err != nil {
 		return err
 	}
-	safeToDelete := allowDataDeletion || existingRepo.SpaceUsed == 0
 
 	var mutation struct {
 		UpdateRetention struct {
@@ -167,8 +161,8 @@ func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays flo
 	}
 	if retentionInDays > 0 {
 		if retentionInDays < existingRepo.RetentionDays || existingRepo.RetentionDays == 0 {
-			if !safeToDelete {
-				return fmt.Errorf("repository contains data and data deletion not allowed")
+			if !allowDataDeletion {
+				return fmt.Errorf("repository may contain data and data deletion not enabled")
 			}
 		}
 		variables["retentionInDays"] = graphql.Float(retentionInDays)
@@ -182,7 +176,6 @@ func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB floa
 	if err != nil {
 		return err
 	}
-	safeToDelete := allowDataDeletion || existingRepo.SpaceUsed == 0
 
 	var mutation struct {
 		UpdateRetention struct {
@@ -196,8 +189,8 @@ func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB floa
 	}
 	if storageInGB > 0 {
 		if storageInGB < existingRepo.StorageRetentionSizeGB || existingRepo.StorageRetentionSizeGB == 0 {
-			if !safeToDelete {
-				return fmt.Errorf("repository contains data and data deletion not allowed")
+			if !allowDataDeletion {
+				return fmt.Errorf("repository may contain data and data deletion not enabled")
 			}
 		}
 		variables["storageInGB"] = graphql.Float(storageInGB)
@@ -211,7 +204,6 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 	if err != nil {
 		return err
 	}
-	safeToDelete := allowDataDeletion || existingRepo.SpaceUsed == 0
 
 	var mutation struct {
 		UpdateRetention struct {
@@ -225,8 +217,8 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 	}
 	if ingestInGB > 0 {
 		if ingestInGB < existingRepo.IngestRetentionSizeGB || existingRepo.IngestRetentionSizeGB == 0 {
-			if !safeToDelete {
-				return fmt.Errorf("repository contains data and data deletion not allowed")
+			if !allowDataDeletion {
+				return fmt.Errorf("repository may contain data and data deletion not enabled")
 			}
 		}
 		variables["ingestInGB"] = graphql.Float(ingestInGB)
