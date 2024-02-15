@@ -6,19 +6,25 @@ import (
 )
 
 type Alert struct {
-	ID                 string   `graphql:"id"                 yaml:"-"                     json:"id"`
-	Name               string   `graphql:"name"               yaml:"name"                  json:"name"`
-	QueryString        string   `graphql:"queryString"        yaml:"queryString"           json:"queryString"`
-	QueryStart         string   `graphql:"queryStart"         yaml:"queryStart"            json:"queryStart"`
-	ThrottleField      string   `graphql:"throttleField"      yaml:"throttleField"         json:"throttleField"`
-	TimeOfLastTrigger  int      `graphql:"timeOfLastTrigger"  yaml:"timeOfLastTrigger"     json:"timeOfLastTrigger"`
-	IsStarred          bool     `graphql:"isStarred"          yaml:"isStarred"             json:"isStarred"`
-	Description        string   `graphql:"description"        yaml:"description,omitempty" json:"description"`
-	ThrottleTimeMillis int      `graphql:"throttleTimeMillis" yaml:"throttleTimeMillis"    json:"throttleTimeMillis"`
-	Enabled            bool     `graphql:"enabled"            yaml:"enabled"               json:"enabled"`
-	Actions            []string `graphql:"actions"            yaml:"actions"               json:"actions"`
-	Labels             []string `graphql:"labels"             yaml:"labels,omitempty"      json:"labels,omitempty"`
-	LastError          string   `graphql:"lastError"          yaml:"lastError"             json:"lastError"`
+	ID                 string         `graphql:"id"                 yaml:"-"                     json:"id"`
+	Name               string         `graphql:"name"               yaml:"name"                  json:"name"`
+	QueryString        string         `graphql:"queryString"        yaml:"queryString"           json:"queryString"`
+	QueryStart         string         `graphql:"queryStart"         yaml:"queryStart"            json:"queryStart"`
+	ThrottleField      string         `graphql:"throttleField"      yaml:"throttleField"         json:"throttleField"`
+	TimeOfLastTrigger  int            `graphql:"timeOfLastTrigger"  yaml:"timeOfLastTrigger"     json:"timeOfLastTrigger"`
+	IsStarred          bool           `graphql:"isStarred"          yaml:"isStarred"             json:"isStarred"`
+	Description        string         `graphql:"description"        yaml:"description,omitempty" json:"description"`
+	ThrottleTimeMillis int            `graphql:"throttleTimeMillis" yaml:"throttleTimeMillis"    json:"throttleTimeMillis"`
+	Enabled            bool           `graphql:"enabled"            yaml:"enabled"               json:"enabled"`
+	Actions            []string       `graphql:"actions"            yaml:"actions"               json:"actions"`
+	Labels             []string       `graphql:"labels"             yaml:"labels,omitempty"      json:"labels,omitempty"`
+	LastError          string         `graphql:"lastError"          yaml:"lastError"             json:"lastError"`
+	QueryOwnership     QueryOwnership `graphql:"queryOwnership"     yaml:"queryOwnershipType" json:"queryOwnershipType"`
+}
+
+type QueryOwnership struct {
+	ID            string `graphql:"id"         yaml:"-"            json:"id"`
+	OwnershipType string `graphql:"__typename" yaml:"ownershipType" json:"ownershipType"`
 }
 
 type Long int64
@@ -108,6 +114,13 @@ func (a *Alerts) Update(viewName string, newAlert *Alert) (*Alert, error) {
 	return &alert, nil
 }
 
+type QueryOwnershipType string
+
+const (
+	QueryOwnershipTypeUser         QueryOwnershipType = "User"
+	QueryOwnershipTypeOrganization QueryOwnershipType = "Organization"
+)
+
 func (a *Alerts) Add(viewName string, newAlert *Alert) (*Alert, error) {
 	if newAlert == nil {
 		return nil, fmt.Errorf("newAlert must not be nil")
@@ -115,7 +128,7 @@ func (a *Alerts) Add(viewName string, newAlert *Alert) (*Alert, error) {
 	var alert Alert
 
 	var mutation struct {
-		Alert `graphql:"createAlert(input: { viewName: $viewName, name: $alertName, description: $description, queryString: $queryString, queryStart: $queryStart, throttleTimeMillis: $throttleTimeMillis, throttleField: $throttleField, enabled: $enabled, actions: $actions, labels: $labels })"`
+		Alert `graphql:"createAlert(input: { viewName: $viewName, name: $alertName, description: $description, queryString: $queryString, queryStart: $queryStart, throttleTimeMillis: $throttleTimeMillis, throttleField: $throttleField, enabled: $enabled, actions: $actions, labels: $labels, queryOwnershipType: $queryOwnershipType })"`
 	}
 
 	actions := make([]graphql.String, len(newAlert.Actions))
@@ -131,6 +144,12 @@ func (a *Alerts) Add(viewName string, newAlert *Alert) (*Alert, error) {
 		field := graphql.String(newAlert.ThrottleField)
 		throttleField = &field
 	}
+
+	var queryOwnershipType = QueryOwnershipTypeUser
+	if newAlert.QueryOwnership.OwnershipType == "OrganizationOwnership" {
+		queryOwnershipType = QueryOwnershipTypeOrganization
+	}
+
 	variables := map[string]interface{}{
 		"viewName":           graphql.String(viewName),
 		"alertName":          graphql.String(newAlert.Name),
@@ -142,6 +161,7 @@ func (a *Alerts) Add(viewName string, newAlert *Alert) (*Alert, error) {
 		"enabled":            graphql.Boolean(newAlert.Enabled),
 		"actions":            actions,
 		"labels":             labels,
+		"queryOwnershipType": queryOwnershipType,
 	}
 
 	err := a.client.Mutate(&mutation, variables)
