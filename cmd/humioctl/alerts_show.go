@@ -47,6 +47,8 @@ func newAlertsShowCmd() *cobra.Command {
 				{format.String("Last Error"), format.String(alert.LastError)},
 				{format.String("Throttle Field"), format.String(alert.ThrottleField)},
 				{format.String("Time Of Last Trigger"), format.Int(alert.TimeOfLastTrigger)},
+				{format.String("Run As User ID"), format.String(alert.RunAsUserID)},
+				{format.String("Query Ownership Type"), format.String(alert.QueryOwnershipType)},
 			}
 
 			printDetailsTable(cmd, details)
