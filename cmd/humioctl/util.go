@@ -3,6 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
 	"net/url"
 	"os"
 	"strconv"
@@ -136,4 +138,23 @@ func printDetailsTable(cmd *cobra.Command, data [][]format.Value) {
 
 func printOverviewTable(cmd *cobra.Command, header []string, data [][]format.Value) {
 	format.FormatterFromCommand(cmd).Table(header, data)
+}
+
+func getBytesFromFile(filePath string) ([]byte, error) {
+	// #nosec G304
+	return os.ReadFile(filePath)
+}
+
+func getBytesFromURL(url string) ([]byte, error) {
+	// #nosec G107
+	response, err := http.Get(url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		_ = response.Body.Close()
+	}()
+	return io.ReadAll(response.Body)
 }
