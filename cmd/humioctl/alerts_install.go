@@ -39,12 +39,9 @@ The install command allows you to install alerts from a URL or from a local file
 
   $ humioctl alerts install viewName --name alertName --url=https://example.com/acme/alert.yaml
 
-  $ humioctl alerts install viewName --name alertName --file=./parser.yaml
+  $ humioctl alerts install viewName --name alertName --file=./alert.yaml
 
   $ humioctl alerts install viewName --file=./alert.yaml
-
-By default 'install' will not override existing alerts with the same name.
-Use the --force flag to update existing alerts with conflicting names.
 `,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
