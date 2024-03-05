@@ -16,10 +16,16 @@ type Alert struct {
 	Actions            []graphql.String `graphql:"actions"`
 	Labels             []graphql.String `graphql:"labels"`
 	LastError          graphql.String   `graphql:"lastError"`
-	QueryOwnership     QueryOwnership   `graphql:"queryOwnership"`
-	RunAsUser          struct {
+	QueryOwnership     struct {
+		ID                     graphql.String         `graphql:"id"`
+		QueryOwnershipTypeName QueryOwnershipTypeName `graphql:"__typename"`
+	} `graphql:"queryOwnership"`
+	RunAsUser struct {
 		ID graphql.String `graphql:"id"`
 	} `graphql:"runAsUser"`
+}
+
+type QueryOwnership struct {
 }
 
 type CreateAlert struct {
@@ -52,3 +58,19 @@ type UpdateAlert struct {
 	Labels             []graphql.String   `json:"labels"`
 	QueryOwnershipType QueryOwnershipType `json:"queryOwnershipType,omitempty"`
 }
+
+type Long int64
+
+type QueryOwnershipTypeName string
+
+const (
+	QueryOwnershipTypeNameOrganization QueryOwnershipTypeName = "OrganizationOwnership"
+	QueryOwnershipTypeNameUser         QueryOwnershipTypeName = "UserOwnership"
+)
+
+type QueryOwnershipType string
+
+const (
+	QueryOwnershipTypeUser         QueryOwnershipType = "User"
+	QueryOwnershipTypeOrganization QueryOwnershipType = "Organization"
+)

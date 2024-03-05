@@ -121,7 +121,6 @@ Common Management Commands:
 	rootCmd.AddCommand(newClusterCmd())
 	rootCmd.AddCommand(newActionsCmd())
 	rootCmd.AddCommand(newAlertsCmd())
-	rootCmd.AddCommand(newFilterAlertsCmd())
 	rootCmd.AddCommand(newPackagesCmd())
 	rootCmd.AddCommand(newGroupsCmd())
 	rootCmd.AddCommand(newFilesCmd())
