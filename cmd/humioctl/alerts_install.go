@@ -52,9 +52,9 @@ The install command allows you to install alerts from a URL or from a local file
 			// if we only got <view> you must supply --file or --url.
 			if l := len(args); l == 1 {
 				if filePath != "" {
-					content, err = getAlertFromFile(filePath)
+					content, err = getBytesFromFile(filePath)
 				} else if url != "" {
-					content, err = getURLAlert(url)
+					content, err = getBytesFromURL(url)
 				} else {
 					cmd.Printf("You must specify a path using --file or --url\n")
 					os.Exit(1)
