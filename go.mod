@@ -1,6 +1,8 @@
 module github.com/humio/cli
 
-go 1.20
+go 1.21
+
+toolchain go1.21.3
 
 require (
 	github.com/cli/shurcooL-graphql v0.0.4
@@ -40,9 +42,4 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-)
-
-replace (
-	golang.org/x/image v0.0.0-20190802002840-cff245a6509b => golang.org/x/image v0.10.0
-	golang.org/x/net v0.10.0 => golang.org/x/net v0.13.0
 )
