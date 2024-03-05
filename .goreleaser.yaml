@@ -3,6 +3,8 @@ project_name: humioctl
 builds:
   - binary: humioctl
     main: ./cmd/humioctl
+    env:
+      - CGO_ENABLED=0
     goos:
       - windows
       - darwin
