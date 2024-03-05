@@ -16,8 +16,6 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"net/http"
 	"os"
 
 	"github.com/humio/cli/api"
@@ -85,23 +83,4 @@ The install command allows you to install filter alerts from a URL or from a loc
 	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the filter alert under a specific name, ignoring the `name` attribute in the filter alert file.")
 
 	return &cmd
-}
-
-func getBytesFromFile(filePath string) ([]byte, error) {
-	// #nosec G304
-	return os.ReadFile(filePath)
-}
-
-func getBytesFromURL(url string) ([]byte, error) {
-	// #nosec G107
-	response, err := http.Get(url)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer func() {
-		_ = response.Body.Close()
-	}()
-	return io.ReadAll(response.Body)
 }
