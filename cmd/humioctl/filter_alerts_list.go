@@ -36,18 +36,12 @@ func newFilterAlertsListCmd() *cobra.Command {
 			var rows = make([][]format.Value, len(filterAlerts))
 			for i := range filterAlerts {
 				filterAlert := filterAlerts[i]
-
-				var actionNames = make([]string, len(filterAlert.ActionNames))
-				for j := range filterAlert.ActionNames {
-					actionNames[j] = filterAlert.ActionNames[j]
-				}
-
 				rows[i] = []format.Value{
 					format.String(filterAlert.ID),
 					format.String(filterAlert.Name),
 					format.Bool(filterAlert.Enabled),
 					format.String(filterAlert.Description),
-					format.String(strings.Join(actionNames, ", ")),
+					format.String(strings.Join(filterAlert.ActionNames, ", ")),
 					format.String(strings.Join(filterAlert.Labels, ", ")),
 					format.String(filterAlert.RunAsUserID),
 					format.String(filterAlert.QueryOwnershipType),

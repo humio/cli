@@ -159,7 +159,7 @@ func (fa *FilterAlerts) Delete(viewName, filterAlertID string) error {
 
 	err := fa.client.Mutate(&mutation, variables)
 
-	if mutation.DidDelete == false {
+	if !mutation.DidDelete {
 		return fmt.Errorf("unable to remove filter alert in repo/view '%s' with id '%s'", viewName, filterAlertID)
 	}
 
