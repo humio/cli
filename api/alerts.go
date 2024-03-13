@@ -20,7 +20,7 @@ type Alert struct {
 	Actions            []string `graphql:"actions"            yaml:"actions"                      json:"actions"`
 	Labels             []string `graphql:"labels"             yaml:"labels,omitempty"             json:"labels,omitempty"`
 	LastError          string   `graphql:"lastError"          yaml:"lastError"                    json:"lastError"`
-	RunAsUserID        string   `graphql:"runAsUserId"        yaml:"runAsUserId,omitempty"        json:"runAsUserID,omitempty"`
+	RunAsUserID        string   `graphql:"runAsUserId"        yaml:"runAsUserId,omitempty"        json:"runAsUserId,omitempty"`
 	QueryOwnershipType string   `graphql:"queryOwnershipType" yaml:"queryOwnershipType,omitempty" json:"queryOwnershipType,omitempty"`
 }
 

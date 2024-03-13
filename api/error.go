@@ -1,13 +1,16 @@
 package api
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type EntityType string
 
 const (
-	EntityTypeParser EntityType = "parser"
-	EntityTypeAction EntityType = "action"
-	EntityTypeAlert  EntityType = "alert"
+	EntityTypeParser      EntityType = "parser"
+	EntityTypeAction      EntityType = "action"
+	EntityTypeAlert       EntityType = "alert"
+	EntityTypeFilterAlert EntityType = "filter-alert"
 )
 
 func (e EntityType) String() string {
@@ -48,6 +51,13 @@ func ActionNotFound(name string) error {
 func AlertNotFound(name string) error {
 	return EntityNotFound{
 		entityType: EntityTypeAlert,
+		key:        name,
+	}
+}
+
+func FilterAlertNotFound(name string) error {
+	return EntityNotFound{
+		entityType: EntityTypeFilterAlert,
 		key:        name,
 	}
 }

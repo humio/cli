@@ -1,4 +1,4 @@
-// Copyright © 2020 Humio Ltd.
+// Copyright © 2024 CrowdStrike
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,23 +23,21 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func newAlertsInstallCmd() *cobra.Command {
+func newFilterAlertsInstallCmd() *cobra.Command {
 	var (
-		filePath, url, name string
+		filePath, url string
 	)
 
 	cmd := cobra.Command{
 		Use:   "install [flags] <view>",
-		Short: "Installs an alert in a view",
-		Long: `Install an alert from a URL or from a local file.
+		Short: "Installs a filter alert in a view",
+		Long: `Install a filter alert from a URL or from a local file.
 
-The install command allows you to install alerts from a URL or from a local file, e.g.
+The install command allows you to install filter alerts from a URL or from a local file, e.g.
 
-  $ humioctl alerts install viewName --name alertName --url=https://example.com/acme/alert.yaml
+  $ humioctl filter-alerts install viewName --url=https://example.com/acme/filter-alert.yaml
 
-  $ humioctl alerts install viewName --name alertName --file=./alert.yaml
-
-  $ humioctl alerts install viewName --file=./alert.yaml
+  $ humioctl filter-alerts install viewName --file=./filter-alert.yaml
 `,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -58,29 +56,24 @@ The install command allows you to install alerts from a URL or from a local file
 					os.Exit(1)
 				}
 			}
-			exitOnError(cmd, err, "Failed to load the alert")
+			exitOnError(cmd, err, "Could to load the filter alert")
 
 			client := NewApiClient(cmd)
 			viewName := args[0]
 
-			var alert api.Alert
-			err = yaml.Unmarshal(content, &alert)
-			exitOnError(cmd, err, "Alert format is invalid")
+			var filterAlert api.FilterAlert
+			err = yaml.Unmarshal(content, &filterAlert)
+			exitOnError(cmd, err, "Could not unmarshal the filter alert")
 
-			if name != "" {
-				alert.Name = name
-			}
+			_, err = client.FilterAlerts().Create(viewName, &filterAlert)
+			exitOnError(cmd, err, "Could not create the filter alert")
 
-			_, err = client.Alerts().Add(viewName, &alert)
-			exitOnError(cmd, err, "Error creating alert")
-
-			fmt.Fprintln(cmd.OutOrStdout(), "Alert created")
+			fmt.Fprintln(cmd.OutOrStdout(), "Filter alert created")
 		},
 	}
 
-	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the alert to install.")
-	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the alert file from.")
-	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the alert under a specific name, ignoring the `name` attribute in the alert file.")
-
+	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the filter alert to install.")
+	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the filter alert file from.")
+	cmd.MarkFlagsMutuallyExclusive("file", "url")
 	return &cmd
 }
