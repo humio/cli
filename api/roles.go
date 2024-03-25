@@ -10,29 +10,30 @@ type Roles struct {
 }
 
 type Role struct {
-	ID                string   `graphql:"id"`
-	DisplayName       string   `graphql:"displayName"`
-	Color             string   `graphql:"color"`
-	Description       string   `graphql:"description"`
-	ViewPermissions   []string `graphql:"viewPermissions"`
-	SystemPermissions []string `graphql:"systemPermissions"`
-	OrgPermissions    []string `graphql:"organizationPermissions"`
+	ID                      string   `graphql:"id"`
+	DisplayName             string   `graphql:"displayName"`
+	Color                   string   `graphql:"color"`
+	Description             string   `graphql:"description"`
+	ViewPermissions         []string `graphql:"viewPermissions"`
+	SystemPermissions       []string `graphql:"systemPermissions"`
+	OrganizationPermissions []string `graphql:"organizationPermissions"`
 }
 
 func (c *Client) Roles() *Roles { return &Roles{client: c} }
 
 func (r *Roles) List() ([]Role, error) {
 	var query struct {
-		Roles struct {
-			Roles []Role
-		} `graphql:"roles()"`
+		Roles []Role `graphql:"roles"`
 	}
 
 	err := r.client.Query(&query, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	var RolesList []Role
 	if err == nil {
-		RolesList = query.Roles.Roles
+		RolesList = query.Roles
 	}
 
 	return RolesList, nil
@@ -53,8 +54,8 @@ func (r *Roles) Create(role *Role) error {
 		systemPermissions[i] = graphql.String(permission)
 	}
 
-	orgPermissions := make([]graphql.String, len(role.OrgPermissions))
-	for i, permission := range role.OrgPermissions {
+	orgPermissions := make([]graphql.String, len(role.OrganizationPermissions))
+	for i, permission := range role.OrganizationPermissions {
 		orgPermissions[i] = graphql.String(permission)
 	}
 
@@ -94,8 +95,8 @@ func (r *Roles) Update(rolename string, newRole *Role) error {
 		systemPermissions[i] = graphql.String(permission)
 	}
 
-	orgPermissions := make([]graphql.String, len(newRole.OrgPermissions))
-	for i, permission := range newRole.OrgPermissions {
+	orgPermissions := make([]graphql.String, len(newRole.OrganizationPermissions))
+	for i, permission := range newRole.OrganizationPermissions {
 		orgPermissions[i] = graphql.String(permission)
 	}
 
@@ -133,8 +134,8 @@ func (r *Roles) RemoveRole(rolename string) error {
 }
 
 func (r *Roles) Get(rolename string) (*Role, error) {
-	roleId, err := r.GetRoleID(rolename)
-	if roleId == "" || err != nil {
+	roleID, err := r.GetRoleID(rolename)
+	if roleID == "" || err != nil {
 		return nil, fmt.Errorf("unable to get role id")
 	}
 
@@ -143,10 +144,10 @@ func (r *Roles) Get(rolename string) (*Role, error) {
 	}
 
 	variables := map[string]interface{}{
-		"roleId": graphql.String(roleId),
+		"roleId": graphql.String(roleID),
 	}
 
-	err = r.client.Query(query, variables)
+	err = r.client.Query(&query, variables)
 	if err != nil {
 		return nil, err
 	}
