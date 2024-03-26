@@ -17,10 +17,6 @@ type FilterAlert struct {
 	QueryOwnership      QueryOwnership   `graphql:"queryOwnership"`
 }
 
-type Action struct {
-	Name graphql.String `graphql:"name"`
-}
-
 type CreateFilterAlert struct {
 	ViewName            RepoOrViewName     `json:"viewName"`
 	Name                graphql.String     `json:"name"`
