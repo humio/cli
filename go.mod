@@ -1,6 +1,6 @@
 module github.com/humio/cli
 
-go 1.20
+go 1.22
 
 require (
 	github.com/cli/shurcooL-graphql v0.0.4
@@ -12,8 +12,8 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.18.2
 	golang.org/x/sync v0.5.0
-	golang.org/x/sys v0.18.0
-	golang.org/x/term v0.13.0
+	golang.org/x/sys v0.19.0
+	golang.org/x/term v0.19.0
 	gopkg.in/yaml.v2 v2.2.8
 )
 
@@ -39,9 +39,4 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-)
-
-replace (
-	golang.org/x/image v0.0.0-20190802002840-cff245a6509b => golang.org/x/image v0.10.0
-	golang.org/x/net v0.10.0 => golang.org/x/net v0.13.0
 )
