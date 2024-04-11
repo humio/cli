@@ -115,6 +115,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newCompletionCmd())
 	rootCmd.AddCommand(newLicenseCmd())
 	rootCmd.AddCommand(newReposCmd())
+	rootCmd.AddCommand(newRolesCmd())
 	rootCmd.AddCommand(newSearchCmd())
 	rootCmd.AddCommand(newStatusCmd())
 	rootCmd.AddCommand(newHealthCmd())
