@@ -39,7 +39,5 @@ func newRolesCreateCmd() *cobra.Command {
 	cmd.Flags().StringSliceVar(&sysPermissionsFlag, "system-permissions", []string{}, "The system permissions of the role.")
 	cmd.Flags().StringSliceVar(&viewPermissionsFlag, "view-permissions", []string{}, "(required) The view permissions of the role.")
 
-	cmd.MarkFlagRequired("view-permissions")
-
 	return &cmd
 }

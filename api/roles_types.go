@@ -185,35 +185,6 @@ const (
 	ObjectActionReadWRiteAndVisible ObjectAction = "ReadWRiteAndVisible"
 )
 
-func (op OrganizationPermission) Get(p string) (OrganizationPermission, bool) {
-	switch OrganizationPermission(p) {
-	case OrganizationPermissionExportOrganization,
-		OrganizationPermissionChangeOrganizationPermissions,
-		OrganizationPermissionChangeIdentityProviders,
-		OrganizationPermissionCreateRepository,
-		OrganizationPermissionManageUsers,
-		OrganizationPermissionViewUsage,
-		OrganizationPermissionChangeOrganizationSettings,
-		OrganizationPermissionChangeIPFilters,
-		OrganizationPermissionChangeSessions,
-		OrganizationPermissionChangeAllViewOrRepositoryPermissions,
-		OrganizationPermissionIngestAcrossAllReposWithinOrganization,
-		OrganizationPermissionDeleteAllRepositories,
-		OrganizationPermissionDeleteAllViews,
-		OrganizationPermissionViewAllInternalNotifications,
-		OrganizationPermissionChangeFleetManagement,
-		OrganizationPermissionViewFleetManagement,
-		OrganizationPermissionChangeTriggersToRunAsOtherUsers,
-		OrganizationPermissionMonitorQueries,
-		OrganizationPermissionBlockQueries,
-		OrganizationPermissionChangeSecurityPolicies,
-		OrganizationPermissionChangeExternalFunctions:
-		return OrganizationPermission(p), true
-	default:
-		return "", false
-	}
-}
-
 // AddRoleInput is the struct of input variables passed to the `createRole()` API mutation.
 type AddRoleInput struct {
 	DisplayName       graphql.String            `json:"displayName"`
@@ -223,14 +194,17 @@ type AddRoleInput struct {
 	OrgPermissions    *[]OrganizationPermission `json:"organizationPermissions,omitempty"`
 	ObjectAction      *ObjectAction             `json:"objectAction,omitempty"` // Undocumented field.
 
-	// Oddly, the GraphQL API does not expose this field.
-	// Description *graphql.String `json:"description"`
+	// Oddly, the GraphQL API does not expose this field for the createRole mutation.
+	// Description *graphql.String `json:"description,omitempty"`
 }
 
 // NewAddRoleInput returns the AddRoleInput struct initialized with the given values.
 func NewAddRoleInput(name string, color *string, viewPermissions, systemPermissions, orgPermissions []string) AddRoleInput {
 	ari := AddRoleInput{
 		DisplayName: graphql.String(name),
+
+		// ViewPermissions is a required field, so we initialize it with an empty slice.
+		ViewPermissions: make([]ViewPermission, 0, len(viewPermissions)),
 	}
 
 	if color != nil {
@@ -243,21 +217,27 @@ func NewAddRoleInput(name string, color *string, viewPermissions, systemPermissi
 		}
 	}
 
-	sysPerms := make([]SystemPermission, 0, len(systemPermissions))
-	for _, permission := range systemPermissions {
-		if sp, ok := SystemPermission(permission).Get(permission); ok {
-			sysPerms = append(sysPerms, sp)
+	if len(systemPermissions) > 0 {
+		if ari.SystemPermissions == nil {
+			ari.SystemPermissions = &[]SystemPermission{}
+		}
+		for _, permission := range systemPermissions {
+			if sp, ok := SystemPermission(permission).Get(permission); ok {
+				*ari.SystemPermissions = append(*ari.SystemPermissions, sp)
+			}
 		}
 	}
-	ari.SystemPermissions = &sysPerms
 
-	orgPerms := make([]OrganizationPermission, 0, len(orgPermissions))
-	for _, permission := range orgPermissions {
-		if op, ok := OrganizationPermission(permission).Get(permission); ok {
-			orgPerms = append(orgPerms, op)
+	if len(orgPermissions) > 0 {
+		if ari.OrgPermissions == nil {
+			ari.OrgPermissions = &[]OrganizationPermission{}
+		}
+		for _, permission := range orgPermissions {
+			if op, ok := OrganizationPermission(permission).Get(permission); ok {
+				*ari.OrgPermissions = append(*ari.OrgPermissions, op)
+			}
 		}
 	}
-	ari.OrgPermissions = &orgPerms
 	return ari
 }
 

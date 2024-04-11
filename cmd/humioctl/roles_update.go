@@ -9,6 +9,7 @@ import (
 )
 
 func newRolesUpdateCmd() *cobra.Command {
+	var appendFlag bool
 	var colorFlag stringPtrFlag
 	var orgPermissionsFlag, sysPermissionsFlag, viewPermissionsFlag []string
 
@@ -39,13 +40,14 @@ func newRolesUpdateCmd() *cobra.Command {
 				colorFlag.value,
 			)
 
-			err = client.Roles().Update(roleUpdate)
+			err = client.Roles().Update(roleUpdate, appendFlag)
 			exitOnError(cmd, err, "Error updating role")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully updated role %q\n", roleName)
 		},
 	}
 
+	cmd.Flags().BoolVar(&appendFlag, "append", false, "Append the specified permissions to the existing permissions.")
 	cmd.Flags().Var(&colorFlag, "color", "The color of the role in RGB hexadecimal, e.g. #FF0000.")
 	cmd.Flags().StringSliceVar(&orgPermissionsFlag, "org-permissions", []string{}, "The organization permissions of the role.")
 	cmd.Flags().StringSliceVar(&sysPermissionsFlag, "system-permissions", []string{}, "The system permissions of the role.")

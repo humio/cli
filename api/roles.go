@@ -55,7 +55,28 @@ func (r *Roles) Create(role AddRoleInput) error {
 }
 
 // Upddate updates a role in the Humio instance.
-func (r *Roles) Update(role UpdateRoleInput) error {
+func (r *Roles) Update(update UpdateRoleInput, appendOp bool) error {
+	if appendOp {
+		role, err := r.Get(string(update.DisplayName))
+		if err != nil {
+			return err
+		}
+		for _, viewPerm := range role.ViewPermissions {
+			if vp, ok := ViewPermission(viewPerm).Get(viewPerm); ok {
+				update.ViewPermissions = append(update.ViewPermissions, vp)
+			}
+		}
+		for _, sysPerm := range role.SystemPermissions {
+			if sp, ok := SystemPermission(sysPerm).Get(sysPerm); ok {
+				*update.SystemPermissions = append(*update.SystemPermissions, sp)
+			}
+		}
+		for _, orgPerm := range role.OrgPermissions {
+			if op, ok := OrganizationPermission(orgPerm).Get(orgPerm); ok {
+				*update.OrganizationPermissions = append(*update.OrganizationPermissions, op)
+			}
+		}
+	}
 	var mutation struct {
 		Results struct {
 			Role struct {
@@ -65,7 +86,7 @@ func (r *Roles) Update(role UpdateRoleInput) error {
 	}
 
 	variables := map[string]interface{}{
-		"input": role,
+		"input": update,
 	}
 
 	return r.client.Mutate(&mutation, variables)
