@@ -42,11 +42,7 @@ func main() {
 			fmt.Fprintf(os.Stderr, "failed to execute template: %v\n", err)
 			os.Exit(1)
 		}
-		if filename == "api/enum.go" {
-			fmt.Println(buf.String())
-		}
 		out, err := format.Source(buf.Bytes())
-		_ = out
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed to format source: %v\n", err)
 			os.Exit(1)
