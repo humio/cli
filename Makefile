@@ -13,6 +13,9 @@ $(BIN_PATH): FORCE
 
 build: $(BIN_PATH)
 
+api_gen: cmd/api_gen/generate.go
+	go run ./cmd/api_gen
+
 clean:
 	go clean
 	@rm -rf bin/
