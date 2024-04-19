@@ -9,3 +9,4 @@ node_modules/
 *.exe
 *.test
 *.prof
+.envrc
