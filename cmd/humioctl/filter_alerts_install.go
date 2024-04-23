@@ -61,11 +61,11 @@ The install command allows you to install filter alerts from a URL or from a loc
 			client := NewApiClient(cmd)
 			viewName := args[0]
 
-			var filterAlert api.FilterAlert
+			var filterAlert api.CreateFilterAlert
 			err = yaml.Unmarshal(content, &filterAlert)
 			exitOnError(cmd, err, "Could not unmarshal the filter alert")
 
-			_, err = client.FilterAlerts().Create(viewName, &filterAlert)
+			_, err = client.FilterAlerts().Create(viewName, filterAlert)
 			exitOnError(cmd, err, "Could not create the filter alert")
 
 			fmt.Fprintln(cmd.OutOrStdout(), "Filter alert created")

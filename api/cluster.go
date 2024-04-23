@@ -76,11 +76,6 @@ type StoragePartitionInput struct {
 	NodeIDs []graphql.Int `json:"nodeIds"`
 }
 
-type IngestPartitionInput struct {
-	ID      graphql.Int   `json:"id"`
-	NodeIDs []graphql.Int `json:"nodeIds"`
-}
-
 // Deprecated: returns dummy data as of LogScale 1.88
 func (c *Clusters) UpdateStoragePartitionScheme(desired []StoragePartitionInput) error {
 	var mutation struct {

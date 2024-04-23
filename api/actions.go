@@ -2,19 +2,9 @@ package api
 
 import (
 	"fmt"
-	graphql "github.com/cli/shurcooL-graphql"
 	"reflect"
-)
 
-const (
-	ActionTypeEmail            string = "EmailAction"
-	ActionTypeHumioRepo        string = "HumioRepoAction"
-	ActionTypeOpsGenie         string = "OpsGenieAction"
-	ActionTypePagerDuty        string = "PagerDutyAction"
-	ActionTypeSlack            string = "SlackAction"
-	ActionTypeSlackPostMessage string = "SlackPostMessageAction"
-	ActionTypeVictorOps        string = "VictorOpsAction"
-	ActionTypeWebhook          string = "WebhookAction"
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 type Actions struct {
@@ -44,11 +34,6 @@ type PagerDutyAction struct {
 	UseProxy   bool   `graphql:"pagerDutyUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
-type SlackFieldEntryInput struct {
-	FieldName string `graphql:"fieldName" yaml:"fieldName" json:"fieldName"`
-	Value     string `graphql:"value"     yaml:"value" json:"value"`
-}
-
 type SlackAction struct {
 	Url      string                 `graphql:"slackUrl: url" yaml:"url,omitempty" json:"url,omitempty"`
 	Fields   []SlackFieldEntryInput `graphql:"slackFields: fields" yaml:"fields,omitempty" json:"fields,omitempty"`
@@ -66,11 +51,6 @@ type VictorOpsAction struct {
 	MessageType string `graphql:"victorOpsMessageType: messageType" yaml:"messageType,omitempty" json:"messageType,omitempty"`
 	NotifyUrl   string `graphql:"victorOpsNotifyUrl: notifyUrl" yaml:"notifyUrl,omitempty" json:"notifyUrl,omitempty"`
 	UseProxy    bool   `graphql:"victorOpsUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
-}
-
-type HttpHeaderEntryInput struct {
-	Header string `graphql:"header"  yaml:"header" json:"header"`
-	Value  string `graphql:"value"   yaml:"value" json:"value"`
 }
 
 type WebhookAction struct {

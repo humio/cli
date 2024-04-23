@@ -85,11 +85,6 @@ func (c *Views) List() ([]ViewListItem, error) {
 	return query.View, err
 }
 
-type ViewConnectionInput struct {
-	RepositoryName graphql.String `json:"repositoryName"`
-	Filter         graphql.String `json:"filter"`
-}
-
 func (c *Views) Create(name, description string, connections []ViewConnectionInput) error {
 	var mutation struct {
 		CreateView struct {

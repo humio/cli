@@ -34,6 +34,12 @@ func newAlertsShowCmd() *cobra.Command {
 			alert, err := client.Alerts().Get(repoOrViewName, name)
 			exitOnError(cmd, err, "Error fetching alert")
 
+			var owner string
+			if alert.QueryOwnership.Organization.Name != "" {
+				owner = alert.QueryOwnership.Organization.Name
+			} else {
+				owner = alert.QueryOwnership.User.Username
+			}
 			details := [][]format.Value{
 				{format.String("ID"), format.String(alert.ID)},
 				{format.String("Name"), format.String(alert.Name)},
@@ -47,8 +53,8 @@ func newAlertsShowCmd() *cobra.Command {
 				{format.String("Last Error"), format.String(alert.LastError)},
 				{format.String("Throttle Field"), format.String(alert.ThrottleField)},
 				{format.String("Time Of Last Trigger"), format.Int(alert.TimeOfLastTrigger)},
-				{format.String("Run As User ID"), format.String(alert.RunAsUserID)},
-				{format.String("Query Ownership Type"), format.String(alert.QueryOwnershipType)},
+				{format.String("Run As User"), format.String(alert.RunAsUser.Username)},
+				{format.String("Query Owner"), format.String(owner)},
 			}
 
 			printDetailsTable(cmd, details)

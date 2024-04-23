@@ -63,15 +63,11 @@ The install command allows you to install alerts from a URL or from a local file
 			client := NewApiClient(cmd)
 			viewName := args[0]
 
-			var alert api.Alert
+			var alert api.CreateAlert
 			err = yaml.Unmarshal(content, &alert)
 			exitOnError(cmd, err, "Alert format is invalid")
 
-			if name != "" {
-				alert.Name = name
-			}
-
-			_, err = client.Alerts().Add(viewName, &alert)
+			_, err = client.Alerts().Add(viewName, alert)
 			exitOnError(cmd, err, "Error creating alert")
 
 			fmt.Fprintln(cmd.OutOrStdout(), "Alert created")

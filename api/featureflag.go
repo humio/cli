@@ -2,8 +2,6 @@ package api
 
 import graphql "github.com/cli/shurcooL-graphql"
 
-type FeatureFlag string
-
 type FeatureFlags struct {
 	c *Client
 }
