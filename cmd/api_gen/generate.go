@@ -151,18 +151,27 @@ type Input interface{}
 {{end}}{{end}}
 
 {{- define "inputObject" -}}
-// {{.name}} {{if .description}}{{.description | clean | endSentence}}{{end}}
-type {{.name}} struct {{"{"}}{{range .inputFields}}{{if eq .type.kind "NON_NULL"}}
-
-	// {{if .description}}{{.description | clean | fullSentence}} {{end}}(Required)
-	{{.name | identifier}} {{.type | type}} ` + "`" + `json:"{{.name}}"` + "`" + `{{end}}{{end}}
-
-{{range .inputFields}}{{if ne .type.kind "NON_NULL"}}
-
-		// {{if .description}}{{.description | clean | fullSentence}} {{end}}(Optional)
-		{{.name | identifier}} {{.type | type}} ` + "`" + `json:"{{.name}},omitempty"` + "`" + `{{end}}{{end}}
-	}
-
+{{- if .description}}
+// {{.name}} {{.description | clean | endSentence}}
+{{- end}}
+type {{.name}} struct {
+	{{- range .inputFields}}
+		{{- if eq .type.kind "NON_NULL"}}
+			{{- if .description}}
+				{{printf "// %s" .description | clean | fullSentence}}
+			{{- end}}
+			{{.name | identifier}} {{.type | type}} ` + "`" + `json:"{{.name}}"` + "`" + ` // Required
+		{{- end}}
+	{{- end }}
+	{{- range .inputFields}}
+		{{- if ne .type.kind "NON_NULL"}}
+			{{- if .description}}
+				{{printf "// %s" .description | clean | fullSentence}}
+			{{- end}}
+			{{.name | identifier}} {{.type | type}} ` + "`" + `json:"{{.name}},omitempty"` + "`" + ` // Optional
+		{{- end}}
+	{{- end}}
+}
 {{- end -}}
 `),
 }

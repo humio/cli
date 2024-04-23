@@ -17,4887 +17,2886 @@ type Input interface{}
 
 // ActionSecurityPoliciesInput represents data for updating action security policies.
 type ActionSecurityPoliciesInput struct {
-
-	// Whether email actions should be enabled. (Required)
-	EmailActionEnabled graphql.Boolean `json:"emailActionEnabled"`
-
-	// Whether repository actions should be enabled. (Required)
-	RepoActionEnabled graphql.Boolean `json:"repoActionEnabled"`
-
-	// Whether OpsGenie actions should be enabled. (Required)
-	OpsGenieActionEnabled graphql.Boolean `json:"opsGenieActionEnabled"`
-
-	// Whether PagerDuty actions should be enabled. (Required)
-	PagerDutyActionEnabled graphql.Boolean `json:"pagerDutyActionEnabled"`
-
-	// Whether single channel Slack actions should be enabled. (Required)
-	SlackSingleChannelActionEnabled graphql.Boolean `json:"slackSingleChannelActionEnabled"`
-
-	// Whether multi channel Slack actions should be enabled. (Required)
-	SlackMultiChannelActionEnabled graphql.Boolean `json:"slackMultiChannelActionEnabled"`
-
-	// Whether upload file actions should be enabled. (Required)
-	UploadFileActionEnabled graphql.Boolean `json:"uploadFileActionEnabled"`
-
-	// Whether VictorOps actions should be enabled. (Required)
-	VictorOpsActionEnabled graphql.Boolean `json:"victorOpsActionEnabled"`
-
-	// Whether webhook actions should be enabled. (Required)
-	WebhookActionEnabled graphql.Boolean `json:"webhookActionEnabled"`
-
-	// Allow list of glob patterns restricting which recipient can be set on email actions. E.g. *@organization.com. Empty list means no recipients allowed whereas not setting it means all allowed. (Optional)
-	EmailActionRecipientAllowList *[]graphql.String `json:"emailActionRecipientAllowList,omitempty"`
-
-	// Allow list of glob patterns restricting which URL can be set on webhook actions. E.g. *.organization.com. Empty means no recipients allowed whereas null means all. (Optional)
-	WebhookActionURLAllowList *[]graphql.String `json:"webhookActionUrlAllowList,omitempty"`
+	// Whether email actions should be enabled.
+	EmailActionEnabled graphql.Boolean `json:"emailActionEnabled"` // Required
+	// Whether repository actions should be enabled.
+	RepoActionEnabled graphql.Boolean `json:"repoActionEnabled"` // Required
+	// Whether OpsGenie actions should be enabled.
+	OpsGenieActionEnabled graphql.Boolean `json:"opsGenieActionEnabled"` // Required
+	// Whether PagerDuty actions should be enabled.
+	PagerDutyActionEnabled graphql.Boolean `json:"pagerDutyActionEnabled"` // Required
+	// Whether single channel Slack actions should be enabled.
+	SlackSingleChannelActionEnabled graphql.Boolean `json:"slackSingleChannelActionEnabled"` // Required
+	// Whether multi channel Slack actions should be enabled.
+	SlackMultiChannelActionEnabled graphql.Boolean `json:"slackMultiChannelActionEnabled"` // Required
+	// Whether upload file actions should be enabled.
+	UploadFileActionEnabled graphql.Boolean `json:"uploadFileActionEnabled"` // Required
+	// Whether VictorOps actions should be enabled.
+	VictorOpsActionEnabled graphql.Boolean `json:"victorOpsActionEnabled"` // Required
+	// Whether webhook actions should be enabled.
+	WebhookActionEnabled graphql.Boolean `json:"webhookActionEnabled"` // Required
+	// Allow list of glob patterns restricting which recipient can be set on email actions. E.g. *@organization.com. Empty list means no recipients allowed whereas not setting it means all allowed.
+	EmailActionRecipientAllowList *[]graphql.String `json:"emailActionRecipientAllowList,omitempty"` // Optional
+	// Allow list of glob patterns restricting which URL can be set on webhook actions. E.g. *.organization.com. Empty means no recipients allowed whereas null means all.
+	WebhookActionURLAllowList *[]graphql.String `json:"webhookActionUrlAllowList,omitempty"` // Optional
 }
 
 // AddAlertLabel represents data for adding a label to an alert.
 type AddAlertLabel struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the alert. (Required)
-	ID graphql.String `json:"id"`
-
-	// Label for the alert. (Required)
-	Label graphql.String `json:"label"`
+	// Name of the view of the alert.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the alert.
+	ID graphql.String `json:"id"` // Required
+	// Label for the alert.
+	Label graphql.String `json:"label"` // Required
 }
 
 // AddAliasMappingInput represents [PREVIEW: This functionality is still under development and can change without warning.] Input object for field addFieldAliasMapping.
 type AddAliasMappingInput struct {
-
-	// ID of the schema that the alias mapping exists on. (Required)
-	SchemaID graphql.String `json:"schemaId"`
-
-	// Alias mapping to be added to this schema. (Required)
-	AliasMapping AliasMappingInput `json:"aliasMapping"`
+	// ID of the schema that the alias mapping exists on.
+	SchemaID graphql.String `json:"schemaId"` // Required
+	// Alias mapping to be added to this schema.
+	AliasMapping AliasMappingInput `json:"aliasMapping"` // Required
 }
 
 // AddIngestTokenV3Input represents input data to create an ingest token.
 type AddIngestTokenV3Input struct {
-
-	// Name of the repository. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// Name of the new ingest token. (Required)
-	Name graphql.String `json:"name"`
-
-	// Optional id or name of the parser to assign to the ingest token. Parsers in packages can be referred to as "packagescope/packagename:parsername". (Optional)
-	Parser *graphql.String `json:"parser,omitempty"`
-
-	// Optional custom token string. This requires special permissions and root privileges. (Optional)
-	CustomToken *graphql.String `json:"customToken,omitempty"`
+	// Name of the repository.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// Name of the new ingest token.
+	Name graphql.String `json:"name"` // Required
+	// Optional id or name of the parser to assign to the ingest token. Parsers in packages can be referred to as "packagescope/packagename:parsername".
+	Parser *graphql.String `json:"parser,omitempty"` // Optional
+	// Optional custom token string. This requires special permissions and root privileges.
+	CustomToken *graphql.String `json:"customToken,omitempty"` // Optional
 }
 
 // AddLabelScheduledSearch represents data for adding a label to a scheduled search.
 type AddLabelScheduledSearch struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the scheduled search. (Required)
-	ID graphql.String `json:"id"`
-
-	// Label for the scheduled search. (Required)
-	Label graphql.String `json:"label"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the scheduled search.
+	ID graphql.String `json:"id"` // Required
+	// Label for the scheduled search.
+	Label graphql.String `json:"label"` // Required
 }
 
-// AddLimitInput
 type AddLimitInput struct {
-
-	// (Required)
-	LimitName graphql.String `json:"limitName"`
-
-	// (Required)
-	AllowLogin graphql.Boolean `json:"allowLogin"`
-
-	// (Required)
-	DailyIngest Long `json:"dailyIngest"`
-
-	// (Required)
-	Retention graphql.Int `json:"retention"`
-
-	// (Required)
-	AllowSelfService graphql.Boolean `json:"allowSelfService"`
-
-	// (Optional)
-	Expiration *Long `json:"expiration,omitempty"`
-
-	// (Optional)
-	ContractVersion *Organizations__ContractVersion `json:"contractVersion,omitempty"`
-
-	// (Optional)
-	UserLimit *graphql.Int `json:"userLimit,omitempty"`
+	LimitName        graphql.String                  `json:"limitName"`                 // Required
+	AllowLogin       graphql.Boolean                 `json:"allowLogin"`                // Required
+	DailyIngest      Long                            `json:"dailyIngest"`               // Required
+	Retention        graphql.Int                     `json:"retention"`                 // Required
+	AllowSelfService graphql.Boolean                 `json:"allowSelfService"`          // Required
+	Expiration       *Long                           `json:"expiration,omitempty"`      // Optional
+	ContractVersion  *Organizations__ContractVersion `json:"contractVersion,omitempty"` // Optional
+	UserLimit        *graphql.Int                    `json:"userLimit,omitempty"`       // Optional
 }
 
-// AddLimitV2Input
 type AddLimitV2Input struct {
-
-	// (Required)
-	LimitName graphql.String `json:"limitName"`
-
-	// (Required)
-	AllowLogin graphql.Boolean `json:"allowLogin"`
-
-	// (Required)
-	DailyIngestContractualType Organizations__ContractualType `json:"dailyIngestContractualType"`
-
-	// (Required)
-	StorageContractualType Organizations__ContractualType `json:"storageContractualType"`
-
-	// (Required)
-	DailyScanContractualType Organizations__ContractualType `json:"dailyScanContractualType"`
-
-	// (Required)
-	MeasurementType Organizations__MeasurementType `json:"measurementType"`
-
-	// (Required)
-	Retention graphql.Int `json:"retention"`
-
-	// (Required)
-	MaxRetention graphql.Int `json:"maxRetention"`
-
-	// (Required)
-	AllowSelfService graphql.Boolean `json:"allowSelfService"`
-
-	// (Required)
-	DateType graphql.String `json:"dateType"`
-
-	// (Required)
-	Trial graphql.Boolean `json:"trial"`
-
-	// (Required)
-	AllowFlightControl graphql.Boolean `json:"allowFlightControl"`
-
-	// (Optional)
-	DailyIngest *Long `json:"dailyIngest,omitempty"`
-
-	// (Optional)
-	DailyScan *Long `json:"dailyScan,omitempty"`
-
-	// (Optional)
-	Expiration *Long `json:"expiration,omitempty"`
-
-	// (Optional)
-	UserLimit *graphql.Int `json:"userLimit,omitempty"`
-
-	// (Optional)
-	RepositoryLimit *graphql.Int `json:"repositoryLimit,omitempty"`
+	LimitName                  graphql.String                 `json:"limitName"`                  // Required
+	AllowLogin                 graphql.Boolean                `json:"allowLogin"`                 // Required
+	DailyIngestContractualType Organizations__ContractualType `json:"dailyIngestContractualType"` // Required
+	StorageContractualType     Organizations__ContractualType `json:"storageContractualType"`     // Required
+	DailyScanContractualType   Organizations__ContractualType `json:"dailyScanContractualType"`   // Required
+	MeasurementType            Organizations__MeasurementType `json:"measurementType"`            // Required
+	Retention                  graphql.Int                    `json:"retention"`                  // Required
+	MaxRetention               graphql.Int                    `json:"maxRetention"`               // Required
+	AllowSelfService           graphql.Boolean                `json:"allowSelfService"`           // Required
+	DateType                   graphql.String                 `json:"dateType"`                   // Required
+	Trial                      graphql.Boolean                `json:"trial"`                      // Required
+	AllowFlightControl         graphql.Boolean                `json:"allowFlightControl"`         // Required
+	DailyIngest                *Long                          `json:"dailyIngest,omitempty"`      // Optional
+	DailyScan                  *Long                          `json:"dailyScan,omitempty"`        // Optional
+	Expiration                 *Long                          `json:"expiration,omitempty"`       // Optional
+	UserLimit                  *graphql.Int                   `json:"userLimit,omitempty"`        // Optional
+	RepositoryLimit            *graphql.Int                   `json:"repositoryLimit,omitempty"`  // Optional
 }
 
-// AddRecentQueryInput
 type AddRecentQueryInput struct {
-
-	// (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// (Required)
-	QueryArguments []InputDictionaryEntry `json:"queryArguments"`
-
-	// (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// (Required)
-	Start graphql.String `json:"start"`
-
-	// (Required)
-	End graphql.String `json:"end"`
-
-	// (Required)
-	IsLive graphql.Boolean `json:"isLive"`
-
-	// (Optional)
-	WidgetType *graphql.String `json:"widgetType,omitempty"`
-
-	// (Optional)
-	Options *JSON `json:"options,omitempty"`
+	ViewName       graphql.String         `json:"viewName"`             // Required
+	QueryArguments []InputDictionaryEntry `json:"queryArguments"`       // Required
+	QueryString    graphql.String         `json:"queryString"`          // Required
+	Start          graphql.String         `json:"start"`                // Required
+	End            graphql.String         `json:"end"`                  // Required
+	IsLive         graphql.Boolean        `json:"isLive"`               // Required
+	WidgetType     *graphql.String        `json:"widgetType,omitempty"` // Optional
+	Options        *JSON                  `json:"options,omitempty"`    // Optional
 }
 
-// AddRoleInput
 type AddRoleInput struct {
-
-	// (Required)
-	DisplayName graphql.String `json:"displayName"`
-
-	// (Required)
-	ViewPermissions []Permission `json:"viewPermissions"`
-
-	// (Optional)
-	Color *graphql.String `json:"color,omitempty"`
-
-	// (Optional)
-	SystemPermissions *[]SystemPermission `json:"systemPermissions,omitempty"`
-
-	// (Optional)
-	OrganizationPermissions *[]OrganizationPermission `json:"organizationPermissions,omitempty"`
-
-	// (Optional)
-	ObjectAction *ObjectAction `json:"objectAction,omitempty"`
+	DisplayName             graphql.String            `json:"displayName"`                       // Required
+	ViewPermissions         []Permission              `json:"viewPermissions"`                   // Required
+	Color                   *graphql.String           `json:"color,omitempty"`                   // Optional
+	SystemPermissions       *[]SystemPermission       `json:"systemPermissions,omitempty"`       // Optional
+	OrganizationPermissions *[]OrganizationPermission `json:"organizationPermissions,omitempty"` // Optional
+	ObjectAction            *ObjectAction             `json:"objectAction,omitempty"`            // Optional
 }
 
 // AddStarScheduledSearch represents data for adding a star to a scheduled search.
 type AddStarScheduledSearch struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the scheduled search. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the scheduled search.
+	ID graphql.String `json:"id"` // Required
 }
 
 // AddStarToAlert represents data for adding a star to an alert.
 type AddStarToAlert struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the alert.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the alert.
+	ID graphql.String `json:"id"` // Required
 }
 
-// AddStarToFieldInput
 type AddStarToFieldInput struct {
-
-	// (Required)
-	FieldName graphql.String `json:"fieldName"`
-
-	// (Required)
-	SearchDomainName graphql.String `json:"searchDomainName"`
+	FieldName        graphql.String `json:"fieldName"`        // Required
+	SearchDomainName graphql.String `json:"searchDomainName"` // Required
 }
 
-// AddStarToQueryInput
 type AddStarToQueryInput struct {
-
-	// (Required)
-	SavedQueryID graphql.String `json:"savedQueryId"`
-
-	// (Required)
-	SearchDomainName graphql.String `json:"searchDomainName"`
+	SavedQueryID     graphql.String `json:"savedQueryId"`     // Required
+	SearchDomainName graphql.String `json:"searchDomainName"` // Required
 }
 
-// AddSubdomainInput
 type AddSubdomainInput struct {
-
-	// (Required)
-	Subdomain graphql.String `json:"subdomain"`
+	Subdomain graphql.String `json:"subdomain"` // Required
 }
 
 // AddToBlocklistByIdInput represents data for adding to the blocklist.
 type AddToBlocklistByIdInput struct {
-
-	// The pattern to match. (Required)
-	Pattern graphql.String `json:"pattern"`
-
-	// Whether the pattern should be matched exactly or interpreted as a regex pattern. (Required)
-	Type BlockedQueryMatcherType `json:"type"`
-
-	// Limits the scope of the pattern to a specific view preventing matching queries from execution in that context only. (Optional)
-	ViewID *graphql.String `json:"viewId,omitempty"`
-
-	// Whether to apply the pattern globally. Requires the ManageCluster permission. (Optional)
-	ClusterWide *graphql.Boolean `json:"clusterWide,omitempty"`
+	// The pattern to match.
+	Pattern graphql.String `json:"pattern"` // Required
+	// Whether the pattern should be matched exactly or interpreted as a regex pattern.
+	Type BlockedQueryMatcherType `json:"type"` // Required
+	// Limits the scope of the pattern to a specific view preventing matching queries from execution in that context only.
+	ViewID *graphql.String `json:"viewId,omitempty"` // Optional
+	// Whether to apply the pattern globally. Requires the ManageCluster permission.
+	ClusterWide *graphql.Boolean `json:"clusterWide,omitempty"` // Optional
 }
 
 // AddToBlocklistInput represents data for adding to the blocklist.
 type AddToBlocklistInput struct {
-
-	// The pattern to match. (Required)
-	Pattern graphql.String `json:"pattern"`
-
-	// Whether the pattern should be matched exactly or interpreted as a regex pattern. (Required)
-	Type BlockedQueryMatcherType `json:"type"`
-
-	// Limits the scope of the pattern to a specific view preventing matching queries from execution in that context only. (Optional)
-	ViewName *graphql.String `json:"viewName,omitempty"`
-
-	// Whether to apply the pattern globally. Requires the ManageCluster permission. (Optional)
-	ClusterWide *graphql.Boolean `json:"clusterWide,omitempty"`
+	// The pattern to match.
+	Pattern graphql.String `json:"pattern"` // Required
+	// Whether the pattern should be matched exactly or interpreted as a regex pattern.
+	Type BlockedQueryMatcherType `json:"type"` // Required
+	// Limits the scope of the pattern to a specific view preventing matching queries from execution in that context only.
+	ViewName *graphql.String `json:"viewName,omitempty"` // Optional
+	// Whether to apply the pattern globally. Requires the ManageCluster permission.
+	ClusterWide *graphql.Boolean `json:"clusterWide,omitempty"` // Optional
 }
 
-// AddUserInput
 type AddUserInput struct {
-
-	// (Required)
-	Username graphql.String `json:"username"`
-
-	// (Optional)
-	Company *graphql.String `json:"company,omitempty"`
-
-	// (Optional)
-	IsRoot *graphql.Boolean `json:"isRoot,omitempty"`
-
-	// (Optional)
-	FirstName *graphql.String `json:"firstName,omitempty"`
-
-	// (Optional)
-	LastName *graphql.String `json:"lastName,omitempty"`
-
-	// (Optional)
-	FullName *graphql.String `json:"fullName,omitempty"`
-
-	// (Optional)
-	Picture *graphql.String `json:"picture,omitempty"`
-
-	// (Optional)
-	Email *graphql.String `json:"email,omitempty"`
-
-	// (Optional)
-	CountryCode *graphql.String `json:"countryCode,omitempty"`
-
-	// (Optional)
-	StateCode *graphql.String `json:"stateCode,omitempty"`
+	Username    graphql.String   `json:"username"`              // Required
+	Company     *graphql.String  `json:"company,omitempty"`     // Optional
+	IsRoot      *graphql.Boolean `json:"isRoot,omitempty"`      // Optional
+	FirstName   *graphql.String  `json:"firstName,omitempty"`   // Optional
+	LastName    *graphql.String  `json:"lastName,omitempty"`    // Optional
+	FullName    *graphql.String  `json:"fullName,omitempty"`    // Optional
+	Picture     *graphql.String  `json:"picture,omitempty"`     // Optional
+	Email       *graphql.String  `json:"email,omitempty"`       // Optional
+	CountryCode *graphql.String  `json:"countryCode,omitempty"` // Optional
+	StateCode   *graphql.String  `json:"stateCode,omitempty"`   // Optional
 }
 
-// AddUserInputV2
 type AddUserInputV2 struct {
-
-	// (Required)
-	Username graphql.String `json:"username"`
-
-	// (Optional)
-	Company *graphql.String `json:"company,omitempty"`
-
-	// (Optional)
-	IsRoot *graphql.Boolean `json:"isRoot,omitempty"`
-
-	// (Optional)
-	FirstName *graphql.String `json:"firstName,omitempty"`
-
-	// (Optional)
-	LastName *graphql.String `json:"lastName,omitempty"`
-
-	// (Optional)
-	FullName *graphql.String `json:"fullName,omitempty"`
-
-	// (Optional)
-	Picture *graphql.String `json:"picture,omitempty"`
-
-	// (Optional)
-	Email *graphql.String `json:"email,omitempty"`
-
-	// (Optional)
-	CountryCode *graphql.String `json:"countryCode,omitempty"`
-
-	// (Optional)
-	StateCode *graphql.String `json:"stateCode,omitempty"`
-
-	// (Optional)
-	SendInvite *graphql.Boolean `json:"sendInvite,omitempty"`
-
-	// (Optional)
-	VerificationToken *graphql.String `json:"verificationToken,omitempty"`
-
-	// (Optional)
-	IsOrgOwner *graphql.Boolean `json:"isOrgOwner,omitempty"`
+	Username          graphql.String   `json:"username"`                    // Required
+	Company           *graphql.String  `json:"company,omitempty"`           // Optional
+	IsRoot            *graphql.Boolean `json:"isRoot,omitempty"`            // Optional
+	FirstName         *graphql.String  `json:"firstName,omitempty"`         // Optional
+	LastName          *graphql.String  `json:"lastName,omitempty"`          // Optional
+	FullName          *graphql.String  `json:"fullName,omitempty"`          // Optional
+	Picture           *graphql.String  `json:"picture,omitempty"`           // Optional
+	Email             *graphql.String  `json:"email,omitempty"`             // Optional
+	CountryCode       *graphql.String  `json:"countryCode,omitempty"`       // Optional
+	StateCode         *graphql.String  `json:"stateCode,omitempty"`         // Optional
+	SendInvite        *graphql.Boolean `json:"sendInvite,omitempty"`        // Optional
+	VerificationToken *graphql.String  `json:"verificationToken,omitempty"` // Optional
+	IsOrgOwner        *graphql.Boolean `json:"isOrgOwner,omitempty"`        // Optional
 }
 
-// AddUsersToGroupInput
 type AddUsersToGroupInput struct {
-
-	// (Required)
-	Users []graphql.String `json:"users"`
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
+	Users   []graphql.String `json:"users"`   // Required
+	GroupID graphql.String   `json:"groupId"` // Required
 }
 
-// AliasInfoInput
 type AliasInfoInput struct {
-
-	// (Required)
-	Source graphql.String `json:"source"`
-
-	// (Required)
-	Alias graphql.String `json:"alias"`
+	Source graphql.String `json:"source"` // Required
+	Alias  graphql.String `json:"alias"`  // Required
 }
 
 // AliasMappingInput represents [PREVIEW: This functionality is still under development and can change without warning.] Input object for creating a new alias mapping.
 type AliasMappingInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Tags []TagsInput `json:"tags"`
-
-	// (Required)
-	Aliases []AliasInfoInput `json:"aliases"`
-
-	// (Optional)
-	OriginalFieldsToKeep *[]graphql.String `json:"originalFieldsToKeep,omitempty"`
+	Name                 graphql.String    `json:"name"`                           // Required
+	Tags                 []TagsInput       `json:"tags"`                           // Required
+	Aliases              []AliasInfoInput  `json:"aliases"`                        // Required
+	OriginalFieldsToKeep *[]graphql.String `json:"originalFieldsToKeep,omitempty"` // Optional
 }
 
-// AnalyticsBrowser
 type AnalyticsBrowser struct {
-
-	// (Required)
-	Info AnalyticsBrowserInfo `json:"info"`
-
-	// (Required)
-	IsChrome graphql.Boolean `json:"isChrome"`
-
-	// (Required)
-	IsChromeHeadless graphql.Boolean `json:"isChromeHeadless"`
-
-	// (Required)
-	IsEdge graphql.Boolean `json:"isEdge"`
-
-	// (Required)
-	IsFirefox graphql.Boolean `json:"isFirefox"`
-
-	// (Required)
-	IsIE graphql.Boolean `json:"isIE"`
-
-	// (Required)
-	IsSafari graphql.Boolean `json:"isSafari"`
+	Info             AnalyticsBrowserInfo `json:"info"`             // Required
+	IsChrome         graphql.Boolean      `json:"isChrome"`         // Required
+	IsChromeHeadless graphql.Boolean      `json:"isChromeHeadless"` // Required
+	IsEdge           graphql.Boolean      `json:"isEdge"`           // Required
+	IsFirefox        graphql.Boolean      `json:"isFirefox"`        // Required
+	IsIE             graphql.Boolean      `json:"isIE"`             // Required
+	IsSafari         graphql.Boolean      `json:"isSafari"`         // Required
 }
 
-// AnalyticsBrowserInfo
 type AnalyticsBrowserInfo struct {
-
-	// (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// (Optional)
-	Version *graphql.String `json:"version,omitempty"`
-
-	// (Optional)
-	Major *graphql.String `json:"major,omitempty"`
+	Name    *graphql.String `json:"name,omitempty"`    // Optional
+	Version *graphql.String `json:"version,omitempty"` // Optional
+	Major   *graphql.String `json:"major,omitempty"`   // Optional
 }
 
-// AnalyticsDevice
 type AnalyticsDevice struct {
-
-	// (Required)
-	Info AnalyticsDeviceInfo `json:"info"`
-
-	// (Required)
-	IsConsole graphql.Boolean `json:"isConsole"`
-
-	// (Required)
-	IsDesktop graphql.Boolean `json:"isDesktop"`
-
-	// (Required)
-	IsMobile graphql.Boolean `json:"isMobile"`
-
-	// (Required)
-	IsTablet graphql.Boolean `json:"isTablet"`
+	Info      AnalyticsDeviceInfo `json:"info"`      // Required
+	IsConsole graphql.Boolean     `json:"isConsole"` // Required
+	IsDesktop graphql.Boolean     `json:"isDesktop"` // Required
+	IsMobile  graphql.Boolean     `json:"isMobile"`  // Required
+	IsTablet  graphql.Boolean     `json:"isTablet"`  // Required
 }
 
-// AnalyticsDeviceInfo
 type AnalyticsDeviceInfo struct {
-
-	// (Optional)
-	Model *graphql.String `json:"model,omitempty"`
-
-	// (Optional)
-	Type *graphql.String `json:"type,omitempty"`
-
-	// (Optional)
-	Vendor *graphql.String `json:"vendor,omitempty"`
+	Model  *graphql.String `json:"model,omitempty"`  // Optional
+	Type   *graphql.String `json:"type,omitempty"`   // Optional
+	Vendor *graphql.String `json:"vendor,omitempty"` // Optional
 }
 
-// AnalyticsEngine
 type AnalyticsEngine struct {
-
-	// (Required)
-	Info AnalyticsInfo `json:"info"`
-
-	// (Required)
-	IsWebkit graphql.Boolean `json:"isWebkit"`
+	Info     AnalyticsInfo   `json:"info"`     // Required
+	IsWebkit graphql.Boolean `json:"isWebkit"` // Required
 }
 
-// AnalyticsFeature
 type AnalyticsFeature struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Value graphql.Boolean `json:"value"`
+	Name  graphql.String  `json:"name"`  // Required
+	Value graphql.Boolean `json:"value"` // Required
 }
 
-// AnalyticsInfo
 type AnalyticsInfo struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Version graphql.String `json:"version"`
+	Name    graphql.String `json:"name"`    // Required
+	Version graphql.String `json:"version"` // Required
 }
 
-// AnalyticsLog
 type AnalyticsLog struct {
-
-	// (Required)
-	Category graphql.String `json:"category"`
-
-	// (Required)
-	Action graphql.String `json:"action"`
-
-	// (Optional)
-	Message *graphql.String `json:"message,omitempty"`
+	Category graphql.String  `json:"category"`          // Required
+	Action   graphql.String  `json:"action"`            // Required
+	Message  *graphql.String `json:"message,omitempty"` // Optional
 }
 
-// AnalyticsLogWithTimestamp
 type AnalyticsLogWithTimestamp struct {
-
-	// (Required)
-	EventID graphql.String `json:"eventId"`
-
-	// (Required)
-	Timestamp Long `json:"timestamp"`
-
-	// (Required)
-	Route graphql.String `json:"route"`
-
-	// (Required)
-	Action graphql.String `json:"action"`
-
-	// (Required)
-	System graphql.String `json:"system"`
-
-	// (Required)
-	Arguments []graphql.String `json:"arguments"`
-
-	// (Required)
-	Features []AnalyticsFeature `json:"features"`
-
-	// (Required)
-	Context graphql.String `json:"context"`
-
-	// (Required)
-	Metrics AnalyticsMetrics `json:"metrics"`
-
-	// (Required)
-	UserAgent AnalyticsUserAgent `json:"userAgent"`
-
-	// (Optional)
-	Feature *graphql.String `json:"feature,omitempty"`
+	EventID   graphql.String     `json:"eventId"`           // Required
+	Timestamp Long               `json:"timestamp"`         // Required
+	Route     graphql.String     `json:"route"`             // Required
+	Action    graphql.String     `json:"action"`            // Required
+	System    graphql.String     `json:"system"`            // Required
+	Arguments []graphql.String   `json:"arguments"`         // Required
+	Features  []AnalyticsFeature `json:"features"`          // Required
+	Context   graphql.String     `json:"context"`           // Required
+	Metrics   AnalyticsMetrics   `json:"metrics"`           // Required
+	UserAgent AnalyticsUserAgent `json:"userAgent"`         // Required
+	Feature   *graphql.String    `json:"feature,omitempty"` // Optional
 }
 
-// AnalyticsMetrics
 type AnalyticsMetrics struct {
-
-	// (Required)
-	Fps graphql.Int `json:"fps"`
+	Fps graphql.Int `json:"fps"` // Required
 }
 
-// AnalyticsOS
 type AnalyticsOS struct {
-
-	// (Required)
-	Info AnalyticsInfo `json:"info"`
-
-	// (Required)
-	IsAndroid graphql.Boolean `json:"isAndroid"`
-
-	// (Required)
-	IsIOS graphql.Boolean `json:"isIOS"`
-
-	// (Required)
-	IsLinux graphql.Boolean `json:"isLinux"`
-
-	// (Required)
-	IsMacOS graphql.Boolean `json:"isMacOS"`
-
-	// (Required)
-	IsWindows graphql.Boolean `json:"isWindows"`
+	Info      AnalyticsInfo   `json:"info"`      // Required
+	IsAndroid graphql.Boolean `json:"isAndroid"` // Required
+	IsIOS     graphql.Boolean `json:"isIOS"`     // Required
+	IsLinux   graphql.Boolean `json:"isLinux"`   // Required
+	IsMacOS   graphql.Boolean `json:"isMacOS"`   // Required
+	IsWindows graphql.Boolean `json:"isWindows"` // Required
 }
 
-// AnalyticsUserAgent
 type AnalyticsUserAgent struct {
-
-	// (Required)
-	Browser AnalyticsBrowser `json:"browser"`
-
-	// (Required)
-	Device AnalyticsDevice `json:"device"`
-
-	// (Required)
-	Engine AnalyticsEngine `json:"engine"`
-
-	// (Required)
-	Os AnalyticsOS `json:"os"`
+	Browser AnalyticsBrowser `json:"browser"` // Required
+	Device  AnalyticsDevice  `json:"device"`  // Required
+	Engine  AnalyticsEngine  `json:"engine"`  // Required
+	Os      AnalyticsOS      `json:"os"`      // Required
 }
 
 // AnalyzeQueryArguments represents arguments for analyzeQuery.
 type AnalyzeQueryArguments struct {
-
-	// (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// (Required)
-	Version LanguageVersionInputType `json:"version"`
-
-	// (Optional)
-	IsLive *graphql.Boolean `json:"isLive,omitempty"`
-
-	// (Optional)
-	Arguments *[]QueryArgumentInputType `json:"arguments,omitempty"`
+	QueryString graphql.String            `json:"queryString"`         // Required
+	Version     LanguageVersionInputType  `json:"version"`             // Required
+	IsLive      *graphql.Boolean          `json:"isLive,omitempty"`    // Optional
+	Arguments   *[]QueryArgumentInputType `json:"arguments,omitempty"` // Optional
 }
 
-// ArgumentInput
 type ArgumentInput struct {
-
-	// (Required)
-	Key graphql.String `json:"key"`
-
-	// (Required)
-	Value graphql.String `json:"value"`
+	Key   graphql.String `json:"key"`   // Required
+	Value graphql.String `json:"value"` // Required
 }
 
 // AssertFieldMissingInput represents an assertion that an event output from a parser test case does not have a given field.
 type AssertFieldMissingInput struct {
-
-	// The field name to assert does not exist. (Required)
-	FieldName graphql.String `json:"fieldName"`
-
-	// The index of the output event to assert on. A parser can output zero to many events from a single input event, so the assertion should point to the specific event it should be asserted on. (Optional)
-	EventIndex *graphql.Int `json:"eventIndex,omitempty"`
+	// The field name to assert does not exist.
+	FieldName graphql.String `json:"fieldName"` // Required
+	// The index of the output event to assert on. A parser can output zero to many events from a single input event, so the assertion should point to the specific event it should be asserted on.
+	EventIndex *graphql.Int `json:"eventIndex,omitempty"` // Optional
 }
 
 // AssertFieldValueEqualsInput represents an assertion that an event output from a parser test case has an expected value for a given field.
 type AssertFieldValueEqualsInput struct {
-
-	// The field name to assert the value of. (Required)
-	FieldName graphql.String `json:"fieldName"`
-
-	// The value the field is expected to contain. (Required)
-	ExpectedValue graphql.String `json:"expectedValue"`
-
-	// The index of the output event to assert on. A parser can output zero to many events from a single input event, so the assertion should point to the specific event it should be asserted on. (Optional)
-	EventIndex *graphql.Int `json:"eventIndex,omitempty"`
+	// The field name to assert the value of.
+	FieldName graphql.String `json:"fieldName"` // Required
+	// The value the field is expected to contain.
+	ExpectedValue graphql.String `json:"expectedValue"` // Required
+	// The index of the output event to assert on. A parser can output zero to many events from a single input event, so the assertion should point to the specific event it should be asserted on.
+	EventIndex *graphql.Int `json:"eventIndex,omitempty"` // Optional
 }
 
-// AssignOrganizationRoleToGroupInput
 type AssignOrganizationRoleToGroupInput struct {
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Required)
-	RoleID graphql.String `json:"roleId"`
+	GroupID graphql.String `json:"groupId"` // Required
+	RoleID  graphql.String `json:"roleId"`  // Required
 }
 
 // AssignParserToIngestTokenInputV2 represents input data to assign a parser to an ingest token.
 type AssignParserToIngestTokenInputV2 struct {
-
-	// Name of the repository. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// Name of the ingest token. (Required)
-	TokenName graphql.String `json:"tokenName"`
-
-	// Id or name of the parser to assign to the ingest token. Parsers in packages can be referred to as "packagescope/packagename:parsername". (Required)
-	Parser graphql.String `json:"parser"`
+	// Name of the repository.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// Name of the ingest token.
+	TokenName graphql.String `json:"tokenName"` // Required
+	// Id or name of the parser to assign to the ingest token. Parsers in packages can be referred to as "packagescope/packagename:parsername".
+	Parser graphql.String `json:"parser"` // Required
 }
 
-// AssignRoleToGroupInput
 type AssignRoleToGroupInput struct {
-
-	// (Required)
-	ViewID graphql.String `json:"viewId"`
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Required)
-	RoleID graphql.String `json:"roleId"`
+	ViewID  graphql.String `json:"viewId"`  // Required
+	GroupID graphql.String `json:"groupId"` // Required
+	RoleID  graphql.String `json:"roleId"`  // Required
 }
 
-// AssignSystemRoleToGroupInput
 type AssignSystemRoleToGroupInput struct {
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Required)
-	RoleID graphql.String `json:"roleId"`
+	GroupID graphql.String `json:"groupId"` // Required
+	RoleID  graphql.String `json:"roleId"`  // Required
 }
 
 // BatchUpdateQueryOwnershipInput represents payload for specifying targets for batch updating query ownership.
 type BatchUpdateQueryOwnershipInput struct {
-
-	// The type to update. (Required)
-	TargetType QueryOwnership_SelectionTargetType `json:"targetType"`
-
-	// The set of ids to update. (Required)
-	IDs []graphql.String `json:"ids"`
+	// The type to update.
+	TargetType QueryOwnership_SelectionTargetType `json:"targetType"` // Required
+	// The set of ids to update.
+	IDs []graphql.String `json:"ids"` // Required
 }
 
-// BlockIngestOnOrgInput
 type BlockIngestOnOrgInput struct {
-
-	// (Required)
-	BlockIngest graphql.Boolean `json:"blockIngest"`
+	BlockIngest graphql.Boolean `json:"blockIngest"` // Required
 }
 
 // CachePolicyInput represents a policy for choosing which segments to cache on local disk when overcommiting local storage with bucket storage. This can be used to protect certain repositories for local storage, such that searching other repositories does not evict them. A cache policy in Humio divides segments into prioritized and non-prioritized segments. When segments needs to be evicted from local storage, we always try evicting non-prioritized segments before prioritized segments. A cache policy can be set either on one of three levels (in order of precedence): - Repo - Org - Globally When determining the cache policy for a repo we first check if there is a cache policy set on the repo. If none is set on the repo, we check the the org. If none is set there either we check the global setting.
 type CachePolicyInput struct {
-
-	// Prioritize caching segments younger than this. (Optional)
-	PrioritizeMillis *Long `json:"prioritizeMillis,omitempty"`
+	// Prioritize caching segments younger than this.
+	PrioritizeMillis *Long `json:"prioritizeMillis,omitempty"` // Optional
 }
 
-// CancelRedactEventsInput
 type CancelRedactEventsInput struct {
-
-	// (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// (Required)
-	RedactionTaskID graphql.String `json:"redactionTaskId"`
+	RepositoryName  graphql.String `json:"repositoryName"`  // Required
+	RedactionTaskID graphql.String `json:"redactionTaskId"` // Required
 }
 
 // CheckLocalFederatedConnectionInput represents data for checking a local federated connection.
 type CheckLocalFederatedConnectionInput struct {
-
-	// Name or id of the local view to connect with. (Required)
-	TargetViewName graphql.String `json:"targetViewName"`
-
-	// Id of the connection to check. (Optional)
-	ConnectionID *graphql.String `json:"connectionId,omitempty"`
-
-	// Additional tags that can be used to filter queries. (Optional)
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"`
-
-	// Filter query that restricts the data visible through this connection. (Optional)
-	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"`
+	// Name or id of the local view to connect with.
+	TargetViewName graphql.String `json:"targetViewName"` // Required
+	// Id of the connection to check.
+	ConnectionID *graphql.String `json:"connectionId,omitempty"` // Optional
+	// Additional tags that can be used to filter queries.
+	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	// Filter query that restricts the data visible through this connection.
+	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
 
 // CheckRemoteFederatedConnectionInput represents data for checking a remote federated connection.
 type CheckRemoteFederatedConnectionInput struct {
-
-	// Public URL of the remote cluster to connect with. (Required)
-	PublicURL graphql.String `json:"publicUrl"`
-
-	// Id of the connection to check. Must be supplied if the token is not supplied. (Optional)
-	ConnectionID *graphql.String `json:"connectionId,omitempty"`
-
-	// Name of the federated view to which the connection belongs. Must be supplied if the token is not supplied. (Optional)
-	FederatedViewName *graphql.String `json:"federatedViewName,omitempty"`
-
-	// Access token for the remote view to connect with. Can be omitted if checking an existing connection with no token change. (Optional)
-	Token *graphql.String `json:"token,omitempty"`
-
-	// Additional tags that can be used to filter queries. (Optional)
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"`
-
-	// Filter query that restricts the data visible through this connection. (Optional)
-	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"`
+	// Public URL of the remote cluster to connect with.
+	PublicURL graphql.String `json:"publicUrl"` // Required
+	// Id of the connection to check. Must be supplied if the token is not supplied.
+	ConnectionID *graphql.String `json:"connectionId,omitempty"` // Optional
+	// Name of the federated view to which the connection belongs. Must be supplied if the token is not supplied.
+	FederatedViewName *graphql.String `json:"federatedViewName,omitempty"` // Optional
+	// Access token for the remote view to connect with. Can be omitted if checking an existing connection with no token change.
+	Token *graphql.String `json:"token,omitempty"` // Optional
+	// Additional tags that can be used to filter queries.
+	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	// Filter query that restricts the data visible through this connection.
+	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
 
 // ClearErrorOnAlertInput represents data for clearing the error on an alert.
 type ClearErrorOnAlertInput struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the alert.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // ClearErrorOnFilterAlertInput represents data for clearing the error on a filter alert.
 type ClearErrorOnFilterAlertInput struct {
-
-	// Name of the view of the filter alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Id of the filter alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the filter alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the filter alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // ClearErrorOnScheduledSearchInput represents data for clearing the error on a scheduled search.
 type ClearErrorOnScheduledSearchInput struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the scheduled search. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the scheduled search.
+	ID graphql.String `json:"id"` // Required
 }
 
-// ClearFieldConfigurationsInput
 type ClearFieldConfigurationsInput struct {
-
-	// (Required)
-	ViewOrRepositoryName graphql.String `json:"viewOrRepositoryName"`
+	ViewOrRepositoryName graphql.String `json:"viewOrRepositoryName"` // Required
 }
 
-// ClearRecentQueriesInput
 type ClearRecentQueriesInput struct {
-
-	// (Required)
-	ViewOrRepositoryName graphql.String `json:"viewOrRepositoryName"`
+	ViewOrRepositoryName graphql.String `json:"viewOrRepositoryName"` // Required
 }
 
 // CloneParserInput represents input data to clone an existing parser.
 type CloneParserInput struct {
-
-	// Name of the new parser. (Required)
-	NewParserName graphql.String `json:"newParserName"`
-
-	// Name of the repository. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// Id of the parser to clone. (Required)
-	ParserIDToClone graphql.String `json:"parserIdToClone"`
+	// Name of the new parser.
+	NewParserName graphql.String `json:"newParserName"` // Required
+	// Name of the repository.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// Id of the parser to clone.
+	ParserIDToClone graphql.String `json:"parserIdToClone"` // Required
 }
 
 // ColumnChange represents whether a column has been added or removed at the given index.
 type ColumnChange struct {
-
-	// Kind of change. (Required)
-	ChangeKind ColumnChangeKind `json:"changeKind"`
-
-	// Index of column to change. (Required)
-	Index graphql.Int `json:"index"`
+	// Kind of change.
+	ChangeKind ColumnChangeKind `json:"changeKind"` // Required
+	// Index of column to change.
+	Index graphql.Int `json:"index"` // Required
 }
 
-// ConfigurationFilter
 type ConfigurationFilter struct {
-
-	// (Required)
-	NewQuery graphql.String `json:"newQuery"`
-
-	// (Optional)
-	OldQuery *graphql.String `json:"oldQuery,omitempty"`
+	NewQuery graphql.String  `json:"newQuery"`           // Required
+	OldQuery *graphql.String `json:"oldQuery,omitempty"` // Optional
 }
 
-// ConflictResolutionConfiguration
 type ConflictResolutionConfiguration struct {
-
-	// (Required)
-	EntityType AssetType `json:"entityType"`
-
-	// (Required)
-	EntityName graphql.String `json:"entityName"`
-
-	// (Required)
-	ConflictResolution MergeStrategy `json:"conflictResolution"`
+	EntityType         AssetType      `json:"entityType"`         // Required
+	EntityName         graphql.String `json:"entityName"`         // Required
+	ConflictResolution MergeStrategy  `json:"conflictResolution"` // Required
 }
 
 // CreateActionFromTemplateInput represents data for creating an action from a yaml template.
 type CreateActionFromTemplateInput struct {
-
-	// Name of the view of the action. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// YAML specification of the action. (Required)
-	YamlTemplate YAML `json:"yamlTemplate"`
+	// Name of the view of the action.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// YAML specification of the action.
+	YamlTemplate YAML `json:"yamlTemplate"` // Required
 }
 
 // CreateAlert represents data for creating an alert.
 type CreateAlert struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the alert. (Required)
-	Name graphql.String `json:"name"`
-
-	// LogScale query to execute. (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// Start of the relative time interval for the query. (Required)
-	QueryStart graphql.String `json:"queryStart"`
-
-	// Throttle time in milliseconds. (Required)
-	ThrottleTimeMillis Long `json:"throttleTimeMillis"`
-
-	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname". (Required)
-	Actions []graphql.String `json:"actions"`
-
-	// Description of the alert. (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// Field to throttle on. (Optional)
-	ThrottleField *graphql.String `json:"throttleField,omitempty"`
-
-	// The alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user. (Optional)
-	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"`
-
-	// Flag indicating whether the alert is enabled. (Optional)
-	Enabled *graphql.Boolean `json:"enabled,omitempty"`
-
-	// Labels attached to the alert. (Optional)
-	Labels *[]graphql.String `json:"labels,omitempty"`
-
-	// Ownership of the query run by this alert. If value is User, ownership will be based on the runAsUserId field. (Optional)
-	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"`
+	// Name of the view of the alert.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the alert.
+	Name graphql.String `json:"name"` // Required
+	// LogScale query to execute.
+	QueryString graphql.String `json:"queryString"` // Required
+	// Start of the relative time interval for the query.
+	QueryStart graphql.String `json:"queryStart"` // Required
+	// Throttle time in milliseconds.
+	ThrottleTimeMillis Long `json:"throttleTimeMillis"` // Required
+	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname".
+	Actions []graphql.String `json:"actions"` // Required
+	// Description of the alert.
+	Description *graphql.String `json:"description,omitempty"` // Optional
+	// Field to throttle on.
+	ThrottleField *graphql.String `json:"throttleField,omitempty"` // Optional
+	// The alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
+	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
+	// Flag indicating whether the alert is enabled.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
+	// Labels attached to the alert.
+	Labels *[]graphql.String `json:"labels,omitempty"` // Optional
+	// Ownership of the query run by this alert. If value is User, ownership will be based on the runAsUserId field.
+	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"` // Optional
 }
 
 // CreateAlertFromTemplateInput represents data for creating an alert from a yaml template.
 type CreateAlertFromTemplateInput struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Name of the alert. (Required)
-	Name graphql.String `json:"name"`
-
-	// YAML specification of the alert. (Required)
-	YamlTemplate YAML `json:"yamlTemplate"`
+	// Name of the view of the alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Name of the alert.
+	Name graphql.String `json:"name"` // Required
+	// YAML specification of the alert.
+	YamlTemplate YAML `json:"yamlTemplate"` // Required
 }
 
 // CreateAwsS3SqsIngestFeed represents data for creating an ingest feed that uses AWS S3 and SQS.
 type CreateAwsS3SqsIngestFeed struct {
-
-	// Name of the repository of the ingest feed. (Required)
-	RepositoryName RepoOrViewName `json:"repositoryName"`
-
-	// Name of the ingest feed. (Required)
-	Name graphql.String `json:"name"`
-
-	// The id or name of the parser that should be used to parse the ingest feed. Parsers in packages can be referred to as: "packagescope/packagename:parsername". (Required)
-	Parser graphql.String `json:"parser"`
-
-	// How to authenticate to AWS. (Required)
-	Authentication IngestFeedAwsAuthenticationInput `json:"authentication"`
-
-	// AWS SQS queue url. (Required)
-	SqsURL graphql.String `json:"sqsUrl"`
-
-	// The AWS region to connect to. (Required)
-	Region graphql.String `json:"region"`
-
-	// Is ingest from the ingest feed enabled?. (Required)
-	Enabled graphql.Boolean `json:"enabled"`
-
-	// The preprocessing to apply to an ingest feed before parsing. (Required)
-	Preprocessing IngestFeedPreprocessingInput `json:"preprocessing"`
-
-	// Compression scheme of the file. (Required)
-	Compression IngestFeedCompression `json:"compression"`
-
-	// Description of the ingest feed. (Optional)
-	Description *graphql.String `json:"description,omitempty"`
+	// Name of the repository of the ingest feed.
+	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
+	// Name of the ingest feed.
+	Name graphql.String `json:"name"` // Required
+	// The id or name of the parser that should be used to parse the ingest feed. Parsers in packages can be referred to as: "packagescope/packagename:parsername".
+	Parser graphql.String `json:"parser"` // Required
+	// How to authenticate to AWS.
+	Authentication IngestFeedAwsAuthenticationInput `json:"authentication"` // Required
+	// AWS SQS queue url.
+	SqsURL graphql.String `json:"sqsUrl"` // Required
+	// The AWS region to connect to.
+	Region graphql.String `json:"region"` // Required
+	// Is ingest from the ingest feed enabled?.
+	Enabled graphql.Boolean `json:"enabled"` // Required
+	// The preprocessing to apply to an ingest feed before parsing.
+	Preprocessing IngestFeedPreprocessingInput `json:"preprocessing"` // Required
+	// Compression scheme of the file.
+	Compression IngestFeedCompression `json:"compression"` // Required
+	// Description of the ingest feed.
+	Description *graphql.String `json:"description,omitempty"` // Optional
 }
 
-// CreateCustomLinkInteractionInput
 type CreateCustomLinkInteractionInput struct {
-
-	// (Required)
-	Path graphql.String `json:"path"`
-
-	// (Required)
-	CustomLinkInteractionInput CustomLinkInteractionInput `json:"customLinkInteractionInput"`
+	Path                       graphql.String             `json:"path"`                       // Required
+	CustomLinkInteractionInput CustomLinkInteractionInput `json:"customLinkInteractionInput"` // Required
 }
 
 // CreateDashboardFromTemplateV2Input represents data for creating a dashboard from a yaml specification.
 type CreateDashboardFromTemplateV2Input struct {
-
-	// Name of the view of the dashboard. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Name of the dashboard. (Required)
-	Name graphql.String `json:"name"`
-
-	// YAML specification of the dashboard. (Required)
-	YamlTemplate YAML `json:"yamlTemplate"`
+	// Name of the view of the dashboard.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Name of the dashboard.
+	Name graphql.String `json:"name"` // Required
+	// YAML specification of the dashboard.
+	YamlTemplate YAML `json:"yamlTemplate"` // Required
 }
 
-// CreateDashboardInput
 type CreateDashboardInput struct {
-
-	// (Required)
-	SearchDomainName graphql.String `json:"searchDomainName"`
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Optional)
-	Labels *[]graphql.String `json:"labels,omitempty"`
-
-	// (Optional)
-	Widgets *[]WidgetInput `json:"widgets,omitempty"`
-
-	// (Optional)
-	Links *[]LinkInput `json:"links,omitempty"`
-
-	// (Optional)
-	DefaultFilterID *graphql.String `json:"defaultFilterId,omitempty"`
-
-	// (Optional)
-	Filters *[]FilterInput `json:"filters,omitempty"`
-
-	// (Optional)
-	Parameters *[]ParameterInput `json:"parameters,omitempty"`
-
-	// (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// (Optional)
-	UpdateFrequency *DashboardUpdateFrequencyInput `json:"updateFrequency,omitempty"`
+	SearchDomainName graphql.String                 `json:"searchDomainName"`          // Required
+	Name             graphql.String                 `json:"name"`                      // Required
+	Labels           *[]graphql.String              `json:"labels,omitempty"`          // Optional
+	Widgets          *[]WidgetInput                 `json:"widgets,omitempty"`         // Optional
+	Links            *[]LinkInput                   `json:"links,omitempty"`           // Optional
+	DefaultFilterID  *graphql.String                `json:"defaultFilterId,omitempty"` // Optional
+	Filters          *[]FilterInput                 `json:"filters,omitempty"`         // Optional
+	Parameters       *[]ParameterInput              `json:"parameters,omitempty"`      // Optional
+	Description      *graphql.String                `json:"description,omitempty"`     // Optional
+	UpdateFrequency  *DashboardUpdateFrequencyInput `json:"updateFrequency,omitempty"` // Optional
 }
 
-// CreateDashboardLinkInteractionInput
 type CreateDashboardLinkInteractionInput struct {
-
-	// (Required)
-	Path graphql.String `json:"path"`
-
-	// (Required)
-	DashboardLinkInteractionInput DashboardLinkInteractionInput `json:"dashboardLinkInteractionInput"`
+	Path                          graphql.String                `json:"path"`                          // Required
+	DashboardLinkInteractionInput DashboardLinkInteractionInput `json:"dashboardLinkInteractionInput"` // Required
 }
 
 // CreateEmailAction represents data for creating an email action.
 type CreateEmailAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// List of email addresses to send an email to. (Required)
-	Recipients []graphql.String `json:"recipients"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
-
-	// Subject of the email. Can be templated with values from the result. (Optional)
-	SubjectTemplate *graphql.String `json:"subjectTemplate,omitempty"`
-
-	// Body of the email. Can be templated with values from the result. (Optional)
-	BodyTemplate *graphql.String `json:"bodyTemplate,omitempty"`
-
-	// Whether the result set should be be attached as a CSV file. (Optional)
-	AttachCsv *graphql.Boolean `json:"attachCsv,omitempty"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// List of email addresses to send an email to.
+	Recipients []graphql.String `json:"recipients"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
+	// Subject of the email. Can be templated with values from the result.
+	SubjectTemplate *graphql.String `json:"subjectTemplate,omitempty"` // Optional
+	// Body of the email. Can be templated with values from the result.
+	BodyTemplate *graphql.String `json:"bodyTemplate,omitempty"` // Optional
+	// Whether the result set should be be attached as a CSV file.
+	AttachCsv *graphql.Boolean `json:"attachCsv,omitempty"` // Optional
 }
 
 // CreateEventForwardingRule represents data for creating an event forwarding rule.
 type CreateEventForwardingRule struct {
-
-	// The name of the repository that the event forwarding rule is for. (Required)
-	RepoName graphql.String `json:"repoName"`
-
-	// The query string for filtering and mapping the events to forward. (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// The id of the event forwarder. (Required)
-	EventForwarderID graphql.String `json:"eventForwarderId"`
-
-	// (Optional)
-	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"`
+	// The name of the repository that the event forwarding rule is for.
+	RepoName graphql.String `json:"repoName"` // Required
+	// The query string for filtering and mapping the events to forward.
+	QueryString graphql.String `json:"queryString"` // Required
+	// The id of the event forwarder.
+	EventForwarderID graphql.String       `json:"eventForwarderId"`          // Required
+	LanguageVersion  *LanguageVersionEnum `json:"languageVersion,omitempty"` // Optional
 }
 
 // CreateFdrFeed represents data for creating an FDR feed.
 type CreateFdrFeed struct {
-
-	// Name of the repository of the FDR feed. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// Name of the FDR feed. (Required)
-	Name graphql.String `json:"name"`
-
-	// The id or name of the parser that should be used to parse the FDR data. We recommend using the FDR parser from the crowdstrike/fdr package, which can be referred to as "crowdstrike/fdr:FDR". (Required)
-	Parser graphql.String `json:"parser"`
-
-	// AWS client id of the FDR feed. (Required)
-	ClientID graphql.String `json:"clientId"`
-
-	// AWS client secret of the FDR feed. (Required)
-	ClientSecret graphql.String `json:"clientSecret"`
-
-	// AWS SQS queue url of the FDR feed. (Required)
-	SqsURL graphql.String `json:"sqsUrl"`
-
-	// AWS S3 Identifier of the FDR feed. (Required)
-	S3Identifier graphql.String `json:"s3Identifier"`
-
-	// Description of the FDR feed. (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// Is ingest from the FDR feed enabled?. (Optional)
-	Enabled *graphql.Boolean `json:"enabled,omitempty"`
+	// Name of the repository of the FDR feed.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// Name of the FDR feed.
+	Name graphql.String `json:"name"` // Required
+	// The id or name of the parser that should be used to parse the FDR data. We recommend using the FDR parser from the crowdstrike/fdr package, which can be referred to as "crowdstrike/fdr:FDR".
+	Parser graphql.String `json:"parser"` // Required
+	// AWS client id of the FDR feed.
+	ClientID graphql.String `json:"clientId"` // Required
+	// AWS client secret of the FDR feed.
+	ClientSecret graphql.String `json:"clientSecret"` // Required
+	// AWS SQS queue url of the FDR feed.
+	SqsURL graphql.String `json:"sqsUrl"` // Required
+	// AWS S3 Identifier of the FDR feed.
+	S3Identifier graphql.String `json:"s3Identifier"` // Required
+	// Description of the FDR feed.
+	Description *graphql.String `json:"description,omitempty"` // Optional
+	// Is ingest from the FDR feed enabled?.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
 }
 
-// CreateFieldAliasSchemaInput
 type CreateFieldAliasSchemaInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Fields []SchemaFieldInput `json:"fields"`
-
-	// (Optional)
-	AliasMappings *[]AliasMappingInput `json:"aliasMappings,omitempty"`
+	Name          graphql.String       `json:"name"`                    // Required
+	Fields        []SchemaFieldInput   `json:"fields"`                  // Required
+	AliasMappings *[]AliasMappingInput `json:"aliasMappings,omitempty"` // Optional
 }
 
 // CreateFilterAlert represents data for creating a filter alert.
 type CreateFilterAlert struct {
-
-	// Name of the view of the filter alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Name of the filter alert. (Required)
-	Name graphql.String `json:"name"`
-
-	// LogScale query to execute. (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname". (Required)
-	ActionIDsOrNames []graphql.String `json:"actionIdsOrNames"`
-
-	// Ownership of the query run by this filter alert. If value is User, ownership will be based on the runAsUserId field. (Required)
-	QueryOwnershipType QueryOwnershipType `json:"queryOwnershipType"`
-
-	// Description of the filter alert. (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// Labels attached to the filter alert. (Optional)
-	Labels *[]graphql.String `json:"labels,omitempty"`
-
-	// Flag indicating whether the filter alert is enabled. (Optional)
-	Enabled *graphql.Boolean `json:"enabled,omitempty"`
-
-	// Allowed number of action triggers per minute for the filter alert. Please note that the maximum allowed number of triggers can vary based on the chosen actions. (Optional)
-	TriggerLimit *graphql.Int `json:"triggerLimit,omitempty"`
-
-	// The filter alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the filter alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user. (Optional)
-	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"`
+	// Name of the view of the filter alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Name of the filter alert.
+	Name graphql.String `json:"name"` // Required
+	// LogScale query to execute.
+	QueryString graphql.String `json:"queryString"` // Required
+	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname".
+	ActionIDsOrNames []graphql.String `json:"actionIdsOrNames"` // Required
+	// Ownership of the query run by this filter alert. If value is User, ownership will be based on the runAsUserId field.
+	QueryOwnershipType QueryOwnershipType `json:"queryOwnershipType"` // Required
+	// Description of the filter alert.
+	Description *graphql.String `json:"description,omitempty"` // Optional
+	// Labels attached to the filter alert.
+	Labels *[]graphql.String `json:"labels,omitempty"` // Optional
+	// Flag indicating whether the filter alert is enabled.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
+	// Allowed number of action triggers per minute for the filter alert. Please note that the maximum allowed number of triggers can vary based on the chosen actions.
+	TriggerLimit *graphql.Int `json:"triggerLimit,omitempty"` // Optional
+	// The filter alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the filter alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
+	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
 }
 
 // CreateHumioRepoAction represents data for creating a Humio repo action.
 type CreateHumioRepoAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Humio ingest token for the dataspace that the action should ingest into. (Required)
-	IngestToken graphql.String `json:"ingestToken"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Humio ingest token for the dataspace that the action should ingest into.
+	IngestToken graphql.String `json:"ingestToken"` // Required
 }
 
 // CreateIngestListenerV3Input represents input data to create an ingest listener.
 type CreateIngestListenerV3Input struct {
-
-	// Name of the repository. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// The TCP/UDP port the ingest listener will listen on. (Required)
-	Port graphql.Int `json:"port"`
-
-	// The kind of listener; TCP, UDP, Netflow/UDP, GELF/UDP, GELF/TCP. (Required)
-	Protocol IngestListenerProtocol `json:"protocol"`
-
-	// Name of the ingest listener. (Required)
-	Name graphql.String `json:"name"`
-
-	// The ip address that the ingest listener will bind to. (Required)
-	BindInterface graphql.String `json:"bindInterface"`
-
-	// Id or name of the parser to assign to the ingest listener. Parsers in packages can be referred to as "packagescope/packagename:parsername". (Required)
-	Parser graphql.String `json:"parser"`
-
-	// The charset used to decode the event stream. (Required)
-	Charset graphql.String `json:"charset"`
-
-	// The vHost name for the ingest listener. (Optional)
-	VHost *graphql.Int `json:"vHost,omitempty"`
+	// Name of the repository.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// The TCP/UDP port the ingest listener will listen on.
+	Port graphql.Int `json:"port"` // Required
+	// The kind of listener; TCP, UDP, Netflow/UDP, GELF/UDP, GELF/TCP.
+	Protocol IngestListenerProtocol `json:"protocol"` // Required
+	// Name of the ingest listener.
+	Name graphql.String `json:"name"` // Required
+	// The ip address that the ingest listener will bind to.
+	BindInterface graphql.String `json:"bindInterface"` // Required
+	// Id or name of the parser to assign to the ingest listener. Parsers in packages can be referred to as "packagescope/packagename:parsername".
+	Parser graphql.String `json:"parser"` // Required
+	// The charset used to decode the event stream.
+	Charset graphql.String `json:"charset"` // Required
+	// The vHost name for the ingest listener.
+	VHost *graphql.Int `json:"vHost,omitempty"` // Optional
 }
 
 // CreateKafkaEventForwarder represents data for creating a Kafka event forwarder.
 type CreateKafkaEventForwarder struct {
-
-	// Name of the event forwarder. (Required)
-	Name graphql.String `json:"name"`
-
-	// Description of the event forwarder. (Required)
-	Description graphql.String `json:"description"`
-
-	// The Kafka producer configuration used to forward events in the form of properties (x.y.z=abc). See https://library.humio.com/humio-server/ingesting-data-event-forwarders.html#kafka-configuration. (Required)
-	Properties graphql.String `json:"properties"`
-
-	// The Kafka topic the events should be forwarded to. (Required)
-	Topic graphql.String `json:"topic"`
-
-	// Is the event forwarder enabled. (Optional)
-	Enabled *graphql.Boolean `json:"enabled,omitempty"`
+	// Name of the event forwarder.
+	Name graphql.String `json:"name"` // Required
+	// Description of the event forwarder.
+	Description graphql.String `json:"description"` // Required
+	// The Kafka producer configuration used to forward events in the form of properties (x.y.z=abc). See https://library.humio.com/humio-server/ingesting-data-event-forwarders.html#kafka-configuration.
+	Properties graphql.String `json:"properties"` // Required
+	// The Kafka topic the events should be forwarded to.
+	Topic graphql.String `json:"topic"` // Required
+	// Is the event forwarder enabled.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
 }
 
 // CreateLocalFederatedConnectionInput represents data for creating a local federated connection.
 type CreateLocalFederatedConnectionInput struct {
-
-	// Name or id of the federated view to add the connection to. (Required)
-	FederatedViewName graphql.String `json:"federatedViewName"`
-
-	// Name or id of the local view to connect with. (Required)
-	TargetViewName graphql.String `json:"targetViewName"`
-
-	// Additional tags that can be used to filter queries. (Optional)
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"`
-
-	// Filter query that restricts the data visible through this connection. (Optional)
-	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"`
+	// Name or id of the federated view to add the connection to.
+	FederatedViewName graphql.String `json:"federatedViewName"` // Required
+	// Name or id of the local view to connect with.
+	TargetViewName graphql.String `json:"targetViewName"` // Required
+	// Additional tags that can be used to filter queries.
+	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	// Filter query that restricts the data visible through this connection.
+	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
 
 // CreateOpsGenieAction represents data for creating an OpsGenie action.
 type CreateOpsGenieAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// OpsGenie webhook url to send the request to. (Required)
-	APIURL graphql.String `json:"apiUrl"`
-
-	// Key to authenticate with OpsGenie. (Required)
-	GenieKey graphql.String `json:"genieKey"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// OpsGenie webhook url to send the request to.
+	APIURL graphql.String `json:"apiUrl"` // Required
+	// Key to authenticate with OpsGenie.
+	GenieKey graphql.String `json:"genieKey"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
 // CreateOrUpdateExternalFunctionInput represents the specification of an external function.
 type CreateOrUpdateExternalFunctionInput struct {
-
-	// The name of the external function. (Required)
-	Name graphql.String `json:"name"`
-
-	// The URL for the external function. (Required)
-	ProcedureURL graphql.String `json:"procedureURL"`
-
-	// The parameter specifications for the external function. (Required)
-	Parameters []ParameterSpecificationInput `json:"parameters"`
-
-	// The description for the external function. (Required)
-	Description graphql.String `json:"description"`
-
-	// The kind of external function. This defines how the external function is executed. (Required)
-	Kind KindInput `json:"kind"`
+	// The name of the external function.
+	Name graphql.String `json:"name"` // Required
+	// The URL for the external function.
+	ProcedureURL graphql.String `json:"procedureURL"` // Required
+	// The parameter specifications for the external function.
+	Parameters []ParameterSpecificationInput `json:"parameters"` // Required
+	// The description for the external function.
+	Description graphql.String `json:"description"` // Required
+	// The kind of external function. This defines how the external function is executed.
+	Kind KindInput `json:"kind"` // Required
 }
 
-// CreateOrganizationPermissionTokenInput
 type CreateOrganizationPermissionTokenInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Permissions []OrganizationPermission `json:"permissions"`
-
-	// (Optional)
-	ExpireAt *Long `json:"expireAt,omitempty"`
-
-	// (Optional)
-	IPFilterID *graphql.String `json:"ipFilterId,omitempty"`
+	Name        graphql.String           `json:"name"`                 // Required
+	Permissions []OrganizationPermission `json:"permissions"`          // Required
+	ExpireAt    *Long                    `json:"expireAt,omitempty"`   // Optional
+	IPFilterID  *graphql.String          `json:"ipFilterId,omitempty"` // Optional
 }
 
 // CreatePagerDutyAction represents data for creating a PagerDuty action.
 type CreatePagerDutyAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Severity level to give to the message. (Required)
-	Severity graphql.String `json:"severity"`
-
-	// Routing key to authenticate with PagerDuty. (Required)
-	RoutingKey graphql.String `json:"routingKey"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Severity level to give to the message.
+	Severity graphql.String `json:"severity"` // Required
+	// Routing key to authenticate with PagerDuty.
+	RoutingKey graphql.String `json:"routingKey"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
 // CreateParserFromTemplateInput represents data for creating a parser from a yaml template.
 type CreateParserFromTemplateInput struct {
-
-	// Name of the view to install the parser in. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Name of the parser. (Required)
-	Name graphql.String `json:"name"`
-
-	// YAML specification of the parser. (Required)
-	YamlTemplate YAML `json:"yamlTemplate"`
+	// Name of the view to install the parser in.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Name of the parser.
+	Name graphql.String `json:"name"` // Required
+	// YAML specification of the parser.
+	YamlTemplate YAML `json:"yamlTemplate"` // Required
 }
 
-// CreateParserInput
 type CreateParserInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	TestData []graphql.String `json:"testData"`
-
-	// (Required)
-	SourceCode graphql.String `json:"sourceCode"`
-
-	// (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// (Required)
-	TagFields []graphql.String `json:"tagFields"`
-
-	// (Required)
-	Force graphql.Boolean `json:"force"`
-
-	// (Optional)
-	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"`
+	Name            graphql.String       `json:"name"`                      // Required
+	TestData        []graphql.String     `json:"testData"`                  // Required
+	SourceCode      graphql.String       `json:"sourceCode"`                // Required
+	RepositoryName  graphql.String       `json:"repositoryName"`            // Required
+	TagFields       []graphql.String     `json:"tagFields"`                 // Required
+	Force           graphql.Boolean      `json:"force"`                     // Required
+	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"` // Optional
 }
 
 // CreateParserInputV2 represents input for creating a parser.
 type CreateParserInputV2 struct {
-
-	// The name to use for the parser. (Required)
-	Name graphql.String `json:"name"`
-
-	// Test cases that can be used to help verify that the parser works as expected. (Required)
-	TestCases []TestCaseInput `json:"testCases"`
-
-	// The parser script that is executed for every incoming event. (Required)
-	SourceCode graphql.String `json:"sourceCode"`
-
-	// The repository where the parser lives. (Required)
-	RepositoryName RepoOrViewName `json:"repositoryName"`
-
-	// Any fields which the parser should convert to tags after an event is parsed. (Required)
-	TagFields []graphql.String `json:"tagFields"`
-
-	// Allows saving a parser with a name that is already in use, by overwriting the parser that previously had the name. (Optional)
-	OverwriteExisting *graphql.Boolean `json:"overwriteExisting,omitempty"`
-
-	// The version of the Humio query language to use. (Optional)
-	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"`
+	// The name to use for the parser.
+	Name graphql.String `json:"name"` // Required
+	// Test cases that can be used to help verify that the parser works as expected.
+	TestCases []TestCaseInput `json:"testCases"` // Required
+	// The parser script that is executed for every incoming event.
+	SourceCode graphql.String `json:"sourceCode"` // Required
+	// The repository where the parser lives.
+	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
+	// Any fields which the parser should convert to tags after an event is parsed.
+	TagFields []graphql.String `json:"tagFields"` // Required
+	// Allows saving a parser with a name that is already in use, by overwriting the parser that previously had the name.
+	OverwriteExisting *graphql.Boolean `json:"overwriteExisting,omitempty"` // Optional
+	// The version of the Humio query language to use.
+	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"` // Optional
 }
 
-// CreatePersonalUserTokenInput
 type CreatePersonalUserTokenInput struct {
-
-	// (Optional)
-	ExpireAt *Long `json:"expireAt,omitempty"`
-
-	// (Optional)
-	IPFilterID *graphql.String `json:"ipFilterId,omitempty"`
+	ExpireAt   *Long           `json:"expireAt,omitempty"`   // Optional
+	IPFilterID *graphql.String `json:"ipFilterId,omitempty"` // Optional
 }
 
 // CreatePostMessageSlackAction represents data for creating a post message Slack action.
 type CreatePostMessageSlackAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Api token to authenticate with Slack. (Required)
-	APIToken graphql.String `json:"apiToken"`
-
-	// List of Slack channels to message. (Required)
-	Channels []graphql.String `json:"channels"`
-
-	// Fields to include within the Slack message. Can be templated with values from the result. (Required)
-	Fields []SlackFieldEntryInput `json:"fields"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Api token to authenticate with Slack.
+	APIToken graphql.String `json:"apiToken"` // Required
+	// List of Slack channels to message.
+	Channels []graphql.String `json:"channels"` // Required
+	// Fields to include within the Slack message. Can be templated with values from the result.
+	Fields []SlackFieldEntryInput `json:"fields"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
 // CreateRemoteFederatedConnectionInput represents data for creating a remote federated connection.
 type CreateRemoteFederatedConnectionInput struct {
-
-	// Name or id of the federated view to add the connection to. (Required)
-	FederatedViewName graphql.String `json:"federatedViewName"`
-
-	// Public URL of the remote cluster to connect with. (Required)
-	PublicURL graphql.String `json:"publicUrl"`
-
-	// Access token for the remote view to connect with. (Required)
-	Token graphql.String `json:"token"`
-
-	// Additional tags that can be used to filter queries. (Optional)
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"`
-
-	// Filter query that restricts the data visible through this connection. (Optional)
-	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"`
+	// Name or id of the federated view to add the connection to.
+	FederatedViewName graphql.String `json:"federatedViewName"` // Required
+	// Public URL of the remote cluster to connect with.
+	PublicURL graphql.String `json:"publicUrl"` // Required
+	// Access token for the remote view to connect with.
+	Token graphql.String `json:"token"` // Required
+	// Additional tags that can be used to filter queries.
+	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	// Filter query that restricts the data visible through this connection.
+	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
 
-// CreateSavedQueryInput
 type CreateSavedQueryInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// (Optional)
-	Start *graphql.String `json:"start,omitempty"`
-
-	// (Optional)
-	End *graphql.String `json:"end,omitempty"`
-
-	// (Optional)
-	IsLive *graphql.Boolean `json:"isLive,omitempty"`
-
-	// (Optional)
-	WidgetType *graphql.String `json:"widgetType,omitempty"`
-
-	// (Optional)
-	Options *graphql.String `json:"options,omitempty"`
-
-	// (Optional)
-	DashboardLinkInteractions *[]DashboardLinkInteractionInput `json:"dashboardLinkInteractions,omitempty"`
-
-	// (Optional)
-	CustomLinkInteractions *[]CustomLinkInteractionInput `json:"customLinkInteractions,omitempty"`
-
-	// (Optional)
-	SearchLinkInteractions *[]SearchLinkInteractionInput `json:"searchLinkInteractions,omitempty"`
-
-	// (Optional)
-	UpdateParametersInteractions *[]UpdateParametersInteractionInput `json:"updateParametersInteractions,omitempty"`
+	Name                         graphql.String                      `json:"name"`                                   // Required
+	ViewName                     graphql.String                      `json:"viewName"`                               // Required
+	QueryString                  graphql.String                      `json:"queryString"`                            // Required
+	Start                        *graphql.String                     `json:"start,omitempty"`                        // Optional
+	End                          *graphql.String                     `json:"end,omitempty"`                          // Optional
+	IsLive                       *graphql.Boolean                    `json:"isLive,omitempty"`                       // Optional
+	WidgetType                   *graphql.String                     `json:"widgetType,omitempty"`                   // Optional
+	Options                      *graphql.String                     `json:"options,omitempty"`                      // Optional
+	DashboardLinkInteractions    *[]DashboardLinkInteractionInput    `json:"dashboardLinkInteractions,omitempty"`    // Optional
+	CustomLinkInteractions       *[]CustomLinkInteractionInput       `json:"customLinkInteractions,omitempty"`       // Optional
+	SearchLinkInteractions       *[]SearchLinkInteractionInput       `json:"searchLinkInteractions,omitempty"`       // Optional
+	UpdateParametersInteractions *[]UpdateParametersInteractionInput `json:"updateParametersInteractions,omitempty"` // Optional
 }
 
 // CreateScheduledSearch represents data for creating a scheduled search.
 type CreateScheduledSearch struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the scheduled search. (Required)
-	Name graphql.String `json:"name"`
-
-	// LogScale query to execute. (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// Start of the relative time interval for the query. (Required)
-	QueryStart graphql.String `json:"queryStart"`
-
-	// End of the relative time interval for the query. (Required)
-	QueryEnd graphql.String `json:"queryEnd"`
-
-	// Cron pattern describing the schedule to execute the query on. (Required)
-	Schedule graphql.String `json:"schedule"`
-
-	// Time zone of the schedule. Currently this field only supports UTC offsets like 'UTC', 'UTC-01' or 'UTC+12:45'. (Required)
-	TimeZone graphql.String `json:"timeZone"`
-
-	// User-defined limit, which caps the number of missed searches to backfill, e.g. in the event of a shutdown. (Required)
-	BackfillLimit graphql.Int `json:"backfillLimit"`
-
-	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname". (Required)
-	Actions []graphql.String `json:"actions"`
-
-	// Description of the scheduled search. (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// Flag indicating whether the scheduled search is enabled. (Optional)
-	Enabled *graphql.Boolean `json:"enabled,omitempty"`
-
-	// Labels attached to the scheduled search. (Optional)
-	Labels *[]graphql.String `json:"labels,omitempty"`
-
-	// The scheduled search will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the scheduled search will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user. (Optional)
-	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"`
-
-	// Ownership of the query run by this scheduled search. If value is User, ownership will be based on the runAsUserId field. (Optional)
-	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the scheduled search.
+	Name graphql.String `json:"name"` // Required
+	// LogScale query to execute.
+	QueryString graphql.String `json:"queryString"` // Required
+	// Start of the relative time interval for the query.
+	QueryStart graphql.String `json:"queryStart"` // Required
+	// End of the relative time interval for the query.
+	QueryEnd graphql.String `json:"queryEnd"` // Required
+	// Cron pattern describing the schedule to execute the query on.
+	Schedule graphql.String `json:"schedule"` // Required
+	// Time zone of the schedule. Currently this field only supports UTC offsets like 'UTC', 'UTC-01' or 'UTC+12:45'.
+	TimeZone graphql.String `json:"timeZone"` // Required
+	// User-defined limit, which caps the number of missed searches to backfill, e.g. in the event of a shutdown.
+	BackfillLimit graphql.Int `json:"backfillLimit"` // Required
+	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname".
+	Actions []graphql.String `json:"actions"` // Required
+	// Description of the scheduled search.
+	Description *graphql.String `json:"description,omitempty"` // Optional
+	// Flag indicating whether the scheduled search is enabled.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
+	// Labels attached to the scheduled search.
+	Labels *[]graphql.String `json:"labels,omitempty"` // Optional
+	// The scheduled search will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the scheduled search will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
+	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
+	// Ownership of the query run by this scheduled search. If value is User, ownership will be based on the runAsUserId field.
+	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"` // Optional
 }
 
 // CreateScheduledSearchFromTemplateInput represents data for creating a scheduled search from a yaml template.
 type CreateScheduledSearchFromTemplateInput struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Name of the scheduled search. (Required)
-	Name graphql.String `json:"name"`
-
-	// YAML specification of the scheduled search. (Required)
-	YamlTemplate YAML `json:"yamlTemplate"`
+	// Name of the view of the scheduled search.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Name of the scheduled search.
+	Name graphql.String `json:"name"` // Required
+	// YAML specification of the scheduled search.
+	YamlTemplate YAML `json:"yamlTemplate"` // Required
 }
 
-// CreateSearchLinkInteractionInput
 type CreateSearchLinkInteractionInput struct {
-
-	// (Required)
-	Path graphql.String `json:"path"`
-
-	// (Required)
-	SearchLinkInteractionInput SearchLinkInteractionInput `json:"searchLinkInteractionInput"`
+	Path                       graphql.String             `json:"path"`                       // Required
+	SearchLinkInteractionInput SearchLinkInteractionInput `json:"searchLinkInteractionInput"` // Required
 }
 
 // CreateSlackAction represents data for creating a Slack action.
 type CreateSlackAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Slack webhook url to send the request to. (Required)
-	URL graphql.String `json:"url"`
-
-	// Fields to include within the Slack message. Can be templated with values from the result. (Required)
-	Fields []SlackFieldEntryInput `json:"fields"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Slack webhook url to send the request to.
+	URL graphql.String `json:"url"` // Required
+	// Fields to include within the Slack message. Can be templated with values from the result.
+	Fields []SlackFieldEntryInput `json:"fields"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// CreateSystemPermissionTokenInput
 type CreateSystemPermissionTokenInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Permissions []SystemPermission `json:"permissions"`
-
-	// (Optional)
-	ExpireAt *Long `json:"expireAt,omitempty"`
-
-	// (Optional)
-	IPFilterID *graphql.String `json:"ipFilterId,omitempty"`
+	Name        graphql.String     `json:"name"`                 // Required
+	Permissions []SystemPermission `json:"permissions"`          // Required
+	ExpireAt    *Long              `json:"expireAt,omitempty"`   // Optional
+	IPFilterID  *graphql.String    `json:"ipFilterId,omitempty"` // Optional
 }
 
 // CreateUploadFileAction represents data for creating an upload file action.
 type CreateUploadFileAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// File name for the uploaded file. (Required)
-	FileName graphql.String `json:"fileName"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// File name for the uploaded file.
+	FileName graphql.String `json:"fileName"` // Required
 }
 
 // CreateVictorOpsAction represents data for creating a VictorOps action.
 type CreateVictorOpsAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Type of the VictorOps message to make. (Required)
-	MessageType graphql.String `json:"messageType"`
-
-	// VictorOps webhook url to send the request to. (Required)
-	NotifyURL graphql.String `json:"notifyUrl"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Type of the VictorOps message to make.
+	MessageType graphql.String `json:"messageType"` // Required
+	// VictorOps webhook url to send the request to.
+	NotifyURL graphql.String `json:"notifyUrl"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// CreateViewPermissionsTokenInput
 type CreateViewPermissionsTokenInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	ViewIDs []graphql.String `json:"viewIds"`
-
-	// (Required)
-	Permissions []Permission `json:"permissions"`
-
-	// (Optional)
-	ExpireAt *Long `json:"expireAt,omitempty"`
-
-	// (Optional)
-	IPFilterID *graphql.String `json:"ipFilterId,omitempty"`
+	Name        graphql.String   `json:"name"`                 // Required
+	ViewIDs     []graphql.String `json:"viewIds"`              // Required
+	Permissions []Permission     `json:"permissions"`          // Required
+	ExpireAt    *Long            `json:"expireAt,omitempty"`   // Optional
+	IPFilterID  *graphql.String  `json:"ipFilterId,omitempty"` // Optional
 }
 
 // CreateWebhookAction represents data for creating a webhook action.
 type CreateWebhookAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Url to send the http(s) request to. (Required)
-	URL graphql.String `json:"url"`
-
-	// Method to use for the request. (Required)
-	Method graphql.String `json:"method"`
-
-	// Headers of the http(s) request. (Required)
-	Headers []HttpHeaderEntryInput `json:"headers"`
-
-	// Body of the http(s) request. Can be templated with values from the result. (Required)
-	BodyTemplate graphql.String `json:"bodyTemplate"`
-
-	// Flag indicating whether SSL should be ignored for the request. (Required)
-	IgnoreSSL graphql.Boolean `json:"ignoreSSL"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Url to send the http(s) request to.
+	URL graphql.String `json:"url"` // Required
+	// Method to use for the request.
+	Method graphql.String `json:"method"` // Required
+	// Headers of the http(s) request.
+	Headers []HttpHeaderEntryInput `json:"headers"` // Required
+	// Body of the http(s) request. Can be templated with values from the result.
+	BodyTemplate graphql.String `json:"bodyTemplate"` // Required
+	// Flag indicating whether SSL should be ignored for the request.
+	IgnoreSSL graphql.Boolean `json:"ignoreSSL"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// CustomLinkInteractionInput
 type CustomLinkInteractionInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	URLTemplate graphql.String `json:"urlTemplate"`
-
-	// (Required)
-	OpenInNewTab graphql.Boolean `json:"openInNewTab"`
-
-	// (Optional)
-	TitleTemplate *graphql.String `json:"titleTemplate,omitempty"`
-
-	// (Optional)
-	URLEncodeArgs *graphql.Boolean `json:"urlEncodeArgs,omitempty"`
-
-	// (Optional)
-	FieldInteractionConditions *[]FieldInteractionConditionInput `json:"fieldInteractionConditions,omitempty"`
+	Name                       graphql.String                    `json:"name"`                                 // Required
+	URLTemplate                graphql.String                    `json:"urlTemplate"`                          // Required
+	OpenInNewTab               graphql.Boolean                   `json:"openInNewTab"`                         // Required
+	TitleTemplate              *graphql.String                   `json:"titleTemplate,omitempty"`              // Optional
+	URLEncodeArgs              *graphql.Boolean                  `json:"urlEncodeArgs,omitempty"`              // Optional
+	FieldInteractionConditions *[]FieldInteractionConditionInput `json:"fieldInteractionConditions,omitempty"` // Optional
 }
 
-// DashboardLinkInteractionInput
 type DashboardLinkInteractionInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Arguments []ArgumentInput `json:"arguments"`
-
-	// (Required)
-	OpenInNewTab graphql.Boolean `json:"openInNewTab"`
-
-	// (Required)
-	UseWidgetTimeWindow graphql.Boolean `json:"useWidgetTimeWindow"`
-
-	// (Optional)
-	TitleTemplate *graphql.String `json:"titleTemplate,omitempty"`
-
-	// (Optional)
-	DashboardID *graphql.String `json:"dashboardId,omitempty"`
-
-	// (Optional)
-	DashboardName *graphql.String `json:"dashboardName,omitempty"`
-
-	// (Optional)
-	DashboardRepoOrViewName *RepoOrViewName `json:"dashboardRepoOrViewName,omitempty"`
-
-	// (Optional)
-	PackageSpecifier *UnversionedPackageSpecifier `json:"packageSpecifier,omitempty"`
-
-	// (Optional)
-	FieldInteractionConditions *[]FieldInteractionConditionInput `json:"fieldInteractionConditions,omitempty"`
+	Name                       graphql.String                    `json:"name"`                                 // Required
+	Arguments                  []ArgumentInput                   `json:"arguments"`                            // Required
+	OpenInNewTab               graphql.Boolean                   `json:"openInNewTab"`                         // Required
+	UseWidgetTimeWindow        graphql.Boolean                   `json:"useWidgetTimeWindow"`                  // Required
+	TitleTemplate              *graphql.String                   `json:"titleTemplate,omitempty"`              // Optional
+	DashboardID                *graphql.String                   `json:"dashboardId,omitempty"`                // Optional
+	DashboardName              *graphql.String                   `json:"dashboardName,omitempty"`              // Optional
+	DashboardRepoOrViewName    *RepoOrViewName                   `json:"dashboardRepoOrViewName,omitempty"`    // Optional
+	PackageSpecifier           *UnversionedPackageSpecifier      `json:"packageSpecifier,omitempty"`           // Optional
+	FieldInteractionConditions *[]FieldInteractionConditionInput `json:"fieldInteractionConditions,omitempty"` // Optional
 }
 
-// DashboardUpdateFrequencyInput
 type DashboardUpdateFrequencyInput struct {
-
-	// (Required)
-	UpdateFrequencyType DashboardUpdateFrequency `json:"updateFrequencyType"`
+	UpdateFrequencyType DashboardUpdateFrequency `json:"updateFrequencyType"` // Required
 }
 
 // DeleteAction represents data for deleting an action.
 type DeleteAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
 }
 
 // DeleteAlert represents data for deleting an alert.
 type DeleteAlert struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the alert.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the alert.
+	ID graphql.String `json:"id"` // Required
 }
 
-// DeleteDashboardInput
 type DeleteDashboardInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
+	ID graphql.String `json:"id"` // Required
 }
 
 // DeleteDashboardInputV2 represents the data for deleting a dashboard.
 type DeleteDashboardInputV2 struct {
-
-	// The viewId containing the dashboard to delete. (Required)
-	ViewID graphql.String `json:"viewId"`
-
-	// The dashboardId to delete. (Required)
-	DashboardID graphql.String `json:"dashboardId"`
+	// The viewId containing the dashboard to delete.
+	ViewID graphql.String `json:"viewId"` // Required
+	// The dashboardId to delete.
+	DashboardID graphql.String `json:"dashboardId"` // Required
 }
 
 // DeleteEventForwarderInput represents data for deleting an event forwarder.
 type DeleteEventForwarderInput struct {
-
-	// Id of the event forwarder. (Required)
-	ID graphql.String `json:"id"`
+	// Id of the event forwarder.
+	ID graphql.String `json:"id"` // Required
 }
 
 // DeleteEventForwardingRule represents data for deleting an event forwarding rule.
 type DeleteEventForwardingRule struct {
-
-	// The name of the repository that the event forwarding rule is for. (Required)
-	RepoName graphql.String `json:"repoName"`
-
-	// The unique id for the event forwarding rule. (Required)
-	ID graphql.String `json:"id"`
+	// The name of the repository that the event forwarding rule is for.
+	RepoName graphql.String `json:"repoName"` // Required
+	// The unique id for the event forwarding rule.
+	ID graphql.String `json:"id"` // Required
 }
 
 // DeleteFdrFeed represents data for deleting an FDR feed.
 type DeleteFdrFeed struct {
-
-	// Name of the repository of the FDR feed. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// Id of the FDR feed. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the repository of the FDR feed.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// Id of the FDR feed.
+	ID graphql.String `json:"id"` // Required
 }
 
 // DeleteFederatedConnectionInput represents data for deleting a federated connection.
 type DeleteFederatedConnectionInput struct {
-
-	// Name or id of the federated view to delete the connection from. (Required)
-	FederatedViewName graphql.String `json:"federatedViewName"`
-
-	// Id of the connection to delete. (Required)
-	ConnectionID graphql.String `json:"connectionId"`
+	// Name or id of the federated view to delete the connection from.
+	FederatedViewName graphql.String `json:"federatedViewName"` // Required
+	// Id of the connection to delete.
+	ConnectionID graphql.String `json:"connectionId"` // Required
 }
 
-// DeleteFieldAliasSchema
 type DeleteFieldAliasSchema struct {
-
-	// (Required)
-	SchemaID graphql.String `json:"schemaId"`
+	SchemaID graphql.String `json:"schemaId"` // Required
 }
 
 // DeleteFilterAlert represents data for deleting a filter alert.
 type DeleteFilterAlert struct {
-
-	// Name of the view of the filter alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Id of the filter alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the filter alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the filter alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // DeleteIngestFeed represents data for deleting an ingest feed.
 type DeleteIngestFeed struct {
-
-	// Name of the repository of the ingest feed. (Required)
-	RepositoryName RepoOrViewName `json:"repositoryName"`
-
-	// Id of the ingest feed. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the repository of the ingest feed.
+	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
+	// Id of the ingest feed.
+	ID graphql.String `json:"id"` // Required
 }
 
-// DeleteInteractionInput
 type DeleteInteractionInput struct {
-
-	// (Required)
-	Path graphql.String `json:"path"`
-
-	// (Required)
-	ID graphql.String `json:"id"`
+	Path graphql.String `json:"path"` // Required
+	ID   graphql.String `json:"id"`   // Required
 }
 
-// DeleteSavedQueryInput
 type DeleteSavedQueryInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	ViewName graphql.String `json:"viewName"`
+	ID       graphql.String `json:"id"`       // Required
+	ViewName graphql.String `json:"viewName"` // Required
 }
 
 // DeleteScheduledSearch represents data for deleting a scheduled search.
 type DeleteScheduledSearch struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the scheduled search. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the scheduled search.
+	ID graphql.String `json:"id"` // Required
 }
 
-// DeleteSearchDomainByIdInput
 type DeleteSearchDomainByIdInput struct {
-
-	// The id of the search domain. (Required)
-	ID graphql.String `json:"id"`
-
-	// Optional message to why the search domain was deleted. Will be added to the audit log. (Optional)
-	DeleteMessage *graphql.String `json:"deleteMessage,omitempty"`
+	// The id of the search domain.
+	ID graphql.String `json:"id"` // Required
+	// Optional message to why the search domain was deleted. Will be added to the audit log.
+	DeleteMessage *graphql.String `json:"deleteMessage,omitempty"` // Optional
 }
 
 // DisableAlert represents data for disabling an alert.
 type DisableAlert struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Id of the alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // DisableEventForwarderInput represents data for disabling an event forwarder.
 type DisableEventForwarderInput struct {
-
-	// Id of the event forwarder. (Required)
-	ID graphql.String `json:"id"`
+	// Id of the event forwarder.
+	ID graphql.String `json:"id"` // Required
 }
 
-// DisableFieldAliasSchemaOnOrgInput
 type DisableFieldAliasSchemaOnOrgInput struct {
-
-	// (Required)
-	SchemaID graphql.String `json:"schemaId"`
+	SchemaID graphql.String `json:"schemaId"` // Required
 }
 
-// DisableFieldAliasSchemaOnViewInput
 type DisableFieldAliasSchemaOnViewInput struct {
-
-	// (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// (Required)
-	SchemaID graphql.String `json:"schemaId"`
+	ViewName graphql.String `json:"viewName"` // Required
+	SchemaID graphql.String `json:"schemaId"` // Required
 }
 
 // DisableFilterAlert represents data for disabling a filter alert.
 type DisableFilterAlert struct {
-
-	// Name of the view of the filter alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Id of the filter alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the filter alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the filter alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // DisableOrganizationIocAccess represents data for disabling access to IOCs (indicators of compromise) for an organization.
 type DisableOrganizationIocAccess struct {
-
-	// Id of organization. (Required)
-	OrganizationID graphql.String `json:"organizationId"`
+	// Id of organization.
+	OrganizationID graphql.String `json:"organizationId"` // Required
 }
 
 // DisableStarScheduledSearch represents data for disabling a scheduled search.
 type DisableStarScheduledSearch struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the scheduled search. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the scheduled search.
+	ID graphql.String `json:"id"` // Required
 }
 
-// DynamicConfigInputObject
 type DynamicConfigInputObject struct {
-
-	// (Required)
-	Config DynamicConfig `json:"config"`
-
-	// (Required)
-	Value graphql.String `json:"value"`
+	Config DynamicConfig  `json:"config"` // Required
+	Value  graphql.String `json:"value"`  // Required
 }
 
 // EnableAlert represents data for enabling an alert.
 type EnableAlert struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Id of the alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // EnableEventForwarderInput represents data for enabling an event forwarder.
 type EnableEventForwarderInput struct {
-
-	// Id of the event forwarder. (Required)
-	ID graphql.String `json:"id"`
+	// Id of the event forwarder.
+	ID graphql.String `json:"id"` // Required
 }
 
-// EnableFieldAliasSchemaOnOrgInput
 type EnableFieldAliasSchemaOnOrgInput struct {
-
-	// (Required)
-	SchemaID graphql.String `json:"schemaId"`
+	SchemaID graphql.String `json:"schemaId"` // Required
 }
 
-// EnableFieldAliasSchemaOnViewInput
 type EnableFieldAliasSchemaOnViewInput struct {
-
-	// (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// (Required)
-	SchemaID graphql.String `json:"schemaId"`
+	ViewName graphql.String `json:"viewName"` // Required
+	SchemaID graphql.String `json:"schemaId"` // Required
 }
 
 // EnableFilterAlert represents data for enabling a filter alert.
 type EnableFilterAlert struct {
-
-	// Name of the view of the filter alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Id of the filter alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the filter alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the filter alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // EnableOrganizationIocAccess represents data for enabling access to IOCs (indicators of compromise) for an organization.
 type EnableOrganizationIocAccess struct {
-
-	// Id of organization. (Required)
-	OrganizationID graphql.String `json:"organizationId"`
+	// Id of organization.
+	OrganizationID graphql.String `json:"organizationId"` // Required
 }
 
 // EnableStarScheduledSearch represents data for enabling a scheduled search.
 type EnableStarScheduledSearch struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the scheduled search. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the scheduled search.
+	ID graphql.String `json:"id"` // Required
 }
 
-// EnableWorkerQueryTracingInputType
 type EnableWorkerQueryTracingInputType struct {
-
-	// The quota key to enable tracing for. All queries belonging to this quota key will be traced. (Required)
-	QuotaKey graphql.String `json:"quotaKey"`
-
-	// The end timestamp for tracing. Tracing for this quota key will be disabled automatically once this time is reached. Will be clamped to be at most 15 minutes in the future. (Required)
-	Expiry DateTime `json:"expiry"`
+	// The quota key to enable tracing for. All queries belonging to this quota key will be traced.
+	QuotaKey graphql.String `json:"quotaKey"` // Required
+	// The end timestamp for tracing. Tracing for this quota key will be disabled automatically once this time is reached. Will be clamped to be at most 15 minutes in the future.
+	Expiry DateTime `json:"expiry"` // Required
 }
 
 // EnabledInput represents enable or disable language restrictions.
 type EnabledInput struct {
-
-	// (Required)
-	Version LanguageVersionEnum `json:"version"`
-
-	// (Required)
-	Enabled graphql.Boolean `json:"enabled"`
+	Version LanguageVersionEnum `json:"version"` // Required
+	Enabled graphql.Boolean     `json:"enabled"` // Required
 }
 
-// EnforceSubdomainsInput
 type EnforceSubdomainsInput struct {
-
-	// (Required)
-	Enforce graphql.Boolean `json:"enforce"`
+	Enforce graphql.Boolean `json:"enforce"` // Required
 }
 
-// EntitySearchInputType
 type EntitySearchInputType struct {
-
-	// (Optional)
-	SearchTerm *graphql.String `json:"searchTerm,omitempty"`
-
-	// (Optional)
-	PageSize *graphql.Int `json:"pageSize,omitempty"`
-
-	// (Optional)
-	PageBefore *graphql.String `json:"pageBefore,omitempty"`
-
-	// (Optional)
-	PageAfter *graphql.String `json:"pageAfter,omitempty"`
-
-	// (Optional)
-	Paths *[]graphql.String `json:"paths,omitempty"`
-
-	// (Optional)
-	SortBy *[]EntitySearchSortInfoType `json:"sortBy,omitempty"`
+	SearchTerm *graphql.String             `json:"searchTerm,omitempty"` // Optional
+	PageSize   *graphql.Int                `json:"pageSize,omitempty"`   // Optional
+	PageBefore *graphql.String             `json:"pageBefore,omitempty"` // Optional
+	PageAfter  *graphql.String             `json:"pageAfter,omitempty"`  // Optional
+	Paths      *[]graphql.String           `json:"paths,omitempty"`      // Optional
+	SortBy     *[]EntitySearchSortInfoType `json:"sortBy,omitempty"`     // Optional
 }
 
-// EntitySearchSortInfoType
 type EntitySearchSortInfoType struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Order EntitySearchSortOrderType `json:"order"`
+	Name  graphql.String            `json:"name"`  // Required
+	Order EntitySearchSortOrderType `json:"order"` // Required
 }
 
-// FederatedConnectionInputTag
 type FederatedConnectionInputTag struct {
-
-	// (Required)
-	Key graphql.String `json:"key"`
-
-	// (Required)
-	Value graphql.String `json:"value"`
+	Key   graphql.String `json:"key"`   // Required
+	Value graphql.String `json:"value"` // Required
 }
 
-// FieldConfigurationInput
 type FieldConfigurationInput struct {
-
-	// (Required)
-	ViewID graphql.String `json:"viewId"`
-
-	// (Required)
-	FieldName graphql.String `json:"fieldName"`
-
-	// (Required)
-	JSON JSON `json:"json"`
+	ViewID    graphql.String `json:"viewId"`    // Required
+	FieldName graphql.String `json:"fieldName"` // Required
+	JSON      JSON           `json:"json"`      // Required
 }
 
-// FieldInteractionConditionInput
 type FieldInteractionConditionInput struct {
-
-	// (Required)
-	FieldName graphql.String `json:"fieldName"`
-
-	// (Required)
-	Operator FieldConditionOperatorType `json:"operator"`
-
-	// (Required)
-	Argument graphql.String `json:"argument"`
+	FieldName graphql.String             `json:"fieldName"` // Required
+	Operator  FieldConditionOperatorType `json:"operator"`  // Required
+	Argument  graphql.String             `json:"argument"`  // Required
 }
 
 // FileFieldFilterType represents a field in a file and what value the field should have for a given entry to pass the filter.
 type FileFieldFilterType struct {
-
-	// (Required)
-	Field graphql.String `json:"field"`
-
-	// (Required)
-	Values []graphql.String `json:"values"`
+	Field  graphql.String   `json:"field"`  // Required
+	Values []graphql.String `json:"values"` // Required
 }
 
-// FilterInput
 type FilterInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Prefix graphql.String `json:"prefix"`
+	ID     graphql.String `json:"id"`     // Required
+	Name   graphql.String `json:"name"`   // Required
+	Prefix graphql.String `json:"prefix"` // Required
 }
 
 // FunctionListInput represents input list of function names.
 type FunctionListInput struct {
-
-	// (Required)
-	Version LanguageVersionEnum `json:"version"`
-
-	// (Required)
-	Functions []graphql.String `json:"functions"`
+	Version   LanguageVersionEnum `json:"version"`   // Required
+	Functions []graphql.String    `json:"functions"` // Required
 }
 
 // GenerateAlertFromPackageTemplateInput represents data for generating an unsaved alert object from a library package template.
 type GenerateAlertFromPackageTemplateInput struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// The id of the package that the alert was installed as part of. (Required)
-	PackageID VersionedPackageSpecifier `json:"packageId"`
-
-	// The name of the alert template in the package. (Required)
-	TemplateName graphql.String `json:"templateName"`
+	// Name of the view of the alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// The id of the package that the alert was installed as part of.
+	PackageID VersionedPackageSpecifier `json:"packageId"` // Required
+	// The name of the alert template in the package.
+	TemplateName graphql.String `json:"templateName"` // Required
 }
 
 // GenerateAlertFromTemplateInput represents data for generating an unsaved alert object from a yaml template.
 type GenerateAlertFromTemplateInput struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// YAML specification of the alert. (Required)
-	YamlTemplate YAML `json:"yamlTemplate"`
+	// Name of the view of the alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// YAML specification of the alert.
+	YamlTemplate YAML `json:"yamlTemplate"` // Required
 }
 
 // GenerateFilterAlertFromPackageTemplateInput represents data for generating an unsaved filter alert object from a library package template.
 type GenerateFilterAlertFromPackageTemplateInput struct {
-
-	// Name of the view of the filter alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// The id of the package of the filter alert template. (Required)
-	PackageID VersionedPackageSpecifier `json:"packageId"`
-
-	// The name of the filter alert template in the package. (Required)
-	TemplateName graphql.String `json:"templateName"`
+	// Name of the view of the filter alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// The id of the package of the filter alert template.
+	PackageID VersionedPackageSpecifier `json:"packageId"` // Required
+	// The name of the filter alert template in the package.
+	TemplateName graphql.String `json:"templateName"` // Required
 }
 
 // GenerateFilterAlertFromTemplateInput represents data for generating an unsaved filter alert object from a yaml template.
 type GenerateFilterAlertFromTemplateInput struct {
-
-	// Name of the view of the filter alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// YAML specification of the filter alert. (Required)
-	YamlTemplate YAML `json:"yamlTemplate"`
+	// Name of the view of the filter alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// YAML specification of the filter alert.
+	YamlTemplate YAML `json:"yamlTemplate"` // Required
 }
 
 // GenerateScheduledSearchFromPackageTemplateInput represents data for generating an unsaved scheduled search object from a library package template.
 type GenerateScheduledSearchFromPackageTemplateInput struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// The id of the package that the scheduled search was installed as part of. (Required)
-	PackageID VersionedPackageSpecifier `json:"packageId"`
-
-	// The name of the scheduled search template in the package. (Required)
-	TemplateName graphql.String `json:"templateName"`
+	// Name of the view of the scheduled search.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// The id of the package that the scheduled search was installed as part of.
+	PackageID VersionedPackageSpecifier `json:"packageId"` // Required
+	// The name of the scheduled search template in the package.
+	TemplateName graphql.String `json:"templateName"` // Required
 }
 
 // GenerateScheduledSearchFromTemplateInput represents data for generating an unsaved scheduled search object from a yaml templat.
 type GenerateScheduledSearchFromTemplateInput struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// YAML specification of the scheduled search. (Required)
-	YamlTemplate YAML `json:"yamlTemplate"`
+	// Name of the view of the scheduled search.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// YAML specification of the scheduled search.
+	YamlTemplate YAML `json:"yamlTemplate"` // Required
 }
 
 // GetExternalFunctionInput represents the input required to get an external function specification.
 type GetExternalFunctionInput struct {
-
-	// The name of the external function to fetch. (Required)
-	Name graphql.String `json:"name"`
-
-	// The view the external function should be accessible on. (Required)
-	View graphql.String `json:"view"`
+	// The name of the external function to fetch.
+	Name graphql.String `json:"name"` // Required
+	// The view the external function should be accessible on.
+	View graphql.String `json:"view"` // Required
 }
 
-// GroupRoleAssignment
 type GroupRoleAssignment struct {
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Required)
-	RoleID graphql.String `json:"roleId"`
+	GroupID graphql.String `json:"groupId"` // Required
+	RoleID  graphql.String `json:"roleId"`  // Required
 }
 
 // HttpHeaderEntryInput represents http(s) Header entry.
 type HttpHeaderEntryInput struct {
-
-	// Key of a http(s) header. (Required)
-	Header graphql.String `json:"header"`
-
-	// Value of a http(s) header. (Required)
-	Value graphql.String `json:"value"`
+	// Key of a http(s) header.
+	Header graphql.String `json:"header"` // Required
+	// Value of a http(s) header.
+	Value graphql.String `json:"value"` // Required
 }
 
-// IPFilterIdInput
 type IPFilterIdInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
+	ID graphql.String `json:"id"` // Required
 }
 
-// IPFilterInput
 type IPFilterInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	IPFilter graphql.String `json:"ipFilter"`
+	Name     graphql.String `json:"name"`     // Required
+	IPFilter graphql.String `json:"ipFilter"` // Required
 }
 
-// IPFilterUpdateInput
 type IPFilterUpdateInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// (Optional)
-	IPFilter *graphql.String `json:"ipFilter,omitempty"`
+	ID       graphql.String  `json:"id"`                 // Required
+	Name     *graphql.String `json:"name,omitempty"`     // Optional
+	IPFilter *graphql.String `json:"ipFilter,omitempty"` // Optional
 }
 
 // IngestFeedAwsAuthenticationInput represents how to authenticate to AWS.
 type IngestFeedAwsAuthenticationInput struct {
-
-	// (Required)
-	Kind IngestFeedAwsAuthenticationKind `json:"kind"`
-
-	// Arn of the role to be assumed. (Optional)
-	RoleArn *graphql.String `json:"roleArn,omitempty"`
+	Kind IngestFeedAwsAuthenticationKind `json:"kind"` // Required
+	// Arn of the role to be assumed.
+	RoleArn *graphql.String `json:"roleArn,omitempty"` // Optional
 }
 
 // IngestFeedPreprocessingInput represents the preprocessing to apply to an ingest feed before parsing.
 type IngestFeedPreprocessingInput struct {
-
-	// (Required)
-	Kind IngestFeedPreprocessingKind `json:"kind"`
+	Kind IngestFeedPreprocessingKind `json:"kind"` // Required
 }
 
-// IngestPartitionInput
 type IngestPartitionInput struct {
-
-	// (Required)
-	ID graphql.Int `json:"id"`
-
-	// (Required)
-	NodeIDs []graphql.Int `json:"nodeIds"`
+	ID      graphql.Int   `json:"id"`      // Required
+	NodeIDs []graphql.Int `json:"nodeIds"` // Required
 }
 
-// InputData
 type InputData struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
+	ID graphql.String `json:"id"` // Required
 }
 
-// InputDictionaryEntry
 type InputDictionaryEntry struct {
-
-	// (Required)
-	Key graphql.String `json:"key"`
-
-	// (Required)
-	Value graphql.String `json:"value"`
+	Key   graphql.String `json:"key"`   // Required
+	Value graphql.String `json:"value"` // Required
 }
 
-// InstallPackageFromRegistryInput
 type InstallPackageFromRegistryInput struct {
-
-	// (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// (Required)
-	PackageID VersionedPackageSpecifier `json:"packageId"`
-
-	// (Optional)
-	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"`
+	ViewName           RepoOrViewName            `json:"viewName"`                     // Required
+	PackageID          VersionedPackageSpecifier `json:"packageId"`                    // Required
+	QueryOwnershipType *QueryOwnershipType       `json:"queryOwnershipType,omitempty"` // Optional
 }
 
 // KindInput represents defines how the external function is executed.
 type KindInput struct {
-
-	// The name of the kind of external function. (Required)
-	Name KindEnum `json:"name"`
-
-	// The parameters that specify the key fields. Use for the 'Enrichment' functions. (Optional)
-	ParametersDefiningKeyFields *[]graphql.String `json:"parametersDefiningKeyFields,omitempty"`
-
-	// The names of the keys when they're returned from the external function. Use for the 'Enrichment' functions. (Optional)
-	FixedKeyFields *[]graphql.String `json:"fixedKeyFields,omitempty"`
+	// The name of the kind of external function.
+	Name KindEnum `json:"name"` // Required
+	// The parameters that specify the key fields. Use for the 'Enrichment' functions.
+	ParametersDefiningKeyFields *[]graphql.String `json:"parametersDefiningKeyFields,omitempty"` // Optional
+	// The names of the keys when they're returned from the external function. Use for the 'Enrichment' functions.
+	FixedKeyFields *[]graphql.String `json:"fixedKeyFields,omitempty"` // Optional
 }
 
 // LanguageVersionInputType represents a specific language version.
 type LanguageVersionInputType struct {
-
-	// The name of the language version. (Required)
-	Name graphql.String `json:"name"`
+	// The name of the language version.
+	Name graphql.String `json:"name"` // Required
 }
 
-// LinkInput
 type LinkInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Token graphql.String `json:"token"`
+	Name  graphql.String `json:"name"`  // Required
+	Token graphql.String `json:"token"` // Required
 }
 
-// LoginBridgeInput
 type LoginBridgeInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Description graphql.String `json:"description"`
-
-	// (Required)
-	Issuer graphql.String `json:"issuer"`
-
-	// (Required)
-	RemoteID graphql.String `json:"remoteId"`
-
-	// (Required)
-	LoginURL graphql.String `json:"loginUrl"`
-
-	// (Required)
-	RelayStateURL graphql.String `json:"relayStateUrl"`
-
-	// (Required)
-	SamlEntityID graphql.String `json:"samlEntityId"`
-
-	// (Required)
-	PrivateSamlCertificate graphql.String `json:"privateSamlCertificate"`
-
-	// (Required)
-	PublicSamlCertificate graphql.String `json:"publicSamlCertificate"`
-
-	// (Required)
-	AllowedUsers []graphql.String `json:"allowedUsers"`
-
-	// (Required)
-	GroupAttribute graphql.String `json:"groupAttribute"`
-
-	// (Required)
-	Groups []graphql.String `json:"groups"`
-
-	// (Required)
-	OrganizationIDAttributeName graphql.String `json:"organizationIdAttributeName"`
-
-	// (Required)
-	GenerateUserName graphql.Boolean `json:"generateUserName"`
-
-	// (Required)
-	TermsDescription graphql.String `json:"termsDescription"`
-
-	// (Required)
-	TermsLink graphql.String `json:"termsLink"`
-
-	// (Optional)
-	AdditionalAttributes *graphql.String `json:"additionalAttributes,omitempty"`
-
-	// (Optional)
-	OrganizationNameAttribute *graphql.String `json:"organizationNameAttribute,omitempty"`
+	Name                        graphql.String   `json:"name"`                                // Required
+	Description                 graphql.String   `json:"description"`                         // Required
+	Issuer                      graphql.String   `json:"issuer"`                              // Required
+	RemoteID                    graphql.String   `json:"remoteId"`                            // Required
+	LoginURL                    graphql.String   `json:"loginUrl"`                            // Required
+	RelayStateURL               graphql.String   `json:"relayStateUrl"`                       // Required
+	SamlEntityID                graphql.String   `json:"samlEntityId"`                        // Required
+	PrivateSamlCertificate      graphql.String   `json:"privateSamlCertificate"`              // Required
+	PublicSamlCertificate       graphql.String   `json:"publicSamlCertificate"`               // Required
+	AllowedUsers                []graphql.String `json:"allowedUsers"`                        // Required
+	GroupAttribute              graphql.String   `json:"groupAttribute"`                      // Required
+	Groups                      []graphql.String `json:"groups"`                              // Required
+	OrganizationIDAttributeName graphql.String   `json:"organizationIdAttributeName"`         // Required
+	GenerateUserName            graphql.Boolean  `json:"generateUserName"`                    // Required
+	TermsDescription            graphql.String   `json:"termsDescription"`                    // Required
+	TermsLink                   graphql.String   `json:"termsLink"`                           // Required
+	AdditionalAttributes        *graphql.String  `json:"additionalAttributes,omitempty"`      // Optional
+	OrganizationNameAttribute   *graphql.String  `json:"organizationNameAttribute,omitempty"` // Optional
 }
 
-// LoginBridgeUpdateInput
 type LoginBridgeUpdateInput struct {
-
-	// (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// (Optional)
-	Issuer *graphql.String `json:"issuer,omitempty"`
-
-	// (Optional)
-	RemoteID *graphql.String `json:"remoteId,omitempty"`
-
-	// (Optional)
-	LoginURL *graphql.String `json:"loginUrl,omitempty"`
-
-	// (Optional)
-	RelayStateURL *graphql.String `json:"relayStateUrl,omitempty"`
-
-	// (Optional)
-	SamlEntityID *graphql.String `json:"samlEntityId,omitempty"`
-
-	// (Optional)
-	PrivateSamlCertificate *graphql.String `json:"privateSamlCertificate,omitempty"`
-
-	// (Optional)
-	PublicSamlCertificate *graphql.String `json:"publicSamlCertificate,omitempty"`
-
-	// (Optional)
-	AllowedUsers *[]graphql.String `json:"allowedUsers,omitempty"`
-
-	// (Optional)
-	GroupAttribute *graphql.String `json:"groupAttribute,omitempty"`
-
-	// (Optional)
-	Groups *[]graphql.String `json:"groups,omitempty"`
-
-	// (Optional)
-	OrganizationIDAttributeName *graphql.String `json:"organizationIdAttributeName,omitempty"`
-
-	// (Optional)
-	AdditionalAttributes *graphql.String `json:"additionalAttributes,omitempty"`
-
-	// (Optional)
-	OrganizationNameAttribute *graphql.String `json:"organizationNameAttribute,omitempty"`
-
-	// (Optional)
-	GenerateUserName *graphql.Boolean `json:"generateUserName,omitempty"`
-
-	// (Optional)
-	TermsDescription *graphql.String `json:"termsDescription,omitempty"`
-
-	// (Optional)
-	TermsLink *graphql.String `json:"termsLink,omitempty"`
+	Name                        *graphql.String   `json:"name,omitempty"`                        // Optional
+	Description                 *graphql.String   `json:"description,omitempty"`                 // Optional
+	Issuer                      *graphql.String   `json:"issuer,omitempty"`                      // Optional
+	RemoteID                    *graphql.String   `json:"remoteId,omitempty"`                    // Optional
+	LoginURL                    *graphql.String   `json:"loginUrl,omitempty"`                    // Optional
+	RelayStateURL               *graphql.String   `json:"relayStateUrl,omitempty"`               // Optional
+	SamlEntityID                *graphql.String   `json:"samlEntityId,omitempty"`                // Optional
+	PrivateSamlCertificate      *graphql.String   `json:"privateSamlCertificate,omitempty"`      // Optional
+	PublicSamlCertificate       *graphql.String   `json:"publicSamlCertificate,omitempty"`       // Optional
+	AllowedUsers                *[]graphql.String `json:"allowedUsers,omitempty"`                // Optional
+	GroupAttribute              *graphql.String   `json:"groupAttribute,omitempty"`              // Optional
+	Groups                      *[]graphql.String `json:"groups,omitempty"`                      // Optional
+	OrganizationIDAttributeName *graphql.String   `json:"organizationIdAttributeName,omitempty"` // Optional
+	AdditionalAttributes        *graphql.String   `json:"additionalAttributes,omitempty"`        // Optional
+	OrganizationNameAttribute   *graphql.String   `json:"organizationNameAttribute,omitempty"`   // Optional
+	GenerateUserName            *graphql.Boolean  `json:"generateUserName,omitempty"`            // Optional
+	TermsDescription            *graphql.String   `json:"termsDescription,omitempty"`            // Optional
+	TermsLink                   *graphql.String   `json:"termsLink,omitempty"`                   // Optional
 }
 
-// MarkLimitDeletedInput
 type MarkLimitDeletedInput struct {
-
-	// (Required)
-	LimitName graphql.String `json:"limitName"`
-
-	// (Required)
-	Deleted graphql.Boolean `json:"deleted"`
+	LimitName graphql.String  `json:"limitName"` // Required
+	Deleted   graphql.Boolean `json:"deleted"`   // Required
 }
 
-// MigrateLimitsInput
 type MigrateLimitsInput struct {
-
-	// (Required)
-	CreateLogLimit graphql.Boolean `json:"createLogLimit"`
-
-	// (Optional)
-	DefaultLimit *graphql.String `json:"defaultLimit,omitempty"`
+	CreateLogLimit graphql.Boolean `json:"createLogLimit"`         // Required
+	DefaultLimit   *graphql.String `json:"defaultLimit,omitempty"` // Optional
 }
 
-// NotificationInput
 type NotificationInput struct {
-
-	// (Required)
-	Message graphql.String `json:"message"`
-
-	// (Required)
-	Target Targets `json:"target"`
-
-	// (Required)
-	Title graphql.String `json:"title"`
-
-	// (Required)
-	Dismissable graphql.Boolean `json:"dismissable"`
-
-	// (Required)
-	Severity NotificationSeverity `json:"severity"`
-
-	// (Required)
-	NotificationType NotificationTypes `json:"notificationType"`
-
-	// (Optional)
-	IDs *[]graphql.String `json:"ids,omitempty"`
-
-	// (Optional)
-	Link *graphql.String `json:"link,omitempty"`
-
-	// (Optional)
-	LinkDescription *graphql.String `json:"linkDescription,omitempty"`
+	Message          graphql.String       `json:"message"`                   // Required
+	Target           Targets              `json:"target"`                    // Required
+	Title            graphql.String       `json:"title"`                     // Required
+	Dismissable      graphql.Boolean      `json:"dismissable"`               // Required
+	Severity         NotificationSeverity `json:"severity"`                  // Required
+	NotificationType NotificationTypes    `json:"notificationType"`          // Required
+	IDs              *[]graphql.String    `json:"ids,omitempty"`             // Optional
+	Link             *graphql.String      `json:"link,omitempty"`            // Optional
+	LinkDescription  *graphql.String      `json:"linkDescription,omitempty"` // Optional
 }
 
-// OidcConfigurationInput
 type OidcConfigurationInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	ClientID graphql.String `json:"clientID"`
-
-	// (Required)
-	ClientSecret graphql.String `json:"clientSecret"`
-
-	// (Required)
-	Issuer graphql.String `json:"issuer"`
-
-	// (Required)
-	TokenEndpointAuthMethod graphql.String `json:"tokenEndpointAuthMethod"`
-
-	// (Required)
-	AuthorizationEndpoint graphql.String `json:"authorizationEndpoint"`
-
-	// (Required)
-	Domains []graphql.String `json:"domains"`
-
-	// (Required)
-	Scopes []graphql.String `json:"scopes"`
-
-	// (Required)
-	EnableDebug graphql.Boolean `json:"enableDebug"`
-
-	// (Optional)
-	TokenEndpoint *graphql.String `json:"tokenEndpoint,omitempty"`
-
-	// (Optional)
-	UserInfoEndpoint *graphql.String `json:"userInfoEndpoint,omitempty"`
-
-	// (Optional)
-	RegistrationEndpoint *graphql.String `json:"registrationEndpoint,omitempty"`
-
-	// (Optional)
-	GroupsClaim *graphql.String `json:"groupsClaim,omitempty"`
-
-	// (Optional)
-	JWKSEndpoint *graphql.String `json:"JWKSEndpoint,omitempty"`
-
-	// (Optional)
-	UserClaim *graphql.String `json:"userClaim,omitempty"`
-
-	// (Optional)
-	DefaultIdp *graphql.Boolean `json:"defaultIdp,omitempty"`
-
-	// (Optional)
-	HumioOwned *graphql.Boolean `json:"humioOwned,omitempty"`
-
-	// (Optional)
-	LazyCreateUsers *graphql.Boolean `json:"lazyCreateUsers,omitempty"`
+	Name                    graphql.String   `json:"name"`                           // Required
+	ClientID                graphql.String   `json:"clientID"`                       // Required
+	ClientSecret            graphql.String   `json:"clientSecret"`                   // Required
+	Issuer                  graphql.String   `json:"issuer"`                         // Required
+	TokenEndpointAuthMethod graphql.String   `json:"tokenEndpointAuthMethod"`        // Required
+	AuthorizationEndpoint   graphql.String   `json:"authorizationEndpoint"`          // Required
+	Domains                 []graphql.String `json:"domains"`                        // Required
+	Scopes                  []graphql.String `json:"scopes"`                         // Required
+	EnableDebug             graphql.Boolean  `json:"enableDebug"`                    // Required
+	TokenEndpoint           *graphql.String  `json:"tokenEndpoint,omitempty"`        // Optional
+	UserInfoEndpoint        *graphql.String  `json:"userInfoEndpoint,omitempty"`     // Optional
+	RegistrationEndpoint    *graphql.String  `json:"registrationEndpoint,omitempty"` // Optional
+	GroupsClaim             *graphql.String  `json:"groupsClaim,omitempty"`          // Optional
+	JWKSEndpoint            *graphql.String  `json:"JWKSEndpoint,omitempty"`         // Optional
+	UserClaim               *graphql.String  `json:"userClaim,omitempty"`            // Optional
+	DefaultIdp              *graphql.Boolean `json:"defaultIdp,omitempty"`           // Optional
+	HumioOwned              *graphql.Boolean `json:"humioOwned,omitempty"`           // Optional
+	LazyCreateUsers         *graphql.Boolean `json:"lazyCreateUsers,omitempty"`      // Optional
 }
 
-// OrderByUserFieldInput
 type OrderByUserFieldInput struct {
-
-	// (Required)
-	UserField OrderByUserField `json:"userField"`
-
-	// (Required)
-	Order OrderByDirection `json:"order"`
+	UserField OrderByUserField `json:"userField"` // Required
+	Order     OrderByDirection `json:"order"`     // Required
 }
 
-// OrganizationLimitsInput
 type OrganizationLimitsInput struct {
-
-	// Ingest in bytes. (Required)
-	Ingest Long `json:"ingest"`
-
-	// Retention in days. (Required)
-	Retention graphql.Int `json:"retention"`
-
-	// (Required)
-	Users graphql.Int `json:"users"`
-
-	// (Required)
-	Expiration Long `json:"expiration"`
-
-	// (Optional)
-	AllowSelfService *graphql.Boolean `json:"allowSelfService,omitempty"`
-
-	// (Optional)
-	ContractVersion *Organizations__ContractVersion `json:"contractVersion,omitempty"`
+	// Ingest in bytes.
+	Ingest Long `json:"ingest"` // Required
+	// Retention in days.
+	Retention        graphql.Int                     `json:"retention"`                  // Required
+	Users            graphql.Int                     `json:"users"`                      // Required
+	Expiration       Long                            `json:"expiration"`                 // Required
+	AllowSelfService *graphql.Boolean                `json:"allowSelfService,omitempty"` // Optional
+	ContractVersion  *Organizations__ContractVersion `json:"contractVersion,omitempty"`  // Optional
 }
 
-// ParameterFilePropertiesInput
 type ParameterFilePropertiesInput struct {
-
-	// (Required)
-	FileName graphql.String `json:"fileName"`
-
-	// (Required)
-	ValueColumn graphql.String `json:"valueColumn"`
-
-	// (Required)
-	ValueFilters []ParameterFileValueFilter `json:"valueFilters"`
-
-	// (Optional)
-	LabelColumn *graphql.String `json:"labelColumn,omitempty"`
-
-	// (Optional)
-	InvalidInputPatterns *[]graphql.String `json:"invalidInputPatterns,omitempty"`
-
-	// (Optional)
-	InvalidInputMessage *graphql.String `json:"invalidInputMessage,omitempty"`
+	FileName             graphql.String             `json:"fileName"`                       // Required
+	ValueColumn          graphql.String             `json:"valueColumn"`                    // Required
+	ValueFilters         []ParameterFileValueFilter `json:"valueFilters"`                   // Required
+	LabelColumn          *graphql.String            `json:"labelColumn,omitempty"`          // Optional
+	InvalidInputPatterns *[]graphql.String          `json:"invalidInputPatterns,omitempty"` // Optional
+	InvalidInputMessage  *graphql.String            `json:"invalidInputMessage,omitempty"`  // Optional
 }
 
-// ParameterFileValueFilter
 type ParameterFileValueFilter struct {
-
-	// (Required)
-	Field graphql.String `json:"field"`
-
-	// (Required)
-	Values []graphql.String `json:"values"`
+	Field  graphql.String   `json:"field"`  // Required
+	Values []graphql.String `json:"values"` // Required
 }
 
-// ParameterFixedListOption
 type ParameterFixedListOption struct {
-
-	// (Required)
-	Label graphql.String `json:"label"`
-
-	// (Required)
-	Value graphql.String `json:"value"`
+	Label graphql.String `json:"label"` // Required
+	Value graphql.String `json:"value"` // Required
 }
 
-// ParameterFixedListPropertiesInput
 type ParameterFixedListPropertiesInput struct {
-
-	// (Required)
-	Values []ParameterFixedListOption `json:"values"`
+	Values []ParameterFixedListOption `json:"values"` // Required
 }
 
-// ParameterFreeTextPropertiesInput
 type ParameterFreeTextPropertiesInput struct {
-
-	// (Optional)
-	InvalidInputPatterns *[]graphql.String `json:"invalidInputPatterns,omitempty"`
-
-	// (Optional)
-	InvalidInputMessage *graphql.String `json:"invalidInputMessage,omitempty"`
+	InvalidInputPatterns *[]graphql.String `json:"invalidInputPatterns,omitempty"` // Optional
+	InvalidInputMessage  *graphql.String   `json:"invalidInputMessage,omitempty"`  // Optional
 }
 
-// ParameterInput
 type ParameterInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	Label graphql.String `json:"label"`
-
-	// (Optional)
-	DefaultValue *graphql.String `json:"defaultValue,omitempty"`
-
-	// (Optional)
-	Order *graphql.Int `json:"order,omitempty"`
-
-	// (Optional)
-	FreeTextOptions *ParameterFreeTextPropertiesInput `json:"freeTextOptions,omitempty"`
-
-	// (Optional)
-	QueryOptions *ParameterQueryPropertiesInput `json:"queryOptions,omitempty"`
-
-	// (Optional)
-	FixedListOptions *ParameterFixedListPropertiesInput `json:"fixedListOptions,omitempty"`
-
-	// (Optional)
-	FileOptions *ParameterFilePropertiesInput `json:"fileOptions,omitempty"`
-
-	// [PREVIEW: The multi-value parameters feature is still in development.]. (Optional)
-	IsMultiParam *graphql.Boolean `json:"isMultiParam,omitempty"`
-
-	// [PREVIEW: The multi-value parameters feature is still in development.]. (Optional)
-	DefaultMultiValues *[]graphql.String `json:"defaultMultiValues,omitempty"`
+	ID               graphql.String                     `json:"id"`                         // Required
+	Label            graphql.String                     `json:"label"`                      // Required
+	DefaultValue     *graphql.String                    `json:"defaultValue,omitempty"`     // Optional
+	Order            *graphql.Int                       `json:"order,omitempty"`            // Optional
+	FreeTextOptions  *ParameterFreeTextPropertiesInput  `json:"freeTextOptions,omitempty"`  // Optional
+	QueryOptions     *ParameterQueryPropertiesInput     `json:"queryOptions,omitempty"`     // Optional
+	FixedListOptions *ParameterFixedListPropertiesInput `json:"fixedListOptions,omitempty"` // Optional
+	FileOptions      *ParameterFilePropertiesInput      `json:"fileOptions,omitempty"`      // Optional
+	// [PREVIEW: The multi-value parameters feature is still in development.].
+	IsMultiParam *graphql.Boolean `json:"isMultiParam,omitempty"` // Optional
+	// [PREVIEW: The multi-value parameters feature is still in development.].
+	DefaultMultiValues *[]graphql.String `json:"defaultMultiValues,omitempty"` // Optional
 }
 
-// ParameterQueryPropertiesInput
 type ParameterQueryPropertiesInput struct {
-
-	// (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// (Required)
-	TimeWindow graphql.String `json:"timeWindow"`
-
-	// (Required)
-	OptionValueField graphql.String `json:"optionValueField"`
-
-	// (Required)
-	OptionLabelField graphql.String `json:"optionLabelField"`
-
-	// (Required)
-	UseDashboardTimeIfSet graphql.Boolean `json:"useDashboardTimeIfSet"`
-
-	// (Optional)
-	InvalidInputPatterns *[]graphql.String `json:"invalidInputPatterns,omitempty"`
-
-	// (Optional)
-	InvalidInputMessage *graphql.String `json:"invalidInputMessage,omitempty"`
+	QueryString           graphql.String    `json:"queryString"`                    // Required
+	TimeWindow            graphql.String    `json:"timeWindow"`                     // Required
+	OptionValueField      graphql.String    `json:"optionValueField"`               // Required
+	OptionLabelField      graphql.String    `json:"optionLabelField"`               // Required
+	UseDashboardTimeIfSet graphql.Boolean   `json:"useDashboardTimeIfSet"`          // Required
+	InvalidInputPatterns  *[]graphql.String `json:"invalidInputPatterns,omitempty"` // Optional
+	InvalidInputMessage   *graphql.String   `json:"invalidInputMessage,omitempty"`  // Optional
 }
 
 // ParameterSpecificationInput represents the specification of a parameter.
 type ParameterSpecificationInput struct {
-
-	// The name of the parameter. (Required)
-	Name graphql.String `json:"name"`
-
-	// The type of the parameter". (Required)
-	ParameterType ParameterTypeEnum `json:"parameterType"`
-
-	// Restricts the smallest allowed value for parameters of type Long. (Optional)
-	MinLong *Long `json:"minLong,omitempty"`
-
-	// Restricts the largest allowed value for parameters of type Long. (Optional)
-	MaxLong *Long `json:"maxLong,omitempty"`
-
-	// Restricts the smallest allowed value for parameters of type Double. (Optional)
-	MinDouble *graphql.Float `json:"minDouble,omitempty"`
-
-	// Restricts the largest allowed value for parameters of type Double. (Optional)
-	MaxDouble *graphql.Float `json:"maxDouble,omitempty"`
-
-	// Restricts the minimum number of allowed elements for parameters of type Array. (Optional)
-	MinLength *graphql.Int `json:"minLength,omitempty"`
-
-	// Defines a default value of the parameter. (Optional)
-	DefaultValue *[]graphql.String `json:"defaultValue,omitempty"`
+	// The name of the parameter.
+	Name graphql.String `json:"name"` // Required
+	// The type of the parameter".
+	ParameterType ParameterTypeEnum `json:"parameterType"` // Required
+	// Restricts the smallest allowed value for parameters of type Long.
+	MinLong *Long `json:"minLong,omitempty"` // Optional
+	// Restricts the largest allowed value for parameters of type Long.
+	MaxLong *Long `json:"maxLong,omitempty"` // Optional
+	// Restricts the smallest allowed value for parameters of type Double.
+	MinDouble *graphql.Float `json:"minDouble,omitempty"` // Optional
+	// Restricts the largest allowed value for parameters of type Double.
+	MaxDouble *graphql.Float `json:"maxDouble,omitempty"` // Optional
+	// Restricts the minimum number of allowed elements for parameters of type Array.
+	MinLength *graphql.Int `json:"minLength,omitempty"` // Optional
+	// Defines a default value of the parameter.
+	DefaultValue *[]graphql.String `json:"defaultValue,omitempty"` // Optional
 }
 
 // ParserTestRunInput represents input for testing a parser.
 type ParserTestRunInput struct {
-
-	// The name of the repository the parser is located in. This is part of the test output in the `#repo` field in each parsed event. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// The name of the parser. This is part of the test output in the `#type` field in each parsed event. (Required)
-	ParserName graphql.String `json:"parserName"`
-
-	// The parser script to be tested. (Required)
-	ParserScript graphql.String `json:"parserScript"`
-
-	// The fields to tag in the parser. (Required)
-	TagFields []graphql.String `json:"tagFields"`
-
-	// The test cases to test the parser against. (Required)
-	TestCases []TestCaseInput `json:"testCases"`
+	// The name of the repository the parser is located in. This is part of the test output in the `#repo` field in each parsed event.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// The name of the parser. This is part of the test output in the `#type` field in each parsed event.
+	ParserName graphql.String `json:"parserName"` // Required
+	// The parser script to be tested.
+	ParserScript graphql.String `json:"parserScript"` // Required
+	// The fields to tag in the parser.
+	TagFields []graphql.String `json:"tagFields"` // Required
+	// The test cases to test the parser against.
+	TestCases []TestCaseInput `json:"testCases"` // Required
 }
 
 // QueryArgument represents an argument to a query.
 type QueryArgument struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Value graphql.String `json:"value"`
+	Name  graphql.String `json:"name"`  // Required
+	Value graphql.String `json:"value"` // Required
 }
 
 // QueryArgumentInputType represents an argument for a query.
 type QueryArgumentInputType struct {
-
-	// The name of the argument. (Required)
-	Name graphql.String `json:"name"`
-
-	// The value of the argument. (Required)
-	Value graphql.String `json:"value"`
+	// The name of the argument.
+	Name graphql.String `json:"name"` // Required
+	// The value of the argument.
+	Value graphql.String `json:"value"` // Required
 }
 
-// QueryQuotaDefaultSettingsInput
 type QueryQuotaDefaultSettingsInput struct {
-
-	// (Required)
-	Settings []QueryQuotaIntervalSettingInput `json:"settings"`
+	Settings []QueryQuotaIntervalSettingInput `json:"settings"` // Required
 }
 
-// QueryQuotaIntervalSettingInput
 type QueryQuotaIntervalSettingInput struct {
-
-	// (Required)
-	Interval QueryQuotaInterval `json:"interval"`
-
-	// (Required)
-	MeasurementKind QueryQuotaMeasurementKind `json:"measurementKind"`
-
-	// (Required)
-	ValueKind QueryQuotaIntervalSettingKind `json:"valueKind"`
-
-	// (Optional)
-	Value *Long `json:"value,omitempty"`
+	Interval        QueryQuotaInterval            `json:"interval"`        // Required
+	MeasurementKind QueryQuotaMeasurementKind     `json:"measurementKind"` // Required
+	ValueKind       QueryQuotaIntervalSettingKind `json:"valueKind"`       // Required
+	Value           *Long                         `json:"value,omitempty"` // Optional
 }
 
-// QueryQuotaUserSettingsInput
 type QueryQuotaUserSettingsInput struct {
-
-	// (Required)
-	Username graphql.String `json:"username"`
-
-	// (Required)
-	Settings []QueryQuotaIntervalSettingInput `json:"settings"`
+	Username graphql.String                   `json:"username"` // Required
+	Settings []QueryQuotaIntervalSettingInput `json:"settings"` // Required
 }
 
-// RedactEventsInputType
 type RedactEventsInputType struct {
-
-	// The name of the repository to redact events in. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// The start of the interval to perform redactions in. (Required)
-	Start DateTime `json:"start"`
-
-	// The end of the interval to perform redactions in. (Required)
-	End DateTime `json:"end"`
-
-	// The query to use for redaction. Any event returned by this query will be removed. (Required)
-	Query graphql.String `json:"query"`
-
-	// Optional message to log in the audit log for this action. (Optional)
-	UserMessage *graphql.String `json:"userMessage,omitempty"`
+	// The name of the repository to redact events in.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// The start of the interval to perform redactions in.
+	Start DateTime `json:"start"` // Required
+	// The end of the interval to perform redactions in.
+	End DateTime `json:"end"` // Required
+	// The query to use for redaction. Any event returned by this query will be removed.
+	Query graphql.String `json:"query"` // Required
+	// Optional message to log in the audit log for this action.
+	UserMessage *graphql.String `json:"userMessage,omitempty"` // Optional
 }
 
 // RemoveAlertLabel represents data for removing a label from an alert.
 type RemoveAlertLabel struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the alert. (Required)
-	ID graphql.String `json:"id"`
-
-	// Label for the alert. (Required)
-	Label graphql.String `json:"label"`
+	// Name of the view of the alert.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the alert.
+	ID graphql.String `json:"id"` // Required
+	// Label for the alert.
+	Label graphql.String `json:"label"` // Required
 }
 
 // RemoveAliasMappingInput represents [PREVIEW: This functionality is still under development and can change without warning.] Input object for field removeFieldAliasMapping.
 type RemoveAliasMappingInput struct {
-
-	// ID of the schema that the alias mapping exists on. (Required)
-	SchemaID graphql.String `json:"schemaId"`
-
-	// Alias mapping ID. (Required)
-	AliasMappingID graphql.String `json:"aliasMappingId"`
+	// ID of the schema that the alias mapping exists on.
+	SchemaID graphql.String `json:"schemaId"` // Required
+	// Alias mapping ID.
+	AliasMappingID graphql.String `json:"aliasMappingId"` // Required
 }
 
 // RemoveFromBlocklistInput represents data for removing a blocklist entry.
 type RemoveFromBlocklistInput struct {
-
-	// The ID of the blocklist entry to remove. (Required)
-	ID graphql.String `json:"id"`
+	// The ID of the blocklist entry to remove.
+	ID graphql.String `json:"id"` // Required
 }
 
 // RemoveLabelScheduledSearch represents data for removing a label.
 type RemoveLabelScheduledSearch struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the scheduled search. (Required)
-	ID graphql.String `json:"id"`
-
-	// Label for the scheduled search. (Required)
-	Label graphql.String `json:"label"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the scheduled search.
+	ID graphql.String `json:"id"` // Required
+	// Label for the scheduled search.
+	Label graphql.String `json:"label"` // Required
 }
 
-// RemoveLimitInput
 type RemoveLimitInput struct {
-
-	// (Required)
-	LimitName graphql.String `json:"limitName"`
+	LimitName graphql.String `json:"limitName"` // Required
 }
 
-// RemoveOrganizationRoleFromGroupInput
 type RemoveOrganizationRoleFromGroupInput struct {
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Required)
-	RoleID graphql.String `json:"roleId"`
+	GroupID graphql.String `json:"groupId"` // Required
+	RoleID  graphql.String `json:"roleId"`  // Required
 }
 
-// RemoveParserInput
 type RemoveParserInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
+	ID             graphql.String `json:"id"`             // Required
+	RepositoryName graphql.String `json:"repositoryName"` // Required
 }
 
 // RemoveRepoCachePolicyInput represents data to remove a repository cache policy.
 type RemoveRepoCachePolicyInput struct {
-
-	// Name of repository. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
+	// Name of repository.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
 }
 
-// RemoveRoleFromGroupInput
 type RemoveRoleFromGroupInput struct {
-
-	// (Required)
-	ViewID graphql.String `json:"viewId"`
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Required)
-	RoleID graphql.String `json:"roleId"`
+	ViewID  graphql.String `json:"viewId"`  // Required
+	GroupID graphql.String `json:"groupId"` // Required
+	RoleID  graphql.String `json:"roleId"`  // Required
 }
 
-// RemoveSecondarySubdomainInput
 type RemoveSecondarySubdomainInput struct {
-
-	// (Required)
-	Subdomain graphql.String `json:"subdomain"`
+	Subdomain graphql.String `json:"subdomain"` // Required
 }
 
 // RemoveStarFromAlert represents data for removing a star from an alert.
 type RemoveStarFromAlert struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the alert. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the alert.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the alert.
+	ID graphql.String `json:"id"` // Required
 }
 
-// RemoveStarFromQueryInput
 type RemoveStarFromQueryInput struct {
-
-	// (Required)
-	SavedQueryID graphql.String `json:"savedQueryId"`
-
-	// (Required)
-	SearchDomainName graphql.String `json:"searchDomainName"`
+	SavedQueryID     graphql.String `json:"savedQueryId"`     // Required
+	SearchDomainName graphql.String `json:"searchDomainName"` // Required
 }
 
 // RemoveStarScheduledSearch represents data for removing a star.
 type RemoveStarScheduledSearch struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the scheduled search. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the scheduled search.
+	ID graphql.String `json:"id"` // Required
 }
 
-// RemoveStarToFieldInput
 type RemoveStarToFieldInput struct {
-
-	// (Required)
-	FieldName graphql.String `json:"fieldName"`
-
-	// (Required)
-	SearchDomainName graphql.String `json:"searchDomainName"`
+	FieldName        graphql.String `json:"fieldName"`        // Required
+	SearchDomainName graphql.String `json:"searchDomainName"` // Required
 }
 
-// RemoveSystemRoleFromGroupInput
 type RemoveSystemRoleFromGroupInput struct {
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Required)
-	RoleID graphql.String `json:"roleId"`
+	GroupID graphql.String `json:"groupId"` // Required
+	RoleID  graphql.String `json:"roleId"`  // Required
 }
 
-// RemoveUserByIdInput
 type RemoveUserByIdInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
+	ID graphql.String `json:"id"` // Required
 }
 
-// RemoveUserInput
 type RemoveUserInput struct {
-
-	// (Required)
-	Username graphql.String `json:"username"`
+	Username graphql.String `json:"username"` // Required
 }
 
-// RemoveUsersFromGroupInput
 type RemoveUsersFromGroupInput struct {
-
-	// (Required)
-	Users []graphql.String `json:"users"`
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
+	Users   []graphql.String `json:"users"`   // Required
+	GroupID graphql.String   `json:"groupId"` // Required
 }
 
-// RenameSearchDomainByIdInput
 type RenameSearchDomainByIdInput struct {
-
-	// The id of the search domain. (Required)
-	ID graphql.String `json:"id"`
-
-	// The new name of the search domain. (Required)
-	NewName graphql.String `json:"newName"`
-
-	// Optional message to why the search domain was renamed. Will be added to the audit log. (Optional)
-	RenameMessage *graphql.String `json:"renameMessage,omitempty"`
+	// The id of the search domain.
+	ID graphql.String `json:"id"` // Required
+	// The new name of the search domain.
+	NewName graphql.String `json:"newName"` // Required
+	// Optional message to why the search domain was renamed. Will be added to the audit log.
+	RenameMessage *graphql.String `json:"renameMessage,omitempty"` // Optional
 }
 
-// RepoFilterInput
 type RepoFilterInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Filter graphql.String `json:"filter"`
+	Name   graphql.String `json:"name"`   // Required
+	Filter graphql.String `json:"filter"` // Required
 }
 
-// RestoreDeletedSearchDomainInput
 type RestoreDeletedSearchDomainInput struct {
-
-	// The id of the search domain. (Required)
-	ID graphql.String `json:"id"`
+	// The id of the search domain.
+	ID graphql.String `json:"id"` // Required
 }
 
-// ResubmitMarketoLeadData
 type ResubmitMarketoLeadData struct {
-
-	// (Optional)
-	UtmParams *UtmParams `json:"utmParams,omitempty"`
-
-	// (Optional)
-	Zip *graphql.String `json:"zip,omitempty"`
+	UtmParams *UtmParams      `json:"utmParams,omitempty"` // Optional
+	Zip       *graphql.String `json:"zip,omitempty"`       // Optional
 }
 
-// RevokeSessionInput
 type RevokeSessionInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	RevocationType SessionRevocation__Type `json:"revocationType"`
+	ID             graphql.String          `json:"id"`             // Required
+	RevocationType SessionRevocation__Type `json:"revocationType"` // Required
 }
 
-// RotateTokenInputData
 type RotateTokenInputData struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
+	ID graphql.String `json:"id"` // Required
 }
 
-// SchemaFieldInput
 type SchemaFieldInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Optional)
-	Description *graphql.String `json:"description,omitempty"`
+	Name        graphql.String  `json:"name"`                  // Required
+	Description *graphql.String `json:"description,omitempty"` // Optional
 }
 
-// SearchLinkInteractionInput
 type SearchLinkInteractionInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// (Required)
-	IsLive graphql.Boolean `json:"isLive"`
-
-	// (Required)
-	Arguments []ArgumentInput `json:"arguments"`
-
-	// (Required)
-	OpenInNewTab graphql.Boolean `json:"openInNewTab"`
-
-	// (Required)
-	UseWidgetTimeWindow graphql.Boolean `json:"useWidgetTimeWindow"`
-
-	// (Optional)
-	TitleTemplate *graphql.String `json:"titleTemplate,omitempty"`
-
-	// (Optional)
-	RepoOrViewName *RepoOrViewName `json:"repoOrViewName,omitempty"`
-
-	// (Optional)
-	FieldInteractionConditions *[]FieldInteractionConditionInput `json:"fieldInteractionConditions,omitempty"`
+	Name                       graphql.String                    `json:"name"`                                 // Required
+	QueryString                graphql.String                    `json:"queryString"`                          // Required
+	IsLive                     graphql.Boolean                   `json:"isLive"`                               // Required
+	Arguments                  []ArgumentInput                   `json:"arguments"`                            // Required
+	OpenInNewTab               graphql.Boolean                   `json:"openInNewTab"`                         // Required
+	UseWidgetTimeWindow        graphql.Boolean                   `json:"useWidgetTimeWindow"`                  // Required
+	TitleTemplate              *graphql.String                   `json:"titleTemplate,omitempty"`              // Optional
+	RepoOrViewName             *RepoOrViewName                   `json:"repoOrViewName,omitempty"`             // Optional
+	FieldInteractionConditions *[]FieldInteractionConditionInput `json:"fieldInteractionConditions,omitempty"` // Optional
 }
 
-// ServiceLevelIndicatorLogArg
 type ServiceLevelIndicatorLogArg struct {
-
-	// (Required)
-	FrontendVersion graphql.String `json:"frontendVersion"`
-
-	// (Required)
-	Content JSON `json:"content"`
+	FrontendVersion graphql.String `json:"frontendVersion"` // Required
+	Content         JSON           `json:"content"`         // Required
 }
 
-// SessionInput
 type SessionInput struct {
-
-	// (Required)
-	MaxInactivityPeriod Long `json:"maxInactivityPeriod"`
-
-	// (Required)
-	ForceReauthenticationAfter Long `json:"forceReauthenticationAfter"`
+	MaxInactivityPeriod        Long `json:"maxInactivityPeriod"`        // Required
+	ForceReauthenticationAfter Long `json:"forceReauthenticationAfter"` // Required
 }
 
-// SetDefaultSavedQueryInput
 type SetDefaultSavedQueryInput struct {
-
-	// (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// (Optional)
-	SavedQueryID *graphql.String `json:"savedQueryId,omitempty"`
+	ViewName     graphql.String  `json:"viewName"`               // Required
+	SavedQueryID *graphql.String `json:"savedQueryId,omitempty"` // Optional
 }
 
 // SetGlobalDefaultCachePolicyInput represents data to set a global default cache policy.
 type SetGlobalDefaultCachePolicyInput struct {
-
-	// Policy to set. (Required)
-	Policy CachePolicyInput `json:"policy"`
+	// Policy to set.
+	Policy CachePolicyInput `json:"policy"` // Required
 }
 
-// SetLimitDisplayNameInput
 type SetLimitDisplayNameInput struct {
-
-	// (Required)
-	LimitName graphql.String `json:"limitName"`
-
-	// (Optional)
-	DisplayName *graphql.String `json:"displayName,omitempty"`
+	LimitName   graphql.String  `json:"limitName"`             // Required
+	DisplayName *graphql.String `json:"displayName,omitempty"` // Optional
 }
 
 // SetOrgDefaultCachePolicyInput represents data to set a organization default cache policy.
 type SetOrgDefaultCachePolicyInput struct {
-
-	// Policy to set. (Required)
-	Policy CachePolicyInput `json:"policy"`
+	// Policy to set.
+	Policy CachePolicyInput `json:"policy"` // Required
 }
 
-// SetPrimarySubdomainInput
 type SetPrimarySubdomainInput struct {
-
-	// (Required)
-	Subdomain graphql.String `json:"subdomain"`
+	Subdomain graphql.String `json:"subdomain"` // Required
 }
 
 // SetRepoCachePolicyInput represents data to set a repo cache policy.
 type SetRepoCachePolicyInput struct {
-
-	// Name of repository. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// Policy to set. (Required)
-	Policy CachePolicyInput `json:"policy"`
+	// Name of repository.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// Policy to set.
+	Policy CachePolicyInput `json:"policy"` // Required
 }
 
-// SetSubdomainSettingsInput
 type SetSubdomainSettingsInput struct {
-
-	// (Required)
-	PrimarySubdomain graphql.String `json:"primarySubdomain"`
-
-	// (Required)
-	EnforceSubdomains graphql.Boolean `json:"enforceSubdomains"`
-
-	// (Optional)
-	SecondarySubdomains *[]graphql.String `json:"secondarySubdomains,omitempty"`
+	PrimarySubdomain    graphql.String    `json:"primarySubdomain"`              // Required
+	EnforceSubdomains   graphql.Boolean   `json:"enforceSubdomains"`             // Required
+	SecondarySubdomains *[]graphql.String `json:"secondarySubdomains,omitempty"` // Optional
 }
 
 // SharedDashboardsSecurityPoliciesInput represents data for updating shared dashboards security policies.
 type SharedDashboardsSecurityPoliciesInput struct {
-
-	// Whether shared dashboard tokens should be enabled. (Required)
-	SharedDashboardsEnabled graphql.Boolean `json:"sharedDashboardsEnabled"`
-
-	// The IP filter that will be enforced on all shared dashboard tokens. (Optional)
-	EnforceIPFilterID *graphql.String `json:"enforceIpFilterId,omitempty"`
+	// Whether shared dashboard tokens should be enabled.
+	SharedDashboardsEnabled graphql.Boolean `json:"sharedDashboardsEnabled"` // Required
+	// The IP filter that will be enforced on all shared dashboard tokens.
+	EnforceIPFilterID *graphql.String `json:"enforceIpFilterId,omitempty"` // Optional
 }
 
 // SlackFieldEntryInput represents slack message field entry.
 type SlackFieldEntryInput struct {
-
-	// Key of a Slack field. (Required)
-	FieldName graphql.String `json:"fieldName"`
-
-	// Value of a Slack field. (Required)
-	Value graphql.String `json:"value"`
+	// Key of a Slack field.
+	FieldName graphql.String `json:"fieldName"` // Required
+	// Value of a Slack field.
+	Value graphql.String `json:"value"` // Required
 }
 
-// SocialLoginSettingsInput
 type SocialLoginSettingsInput struct {
-
-	// (Required)
-	SocialProviderProfile SocialProviderProfile `json:"socialProviderProfile"`
-
-	// (Required)
-	Filter SocialLoginField `json:"filter"`
-
-	// (Required)
-	AllowList []graphql.String `json:"allowList"`
+	SocialProviderProfile SocialProviderProfile `json:"socialProviderProfile"` // Required
+	Filter                SocialLoginField      `json:"filter"`                // Required
+	AllowList             []graphql.String      `json:"allowList"`             // Required
 }
 
-// StopQueriesInput
 type StopQueriesInput struct {
-
-	// Whether to stop queries globally. Requires the ManageCluster permission. (Optional)
-	ClusterWide *graphql.Boolean `json:"clusterWide,omitempty"`
+	// Whether to stop queries globally. Requires the ManageCluster permission.
+	ClusterWide *graphql.Boolean `json:"clusterWide,omitempty"` // Optional
 }
 
 // TagGroupingRuleInput represents the grouping rule for a given tag.
 type TagGroupingRuleInput struct {
-
-	// The tag name to which the rule will apply. (Required)
-	TagName graphql.String `json:"tagName"`
-
-	// The number of groups the tag will be split into. (Required)
-	GroupCount graphql.Int `json:"groupCount"`
+	// The tag name to which the rule will apply.
+	TagName graphql.String `json:"tagName"` // Required
+	// The number of groups the tag will be split into.
+	GroupCount graphql.Int `json:"groupCount"` // Required
 }
 
-// TagsInput
 type TagsInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Value graphql.String `json:"value"`
+	Name  graphql.String `json:"name"`  // Required
+	Value graphql.String `json:"value"` // Required
 }
 
 // TestAwsS3SqsIngestFeed represents data for testing an ingest feed that uses AWS S3 and SQS.
 type TestAwsS3SqsIngestFeed struct {
-
-	// Name of the repository of the ingest feed. (Required)
-	RepositoryName RepoOrViewName `json:"repositoryName"`
-
-	// How to authenticate to AWS. (Required)
-	Authentication IngestFeedAwsAuthenticationInput `json:"authentication"`
-
-	// AWS SQS queue url. (Required)
-	SqsURL graphql.String `json:"sqsUrl"`
-
-	// The AWS region to connect to. (Required)
-	Region graphql.String `json:"region"`
+	// Name of the repository of the ingest feed.
+	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
+	// How to authenticate to AWS.
+	Authentication IngestFeedAwsAuthenticationInput `json:"authentication"` // Required
+	// AWS SQS queue url.
+	SqsURL graphql.String `json:"sqsUrl"` // Required
+	// The AWS region to connect to.
+	Region graphql.String `json:"region"` // Required
 }
 
 // TestCaseInput represents a test case for a parser.
 type TestCaseInput struct {
-
-	// The event to parse and test on. (Required)
-	Event TestEventInput `json:"event"`
-
-	// Any assertions to test that a field is not present in the parser output. (Optional)
-	FieldMissingAssertions *[]AssertFieldMissingInput `json:"fieldMissingAssertions,omitempty"`
-
-	// Any assertions to test that a field contains a specific value in the parser output. (Optional)
-	FieldValueEqualsAssertions *[]AssertFieldValueEqualsInput `json:"fieldValueEqualsAssertions,omitempty"`
+	// The event to parse and test on.
+	Event TestEventInput `json:"event"` // Required
+	// Any assertions to test that a field is not present in the parser output.
+	FieldMissingAssertions *[]AssertFieldMissingInput `json:"fieldMissingAssertions,omitempty"` // Optional
+	// Any assertions to test that a field contains a specific value in the parser output.
+	FieldValueEqualsAssertions *[]AssertFieldValueEqualsInput `json:"fieldValueEqualsAssertions,omitempty"` // Optional
 }
 
 // TestEmailAction represents data for testing an email action.
 type TestEmailAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// List of email addresses to send an email to. (Required)
-	Recipients []graphql.String `json:"recipients"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
-
-	// Name of the action.. This is a mock value, the trigger does not have to exist. (Required)
-	TriggerName graphql.String `json:"triggerName"`
-
-	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects. (Required)
-	EventData graphql.String `json:"eventData"`
-
-	// Subject of the email. Can be templated with values from the result. (Optional)
-	SubjectTemplate *graphql.String `json:"subjectTemplate,omitempty"`
-
-	// Body of the email. Can be templated with values from the result. (Optional)
-	BodyTemplate *graphql.String `json:"bodyTemplate,omitempty"`
-
-	// Whether the result set should be be attached as a CSV file. (Optional)
-	AttachCsv *graphql.Boolean `json:"attachCsv,omitempty"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// List of email addresses to send an email to.
+	Recipients []graphql.String `json:"recipients"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
+	// Name of the action.. This is a mock value, the trigger does not have to exist.
+	TriggerName graphql.String `json:"triggerName"` // Required
+	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects.
+	EventData graphql.String `json:"eventData"` // Required
+	// Subject of the email. Can be templated with values from the result.
+	SubjectTemplate *graphql.String `json:"subjectTemplate,omitempty"` // Optional
+	// Body of the email. Can be templated with values from the result.
+	BodyTemplate *graphql.String `json:"bodyTemplate,omitempty"` // Optional
+	// Whether the result set should be be attached as a CSV file.
+	AttachCsv *graphql.Boolean `json:"attachCsv,omitempty"` // Optional
 }
 
 // TestEventInput represents an event for a parser to parse during testing.
 type TestEventInput struct {
-
-	// The contents of `@rawString` field when the event begins parsing. (Required)
-	RawString graphql.String `json:"rawString"`
+	// The contents of `@rawString` field when the event begins parsing.
+	RawString graphql.String `json:"rawString"` // Required
 }
 
 // TestFdrFeed represents data for testing an FDR feed.
 type TestFdrFeed struct {
-
-	// Name of the repository of the FDR feed. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// Id of an existing FDR feed. If no id is provided, the remaining input fields must be set. (Optional)
-	FeedID *graphql.String `json:"feedId,omitempty"`
-
-	// AWS client id to use in FDR feed test. If not set, the 'clientId' of the existing FDR feed will be used. (Optional)
-	ClientID *graphql.String `json:"clientId,omitempty"`
-
-	// AWS client secret to use in FDR feed test. If not set, the 'clientSecret' of the existing FDR feed will be used. (Optional)
-	ClientSecret *graphql.String `json:"clientSecret,omitempty"`
-
-	// AWS SQS queue url to use in FDR feed test. If not set, the 'sqsUrl' of the existing FDR feed will be used. (Optional)
-	SqsURL *graphql.String `json:"sqsUrl,omitempty"`
-
-	// AWS S3 identifier to use in FDR feed test. If not set, the 's3Identifier' of the existing FDR feed will be used. (Optional)
-	S3Identifier *graphql.String `json:"s3Identifier,omitempty"`
+	// Name of the repository of the FDR feed.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// Id of an existing FDR feed. If no id is provided, the remaining input fields must be set.
+	FeedID *graphql.String `json:"feedId,omitempty"` // Optional
+	// AWS client id to use in FDR feed test. If not set, the 'clientId' of the existing FDR feed will be used.
+	ClientID *graphql.String `json:"clientId,omitempty"` // Optional
+	// AWS client secret to use in FDR feed test. If not set, the 'clientSecret' of the existing FDR feed will be used.
+	ClientSecret *graphql.String `json:"clientSecret,omitempty"` // Optional
+	// AWS SQS queue url to use in FDR feed test. If not set, the 'sqsUrl' of the existing FDR feed will be used.
+	SqsURL *graphql.String `json:"sqsUrl,omitempty"` // Optional
+	// AWS S3 identifier to use in FDR feed test. If not set, the 's3Identifier' of the existing FDR feed will be used.
+	S3Identifier *graphql.String `json:"s3Identifier,omitempty"` // Optional
 }
 
 // TestHumioRepoAction represents data for testing a Humio repo action.
 type TestHumioRepoAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Humio ingest token for the dataspace that the action should ingest into. (Required)
-	IngestToken graphql.String `json:"ingestToken"`
-
-	// Name of the action.. This is a mock value, the trigger does not have to exist. (Required)
-	TriggerName graphql.String `json:"triggerName"`
-
-	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects. (Required)
-	EventData graphql.String `json:"eventData"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Humio ingest token for the dataspace that the action should ingest into.
+	IngestToken graphql.String `json:"ingestToken"` // Required
+	// Name of the action.. This is a mock value, the trigger does not have to exist.
+	TriggerName graphql.String `json:"triggerName"` // Required
+	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects.
+	EventData graphql.String `json:"eventData"` // Required
 }
 
 // TestKafkaEventForwarder represents data for testing a Kafka event forwarder.
 type TestKafkaEventForwarder struct {
-
-	// Name of the event forwarder. (Required)
-	Name graphql.String `json:"name"`
-
-	// Description of the event forwarder. (Required)
-	Description graphql.String `json:"description"`
-
-	// The Kafka producer configuration used to forward events in the form of properties (x.y.z=abc). See https://library.humio.com/humio-server/ingesting-data-event-forwarders.html#kafka-configuration. (Required)
-	Properties graphql.String `json:"properties"`
-
-	// The Kafka topic the events should be forwarded to. (Required)
-	Topic graphql.String `json:"topic"`
-
-	// Is the event forwarder enabled. (Optional)
-	Enabled *graphql.Boolean `json:"enabled,omitempty"`
+	// Name of the event forwarder.
+	Name graphql.String `json:"name"` // Required
+	// Description of the event forwarder.
+	Description graphql.String `json:"description"` // Required
+	// The Kafka producer configuration used to forward events in the form of properties (x.y.z=abc). See https://library.humio.com/humio-server/ingesting-data-event-forwarders.html#kafka-configuration.
+	Properties graphql.String `json:"properties"` // Required
+	// The Kafka topic the events should be forwarded to.
+	Topic graphql.String `json:"topic"` // Required
+	// Is the event forwarder enabled.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
 }
 
 // TestOpsGenieAction represents data for testing an OpsGenie action.
 type TestOpsGenieAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// OpsGenie webhook url to send the request to. (Required)
-	APIURL graphql.String `json:"apiUrl"`
-
-	// Key to authenticate with OpsGenie. (Required)
-	GenieKey graphql.String `json:"genieKey"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
-
-	// Name of the action.. This is a mock value, the trigger does not have to exist. (Required)
-	TriggerName graphql.String `json:"triggerName"`
-
-	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects. (Required)
-	EventData graphql.String `json:"eventData"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// OpsGenie webhook url to send the request to.
+	APIURL graphql.String `json:"apiUrl"` // Required
+	// Key to authenticate with OpsGenie.
+	GenieKey graphql.String `json:"genieKey"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
+	// Name of the action.. This is a mock value, the trigger does not have to exist.
+	TriggerName graphql.String `json:"triggerName"` // Required
+	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects.
+	EventData graphql.String `json:"eventData"` // Required
 }
 
 // TestPagerDutyAction represents data for testing a PagerDuty action.
 type TestPagerDutyAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Severity level to give to the message. (Required)
-	Severity graphql.String `json:"severity"`
-
-	// Routing key to authenticate with PagerDuty. (Required)
-	RoutingKey graphql.String `json:"routingKey"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
-
-	// Name of the action.. This is a mock value, the trigger does not have to exist. (Required)
-	TriggerName graphql.String `json:"triggerName"`
-
-	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects. (Required)
-	EventData graphql.String `json:"eventData"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Severity level to give to the message.
+	Severity graphql.String `json:"severity"` // Required
+	// Routing key to authenticate with PagerDuty.
+	RoutingKey graphql.String `json:"routingKey"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
+	// Name of the action.. This is a mock value, the trigger does not have to exist.
+	TriggerName graphql.String `json:"triggerName"` // Required
+	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects.
+	EventData graphql.String `json:"eventData"` // Required
 }
 
 // TestParserInputV2 represents input for testing a parser.
 type TestParserInputV2 struct {
-
-	// The name of the repository the parser is located in. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// The id of the parser. (Required)
-	ParserID graphql.String `json:"parserId"`
-
-	// The name of the parser. (Required)
-	ParserName graphql.String `json:"parserName"`
-
-	// The parser script to be tested. (Required)
-	ParserScript graphql.String `json:"parserScript"`
-
-	// The events to test the parser on. (Required)
-	TestData []graphql.String `json:"testData"`
+	// The name of the repository the parser is located in.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// The id of the parser.
+	ParserID graphql.String `json:"parserId"` // Required
+	// The name of the parser.
+	ParserName graphql.String `json:"parserName"` // Required
+	// The parser script to be tested.
+	ParserScript graphql.String `json:"parserScript"` // Required
+	// The events to test the parser on.
+	TestData []graphql.String `json:"testData"` // Required
 }
 
 // TestPostMessageSlackAction represents data for testing a post message Slack action.
 type TestPostMessageSlackAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Api token to authenticate with Slack. (Required)
-	APIToken graphql.String `json:"apiToken"`
-
-	// List of Slack channels to message. (Required)
-	Channels []graphql.String `json:"channels"`
-
-	// Fields to include within the Slack message. Can be templated with values from the result. (Required)
-	Fields []SlackFieldEntryInput `json:"fields"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
-
-	// Name of the action.. This is a mock value, the trigger does not have to exist. (Required)
-	TriggerName graphql.String `json:"triggerName"`
-
-	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects. (Required)
-	EventData graphql.String `json:"eventData"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Api token to authenticate with Slack.
+	APIToken graphql.String `json:"apiToken"` // Required
+	// List of Slack channels to message.
+	Channels []graphql.String `json:"channels"` // Required
+	// Fields to include within the Slack message. Can be templated with values from the result.
+	Fields []SlackFieldEntryInput `json:"fields"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
+	// Name of the action.. This is a mock value, the trigger does not have to exist.
+	TriggerName graphql.String `json:"triggerName"` // Required
+	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects.
+	EventData graphql.String `json:"eventData"` // Required
 }
 
 // TestSlackAction represents data for testing a Slack action.
 type TestSlackAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Slack webhook url to send the request to. (Required)
-	URL graphql.String `json:"url"`
-
-	// Fields to include within the Slack message. Can be templated with values from the result. (Required)
-	Fields []SlackFieldEntryInput `json:"fields"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
-
-	// Name of the action.. This is a mock value, the trigger does not have to exist. (Required)
-	TriggerName graphql.String `json:"triggerName"`
-
-	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects. (Required)
-	EventData graphql.String `json:"eventData"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Slack webhook url to send the request to.
+	URL graphql.String `json:"url"` // Required
+	// Fields to include within the Slack message. Can be templated with values from the result.
+	Fields []SlackFieldEntryInput `json:"fields"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
+	// Name of the action.. This is a mock value, the trigger does not have to exist.
+	TriggerName graphql.String `json:"triggerName"` // Required
+	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects.
+	EventData graphql.String `json:"eventData"` // Required
 }
 
 // TestUploadFileAction represents data for testing an upload file action.
 type TestUploadFileAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// File name for the uploaded file. (Required)
-	FileName graphql.String `json:"fileName"`
-
-	// Name of the action.. This is a mock value, the trigger does not have to exist. (Required)
-	TriggerName graphql.String `json:"triggerName"`
-
-	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects. (Required)
-	EventData graphql.String `json:"eventData"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// File name for the uploaded file.
+	FileName graphql.String `json:"fileName"` // Required
+	// Name of the action.. This is a mock value, the trigger does not have to exist.
+	TriggerName graphql.String `json:"triggerName"` // Required
+	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects.
+	EventData graphql.String `json:"eventData"` // Required
 }
 
 // TestVictorOpsAction represents data for testing a VictorOps action.
 type TestVictorOpsAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Type of the VictorOps message to make. (Required)
-	MessageType graphql.String `json:"messageType"`
-
-	// VictorOps webhook url to send the request to. (Required)
-	NotifyURL graphql.String `json:"notifyUrl"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
-
-	// Name of the action.. This is a mock value, the trigger does not have to exist. (Required)
-	TriggerName graphql.String `json:"triggerName"`
-
-	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects. (Required)
-	EventData graphql.String `json:"eventData"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Type of the VictorOps message to make.
+	MessageType graphql.String `json:"messageType"` // Required
+	// VictorOps webhook url to send the request to.
+	NotifyURL graphql.String `json:"notifyUrl"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
+	// Name of the action.. This is a mock value, the trigger does not have to exist.
+	TriggerName graphql.String `json:"triggerName"` // Required
+	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects.
+	EventData graphql.String `json:"eventData"` // Required
 }
 
 // TestWebhookAction represents data for testing a webhook action.
 type TestWebhookAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Url to send the http(s) request to. (Required)
-	URL graphql.String `json:"url"`
-
-	// Method to use for the request. (Required)
-	Method graphql.String `json:"method"`
-
-	// Headers of the http(s) request. (Required)
-	Headers []HttpHeaderEntryInput `json:"headers"`
-
-	// Body of the http(s) request. Can be templated with values from the result. (Required)
-	BodyTemplate graphql.String `json:"bodyTemplate"`
-
-	// Flag indicating whether SSL should be ignored for the request. (Required)
-	IgnoreSSL graphql.Boolean `json:"ignoreSSL"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
-
-	// Name of the action.. This is a mock value, the trigger does not have to exist. (Required)
-	TriggerName graphql.String `json:"triggerName"`
-
-	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects. (Required)
-	EventData graphql.String `json:"eventData"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Url to send the http(s) request to.
+	URL graphql.String `json:"url"` // Required
+	// Method to use for the request.
+	Method graphql.String `json:"method"` // Required
+	// Headers of the http(s) request.
+	Headers []HttpHeaderEntryInput `json:"headers"` // Required
+	// Body of the http(s) request. Can be templated with values from the result.
+	BodyTemplate graphql.String `json:"bodyTemplate"` // Required
+	// Flag indicating whether SSL should be ignored for the request.
+	IgnoreSSL graphql.Boolean `json:"ignoreSSL"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
+	// Name of the action.. This is a mock value, the trigger does not have to exist.
+	TriggerName graphql.String `json:"triggerName"` // Required
+	// JSON data representing one or more events. One event can be supplied as a JSON object. Multiple events must be supplied as a list of JSON objects.
+	EventData graphql.String `json:"eventData"` // Required
 }
 
-// TokenInput
 type TokenInput struct {
-
-	// (Required)
-	Token graphql.String `json:"token"`
+	Token graphql.String `json:"token"` // Required
 }
 
 // TokenSecurityPoliciesInput represents data for updating token security policies.
 type TokenSecurityPoliciesInput struct {
-
-	// Whether personal user tokens should be enabled. (Required)
-	PersonalUserTokensEnabled graphql.Boolean `json:"personalUserTokensEnabled"`
-
-	// Whether view permission tokens should be enabled. (Required)
-	ViewPermissionTokensEnabled graphql.Boolean `json:"viewPermissionTokensEnabled"`
-
-	// Whether it should be allowed to change permissions on existing view permission tokens. (Required)
-	ViewPermissionTokensAllowPermissionUpdates graphql.Boolean `json:"viewPermissionTokensAllowPermissionUpdates"`
-
-	// Whether organization permission tokens should be enabled. (Required)
-	OrganizationPermissionTokensEnabled graphql.Boolean `json:"organizationPermissionTokensEnabled"`
-
-	// Whether it should be allowed to change permissions on existing organization permission tokens. (Required)
-	OrganizationPermissionTokensAllowPermissionUpdates graphql.Boolean `json:"organizationPermissionTokensAllowPermissionUpdates"`
-
-	// Maximum time in ms a personal user token can be used before expiring (TTL). (Optional)
-	PersonalUserTokensEnforceExpirationAfterMs *Long `json:"personalUserTokensEnforceExpirationAfterMs,omitempty"`
-
-	// The IP filter that will be enforced on all personal user tokens. (Optional)
-	PersonalUserTokensEnforceIPFilterID *graphql.String `json:"personalUserTokensEnforceIpFilterId,omitempty"`
-
-	// Maximum time in ms a view permission token can be used before expiring (TTL). (Optional)
-	ViewPermissionTokensEnforceExpirationAfterMs *Long `json:"viewPermissionTokensEnforceExpirationAfterMs,omitempty"`
-
-	// The IP filter that will be enforced on all view permission tokens. (Optional)
-	ViewPermissionTokensEnforceIPFilterID *graphql.String `json:"viewPermissionTokensEnforceIpFilterId,omitempty"`
-
-	// Maximum time in ms an organization permission token can be used before expiring (TTL). (Optional)
-	OrganizationPermissionTokensEnforceExpirationAfterMs *Long `json:"organizationPermissionTokensEnforceExpirationAfterMs,omitempty"`
-
-	// The IP filter that will be enforced on all organization permission tokens. (Optional)
-	OrganizationPermissionTokensEnforceIPFilterID *graphql.String `json:"organizationPermissionTokensEnforceIpFilterId,omitempty"`
-
-	// Whether system permission tokens should be enabled. (Optional)
-	SystemPermissionTokensEnabled *graphql.Boolean `json:"systemPermissionTokensEnabled,omitempty"`
-
-	// Maximum time in ms a system permission token can be used before expiring (TTL). (Optional)
-	SystemPermissionTokensEnforceExpirationAfterMs *Long `json:"systemPermissionTokensEnforceExpirationAfterMs,omitempty"`
-
-	// The IP filter that will be enforced on all system permission tokens. (Optional)
-	SystemPermissionTokensEnforceIPFilterID *graphql.String `json:"systemPermissionTokensEnforceIpFilterId,omitempty"`
-
-	// Whether it should be allowed to change permissions on existing system permission tokens. (Optional)
-	SystemPermissionTokensAllowPermissionUpdates *graphql.Boolean `json:"systemPermissionTokensAllowPermissionUpdates,omitempty"`
+	// Whether personal user tokens should be enabled.
+	PersonalUserTokensEnabled graphql.Boolean `json:"personalUserTokensEnabled"` // Required
+	// Whether view permission tokens should be enabled.
+	ViewPermissionTokensEnabled graphql.Boolean `json:"viewPermissionTokensEnabled"` // Required
+	// Whether it should be allowed to change permissions on existing view permission tokens.
+	ViewPermissionTokensAllowPermissionUpdates graphql.Boolean `json:"viewPermissionTokensAllowPermissionUpdates"` // Required
+	// Whether organization permission tokens should be enabled.
+	OrganizationPermissionTokensEnabled graphql.Boolean `json:"organizationPermissionTokensEnabled"` // Required
+	// Whether it should be allowed to change permissions on existing organization permission tokens.
+	OrganizationPermissionTokensAllowPermissionUpdates graphql.Boolean `json:"organizationPermissionTokensAllowPermissionUpdates"` // Required
+	// Maximum time in ms a personal user token can be used before expiring (TTL).
+	PersonalUserTokensEnforceExpirationAfterMs *Long `json:"personalUserTokensEnforceExpirationAfterMs,omitempty"` // Optional
+	// The IP filter that will be enforced on all personal user tokens.
+	PersonalUserTokensEnforceIPFilterID *graphql.String `json:"personalUserTokensEnforceIpFilterId,omitempty"` // Optional
+	// Maximum time in ms a view permission token can be used before expiring (TTL).
+	ViewPermissionTokensEnforceExpirationAfterMs *Long `json:"viewPermissionTokensEnforceExpirationAfterMs,omitempty"` // Optional
+	// The IP filter that will be enforced on all view permission tokens.
+	ViewPermissionTokensEnforceIPFilterID *graphql.String `json:"viewPermissionTokensEnforceIpFilterId,omitempty"` // Optional
+	// Maximum time in ms an organization permission token can be used before expiring (TTL).
+	OrganizationPermissionTokensEnforceExpirationAfterMs *Long `json:"organizationPermissionTokensEnforceExpirationAfterMs,omitempty"` // Optional
+	// The IP filter that will be enforced on all organization permission tokens.
+	OrganizationPermissionTokensEnforceIPFilterID *graphql.String `json:"organizationPermissionTokensEnforceIpFilterId,omitempty"` // Optional
+	// Whether system permission tokens should be enabled.
+	SystemPermissionTokensEnabled *graphql.Boolean `json:"systemPermissionTokensEnabled,omitempty"` // Optional
+	// Maximum time in ms a system permission token can be used before expiring (TTL).
+	SystemPermissionTokensEnforceExpirationAfterMs *Long `json:"systemPermissionTokensEnforceExpirationAfterMs,omitempty"` // Optional
+	// The IP filter that will be enforced on all system permission tokens.
+	SystemPermissionTokensEnforceIPFilterID *graphql.String `json:"systemPermissionTokensEnforceIpFilterId,omitempty"` // Optional
+	// Whether it should be allowed to change permissions on existing system permission tokens.
+	SystemPermissionTokensAllowPermissionUpdates *graphql.Boolean `json:"systemPermissionTokensAllowPermissionUpdates,omitempty"` // Optional
 }
 
 // TriggerPollIngestFeed represents data for trigger polling an ingest feed.
 type TriggerPollIngestFeed struct {
-
-	// Name of the repository of the ingest feed. (Required)
-	RepositoryName RepoOrViewName `json:"repositoryName"`
-
-	// Id of the ingest feed. (Required)
-	ID graphql.String `json:"id"`
+	// Name of the repository of the ingest feed.
+	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
+	// Id of the ingest feed.
+	ID graphql.String `json:"id"` // Required
 }
 
 // UpdateAlert represents data for updating an alert.
 type UpdateAlert struct {
-
-	// Name of the view of the alert. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the alert. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the alert. (Required)
-	Name graphql.String `json:"name"`
-
-	// LogScale query to execute. (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// Start of the relative time interval for the query. (Required)
-	QueryStart graphql.String `json:"queryStart"`
-
-	// Throttle time in milliseconds. (Required)
-	ThrottleTimeMillis Long `json:"throttleTimeMillis"`
-
-	// Flag indicating whether the alert is enabled. (Required)
-	Enabled graphql.Boolean `json:"enabled"`
-
-	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname". (Required)
-	Actions []graphql.String `json:"actions"`
-
-	// Labels attached to the alert. (Required)
-	Labels []graphql.String `json:"labels"`
-
-	// Description of the alert. (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// Field to throttle on. (Optional)
-	ThrottleField *graphql.String `json:"throttleField,omitempty"`
-
-	// The alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user. (Optional)
-	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"`
-
-	// Ownership of the query run by this alert. If value is User, ownership will be based on the runAsUserId field. (Optional)
-	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"`
+	// Name of the view of the alert.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the alert.
+	ID graphql.String `json:"id"` // Required
+	// Name of the alert.
+	Name graphql.String `json:"name"` // Required
+	// LogScale query to execute.
+	QueryString graphql.String `json:"queryString"` // Required
+	// Start of the relative time interval for the query.
+	QueryStart graphql.String `json:"queryStart"` // Required
+	// Throttle time in milliseconds.
+	ThrottleTimeMillis Long `json:"throttleTimeMillis"` // Required
+	// Flag indicating whether the alert is enabled.
+	Enabled graphql.Boolean `json:"enabled"` // Required
+	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname".
+	Actions []graphql.String `json:"actions"` // Required
+	// Labels attached to the alert.
+	Labels []graphql.String `json:"labels"` // Required
+	// Description of the alert.
+	Description *graphql.String `json:"description,omitempty"` // Optional
+	// Field to throttle on.
+	ThrottleField *graphql.String `json:"throttleField,omitempty"` // Optional
+	// The alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
+	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
+	// Ownership of the query run by this alert. If value is User, ownership will be based on the runAsUserId field.
+	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"` // Optional
 }
 
 // UpdateAwsS3SqsIngestFeed represents data for updating an ingest feed which uses AWS S3 with SQS. The update is a delta update.
 type UpdateAwsS3SqsIngestFeed struct {
-
-	// Name of the repository of the ingest feed. (Required)
-	RepositoryName RepoOrViewName `json:"repositoryName"`
-
-	// Id of the ingest feed. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the ingest feed. (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// If the description should be cleared, supply an `UpdateDescription` object with no value or a `null` value. If the description should be changed, supply an `UpdateDescription`object with the desired value. (Optional)
-	Description *UpdateIngestFeedDescription `json:"description,omitempty"`
-
-	// The id or name of the parser that should be used to parse the ingest feed. Parsers in packages can be referred to as: "packagescope/packagename:parsername". (Optional)
-	Parser *graphql.String `json:"parser,omitempty"`
-
-	// How to authenticate to AWS. (Optional)
-	Authentication *IngestFeedAwsAuthenticationInput `json:"authentication,omitempty"`
-
-	// AWS SQS queue url. (Optional)
-	SqsURL *graphql.String `json:"sqsUrl,omitempty"`
-
-	// The AWS region to connect to. (Optional)
-	Region *graphql.String `json:"region,omitempty"`
-
-	// Is ingest from the ingest feed enabled?. (Optional)
-	Enabled *graphql.Boolean `json:"enabled,omitempty"`
-
-	// The preprocessing to apply to an ingest feed before parsing. (Optional)
-	Preprocessing *IngestFeedPreprocessingInput `json:"preprocessing,omitempty"`
-
-	// Compression scheme of the file. (Optional)
-	Compression *IngestFeedCompression `json:"compression,omitempty"`
+	// Name of the repository of the ingest feed.
+	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
+	// Id of the ingest feed.
+	ID graphql.String `json:"id"` // Required
+	// Name of the ingest feed.
+	Name *graphql.String `json:"name,omitempty"` // Optional
+	// If the description should be cleared, supply an `UpdateDescription` object with no value or a `null` value. If the description should be changed, supply an `UpdateDescription`object with the desired value.
+	Description *UpdateIngestFeedDescription `json:"description,omitempty"` // Optional
+	// The id or name of the parser that should be used to parse the ingest feed. Parsers in packages can be referred to as: "packagescope/packagename:parsername".
+	Parser *graphql.String `json:"parser,omitempty"` // Optional
+	// How to authenticate to AWS.
+	Authentication *IngestFeedAwsAuthenticationInput `json:"authentication,omitempty"` // Optional
+	// AWS SQS queue url.
+	SqsURL *graphql.String `json:"sqsUrl,omitempty"` // Optional
+	// The AWS region to connect to.
+	Region *graphql.String `json:"region,omitempty"` // Optional
+	// Is ingest from the ingest feed enabled?.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
+	// The preprocessing to apply to an ingest feed before parsing.
+	Preprocessing *IngestFeedPreprocessingInput `json:"preprocessing,omitempty"` // Optional
+	// Compression scheme of the file.
+	Compression *IngestFeedCompression `json:"compression,omitempty"` // Optional
 }
 
-// UpdateCustomLinkInteractionInput
 type UpdateCustomLinkInteractionInput struct {
-
-	// (Required)
-	Path graphql.String `json:"path"`
-
-	// (Required)
-	InteractionID graphql.String `json:"interactionId"`
-
-	// (Required)
-	CustomLinkInteractionInput CustomLinkInteractionInput `json:"customLinkInteractionInput"`
+	Path                       graphql.String             `json:"path"`                       // Required
+	InteractionID              graphql.String             `json:"interactionId"`              // Required
+	CustomLinkInteractionInput CustomLinkInteractionInput `json:"customLinkInteractionInput"` // Required
 }
 
-// UpdateDashboardInput
 type UpdateDashboardInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// (Optional)
-	Labels *[]graphql.String `json:"labels,omitempty"`
-
-	// (Optional)
-	Widgets *[]WidgetInput `json:"widgets,omitempty"`
-
-	// (Optional)
-	Links *[]LinkInput `json:"links,omitempty"`
-
-	// (Optional)
-	DefaultFilterID *graphql.String `json:"defaultFilterId,omitempty"`
-
-	// (Optional)
-	Filters *[]FilterInput `json:"filters,omitempty"`
-
-	// (Optional)
-	Parameters *[]ParameterInput `json:"parameters,omitempty"`
-
-	// (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// (Optional)
-	TimeJumpSizeInMs *graphql.Int `json:"timeJumpSizeInMs,omitempty"`
-
-	// (Optional)
-	UpdateFrequency *DashboardUpdateFrequencyInput `json:"updateFrequency,omitempty"`
-
-	// (Optional)
-	DefaultSharedTimeStart *graphql.String `json:"defaultSharedTimeStart,omitempty"`
-
-	// (Optional)
-	DefaultSharedTimeEnd *graphql.String `json:"defaultSharedTimeEnd,omitempty"`
-
-	// (Optional)
-	DefaultSharedTimeEnabled *graphql.Boolean `json:"defaultSharedTimeEnabled,omitempty"`
+	ID                       graphql.String                 `json:"id"`                                 // Required
+	Name                     *graphql.String                `json:"name,omitempty"`                     // Optional
+	Labels                   *[]graphql.String              `json:"labels,omitempty"`                   // Optional
+	Widgets                  *[]WidgetInput                 `json:"widgets,omitempty"`                  // Optional
+	Links                    *[]LinkInput                   `json:"links,omitempty"`                    // Optional
+	DefaultFilterID          *graphql.String                `json:"defaultFilterId,omitempty"`          // Optional
+	Filters                  *[]FilterInput                 `json:"filters,omitempty"`                  // Optional
+	Parameters               *[]ParameterInput              `json:"parameters,omitempty"`               // Optional
+	Description              *graphql.String                `json:"description,omitempty"`              // Optional
+	TimeJumpSizeInMs         *graphql.Int                   `json:"timeJumpSizeInMs,omitempty"`         // Optional
+	UpdateFrequency          *DashboardUpdateFrequencyInput `json:"updateFrequency,omitempty"`          // Optional
+	DefaultSharedTimeStart   *graphql.String                `json:"defaultSharedTimeStart,omitempty"`   // Optional
+	DefaultSharedTimeEnd     *graphql.String                `json:"defaultSharedTimeEnd,omitempty"`     // Optional
+	DefaultSharedTimeEnabled *graphql.Boolean               `json:"defaultSharedTimeEnabled,omitempty"` // Optional
 }
 
-// UpdateDashboardLinkInteractionInput
 type UpdateDashboardLinkInteractionInput struct {
-
-	// (Required)
-	Path graphql.String `json:"path"`
-
-	// (Required)
-	InteractionID graphql.String `json:"interactionId"`
-
-	// (Required)
-	DashboardLinkInteractionInput DashboardLinkInteractionInput `json:"dashboardLinkInteractionInput"`
+	Path                          graphql.String                `json:"path"`                          // Required
+	InteractionID                 graphql.String                `json:"interactionId"`                 // Required
+	DashboardLinkInteractionInput DashboardLinkInteractionInput `json:"dashboardLinkInteractionInput"` // Required
 }
 
-// UpdateDefaultQueryPrefixInput
 type UpdateDefaultQueryPrefixInput struct {
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Optional)
-	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"`
+	GroupID     graphql.String  `json:"groupId"`               // Required
+	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
 
-// UpdateDefaultRoleInput
 type UpdateDefaultRoleInput struct {
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Optional)
-	RoleID *graphql.String `json:"roleId,omitempty"`
+	GroupID graphql.String  `json:"groupId"`          // Required
+	RoleID  *graphql.String `json:"roleId,omitempty"` // Optional
 }
 
 // UpdateDescription represents type for updating the description. If the description should be cleared, supply an `UpdateDescription` object with no value or a `null` value. If the description should be changed, supply an `UpdateDescription`object with the desired value.
 type UpdateDescription struct {
-
-	// Description of the FDR feed. (Optional)
-	Value *graphql.String `json:"value,omitempty"`
+	// Description of the FDR feed.
+	Value *graphql.String `json:"value,omitempty"` // Optional
 }
 
 // UpdateEmailAction represents data for updating an email action.
 type UpdateEmailAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// List of email addresses to send an email to. (Required)
-	Recipients []graphql.String `json:"recipients"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
-
-	// Subject of the email. Can be templated with values from the result. (Optional)
-	SubjectTemplate *graphql.String `json:"subjectTemplate,omitempty"`
-
-	// Body of the email. Can be templated with values from the result. (Optional)
-	BodyTemplate *graphql.String `json:"bodyTemplate,omitempty"`
-
-	// Whether the result set should be be attached as a CSV file. (Optional)
-	AttachCsv *graphql.Boolean `json:"attachCsv,omitempty"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// List of email addresses to send an email to.
+	Recipients []graphql.String `json:"recipients"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
+	// Subject of the email. Can be templated with values from the result.
+	SubjectTemplate *graphql.String `json:"subjectTemplate,omitempty"` // Optional
+	// Body of the email. Can be templated with values from the result.
+	BodyTemplate *graphql.String `json:"bodyTemplate,omitempty"` // Optional
+	// Whether the result set should be be attached as a CSV file.
+	AttachCsv *graphql.Boolean `json:"attachCsv,omitempty"` // Optional
 }
 
 // UpdateEventForwardingRule represents data for updating an event forwarding rule.
 type UpdateEventForwardingRule struct {
-
-	// The name of the repository that the event forwarding rule is for. (Required)
-	RepoName graphql.String `json:"repoName"`
-
-	// The unique id for the event forwarding rule. (Required)
-	ID graphql.String `json:"id"`
-
-	// The query string for filtering and mapping the events to forward. (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// The id of the event forwarder. (Required)
-	EventForwarderID graphql.String `json:"eventForwarderId"`
-
-	// (Optional)
-	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"`
+	// The name of the repository that the event forwarding rule is for.
+	RepoName graphql.String `json:"repoName"` // Required
+	// The unique id for the event forwarding rule.
+	ID graphql.String `json:"id"` // Required
+	// The query string for filtering and mapping the events to forward.
+	QueryString graphql.String `json:"queryString"` // Required
+	// The id of the event forwarder.
+	EventForwarderID graphql.String       `json:"eventForwarderId"`          // Required
+	LanguageVersion  *LanguageVersionEnum `json:"languageVersion,omitempty"` // Optional
 }
 
 // UpdateFdrFeed represents data for updating an FDR feed. Note that the fields, apart from `id` and `repositoryName`, only need to be supplied if the field should be changed.
 type UpdateFdrFeed struct {
-
-	// Name of the repository of the FDR feed. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// Id of the FDR feed. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the FDR feed. If the field should not be updated, leave it out or let the value be `null`. (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// Description of the FDR feed. If the field should not be updated, leave it out or let the value be `null`. If the description should be cleared, supply an `UpdateDescription` object with no value or a `null` value. If the description should be changed, supply an `UpdateDescription`object with the desired value. (Optional)
-	Description *UpdateDescription `json:"description,omitempty"`
-
-	// The id or name of the parser that should be used to parse the FDR data. We recommend using the FDR parser from the crowdstrike/fdr package, which can be referred to as "crowdstrike/fdr:FDR". If the field should not be updated, leave it out or let the value be `null`. (Optional)
-	Parser *graphql.String `json:"parser,omitempty"`
-
-	// AWS client id of the FDR feed. If the field should not be updated, leave it out or let the value be `null`. (Optional)
-	ClientID *graphql.String `json:"clientId,omitempty"`
-
-	// AWS client secret of the FDR feed. If the field should not be updated, leave it out or let the value be `null`. (Optional)
-	ClientSecret *graphql.String `json:"clientSecret,omitempty"`
-
-	// AWS SQS queue url of the FDR feed. If the field should not be updated, leave it out or let the value be `null`. (Optional)
-	SqsURL *graphql.String `json:"sqsUrl,omitempty"`
-
-	// AWS S3 Identifier of the FDR feed. If the field should not be updated, leave it out or let the value be `null`. (Optional)
-	S3Identifier *graphql.String `json:"s3Identifier,omitempty"`
-
-	// Is ingest from the FDR feed enabled? If the field should not be updated, leave it out or let the value be `null`. (Optional)
-	Enabled *graphql.Boolean `json:"enabled,omitempty"`
+	// Name of the repository of the FDR feed.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// Id of the FDR feed.
+	ID graphql.String `json:"id"` // Required
+	// Name of the FDR feed. If the field should not be updated, leave it out or let the value be `null`.
+	Name *graphql.String `json:"name,omitempty"` // Optional
+	// Description of the FDR feed. If the field should not be updated, leave it out or let the value be `null`. If the description should be cleared, supply an `UpdateDescription` object with no value or a `null` value. If the description should be changed, supply an `UpdateDescription`object with the desired value.
+	Description *UpdateDescription `json:"description,omitempty"` // Optional
+	// The id or name of the parser that should be used to parse the FDR data. We recommend using the FDR parser from the crowdstrike/fdr package, which can be referred to as "crowdstrike/fdr:FDR". If the field should not be updated, leave it out or let the value be `null`.
+	Parser *graphql.String `json:"parser,omitempty"` // Optional
+	// AWS client id of the FDR feed. If the field should not be updated, leave it out or let the value be `null`.
+	ClientID *graphql.String `json:"clientId,omitempty"` // Optional
+	// AWS client secret of the FDR feed. If the field should not be updated, leave it out or let the value be `null`.
+	ClientSecret *graphql.String `json:"clientSecret,omitempty"` // Optional
+	// AWS SQS queue url of the FDR feed. If the field should not be updated, leave it out or let the value be `null`.
+	SqsURL *graphql.String `json:"sqsUrl,omitempty"` // Optional
+	// AWS S3 Identifier of the FDR feed. If the field should not be updated, leave it out or let the value be `null`.
+	S3Identifier *graphql.String `json:"s3Identifier,omitempty"` // Optional
+	// Is ingest from the FDR feed enabled? If the field should not be updated, leave it out or let the value be `null`.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
 }
 
 // UpdateFdrFeedControl represents data for updating the administrator control of an FDR feed.
 type UpdateFdrFeedControl struct {
-
-	// Name of the repository of the FDR feed. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// Id of the FDR feed. (Required)
-	ID graphql.String `json:"id"`
-
-	// Maximum number of nodes to poll FDR feed with If the value should be cleared, supply an `UpdateLong` object the with no value or a `null` value. If the setting should be changed, supply a `UpdateLong` object with the desired value. If this value is left out the underlying value will not change. (Optional)
-	MaxNodes *UpdateLong `json:"maxNodes,omitempty"`
-
-	// Maximum amount of files downloaded from s3 in parallel for a single node. If the value should be cleared, supply an `UpdateLong` object the with no value or a `null` value. If the setting should be changed, supply a `UpdateLong` object with the desired value. If this value is left out the underlying value will not change. (Optional)
-	FileDownloadParallelism *UpdateLong `json:"fileDownloadParallelism,omitempty"`
+	// Name of the repository of the FDR feed.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// Id of the FDR feed.
+	ID graphql.String `json:"id"` // Required
+	// Maximum number of nodes to poll FDR feed with If the value should be cleared, supply an `UpdateLong` object the with no value or a `null` value. If the setting should be changed, supply a `UpdateLong` object with the desired value. If this value is left out the underlying value will not change.
+	MaxNodes *UpdateLong `json:"maxNodes,omitempty"` // Optional
+	// Maximum amount of files downloaded from s3 in parallel for a single node. If the value should be cleared, supply an `UpdateLong` object the with no value or a `null` value. If the setting should be changed, supply a `UpdateLong` object with the desired value. If this value is left out the underlying value will not change.
+	FileDownloadParallelism *UpdateLong `json:"fileDownloadParallelism,omitempty"` // Optional
 }
 
 // UpdateFieldAliasMappingInput represents [PREVIEW: This functionality is still under development and can change without warning.] Input object for field updateFieldAliasAliasMapping.
 type UpdateFieldAliasMappingInput struct {
-
-	// ID of the schema that the alias mapping exists on. (Required)
-	SchemaID graphql.String `json:"schemaId"`
-
-	// Alias mapping ID. (Required)
-	AliasMappingID graphql.String `json:"aliasMappingId"`
-
-	// Name of the Alias mapping. Overrides the existing name. If not supplied then the name will be unchanged. (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// Tags of the alias mapping. Overrides the existing tags. If not supplied then the tags will be unchanged. (Optional)
-	Tags *[]TagsInput `json:"tags,omitempty"`
-
-	// (Optional)
-	Aliases *[]AliasInfoInput `json:"aliases,omitempty"`
-
-	// Source fields that are aliased, but should still be available in query. Overrides the existing values for this field. If not supplied then this field will be unchanged. (Optional)
-	OriginalFieldsToKeep *[]graphql.String `json:"originalFieldsToKeep,omitempty"`
+	// ID of the schema that the alias mapping exists on.
+	SchemaID graphql.String `json:"schemaId"` // Required
+	// Alias mapping ID.
+	AliasMappingID graphql.String `json:"aliasMappingId"` // Required
+	// Name of the Alias mapping. Overrides the existing name. If not supplied then the name will be unchanged.
+	Name *graphql.String `json:"name,omitempty"` // Optional
+	// Tags of the alias mapping. Overrides the existing tags. If not supplied then the tags will be unchanged.
+	Tags    *[]TagsInput      `json:"tags,omitempty"`    // Optional
+	Aliases *[]AliasInfoInput `json:"aliases,omitempty"` // Optional
+	// Source fields that are aliased, but should still be available in query. Overrides the existing values for this field. If not supplied then this field will be unchanged.
+	OriginalFieldsToKeep *[]graphql.String `json:"originalFieldsToKeep,omitempty"` // Optional
 }
 
 // UpdateFieldAliasSchemaInput represents [PREVIEW: This functionality is still under development and can change without warning.] Input object for field updateFieldAliasSchema.
 type UpdateFieldAliasSchemaInput struct {
-
-	// Schema ID. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the schema. Overrides the existing name. If not supplied then the name will be unchanged. (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// Fields of the schema. Overrides the existing fields. If not supplied then the fields will be unchanged. (Optional)
-	Fields *[]SchemaFieldInput `json:"fields,omitempty"`
-
-	// Alias mappings on the schema. Overrides the existing alias mappings. If not supplied then the alias mapping will be unchanged. (Optional)
-	AliasMappings *[]AliasMappingInput `json:"aliasMappings,omitempty"`
+	// Schema ID.
+	ID graphql.String `json:"id"` // Required
+	// Name of the schema. Overrides the existing name. If not supplied then the name will be unchanged.
+	Name *graphql.String `json:"name,omitempty"` // Optional
+	// Fields of the schema. Overrides the existing fields. If not supplied then the fields will be unchanged.
+	Fields *[]SchemaFieldInput `json:"fields,omitempty"` // Optional
+	// Alias mappings on the schema. Overrides the existing alias mappings. If not supplied then the alias mapping will be unchanged.
+	AliasMappings *[]AliasMappingInput `json:"aliasMappings,omitempty"` // Optional
 }
 
 // UpdateFilterAlert represents data for updating a filter alert.
 type UpdateFilterAlert struct {
-
-	// Name of the view of the filter alert. (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// Id of the filter alert. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the filter alert. (Required)
-	Name graphql.String `json:"name"`
-
-	// LogScale query to execute. (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname". (Required)
-	ActionIDsOrNames []graphql.String `json:"actionIdsOrNames"`
-
-	// Labels attached to the filter alert. (Required)
-	Labels []graphql.String `json:"labels"`
-
-	// Flag indicating whether the filter alert is enabled. (Required)
-	Enabled graphql.Boolean `json:"enabled"`
-
-	// Allowed number of action triggers per minute for the filter alert. Please note that the maximum allowed number of triggers can vary based on the chosen actions. (Required)
-	TriggerLimit graphql.Int `json:"triggerLimit"`
-
-	// Ownership of the query run by this filter alert. If value is User, ownership will be based on the runAsUserId field. (Required)
-	QueryOwnershipType QueryOwnershipType `json:"queryOwnershipType"`
-
-	// Description of the filter alert. (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// The filter alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the filter alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user. (Optional)
-	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"`
+	// Name of the view of the filter alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the filter alert.
+	ID graphql.String `json:"id"` // Required
+	// Name of the filter alert.
+	Name graphql.String `json:"name"` // Required
+	// LogScale query to execute.
+	QueryString graphql.String `json:"queryString"` // Required
+	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname".
+	ActionIDsOrNames []graphql.String `json:"actionIdsOrNames"` // Required
+	// Labels attached to the filter alert.
+	Labels []graphql.String `json:"labels"` // Required
+	// Flag indicating whether the filter alert is enabled.
+	Enabled graphql.Boolean `json:"enabled"` // Required
+	// Allowed number of action triggers per minute for the filter alert. Please note that the maximum allowed number of triggers can vary based on the chosen actions.
+	TriggerLimit graphql.Int `json:"triggerLimit"` // Required
+	// Ownership of the query run by this filter alert. If value is User, ownership will be based on the runAsUserId field.
+	QueryOwnershipType QueryOwnershipType `json:"queryOwnershipType"` // Required
+	// Description of the filter alert.
+	Description *graphql.String `json:"description,omitempty"` // Optional
+	// The filter alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the filter alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
+	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
 }
 
-// UpdateGroupInput
 type UpdateGroupInput struct {
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
-
-	// (Optional)
-	DisplayName *graphql.String `json:"displayName,omitempty"`
-
-	// (Optional)
-	LookupName *graphql.String `json:"lookupName,omitempty"`
+	GroupID     graphql.String  `json:"groupId"`               // Required
+	DisplayName *graphql.String `json:"displayName,omitempty"` // Optional
+	LookupName  *graphql.String `json:"lookupName,omitempty"`  // Optional
 }
 
 // UpdateHumioRepoAction represents data for updating a Humio repo action.
 type UpdateHumioRepoAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Humio ingest token for the dataspace that the action should ingest into. (Required)
-	IngestToken graphql.String `json:"ingestToken"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Humio ingest token for the dataspace that the action should ingest into.
+	IngestToken graphql.String `json:"ingestToken"` // Required
 }
 
 // UpdateIngestFeedDescription represents type for updating the description. If the description should be cleared, supply an `UpdateDescription` object with no value or a `null` value. If the description should be changed, supply an `UpdateDescription`object with the desired value.
 type UpdateIngestFeedDescription struct {
-
-	// Type for updating the description. If the description should be cleared, supply an `UpdateDescription` object with no value or a `null` value. If the description should be changed, supply an `UpdateDescription`object with the desired value. (Optional)
-	Description *graphql.String `json:"description,omitempty"`
+	// Type for updating the description. If the description should be cleared, supply an `UpdateDescription` object with no value or a `null` value. If the description should be changed, supply an `UpdateDescription`object with the desired value.
+	Description *graphql.String `json:"description,omitempty"` // Optional
 }
 
 // UpdateIngestListenerV3Input represents input data to update an ingest listener.
 type UpdateIngestListenerV3Input struct {
-
-	// id of the ingest listener. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the repository. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// The port the ingest listener will listen on. (Required)
-	Port graphql.Int `json:"port"`
-
-	// The kind of listener; TCP, UDP, Netflow/UDP, GELF/UDP, GELF/TCP. (Required)
-	Protocol IngestListenerProtocol `json:"protocol"`
-
-	// Name of the ingest listener. (Required)
-	Name graphql.String `json:"name"`
-
-	// The ip address the ingest listener will bind to. (Required)
-	BindInterface graphql.String `json:"bindInterface"`
-
-	// Id or name of the parser to assign to the ingest listener. Parsers in packages can be referred to as "packagescope/packagename:parsername". (Required)
-	Parser graphql.String `json:"parser"`
-
-	// The charset used to decode the event stream. (Required)
-	Charset graphql.String `json:"charset"`
-
-	// The vHost name for the ingest listener. (Optional)
-	VHost *graphql.Int `json:"vHost,omitempty"`
+	// id of the ingest listener.
+	ID graphql.String `json:"id"` // Required
+	// Name of the repository.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// The port the ingest listener will listen on.
+	Port graphql.Int `json:"port"` // Required
+	// The kind of listener; TCP, UDP, Netflow/UDP, GELF/UDP, GELF/TCP.
+	Protocol IngestListenerProtocol `json:"protocol"` // Required
+	// Name of the ingest listener.
+	Name graphql.String `json:"name"` // Required
+	// The ip address the ingest listener will bind to.
+	BindInterface graphql.String `json:"bindInterface"` // Required
+	// Id or name of the parser to assign to the ingest listener. Parsers in packages can be referred to as "packagescope/packagename:parsername".
+	Parser graphql.String `json:"parser"` // Required
+	// The charset used to decode the event stream.
+	Charset graphql.String `json:"charset"` // Required
+	// The vHost name for the ingest listener.
+	VHost *graphql.Int `json:"vHost,omitempty"` // Optional
 }
 
 // UpdateKafkaEventForwarder represents data for updating a Kafka event forwarder.
 type UpdateKafkaEventForwarder struct {
-
-	// Id of the event forwarder. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the event forwarder. (Required)
-	Name graphql.String `json:"name"`
-
-	// Description of the event forwarder. (Required)
-	Description graphql.String `json:"description"`
-
-	// The Kafka producer configuration used to forward events in the form of properties (x.y.z=abc). See https://library.humio.com/humio-server/ingesting-data-event-forwarders.html#kafka-configuration. (Required)
-	Properties graphql.String `json:"properties"`
-
-	// The Kafka topic the events should be forwarded to. (Required)
-	Topic graphql.String `json:"topic"`
-
-	// Is the event forwarder enabled. (Optional)
-	Enabled *graphql.Boolean `json:"enabled,omitempty"`
+	// Id of the event forwarder.
+	ID graphql.String `json:"id"` // Required
+	// Name of the event forwarder.
+	Name graphql.String `json:"name"` // Required
+	// Description of the event forwarder.
+	Description graphql.String `json:"description"` // Required
+	// The Kafka producer configuration used to forward events in the form of properties (x.y.z=abc). See https://library.humio.com/humio-server/ingesting-data-event-forwarders.html#kafka-configuration.
+	Properties graphql.String `json:"properties"` // Required
+	// The Kafka topic the events should be forwarded to.
+	Topic graphql.String `json:"topic"` // Required
+	// Is the event forwarder enabled.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
 }
 
-// UpdateLimitInput
 type UpdateLimitInput struct {
-
-	// (Required)
-	LimitName graphql.String `json:"limitName"`
-
-	// (Optional)
-	AllowLogin *graphql.Boolean `json:"allowLogin,omitempty"`
-
-	// (Optional)
-	DailyIngest *Long `json:"dailyIngest,omitempty"`
-
-	// (Optional)
-	Retention *graphql.Int `json:"retention,omitempty"`
-
-	// (Optional)
-	AllowSelfService *graphql.Boolean `json:"allowSelfService,omitempty"`
-
-	// (Optional)
-	Expiration *Long `json:"expiration,omitempty"`
-
-	// (Optional)
-	ContractVersion *Organizations__ContractVersion `json:"contractVersion,omitempty"`
-
-	// (Optional)
-	UserLimit *graphql.Int `json:"userLimit,omitempty"`
+	LimitName        graphql.String                  `json:"limitName"`                  // Required
+	AllowLogin       *graphql.Boolean                `json:"allowLogin,omitempty"`       // Optional
+	DailyIngest      *Long                           `json:"dailyIngest,omitempty"`      // Optional
+	Retention        *graphql.Int                    `json:"retention,omitempty"`        // Optional
+	AllowSelfService *graphql.Boolean                `json:"allowSelfService,omitempty"` // Optional
+	Expiration       *Long                           `json:"expiration,omitempty"`       // Optional
+	ContractVersion  *Organizations__ContractVersion `json:"contractVersion,omitempty"`  // Optional
+	UserLimit        *graphql.Int                    `json:"userLimit,omitempty"`        // Optional
 }
 
-// UpdateLimitInputV2
 type UpdateLimitInputV2 struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// (Optional)
-	AllowLogin *graphql.Boolean `json:"allowLogin,omitempty"`
-
-	// (Optional)
-	DailyIngest *Long `json:"dailyIngest,omitempty"`
-
-	// (Optional)
-	DailyIngestContractualType *Organizations__ContractualType `json:"dailyIngestContractualType,omitempty"`
-
-	// (Optional)
-	StorageContractualType *Organizations__ContractualType `json:"storageContractualType,omitempty"`
-
-	// (Optional)
-	DailyScanContractualType *Organizations__ContractualType `json:"dailyScanContractualType,omitempty"`
-
-	// (Optional)
-	MeasurementType *Organizations__MeasurementType `json:"measurementType,omitempty"`
-
-	// (Optional)
-	DailyScan *Long `json:"dailyScan,omitempty"`
-
-	// (Optional)
-	Retention *graphql.Int `json:"retention,omitempty"`
-
-	// (Optional)
-	MaxRetention *graphql.Int `json:"maxRetention,omitempty"`
-
-	// (Optional)
-	AllowSelfService *graphql.Boolean `json:"allowSelfService,omitempty"`
-
-	// (Optional)
-	Expiration *Long `json:"expiration,omitempty"`
-
-	// (Optional)
-	UserLimit *graphql.Int `json:"userLimit,omitempty"`
-
-	// (Optional)
-	DateType *graphql.String `json:"dateType,omitempty"`
-
-	// (Optional)
-	Trial *graphql.Boolean `json:"trial,omitempty"`
-
-	// (Optional)
-	AllowFlightControl *graphql.Boolean `json:"allowFlightControl,omitempty"`
-
-	// (Optional)
-	RepositoryLimit *graphql.Int `json:"repositoryLimit,omitempty"`
+	ID                         graphql.String                  `json:"id"`                                   // Required
+	Name                       *graphql.String                 `json:"name,omitempty"`                       // Optional
+	AllowLogin                 *graphql.Boolean                `json:"allowLogin,omitempty"`                 // Optional
+	DailyIngest                *Long                           `json:"dailyIngest,omitempty"`                // Optional
+	DailyIngestContractualType *Organizations__ContractualType `json:"dailyIngestContractualType,omitempty"` // Optional
+	StorageContractualType     *Organizations__ContractualType `json:"storageContractualType,omitempty"`     // Optional
+	DailyScanContractualType   *Organizations__ContractualType `json:"dailyScanContractualType,omitempty"`   // Optional
+	MeasurementType            *Organizations__MeasurementType `json:"measurementType,omitempty"`            // Optional
+	DailyScan                  *Long                           `json:"dailyScan,omitempty"`                  // Optional
+	Retention                  *graphql.Int                    `json:"retention,omitempty"`                  // Optional
+	MaxRetention               *graphql.Int                    `json:"maxRetention,omitempty"`               // Optional
+	AllowSelfService           *graphql.Boolean                `json:"allowSelfService,omitempty"`           // Optional
+	Expiration                 *Long                           `json:"expiration,omitempty"`                 // Optional
+	UserLimit                  *graphql.Int                    `json:"userLimit,omitempty"`                  // Optional
+	DateType                   *graphql.String                 `json:"dateType,omitempty"`                   // Optional
+	Trial                      *graphql.Boolean                `json:"trial,omitempty"`                      // Optional
+	AllowFlightControl         *graphql.Boolean                `json:"allowFlightControl,omitempty"`         // Optional
+	RepositoryLimit            *graphql.Int                    `json:"repositoryLimit,omitempty"`            // Optional
 }
 
 // UpdateLocalFederatedConnectionInput represents data for updating a local federated connection.
 type UpdateLocalFederatedConnectionInput struct {
-
-	// Name or id of the federated view that has the connection. (Required)
-	FederatedViewName graphql.String `json:"federatedViewName"`
-
-	// Id of the connection to update. (Required)
-	ConnectionID graphql.String `json:"connectionId"`
-
-	// Name or id of the local view to connect with. (Optional)
-	TargetViewName *graphql.String `json:"targetViewName,omitempty"`
-
-	// Additional tags that can be used to filter queries. (Optional)
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"`
-
-	// Filter query that restricts the data visible through this connection. (Optional)
-	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"`
+	// Name or id of the federated view that has the connection.
+	FederatedViewName graphql.String `json:"federatedViewName"` // Required
+	// Id of the connection to update.
+	ConnectionID graphql.String `json:"connectionId"` // Required
+	// Name or id of the local view to connect with.
+	TargetViewName *graphql.String `json:"targetViewName,omitempty"` // Optional
+	// Additional tags that can be used to filter queries.
+	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	// Filter query that restricts the data visible through this connection.
+	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
 
 // UpdateLong represents if the value should be cleared, supply an `UpdateLong` object the with no value or a `null` value. If the setting should be changed, supply a `UpdateLong` object with the desired value.
 type UpdateLong struct {
-
-	// (Optional)
-	Value *graphql.Int `json:"value,omitempty"`
+	Value *graphql.Int `json:"value,omitempty"` // Optional
 }
 
-// UpdateOidcConfigurationInput
 type UpdateOidcConfigurationInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	ClientID graphql.String `json:"clientID"`
-
-	// (Required)
-	ClientSecret graphql.String `json:"clientSecret"`
-
-	// (Required)
-	Issuer graphql.String `json:"issuer"`
-
-	// (Required)
-	TokenEndpointAuthMethod graphql.String `json:"tokenEndpointAuthMethod"`
-
-	// (Required)
-	AuthorizationEndpoint graphql.String `json:"authorizationEndpoint"`
-
-	// (Required)
-	Domains []graphql.String `json:"domains"`
-
-	// (Required)
-	Scopes []graphql.String `json:"scopes"`
-
-	// (Required)
-	UserClaim graphql.String `json:"userClaim"`
-
-	// (Required)
-	EnableDebug graphql.Boolean `json:"enableDebug"`
-
-	// (Optional)
-	TokenEndpoint *graphql.String `json:"tokenEndpoint,omitempty"`
-
-	// (Optional)
-	UserInfoEndpoint *graphql.String `json:"userInfoEndpoint,omitempty"`
-
-	// (Optional)
-	RegistrationEndpoint *graphql.String `json:"registrationEndpoint,omitempty"`
-
-	// (Optional)
-	GroupsClaim *graphql.String `json:"groupsClaim,omitempty"`
-
-	// (Optional)
-	JWKSEndpoint *graphql.String `json:"JWKSEndpoint,omitempty"`
-
-	// (Optional)
-	DefaultIdp *graphql.Boolean `json:"defaultIdp,omitempty"`
-
-	// (Optional)
-	HumioOwned *graphql.Boolean `json:"humioOwned,omitempty"`
-
-	// (Optional)
-	LazyCreateUsers *graphql.Boolean `json:"lazyCreateUsers,omitempty"`
+	ID                      graphql.String   `json:"id"`                             // Required
+	Name                    graphql.String   `json:"name"`                           // Required
+	ClientID                graphql.String   `json:"clientID"`                       // Required
+	ClientSecret            graphql.String   `json:"clientSecret"`                   // Required
+	Issuer                  graphql.String   `json:"issuer"`                         // Required
+	TokenEndpointAuthMethod graphql.String   `json:"tokenEndpointAuthMethod"`        // Required
+	AuthorizationEndpoint   graphql.String   `json:"authorizationEndpoint"`          // Required
+	Domains                 []graphql.String `json:"domains"`                        // Required
+	Scopes                  []graphql.String `json:"scopes"`                         // Required
+	UserClaim               graphql.String   `json:"userClaim"`                      // Required
+	EnableDebug             graphql.Boolean  `json:"enableDebug"`                    // Required
+	TokenEndpoint           *graphql.String  `json:"tokenEndpoint,omitempty"`        // Optional
+	UserInfoEndpoint        *graphql.String  `json:"userInfoEndpoint,omitempty"`     // Optional
+	RegistrationEndpoint    *graphql.String  `json:"registrationEndpoint,omitempty"` // Optional
+	GroupsClaim             *graphql.String  `json:"groupsClaim,omitempty"`          // Optional
+	JWKSEndpoint            *graphql.String  `json:"JWKSEndpoint,omitempty"`         // Optional
+	DefaultIdp              *graphql.Boolean `json:"defaultIdp,omitempty"`           // Optional
+	HumioOwned              *graphql.Boolean `json:"humioOwned,omitempty"`           // Optional
+	LazyCreateUsers         *graphql.Boolean `json:"lazyCreateUsers,omitempty"`      // Optional
 }
 
 // UpdateOpsGenieAction represents data for updating an OpsGenie action.
 type UpdateOpsGenieAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// OpsGenie webhook url to send the request to. (Required)
-	APIURL graphql.String `json:"apiUrl"`
-
-	// Key to authenticate with OpsGenie. (Required)
-	GenieKey graphql.String `json:"genieKey"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// OpsGenie webhook url to send the request to.
+	APIURL graphql.String `json:"apiUrl"` // Required
+	// Key to authenticate with OpsGenie.
+	GenieKey graphql.String `json:"genieKey"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// UpdateOrganizationPermissionsTokenPermissionsInput
 type UpdateOrganizationPermissionsTokenPermissionsInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	Permissions []OrganizationPermission `json:"permissions"`
+	ID          graphql.String           `json:"id"`          // Required
+	Permissions []OrganizationPermission `json:"permissions"` // Required
 }
 
-// UpdatePackageFromRegistryInput
 type UpdatePackageFromRegistryInput struct {
-
-	// (Required)
-	ViewName RepoOrViewName `json:"viewName"`
-
-	// (Required)
-	PackageID VersionedPackageSpecifier `json:"packageId"`
-
-	// (Required)
-	ConflictResolutions []ConflictResolutionConfiguration `json:"conflictResolutions"`
-
-	// (Optional)
-	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"`
+	ViewName            RepoOrViewName                    `json:"viewName"`                     // Required
+	PackageID           VersionedPackageSpecifier         `json:"packageId"`                    // Required
+	ConflictResolutions []ConflictResolutionConfiguration `json:"conflictResolutions"`          // Required
+	QueryOwnershipType  *QueryOwnershipType               `json:"queryOwnershipType,omitempty"` // Optional
 }
 
 // UpdatePagerDutyAction represents data for updating a PagerDuty action.
 type UpdatePagerDutyAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Severity level to give to the message. (Required)
-	Severity graphql.String `json:"severity"`
-
-	// Routing key to authenticate with PagerDuty. (Required)
-	RoutingKey graphql.String `json:"routingKey"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Severity level to give to the message.
+	Severity graphql.String `json:"severity"` // Required
+	// Routing key to authenticate with PagerDuty.
+	RoutingKey graphql.String `json:"routingKey"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// UpdateParametersInteractionInput
 type UpdateParametersInteractionInput struct {
-
-	// (Required)
-	Name graphql.String `json:"name"`
-
-	// (Required)
-	Arguments []ArgumentInput `json:"arguments"`
-
-	// (Required)
-	UseWidgetTimeWindow graphql.Boolean `json:"useWidgetTimeWindow"`
-
-	// (Optional)
-	TitleTemplate *graphql.String `json:"titleTemplate,omitempty"`
-
-	// (Optional)
-	FieldInteractionConditions *[]FieldInteractionConditionInput `json:"fieldInteractionConditions,omitempty"`
+	Name                       graphql.String                    `json:"name"`                                 // Required
+	Arguments                  []ArgumentInput                   `json:"arguments"`                            // Required
+	UseWidgetTimeWindow        graphql.Boolean                   `json:"useWidgetTimeWindow"`                  // Required
+	TitleTemplate              *graphql.String                   `json:"titleTemplate,omitempty"`              // Optional
+	FieldInteractionConditions *[]FieldInteractionConditionInput `json:"fieldInteractionConditions,omitempty"` // Optional
 }
 
 // UpdateParserInput represents input for updating a parser.
 type UpdateParserInput struct {
-
-	// The repository where the parser lives. (Optional)
-	RepositoryName *graphql.String `json:"repositoryName,omitempty"`
-
-	// The ID of the parser to update. (Optional)
-	ID *graphql.String `json:"id,omitempty"`
-
-	// The name to use for the parser. (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// Test events that can be parsed by the parser. (Optional)
-	TestData *[]graphql.String `json:"testData,omitempty"`
-
-	// [PREVIEW: Allows parser to have more extensive test cases than the `testData` field allows. If both `testCases` and `testData` are passed in, then `testCases` is the one that is used.]. (Optional)
-	TestCases *[]TestCaseInput `json:"testCases,omitempty"`
-
-	// The parser script that is executed for every incoming event. (Optional)
-	SourceCode *graphql.String `json:"sourceCode,omitempty"`
-
-	// Any fields which the parser should convert to tags after an event is parsed. (Optional)
-	TagFields *[]graphql.String `json:"tagFields,omitempty"`
-
-	// A list of fields that will be removed from the event before it's parsed. These fields will not be included when calculating usage. (Optional)
-	FieldsToBeRemovedBeforeParsing *[]graphql.String `json:"fieldsToBeRemovedBeforeParsing,omitempty"`
-
-	// The version of the Humio query language to use. (Optional)
-	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"`
+	// The repository where the parser lives.
+	RepositoryName *graphql.String `json:"repositoryName,omitempty"` // Optional
+	// The ID of the parser to update.
+	ID *graphql.String `json:"id,omitempty"` // Optional
+	// The name to use for the parser.
+	Name *graphql.String `json:"name,omitempty"` // Optional
+	// Test events that can be parsed by the parser.
+	TestData *[]graphql.String `json:"testData,omitempty"` // Optional
+	// [PREVIEW: Allows parser to have more extensive test cases than the `testData` field allows. If both `testCases` and `testData` are passed in, then `testCases` is the one that is used.].
+	TestCases *[]TestCaseInput `json:"testCases,omitempty"` // Optional
+	// The parser script that is executed for every incoming event.
+	SourceCode *graphql.String `json:"sourceCode,omitempty"` // Optional
+	// Any fields which the parser should convert to tags after an event is parsed.
+	TagFields *[]graphql.String `json:"tagFields,omitempty"` // Optional
+	// A list of fields that will be removed from the event before it's parsed. These fields will not be included when calculating usage.
+	FieldsToBeRemovedBeforeParsing *[]graphql.String `json:"fieldsToBeRemovedBeforeParsing,omitempty"` // Optional
+	// The version of the Humio query language to use.
+	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"` // Optional
 }
 
 // UpdatePostMessageSlackAction represents data for updating a post-message Slack action.
 type UpdatePostMessageSlackAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Api token to authenticate with Slack. (Required)
-	APIToken graphql.String `json:"apiToken"`
-
-	// List of Slack channels to message. (Required)
-	Channels []graphql.String `json:"channels"`
-
-	// Fields to include within the Slack message. Can be templated with values from the result. (Required)
-	Fields []SlackFieldEntryInput `json:"fields"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Api token to authenticate with Slack.
+	APIToken graphql.String `json:"apiToken"` // Required
+	// List of Slack channels to message.
+	Channels []graphql.String `json:"channels"` // Required
+	// Fields to include within the Slack message. Can be templated with values from the result.
+	Fields []SlackFieldEntryInput `json:"fields"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// UpdateQueryPrefixInput
 type UpdateQueryPrefixInput struct {
-
-	// (Required)
-	QueryPrefix graphql.String `json:"queryPrefix"`
-
-	// (Required)
-	ViewID graphql.String `json:"viewId"`
-
-	// (Required)
-	GroupID graphql.String `json:"groupId"`
+	QueryPrefix graphql.String `json:"queryPrefix"` // Required
+	ViewID      graphql.String `json:"viewId"`      // Required
+	GroupID     graphql.String `json:"groupId"`     // Required
 }
 
 // UpdateRemoteFederatedConnectionInput represents data for updating a remote federated connection.
 type UpdateRemoteFederatedConnectionInput struct {
-
-	// Name or id of the federated view that has the connection. (Required)
-	FederatedViewName graphql.String `json:"federatedViewName"`
-
-	// Id of the connection to update. (Required)
-	ConnectionID graphql.String `json:"connectionId"`
-
-	// Public URL of the remote cluster to connect with. (Optional)
-	PublicURL *graphql.String `json:"publicUrl,omitempty"`
-
-	// Access token for the remote view to connect with. (Optional)
-	Token *graphql.String `json:"token,omitempty"`
-
-	// Additional tags that can be used to filter queries. (Optional)
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"`
-
-	// Filter query that restricts the data visible through this connection. (Optional)
-	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"`
+	// Name or id of the federated view that has the connection.
+	FederatedViewName graphql.String `json:"federatedViewName"` // Required
+	// Id of the connection to update.
+	ConnectionID graphql.String `json:"connectionId"` // Required
+	// Public URL of the remote cluster to connect with.
+	PublicURL *graphql.String `json:"publicUrl,omitempty"` // Optional
+	// Access token for the remote view to connect with.
+	Token *graphql.String `json:"token,omitempty"` // Optional
+	// Additional tags that can be used to filter queries.
+	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	// Filter query that restricts the data visible through this connection.
+	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
 
-// UpdateRepoDataTypeInputObject
 type UpdateRepoDataTypeInputObject struct {
-
-	// (Required)
-	DataspaceID graphql.String `json:"dataspaceId"`
-
-	// (Required)
-	RepoDataType RepositoryDataType `json:"repoDataType"`
+	DataspaceID  graphql.String     `json:"dataspaceId"`  // Required
+	RepoDataType RepositoryDataType `json:"repoDataType"` // Required
 }
 
-// UpdateRepoLimitIdInputObject
 type UpdateRepoLimitIdInputObject struct {
-
-	// (Required)
-	DataspaceID graphql.String `json:"dataspaceId"`
-
-	// (Required)
-	LimitID graphql.String `json:"limitId"`
+	DataspaceID graphql.String `json:"dataspaceId"` // Required
+	LimitID     graphql.String `json:"limitId"`     // Required
 }
 
-// UpdateRoleInput
 type UpdateRoleInput struct {
-
-	// (Required)
-	RoleID graphql.String `json:"roleId"`
-
-	// (Required)
-	DisplayName graphql.String `json:"displayName"`
-
-	// (Required)
-	ViewPermissions []Permission `json:"viewPermissions"`
-
-	// (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// (Optional)
-	Color *graphql.String `json:"color,omitempty"`
-
-	// (Optional)
-	SystemPermissions *[]SystemPermission `json:"systemPermissions,omitempty"`
-
-	// (Optional)
-	OrganizationPermissions *[]OrganizationPermission `json:"organizationPermissions,omitempty"`
-
-	// (Optional)
-	ObjectAction *ObjectAction `json:"objectAction,omitempty"`
+	RoleID                  graphql.String            `json:"roleId"`                            // Required
+	DisplayName             graphql.String            `json:"displayName"`                       // Required
+	ViewPermissions         []Permission              `json:"viewPermissions"`                   // Required
+	Description             *graphql.String           `json:"description,omitempty"`             // Optional
+	Color                   *graphql.String           `json:"color,omitempty"`                   // Optional
+	SystemPermissions       *[]SystemPermission       `json:"systemPermissions,omitempty"`       // Optional
+	OrganizationPermissions *[]OrganizationPermission `json:"organizationPermissions,omitempty"` // Optional
+	ObjectAction            *ObjectAction             `json:"objectAction,omitempty"`            // Optional
 }
 
-// UpdateSavedQueryInput
 type UpdateSavedQueryInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// (Optional)
-	Name *graphql.String `json:"name,omitempty"`
-
-	// (Optional)
-	QueryString *graphql.String `json:"queryString,omitempty"`
-
-	// (Optional)
-	Start *graphql.String `json:"start,omitempty"`
-
-	// (Optional)
-	End *graphql.String `json:"end,omitempty"`
-
-	// (Optional)
-	IsLive *graphql.Boolean `json:"isLive,omitempty"`
-
-	// (Optional)
-	WidgetType *graphql.String `json:"widgetType,omitempty"`
-
-	// (Optional)
-	Options *graphql.String `json:"options,omitempty"`
-
-	// (Optional)
-	DashboardLinkInteractions *[]DashboardLinkInteractionInput `json:"dashboardLinkInteractions,omitempty"`
-
-	// (Optional)
-	CustomLinkInteractions *[]CustomLinkInteractionInput `json:"customLinkInteractions,omitempty"`
-
-	// (Optional)
-	SearchLinkInteractions *[]SearchLinkInteractionInput `json:"searchLinkInteractions,omitempty"`
-
-	// (Optional)
-	UpdateParametersInteractions *[]UpdateParametersInteractionInput `json:"updateParametersInteractions,omitempty"`
+	ID                           graphql.String                      `json:"id"`                                     // Required
+	ViewName                     graphql.String                      `json:"viewName"`                               // Required
+	Name                         *graphql.String                     `json:"name,omitempty"`                         // Optional
+	QueryString                  *graphql.String                     `json:"queryString,omitempty"`                  // Optional
+	Start                        *graphql.String                     `json:"start,omitempty"`                        // Optional
+	End                          *graphql.String                     `json:"end,omitempty"`                          // Optional
+	IsLive                       *graphql.Boolean                    `json:"isLive,omitempty"`                       // Optional
+	WidgetType                   *graphql.String                     `json:"widgetType,omitempty"`                   // Optional
+	Options                      *graphql.String                     `json:"options,omitempty"`                      // Optional
+	DashboardLinkInteractions    *[]DashboardLinkInteractionInput    `json:"dashboardLinkInteractions,omitempty"`    // Optional
+	CustomLinkInteractions       *[]CustomLinkInteractionInput       `json:"customLinkInteractions,omitempty"`       // Optional
+	SearchLinkInteractions       *[]SearchLinkInteractionInput       `json:"searchLinkInteractions,omitempty"`       // Optional
+	UpdateParametersInteractions *[]UpdateParametersInteractionInput `json:"updateParametersInteractions,omitempty"` // Optional
 }
 
 // UpdateScheduledSearch represents data for updating a scheduled search.
 type UpdateScheduledSearch struct {
-
-	// Name of the view of the scheduled search. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the scheduled search. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the scheduled search. (Required)
-	Name graphql.String `json:"name"`
-
-	// LogScale query to execute. (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// Start of the relative time interval for the query. (Required)
-	QueryStart graphql.String `json:"queryStart"`
-
-	// End of the relative time interval for the query. (Required)
-	QueryEnd graphql.String `json:"queryEnd"`
-
-	// Cron pattern describing the schedule to execute the query on. (Required)
-	Schedule graphql.String `json:"schedule"`
-
-	// Time zone of the schedule. Currently this field only supports UTC offsets like 'UTC', 'UTC-01' or 'UTC+12:45'. (Required)
-	TimeZone graphql.String `json:"timeZone"`
-
-	// User-defined limit, which caps the number of missed searches to backfill, e.g. in the event of a shutdown. (Required)
-	BackfillLimit graphql.Int `json:"backfillLimit"`
-
-	// Flag indicating whether the scheduled search is enabled. (Required)
-	Enabled graphql.Boolean `json:"enabled"`
-
-	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname". (Required)
-	Actions []graphql.String `json:"actions"`
-
-	// Labels attached to the scheduled search. (Required)
-	Labels []graphql.String `json:"labels"`
-
-	// Description of the scheduled search. (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// The scheduled search will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the scheduled search will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user. (Optional)
-	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"`
-
-	// Ownership of the query run by this scheduled search. If value is User, ownership will be based on the runAsUserId field. (Optional)
-	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"`
+	// Name of the view of the scheduled search.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the scheduled search.
+	ID graphql.String `json:"id"` // Required
+	// Name of the scheduled search.
+	Name graphql.String `json:"name"` // Required
+	// LogScale query to execute.
+	QueryString graphql.String `json:"queryString"` // Required
+	// Start of the relative time interval for the query.
+	QueryStart graphql.String `json:"queryStart"` // Required
+	// End of the relative time interval for the query.
+	QueryEnd graphql.String `json:"queryEnd"` // Required
+	// Cron pattern describing the schedule to execute the query on.
+	Schedule graphql.String `json:"schedule"` // Required
+	// Time zone of the schedule. Currently this field only supports UTC offsets like 'UTC', 'UTC-01' or 'UTC+12:45'.
+	TimeZone graphql.String `json:"timeZone"` // Required
+	// User-defined limit, which caps the number of missed searches to backfill, e.g. in the event of a shutdown.
+	BackfillLimit graphql.Int `json:"backfillLimit"` // Required
+	// Flag indicating whether the scheduled search is enabled.
+	Enabled graphql.Boolean `json:"enabled"` // Required
+	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname".
+	Actions []graphql.String `json:"actions"` // Required
+	// Labels attached to the scheduled search.
+	Labels []graphql.String `json:"labels"` // Required
+	// Description of the scheduled search.
+	Description *graphql.String `json:"description,omitempty"` // Optional
+	// The scheduled search will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the scheduled search will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
+	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
+	// Ownership of the query run by this scheduled search. If value is User, ownership will be based on the runAsUserId field.
+	QueryOwnershipType *QueryOwnershipType `json:"queryOwnershipType,omitempty"` // Optional
 }
 
-// UpdateSearchLinkInteractionInput
 type UpdateSearchLinkInteractionInput struct {
-
-	// (Required)
-	Path graphql.String `json:"path"`
-
-	// (Required)
-	InteractionID graphql.String `json:"interactionId"`
-
-	// (Required)
-	SearchLinkInteractionInput SearchLinkInteractionInput `json:"searchLinkInteractionInput"`
+	Path                       graphql.String             `json:"path"`                       // Required
+	InteractionID              graphql.String             `json:"interactionId"`              // Required
+	SearchLinkInteractionInput SearchLinkInteractionInput `json:"searchLinkInteractionInput"` // Required
 }
 
 // UpdateSlackAction represents data for updating a Slack action.
 type UpdateSlackAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Slack webhook url to send the request to. (Required)
-	URL graphql.String `json:"url"`
-
-	// Fields to include within the Slack message. Can be templated with values from the result. (Required)
-	Fields []SlackFieldEntryInput `json:"fields"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Slack webhook url to send the request to.
+	URL graphql.String `json:"url"` // Required
+	// Fields to include within the Slack message. Can be templated with values from the result.
+	Fields []SlackFieldEntryInput `json:"fields"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// UpdateSubscriptionInputObject
 type UpdateSubscriptionInputObject struct {
-
-	// (Required)
-	Subscription Organizations__Subscription `json:"subscription"`
-
-	// (Optional)
-	TrialDays *graphql.Int `json:"trialDays,omitempty"`
+	Subscription Organizations__Subscription `json:"subscription"`        // Required
+	TrialDays    *graphql.Int                `json:"trialDays,omitempty"` // Optional
 }
 
-// UpdateSystemPermissionsTokenPermissionsInput
 type UpdateSystemPermissionsTokenPermissionsInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	Permissions []SystemPermission `json:"permissions"`
+	ID          graphql.String     `json:"id"`          // Required
+	Permissions []SystemPermission `json:"permissions"` // Required
 }
 
 // UpdateUploadFileAction represents data for updating an upload file action.
 type UpdateUploadFileAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// File name for the uploaded file. (Required)
-	FileName graphql.String `json:"fileName"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// File name for the uploaded file.
+	FileName graphql.String `json:"fileName"` // Required
 }
 
-// UpdateUserByIdInput
 type UpdateUserByIdInput struct {
-
-	// (Required)
-	UserID graphql.String `json:"userId"`
-
-	// (Optional)
-	Company *graphql.String `json:"company,omitempty"`
-
-	// (Optional)
-	IsRoot *graphql.Boolean `json:"isRoot,omitempty"`
-
-	// (Optional)
-	Username *graphql.String `json:"username,omitempty"`
-
-	// (Optional)
-	FirstName *graphql.String `json:"firstName,omitempty"`
-
-	// (Optional)
-	LastName *graphql.String `json:"lastName,omitempty"`
-
-	// (Optional)
-	FullName *graphql.String `json:"fullName,omitempty"`
-
-	// (Optional)
-	Picture *graphql.String `json:"picture,omitempty"`
-
-	// (Optional)
-	Email *graphql.String `json:"email,omitempty"`
-
-	// (Optional)
-	CountryCode *graphql.String `json:"countryCode,omitempty"`
-
-	// (Optional)
-	StateCode *graphql.String `json:"stateCode,omitempty"`
+	UserID      graphql.String   `json:"userId"`                // Required
+	Company     *graphql.String  `json:"company,omitempty"`     // Optional
+	IsRoot      *graphql.Boolean `json:"isRoot,omitempty"`      // Optional
+	Username    *graphql.String  `json:"username,omitempty"`    // Optional
+	FirstName   *graphql.String  `json:"firstName,omitempty"`   // Optional
+	LastName    *graphql.String  `json:"lastName,omitempty"`    // Optional
+	FullName    *graphql.String  `json:"fullName,omitempty"`    // Optional
+	Picture     *graphql.String  `json:"picture,omitempty"`     // Optional
+	Email       *graphql.String  `json:"email,omitempty"`       // Optional
+	CountryCode *graphql.String  `json:"countryCode,omitempty"` // Optional
+	StateCode   *graphql.String  `json:"stateCode,omitempty"`   // Optional
 }
 
 // UpdateVictorOpsAction represents data for updating a VictorOps action.
 type UpdateVictorOpsAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Type of the VictorOps message to make. (Required)
-	MessageType graphql.String `json:"messageType"`
-
-	// VictorOps webhook url to send the request to. (Required)
-	NotifyURL graphql.String `json:"notifyUrl"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Type of the VictorOps message to make.
+	MessageType graphql.String `json:"messageType"` // Required
+	// VictorOps webhook url to send the request to.
+	NotifyURL graphql.String `json:"notifyUrl"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// UpdateViewPermissionsTokenPermissionsInput
 type UpdateViewPermissionsTokenPermissionsInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	Permissions []Permission `json:"permissions"`
+	ID          graphql.String `json:"id"`          // Required
+	Permissions []Permission   `json:"permissions"` // Required
 }
 
 // UpdateWebhookAction represents data for updating a webhook action.
 type UpdateWebhookAction struct {
-
-	// Name of the view of the action. (Required)
-	ViewName graphql.String `json:"viewName"`
-
-	// Id of the action. (Required)
-	ID graphql.String `json:"id"`
-
-	// Name of the action. (Required)
-	Name graphql.String `json:"name"`
-
-	// Url to send the http(s) request to. (Required)
-	URL graphql.String `json:"url"`
-
-	// Method to use for the request. (Required)
-	Method graphql.String `json:"method"`
-
-	// Headers of the http(s) request. (Required)
-	Headers []HttpHeaderEntryInput `json:"headers"`
-
-	// Body of the http(s) request. Can be templated with values from the result. (Required)
-	BodyTemplate graphql.String `json:"bodyTemplate"`
-
-	// Flag indicating whether SSL should be ignored for the request. (Required)
-	IgnoreSSL graphql.Boolean `json:"ignoreSSL"`
-
-	// Defines whether the action should use the configured proxy to make web requests. (Required)
-	UseProxy graphql.Boolean `json:"useProxy"`
+	// Name of the view of the action.
+	ViewName graphql.String `json:"viewName"` // Required
+	// Id of the action.
+	ID graphql.String `json:"id"` // Required
+	// Name of the action.
+	Name graphql.String `json:"name"` // Required
+	// Url to send the http(s) request to.
+	URL graphql.String `json:"url"` // Required
+	// Method to use for the request.
+	Method graphql.String `json:"method"` // Required
+	// Headers of the http(s) request.
+	Headers []HttpHeaderEntryInput `json:"headers"` // Required
+	// Body of the http(s) request. Can be templated with values from the result.
+	BodyTemplate graphql.String `json:"bodyTemplate"` // Required
+	// Flag indicating whether SSL should be ignored for the request.
+	IgnoreSSL graphql.Boolean `json:"ignoreSSL"` // Required
+	// Defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// UpgradeAccountData
 type UpgradeAccountData struct {
-
-	// (Required)
-	LastName graphql.String `json:"lastName"`
-
-	// (Required)
-	Company graphql.String `json:"company"`
-
-	// (Required)
-	Email graphql.String `json:"email"`
-
-	// (Optional)
-	FirstName *graphql.String `json:"firstName,omitempty"`
-
-	// (Optional)
-	Purpose *Purposes `json:"purpose,omitempty"`
-
-	// (Optional)
-	PhoneNumber *graphql.String `json:"phoneNumber,omitempty"`
-
-	// (Optional)
-	CountryCode *graphql.String `json:"countryCode,omitempty"`
-
-	// (Optional)
-	StateCode *graphql.String `json:"stateCode,omitempty"`
-
-	// (Optional)
-	Comment *graphql.String `json:"comment,omitempty"`
+	LastName    graphql.String  `json:"lastName"`              // Required
+	Company     graphql.String  `json:"company"`               // Required
+	Email       graphql.String  `json:"email"`                 // Required
+	FirstName   *graphql.String `json:"firstName,omitempty"`   // Optional
+	Purpose     *Purposes       `json:"purpose,omitempty"`     // Optional
+	PhoneNumber *graphql.String `json:"phoneNumber,omitempty"` // Optional
+	CountryCode *graphql.String `json:"countryCode,omitempty"` // Optional
+	StateCode   *graphql.String `json:"stateCode,omitempty"`   // Optional
+	Comment     *graphql.String `json:"comment,omitempty"`     // Optional
 }
 
-// UserRoleAssignment
 type UserRoleAssignment struct {
-
-	// (Required)
-	UserID graphql.String `json:"userId"`
-
-	// (Required)
-	RoleID graphql.String `json:"roleId"`
+	UserID graphql.String `json:"userId"` // Required
+	RoleID graphql.String `json:"roleId"` // Required
 }
 
-// UtmParams
 type UtmParams struct {
-
-	// (Required)
-	Campaign graphql.String `json:"campaign"`
-
-	// (Required)
-	Content graphql.String `json:"content"`
-
-	// (Required)
-	Medium graphql.String `json:"medium"`
-
-	// (Required)
-	Source graphql.String `json:"source"`
-
-	// (Required)
-	Term graphql.String `json:"term"`
+	Campaign graphql.String `json:"campaign"` // Required
+	Content  graphql.String `json:"content"`  // Required
+	Medium   graphql.String `json:"medium"`   // Required
+	Source   graphql.String `json:"source"`   // Required
+	Term     graphql.String `json:"term"`     // Required
 }
 
 // ViewConnectionInput represents the repositories this view will read from.
 type ViewConnectionInput struct {
-
-	// The name of the connected repository. (Required)
-	RepositoryName graphql.String `json:"repositoryName"`
-
-	// The filter applied to all results from the repository. (Required)
-	Filter graphql.String `json:"filter"`
-
-	// (Optional)
-	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"`
+	// The name of the connected repository.
+	RepositoryName graphql.String `json:"repositoryName"` // Required
+	// The filter applied to all results from the repository.
+	Filter          graphql.String       `json:"filter"`                    // Required
+	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"` // Optional
 }
 
-// WidgetInput
 type WidgetInput struct {
-
-	// (Required)
-	ID graphql.String `json:"id"`
-
-	// (Required)
-	Title graphql.String `json:"title"`
-
-	// (Required)
-	X graphql.Int `json:"x"`
-
-	// (Required)
-	Y graphql.Int `json:"y"`
-
-	// (Required)
-	Width graphql.Int `json:"width"`
-
-	// (Required)
-	Height graphql.Int `json:"height"`
-
-	// (Optional)
-	Description *graphql.String `json:"description,omitempty"`
-
-	// (Optional)
-	QueryOptions *WidgetQueryPropertiesInput `json:"queryOptions,omitempty"`
-
-	// (Optional)
-	NoteOptions *WidgetNotePropertiesInput `json:"noteOptions,omitempty"`
-
-	// (Optional)
-	LinkOptions *WidgetLinkPropertiesInput `json:"linkOptions,omitempty"`
+	ID           graphql.String              `json:"id"`                     // Required
+	Title        graphql.String              `json:"title"`                  // Required
+	X            graphql.Int                 `json:"x"`                      // Required
+	Y            graphql.Int                 `json:"y"`                      // Required
+	Width        graphql.Int                 `json:"width"`                  // Required
+	Height       graphql.Int                 `json:"height"`                 // Required
+	Description  *graphql.String             `json:"description,omitempty"`  // Optional
+	QueryOptions *WidgetQueryPropertiesInput `json:"queryOptions,omitempty"` // Optional
+	NoteOptions  *WidgetNotePropertiesInput  `json:"noteOptions,omitempty"`  // Optional
+	LinkOptions  *WidgetLinkPropertiesInput  `json:"linkOptions,omitempty"`  // Optional
 }
 
-// WidgetLinkPropertiesInput
 type WidgetLinkPropertiesInput struct {
-
-	// (Required)
-	Labels []graphql.String `json:"labels"`
+	Labels []graphql.String `json:"labels"` // Required
 }
 
-// WidgetNotePropertiesInput
 type WidgetNotePropertiesInput struct {
-
-	// (Required)
-	Text graphql.String `json:"text"`
-
-	// (Optional)
-	BackgroundColor *graphql.String `json:"backgroundColor,omitempty"`
-
-	// (Optional)
-	TextColor *graphql.String `json:"textColor,omitempty"`
+	Text            graphql.String  `json:"text"`                      // Required
+	BackgroundColor *graphql.String `json:"backgroundColor,omitempty"` // Optional
+	TextColor       *graphql.String `json:"textColor,omitempty"`       // Optional
 }
 
-// WidgetQueryPropertiesInput
 type WidgetQueryPropertiesInput struct {
-
-	// (Required)
-	QueryString graphql.String `json:"queryString"`
-
-	// (Required)
-	Start graphql.String `json:"start"`
-
-	// (Required)
-	End graphql.String `json:"end"`
-
-	// (Required)
-	WidgetType graphql.String `json:"widgetType"`
-
-	// (Optional)
-	Options *graphql.String `json:"options,omitempty"`
-
-	// (Optional)
-	DashboardLinkInteractions *[]DashboardLinkInteractionInput `json:"dashboardLinkInteractions,omitempty"`
-
-	// (Optional)
-	CustomLinkInteractions *[]CustomLinkInteractionInput `json:"customLinkInteractions,omitempty"`
-
-	// (Optional)
-	SearchLinkInteractions *[]SearchLinkInteractionInput `json:"searchLinkInteractions,omitempty"`
-
-	// (Optional)
-	UpdateParametersInteractions *[]UpdateParametersInteractionInput `json:"updateParametersInteractions,omitempty"`
+	QueryString                  graphql.String                      `json:"queryString"`                            // Required
+	Start                        graphql.String                      `json:"start"`                                  // Required
+	End                          graphql.String                      `json:"end"`                                    // Required
+	WidgetType                   graphql.String                      `json:"widgetType"`                             // Required
+	Options                      *graphql.String                     `json:"options,omitempty"`                      // Optional
+	DashboardLinkInteractions    *[]DashboardLinkInteractionInput    `json:"dashboardLinkInteractions,omitempty"`    // Optional
+	CustomLinkInteractions       *[]CustomLinkInteractionInput       `json:"customLinkInteractions,omitempty"`       // Optional
+	SearchLinkInteractions       *[]SearchLinkInteractionInput       `json:"searchLinkInteractions,omitempty"`       // Optional
+	UpdateParametersInteractions *[]UpdateParametersInteractionInput `json:"updateParametersInteractions,omitempty"` // Optional
 }
 
 // deleteExternalFunctionInput represents the input required to delete an external function specification.
 type deleteExternalFunctionInput struct {
-
-	// The name of the external function to delete. (Required)
-	Name graphql.String `json:"name"`
+	// The name of the external function to delete.
+	Name graphql.String `json:"name"` // Required
 }
