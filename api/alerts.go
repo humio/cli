@@ -9,13 +9,14 @@ import (
 type Alert struct {
 	ID                 string         `graphql:"id"                 yaml:"-"                            json:"id"`
 	Name               string         `graphql:"name"               yaml:"name"                         json:"name"`
+	DisplayName        string         `graphql:"displayName" yaml:"displayName" json:"displayName"`
 	QueryString        string         `graphql:"queryString"        yaml:"queryString"                  json:"queryString"`
 	QueryStart         string         `graphql:"queryStart"         yaml:"queryStart"                   json:"queryStart"`
 	ThrottleField      string         `graphql:"throttleField"      yaml:"throttleField"                json:"throttleField"`
-	TimeOfLastTrigger  int            `graphql:"timeOfLastTrigger"  yaml:"timeOfLastTrigger"            json:"timeOfLastTrigger"`
+	TimeOfLastTrigger  int64          `graphql:"timeOfLastTrigger"  yaml:"timeOfLastTrigger"            json:"timeOfLastTrigger"`
 	IsStarred          bool           `graphql:"isStarred"          yaml:"isStarred"                    json:"isStarred"`
 	Description        string         `graphql:"description"        yaml:"description,omitempty"        json:"description"`
-	ThrottleTimeMillis int            `graphql:"throttleTimeMillis" yaml:"throttleTimeMillis"           json:"throttleTimeMillis"`
+	ThrottleTimeMillis int64          `graphql:"throttleTimeMillis" yaml:"throttleTimeMillis"           json:"throttleTimeMillis"`
 	Enabled            bool           `graphql:"enabled"            yaml:"enabled"                      json:"enabled"`
 	Actions            []string       `graphql:"actions"            yaml:"actions"                      json:"actions"`
 	Labels             []string       `graphql:"labels"             yaml:"labels,omitempty"             json:"labels,omitempty"`
