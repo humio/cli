@@ -2,7 +2,7 @@
 
 package api
 
-import graphql "github.com/cli/shurcooL-graphql"
+import "github.com/cli/shurcooL-graphql"
 
 type Long int64
 type JSON string
