@@ -40,11 +40,6 @@ type IngestPartition struct {
 	NodeIds []int
 }
 
-type StoragePartition struct {
-	Id      int
-	NodeIds []int
-}
-
 type Cluster struct {
 	Nodes                               []ClusterNode
 	ClusterInfoAgeSeconds               float64
@@ -57,7 +52,6 @@ type Cluster struct {
 	TargetMissingSegmentSize            float64
 	TargetProperlyReplicatedSegmentSize float64
 	IngestPartitions                    []IngestPartition
-	StoragePartitions                   []StoragePartition // Deprecated: returns dummy data as of LogScale 1.88
 }
 
 func (c *Client) Clusters() *Clusters { return &Clusters{client: c} }
@@ -69,92 +63,6 @@ func (c *Clusters) Get() (Cluster, error) {
 
 	err := c.client.Query(&query, nil)
 	return query.Cluster, err
-}
-
-type StoragePartitionInput struct {
-	ID      graphql.Int   `json:"id"`
-	NodeIDs []graphql.Int `json:"nodeIds"`
-}
-
-type IngestPartitionInput struct {
-	ID      graphql.Int   `json:"id"`
-	NodeIDs []graphql.Int `json:"nodeIds"`
-}
-
-// Deprecated: returns dummy data as of LogScale 1.88
-func (c *Clusters) UpdateStoragePartitionScheme(desired []StoragePartitionInput) error {
-	var mutation struct {
-		UpdateStoragePartitionScheme struct {
-			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
-		} `graphql:"updateStoragePartitionScheme(partitions: $partitions)"`
-	}
-
-	variables := map[string]interface{}{
-		"partitions": desired,
-	}
-
-	return c.client.Mutate(&mutation, variables)
-}
-
-// Deprecated: returns dummy data as of LogScale 1.80
-func (c *Clusters) UpdateIngestPartitionScheme(desired []IngestPartitionInput) error {
-	var mutation struct {
-		UpdateStoragePartitionScheme struct {
-			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
-		} `graphql:"updateIngestPartitionScheme(partitions: $partitions)"`
-	}
-
-	variables := map[string]interface{}{
-		"partitions": desired,
-	}
-
-	return c.client.Mutate(&mutation, variables)
-}
-
-// Deprecated: returns dummy data as of LogScale 1.88
-func (c *Clusters) StartDataRedistribution() error {
-	var mutation struct {
-		StartDataRedistribution struct {
-			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
-		} `graphql:"startDataRedistribution"`
-	}
-
-	return c.client.Mutate(&mutation, nil)
-}
-
-// Deprecated: returns dummy data as of LogScale 1.88
-func (c *Clusters) ClusterMoveStorageRouteAwayFromNode(nodeID int) error {
-	var mutation struct {
-		ClusterMoveStorageRouteAwayFromNode struct {
-			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
-		} `graphql:"clusterMoveStorageRouteAwayFromNode(nodeID: $id)"`
-	}
-
-	variables := map[string]interface{}{
-		"id": graphql.Int(nodeID),
-	}
-
-	return c.client.Mutate(&mutation, variables)
-}
-
-// Deprecated: returns dummy data as of LogScale 1.80
-func (c *Clusters) ClusterMoveIngestRoutesAwayFromNode(nodeID int) error {
-	var mutation struct {
-		ClusterMoveIngestRoutesAwayFromNode struct {
-			// We have to make a selection, so just take __typename
-			Typename graphql.String `graphql:"__typename"`
-		} `graphql:"clusterMoveIngestRoutesAwayFromNode(nodeID: $id)"`
-	}
-
-	variables := map[string]interface{}{
-		"id": graphql.Int(nodeID),
-	}
-
-	return c.client.Mutate(&mutation, variables)
 }
 
 type ClusterNodes struct {
@@ -212,28 +120,4 @@ func (n *ClusterNodes) Unregister(nodeID int, force bool) error {
 	}
 
 	return n.client.Mutate(&mutation, variables)
-}
-
-// Deprecated: returns dummy data as of LogScale 1.80
-func (c *Clusters) SuggestedIngestPartitions() ([]IngestPartitionInput, error) {
-	var query struct {
-		Cluster struct {
-			SuggestedIngestPartitions []IngestPartitionInput `graphql:"suggestedIngestPartitions"`
-		} `graphql:"cluster"`
-	}
-
-	err := c.client.Query(&query, nil)
-	return query.Cluster.SuggestedIngestPartitions, err
-}
-
-// Deprecated: returns dummy data as of LogScale 1.88
-func (c *Clusters) SuggestedStoragePartitions() ([]StoragePartitionInput, error) {
-	var query struct {
-		Cluster struct {
-			SuggestedStoragePartitions []StoragePartitionInput `graphql:"suggestedStoragePartitions"`
-		} `graphql:"cluster"`
-	}
-
-	err := c.client.Query(&query, nil)
-	return query.Cluster.SuggestedStoragePartitions, err
 }
