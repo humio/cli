@@ -48,6 +48,7 @@ const (
 	AssetTypeScheduledSearch AssetType = "ScheduledSearch"
 	AssetTypeAction          AssetType = "Action"
 	AssetTypeFile            AssetType = "File"
+	AssetTypeAggregateAlert  AssetType = "AggregateAlert"
 	AssetTypeFilterAlert     AssetType = "FilterAlert"
 	AssetTypeAlert           AssetType = "Alert"
 	AssetTypeParser          AssetType = "Parser"
@@ -65,6 +66,8 @@ func ValidAssetType(s string) (AssetType, bool) {
 		return AssetTypeAction, true
 	case "File":
 		return AssetTypeFile, true
+	case "AggregateAlert":
+		return AssetTypeAggregateAlert, true
 	case "FilterAlert":
 		return AssetTypeFilterAlert, true
 	case "Alert":
@@ -133,10 +136,10 @@ func ValidColumnChangeKind(s string) (ColumnChangeKind, bool) {
 	return ColumnChangeKind(""), false
 }
 
-// ConnectionAspect represents a value denoting some aspect of a federated connection.
+// ConnectionAspect represents a value denoting some aspect of a cluster connection.
 type ConnectionAspect string
 
-// A value denoting some aspect of a federated connection.
+// A value denoting some aspect of a cluster connection.
 const (
 	ConnectionAspectTag         ConnectionAspect = "Tag"
 	ConnectionAspectQueryPrefix ConnectionAspect = "QueryPrefix"
@@ -237,6 +240,8 @@ const (
 	DynamicConfigDeleteDuplicatedNameViewsAfterMerging            DynamicConfig = "DeleteDuplicatedNameViewsAfterMerging"
 	DynamicConfigMaxQueryPenaltyCreditForBlockedQueriesFactor     DynamicConfig = "MaxQueryPenaltyCreditForBlockedQueriesFactor"
 	DynamicConfigMaxConcurrentQueriesOnWorker                     DynamicConfig = "MaxConcurrentQueriesOnWorker"
+	DynamicConfigMaxQueryPollsForWorker                           DynamicConfig = "MaxQueryPollsForWorker"
+	DynamicConfigMaxOpenSegmentsOnWorker                          DynamicConfig = "MaxOpenSegmentsOnWorker"
 	DynamicConfigIngestFeedAwsProcessingDownloadBufferSize        DynamicConfig = "IngestFeedAwsProcessingDownloadBufferSize"
 	DynamicConfigIngestFeedAwsProcessingEventBufferSize           DynamicConfig = "IngestFeedAwsProcessingEventBufferSize"
 	DynamicConfigIngestFeedAwsProcessingEventsPerBatch            DynamicConfig = "IngestFeedAwsProcessingEventsPerBatch"
@@ -246,11 +251,15 @@ const (
 	DynamicConfigIngestFeedGovernorIngestDelayLow                 DynamicConfig = "IngestFeedGovernorIngestDelayLow"
 	DynamicConfigIngestFeedGovernorIngestDelayHigh                DynamicConfig = "IngestFeedGovernorIngestDelayHigh"
 	DynamicConfigIngestFeedGovernorRateOverride                   DynamicConfig = "IngestFeedGovernorRateOverride"
+	DynamicConfigIngestFeedMaxConcurrentPolls                     DynamicConfig = "IngestFeedMaxConcurrentPolls"
 	DynamicConfigMaxCsvFileUploadSizeBytes                        DynamicConfig = "MaxCsvFileUploadSizeBytes"
 	DynamicConfigMaxJSONFileUploadSizeBytes                       DynamicConfig = "MaxJsonFileUploadSizeBytes"
 	DynamicConfigMatchFilesMaxHeapFraction                        DynamicConfig = "MatchFilesMaxHeapFraction"
+	DynamicConfigLookupTableSyncAwaitSeconds                      DynamicConfig = "LookupTableSyncAwaitSeconds"
 	DynamicConfigGraphQlSelectionSizeLimit                        DynamicConfig = "GraphQLSelectionSizeLimit"
 	DynamicConfigUnauthenticatedGraphQlSelectionSizeLimit         DynamicConfig = "UnauthenticatedGraphQLSelectionSizeLimit"
+	DynamicConfigQueryBlockMillisOnHighIngestDelay                DynamicConfig = "QueryBlockMillisOnHighIngestDelay"
+	DynamicConfigFileReplicationFactor                            DynamicConfig = "FileReplicationFactor"
 )
 
 func ValidDynamicConfig(s string) (DynamicConfig, bool) {
@@ -353,6 +362,10 @@ func ValidDynamicConfig(s string) (DynamicConfig, bool) {
 		return DynamicConfigMaxQueryPenaltyCreditForBlockedQueriesFactor, true
 	case "MaxConcurrentQueriesOnWorker":
 		return DynamicConfigMaxConcurrentQueriesOnWorker, true
+	case "MaxQueryPollsForWorker":
+		return DynamicConfigMaxQueryPollsForWorker, true
+	case "MaxOpenSegmentsOnWorker":
+		return DynamicConfigMaxOpenSegmentsOnWorker, true
 	case "IngestFeedAwsProcessingDownloadBufferSize":
 		return DynamicConfigIngestFeedAwsProcessingDownloadBufferSize, true
 	case "IngestFeedAwsProcessingEventBufferSize":
@@ -371,16 +384,24 @@ func ValidDynamicConfig(s string) (DynamicConfig, bool) {
 		return DynamicConfigIngestFeedGovernorIngestDelayHigh, true
 	case "IngestFeedGovernorRateOverride":
 		return DynamicConfigIngestFeedGovernorRateOverride, true
+	case "IngestFeedMaxConcurrentPolls":
+		return DynamicConfigIngestFeedMaxConcurrentPolls, true
 	case "MaxCsvFileUploadSizeBytes":
 		return DynamicConfigMaxCsvFileUploadSizeBytes, true
 	case "MaxJsonFileUploadSizeBytes":
 		return DynamicConfigMaxJSONFileUploadSizeBytes, true
 	case "MatchFilesMaxHeapFraction":
 		return DynamicConfigMatchFilesMaxHeapFraction, true
+	case "LookupTableSyncAwaitSeconds":
+		return DynamicConfigLookupTableSyncAwaitSeconds, true
 	case "GraphQLSelectionSizeLimit":
 		return DynamicConfigGraphQlSelectionSizeLimit, true
 	case "UnauthenticatedGraphQLSelectionSizeLimit":
 		return DynamicConfigUnauthenticatedGraphQlSelectionSizeLimit, true
+	case "QueryBlockMillisOnHighIngestDelay":
+		return DynamicConfigQueryBlockMillisOnHighIngestDelay, true
+	case "FileReplicationFactor":
+		return DynamicConfigFileReplicationFactor, true
 	}
 	return DynamicConfig(""), false
 }
@@ -466,17 +487,20 @@ func ValidEventForwarderKind(s string) (EventForwarderKind, bool) {
 type FeatureAnnouncement string
 
 const (
-	FeatureAnnouncementFilterMatchHighlighting  FeatureAnnouncement = "FilterMatchHighlighting"
-	FeatureAnnouncementOrganizationOwnedQueries FeatureAnnouncement = "OrganizationOwnedQueries"
-	FeatureAnnouncementInteractions             FeatureAnnouncement = "Interactions"
-	FeatureAnnouncementFieldInteractions        FeatureAnnouncement = "FieldInteractions"
-	FeatureAnnouncementPuffinRebranding         FeatureAnnouncement = "PuffinRebranding"
-	FeatureAnnouncementFetchMoreOnFieldsPanel   FeatureAnnouncement = "FetchMoreOnFieldsPanel"
-	FeatureAnnouncementToolPanel                FeatureAnnouncement = "ToolPanel"
+	FeatureAnnouncementFleetRemoteUpdatesAndGroups FeatureAnnouncement = "FleetRemoteUpdatesAndGroups"
+	FeatureAnnouncementFilterMatchHighlighting     FeatureAnnouncement = "FilterMatchHighlighting"
+	FeatureAnnouncementOrganizationOwnedQueries    FeatureAnnouncement = "OrganizationOwnedQueries"
+	FeatureAnnouncementInteractions                FeatureAnnouncement = "Interactions"
+	FeatureAnnouncementFieldInteractions           FeatureAnnouncement = "FieldInteractions"
+	FeatureAnnouncementPuffinRebranding            FeatureAnnouncement = "PuffinRebranding"
+	FeatureAnnouncementFetchMoreOnFieldsPanel      FeatureAnnouncement = "FetchMoreOnFieldsPanel"
+	FeatureAnnouncementToolPanel                   FeatureAnnouncement = "ToolPanel"
 )
 
 func ValidFeatureAnnouncement(s string) (FeatureAnnouncement, bool) {
 	switch s {
+	case "FleetRemoteUpdatesAndGroups":
+		return FeatureAnnouncementFleetRemoteUpdatesAndGroups, true
 	case "FilterMatchHighlighting":
 		return FeatureAnnouncementFilterMatchHighlighting, true
 	case "OrganizationOwnedQueries":
@@ -528,16 +552,16 @@ const (
 	FeatureFlagPreMergeMiniSegments                      FeatureFlag = "PreMergeMiniSegments"                      // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Pre-merge mini-segments.
 	FeatureFlagFleetLiveQueries                          FeatureFlag = "FleetLiveQueries"                          // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Use live queries in fleet management.
 	FeatureFlagFleetCollectorDebugLogging                FeatureFlag = "FleetCollectorDebugLogging"                // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enables fleet management collector debug logging.
-	FeatureFlagUseNewQueryScheduler                      FeatureFlag = "UseNewQueryScheduler"                      // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Use the new fair-across-users query scheduler.
+	FeatureFlagFleetRemoteUpdates                        FeatureFlag = "FleetRemoteUpdates"                        // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enables LogScale Collector remote updates.
+	FeatureFlagFieldAliasing                             FeatureFlag = "FieldAliasing"                             // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enables Field Aliasing.
 	FeatureFlagExternalFunctions                         FeatureFlag = "ExternalFunctions"                         // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] External Functions.
-	FeatureFlagRestartLiveQueriesOnFileChanged           FeatureFlag = "RestartLiveQueriesOnFileChanged"           // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enable restarting live queries when a file it uses is updated. If disabled, lookup files are swapped while the queries are still running..
-	FeatureFlagFieldAliasing                             FeatureFlag = "FieldAliasing"                             // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Field Aliasing.
-	FeatureFlagRoundsBasedQueryPolling                   FeatureFlag = "RoundsBasedQueryPolling"                   // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enable experimental round based query polling functionality.
 	FeatureFlagQueryAssistant                            FeatureFlag = "QueryAssistant"                            // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enable the LogScale Query Assistant.
 	FeatureFlagFlightControl                             FeatureFlag = "FlightControl"                             // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enable Flight Control support in cluster.
 	FeatureFlagOrganizationSecurityPolicies              FeatureFlag = "OrganizationSecurityPolicies"              // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enable organization level security policies. For instance the ability to only enable certain action types.
 	FeatureFlagOrganizationQueryOwnership                FeatureFlag = "OrganizationQueryOwnership"                // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enable organization query ownership that allows running queries on behalf of the organization.
 	FeatureFlagScheduledReports                          FeatureFlag = "ScheduledReports"                          // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Enable Scheduled Reports.
+	FeatureFlagAggregateAlerts                           FeatureFlag = "AggregateAlerts"                           // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Aggregate Alerts.
+	FeatureFlagDerivedCidTag                             FeatureFlag = "DerivedCidTag"                             // [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to Humio ending up in a bad state beyond repair.] Adds a derived #repo.cid tag when searching in views or dataspaces within an organization with an associated CID.
 )
 
 func ValidFeatureFlag(s string) (FeatureFlag, bool) {
@@ -598,16 +622,12 @@ func ValidFeatureFlag(s string) (FeatureFlag, bool) {
 		return FeatureFlagFleetLiveQueries, true
 	case "FleetCollectorDebugLogging":
 		return FeatureFlagFleetCollectorDebugLogging, true
-	case "UseNewQueryScheduler":
-		return FeatureFlagUseNewQueryScheduler, true
-	case "ExternalFunctions":
-		return FeatureFlagExternalFunctions, true
-	case "RestartLiveQueriesOnFileChanged":
-		return FeatureFlagRestartLiveQueriesOnFileChanged, true
+	case "FleetRemoteUpdates":
+		return FeatureFlagFleetRemoteUpdates, true
 	case "FieldAliasing":
 		return FeatureFlagFieldAliasing, true
-	case "RoundsBasedQueryPolling":
-		return FeatureFlagRoundsBasedQueryPolling, true
+	case "ExternalFunctions":
+		return FeatureFlagExternalFunctions, true
 	case "QueryAssistant":
 		return FeatureFlagQueryAssistant, true
 	case "FlightControl":
@@ -618,6 +638,10 @@ func ValidFeatureFlag(s string) (FeatureFlag, bool) {
 		return FeatureFlagOrganizationQueryOwnership, true
 	case "ScheduledReports":
 		return FeatureFlagScheduledReports, true
+	case "AggregateAlerts":
+		return FeatureFlagAggregateAlerts, true
+	case "DerivedCidTag":
+		return FeatureFlagDerivedCidTag, true
 	}
 	return FeatureFlag(""), false
 }
@@ -686,6 +710,29 @@ func ValidFleetConfiguration__SortBy(s string) (FleetConfiguration__SortBy, bool
 		return FleetConfiguration__SortByLastModified, true
 	}
 	return FleetConfiguration__SortBy(""), false
+}
+
+type FleetGroups__SortBy string
+
+const (
+	FleetGroups__SortByFilter        FleetGroups__SortBy = "Filter"
+	FleetGroups__SortByWantedVersion FleetGroups__SortBy = "WantedVersion"
+	FleetGroups__SortByCollectors    FleetGroups__SortBy = "Collectors"
+	FleetGroups__SortByName          FleetGroups__SortBy = "Name"
+)
+
+func ValidFleetGroups__SortBy(s string) (FleetGroups__SortBy, bool) {
+	switch s {
+	case "Filter":
+		return FleetGroups__SortByFilter, true
+	case "WantedVersion":
+		return FleetGroups__SortByWantedVersion, true
+	case "Collectors":
+		return FleetGroups__SortByCollectors, true
+	case "Name":
+		return FleetGroups__SortByName, true
+	}
+	return FleetGroups__SortBy(""), false
 }
 
 type Fleet__SortBy string
@@ -892,11 +939,12 @@ type LanguageVersionEnum string
 
 // The version of the Humio query language to use.
 const (
-	LanguageVersionEnumLegacy      LanguageVersionEnum = "legacy"
-	LanguageVersionEnumXdr1        LanguageVersionEnum = "xdr1"
-	LanguageVersionEnumXdrdetects1 LanguageVersionEnum = "xdrdetects1"
-	LanguageVersionEnumFilteralert LanguageVersionEnum = "filteralert"
-	LanguageVersionEnumFederated1  LanguageVersionEnum = "federated1"
+	LanguageVersionEnumLegacy         LanguageVersionEnum = "legacy"
+	LanguageVersionEnumXdr1           LanguageVersionEnum = "xdr1"
+	LanguageVersionEnumXdrdetects1    LanguageVersionEnum = "xdrdetects1"
+	LanguageVersionEnumFilteralert    LanguageVersionEnum = "filteralert"
+	LanguageVersionEnumAggregatealert LanguageVersionEnum = "aggregatealert"
+	LanguageVersionEnumFederated1     LanguageVersionEnum = "federated1"
 )
 
 func ValidLanguageVersionEnum(s string) (LanguageVersionEnum, bool) {
@@ -909,16 +957,18 @@ func ValidLanguageVersionEnum(s string) (LanguageVersionEnum, bool) {
 		return LanguageVersionEnumXdrdetects1, true
 	case "filteralert":
 		return LanguageVersionEnumFilteralert, true
+	case "aggregatealert":
+		return LanguageVersionEnumAggregatealert, true
 	case "federated1":
 		return LanguageVersionEnumFederated1, true
 	}
 	return LanguageVersionEnum(""), false
 }
 
-// LocalTargetType represents indicates whether the target of a local federated connection is a view or a repo.
+// LocalTargetType represents indicates whether the target of a local cluster connection is a view or a repo.
 type LocalTargetType string
 
-// Indicates whether the target of a local federated connection is a view or a repo.
+// Indicates whether the target of a local cluster connection is a view or a repo.
 const (
 	LocalTargetTypeView LocalTargetType = "View"
 	LocalTargetTypeRepo LocalTargetType = "Repo"
@@ -937,15 +987,15 @@ func ValidLocalTargetType(s string) (LocalTargetType, bool) {
 type LogCollectorConfigurationAssignmentType string
 
 const (
-	LogCollectorConfigurationAssignmentTypeConfigurationFilter LogCollectorConfigurationAssignmentType = "ConfigurationFilter"
-	LogCollectorConfigurationAssignmentTypeManual              LogCollectorConfigurationAssignmentType = "Manual"
-	LogCollectorConfigurationAssignmentTypeTest                LogCollectorConfigurationAssignmentType = "Test"
+	LogCollectorConfigurationAssignmentTypeGroup  LogCollectorConfigurationAssignmentType = "Group"
+	LogCollectorConfigurationAssignmentTypeManual LogCollectorConfigurationAssignmentType = "Manual"
+	LogCollectorConfigurationAssignmentTypeTest   LogCollectorConfigurationAssignmentType = "Test"
 )
 
 func ValidLogCollectorConfigurationAssignmentType(s string) (LogCollectorConfigurationAssignmentType, bool) {
 	switch s {
-	case "ConfigurationFilter":
-		return LogCollectorConfigurationAssignmentTypeConfigurationFilter, true
+	case "Group":
+		return LogCollectorConfigurationAssignmentTypeGroup, true
 	case "Manual":
 		return LogCollectorConfigurationAssignmentTypeManual, true
 	case "Test":
@@ -1136,6 +1186,7 @@ const (
 	OrganizationActionChangeFleetManagement             OrganizationAction = "ChangeFleetManagement"
 	OrganizationActionViewFleetManagement               OrganizationAction = "ViewFleetManagement"
 	OrganizationActionUseRemoteConfig                   OrganizationAction = "UseRemoteConfig"
+	OrganizationActionUseRemoteUpdates                  OrganizationAction = "UseRemoteUpdates"
 	OrganizationActionChangeTriggersToRunAsOtherUsers   OrganizationAction = "ChangeTriggersToRunAsOtherUsers"
 	OrganizationActionChangeEventForwarders             OrganizationAction = "ChangeEventForwarders"
 	OrganizationActionViewRunningQueries                OrganizationAction = "ViewRunningQueries"
@@ -1154,6 +1205,8 @@ const (
 	OrganizationActionAddFederatedView                  OrganizationAction = "AddFederatedView"
 	OrganizationActionViewFalconDataConnectorURL        OrganizationAction = "ViewFalconDataConnectorUrl"
 	OrganizationActionManageSchemas                     OrganizationAction = "ManageSchemas"
+	OrganizationActionAggregateAlertsEnabled            OrganizationAction = "AggregateAlertsEnabled"   // [PREVIEW: This is a temporary value that will be removed again].
+	OrganizationActionExternalFunctionsEnabled          OrganizationAction = "ExternalFunctionsEnabled" // [PREVIEW: This is a temporary value that will be removed again].
 )
 
 func ValidOrganizationAction(s string) (OrganizationAction, bool) {
@@ -1192,6 +1245,8 @@ func ValidOrganizationAction(s string) (OrganizationAction, bool) {
 		return OrganizationActionViewFleetManagement, true
 	case "UseRemoteConfig":
 		return OrganizationActionUseRemoteConfig, true
+	case "UseRemoteUpdates":
+		return OrganizationActionUseRemoteUpdates, true
 	case "ChangeTriggersToRunAsOtherUsers":
 		return OrganizationActionChangeTriggersToRunAsOtherUsers, true
 	case "ChangeEventForwarders":
@@ -1228,6 +1283,10 @@ func ValidOrganizationAction(s string) (OrganizationAction, bool) {
 		return OrganizationActionViewFalconDataConnectorURL, true
 	case "ManageSchemas":
 		return OrganizationActionManageSchemas, true
+	case "AggregateAlertsEnabled":
+		return OrganizationActionAggregateAlertsEnabled, true
+	case "ExternalFunctionsEnabled":
+		return OrganizationActionExternalFunctionsEnabled, true
 	}
 	return OrganizationAction(""), false
 }
@@ -1278,6 +1337,7 @@ const (
 	OrganizationPermissionBlockQueries                           OrganizationPermission = "BlockQueries"
 	OrganizationPermissionChangeSecurityPolicies                 OrganizationPermission = "ChangeSecurityPolicies"
 	OrganizationPermissionChangeExternalFunctions                OrganizationPermission = "ChangeExternalFunctions"
+	OrganizationPermissionChangeFieldAliases                     OrganizationPermission = "ChangeFieldAliases"
 )
 
 func ValidOrganizationPermission(s string) (OrganizationPermission, bool) {
@@ -1324,6 +1384,8 @@ func ValidOrganizationPermission(s string) (OrganizationPermission, bool) {
 		return OrganizationPermissionChangeSecurityPolicies, true
 	case "ChangeExternalFunctions":
 		return OrganizationPermissionChangeExternalFunctions, true
+	case "ChangeFieldAliases":
+		return OrganizationPermissionChangeFieldAliases, true
 	}
 	return OrganizationPermission(""), false
 }
@@ -1716,6 +1778,8 @@ type Permission string
 const (
 	PermissionChangeUserAccess                  Permission = "ChangeUserAccess"
 	PermissionChangeTriggersAndActions          Permission = "ChangeTriggersAndActions" // Permission to administer alerts, scheduled searches and actions.
+	PermissionChangeTriggers                    Permission = "ChangeTriggers"           // Permission to administer alerts and scheduled searches.
+	PermissionChangeActions                     Permission = "ChangeActions"            // Permission to administer actions.
 	PermissionChangeDashboards                  Permission = "ChangeDashboards"
 	PermissionChangeDashboardReadonlyToken      Permission = "ChangeDashboardReadonlyToken"
 	PermissionChangeFiles                       Permission = "ChangeFiles"
@@ -1751,6 +1815,10 @@ func ValidPermission(s string) (Permission, bool) {
 		return PermissionChangeUserAccess, true
 	case "ChangeTriggersAndActions":
 		return PermissionChangeTriggersAndActions, true
+	case "ChangeTriggers":
+		return PermissionChangeTriggers, true
+	case "ChangeActions":
+		return PermissionChangeActions, true
 	case "ChangeDashboards":
 		return PermissionChangeDashboards, true
 	case "ChangeDashboardReadonlyToken":
@@ -2555,6 +2623,8 @@ const (
 	ViewActionChangeConnections                    ViewAction = "ChangeConnections"
 	ViewActionChangeUserAccess                     ViewAction = "ChangeUserAccess"
 	ViewActionChangeTriggersAndActions             ViewAction = "ChangeTriggersAndActions" // Denotes if you can administer alerts, scheduled searches and actions.
+	ViewActionChangeTriggers                       ViewAction = "ChangeTriggers"           // Denotes if you can administer alerts and scheduled searches.
+	ViewActionChangeActions                        ViewAction = "ChangeActions"            // Denotes if you can administer actions.
 	ViewActionChangeInteractions                   ViewAction = "ChangeInteractions"
 	ViewActionChangeViewOrRepositoryDescription    ViewAction = "ChangeViewOrRepositoryDescription"
 	ViewActionChangeDashboards                     ViewAction = "ChangeDashboards"
@@ -2600,6 +2670,10 @@ func ValidViewAction(s string) (ViewAction, bool) {
 		return ViewActionChangeUserAccess, true
 	case "ChangeTriggersAndActions":
 		return ViewActionChangeTriggersAndActions, true
+	case "ChangeTriggers":
+		return ViewActionChangeTriggers, true
+	case "ChangeActions":
+		return ViewActionChangeActions, true
 	case "ChangeInteractions":
 		return ViewActionChangeInteractions, true
 	case "ChangeViewOrRepositoryDescription":

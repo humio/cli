@@ -12,7 +12,7 @@ type RepoOrViewName string
 
 // Input represents one of the Input structs:
 //
-// ActionSecurityPoliciesInput, AddAlertLabel, AddAliasMappingInput, AddIngestTokenV3Input, AddLabelScheduledSearch, AddLimitInput, AddLimitV2Input, AddRecentQueryInput, AddRoleInput, AddStarScheduledSearch, AddStarToAlert, AddStarToFieldInput, AddStarToQueryInput, AddSubdomainInput, AddToBlocklistByIdInput, AddToBlocklistInput, AddUserInput, AddUserInputV2, AddUsersToGroupInput, AliasInfoInput, AliasMappingInput, AnalyticsBrowser, AnalyticsBrowserInfo, AnalyticsDevice, AnalyticsDeviceInfo, AnalyticsEngine, AnalyticsFeature, AnalyticsInfo, AnalyticsLog, AnalyticsLogWithTimestamp, AnalyticsMetrics, AnalyticsOS, AnalyticsUserAgent, AnalyzeQueryArguments, ArgumentInput, AssertFieldMissingInput, AssertFieldValueEqualsInput, AssignOrganizationRoleToGroupInput, AssignParserToIngestTokenInputV2, AssignRoleToGroupInput, AssignSystemRoleToGroupInput, BatchUpdateQueryOwnershipInput, BlockIngestOnOrgInput, CachePolicyInput, CancelRedactEventsInput, CheckLocalFederatedConnectionInput, CheckRemoteFederatedConnectionInput, ClearErrorOnAlertInput, ClearErrorOnFilterAlertInput, ClearErrorOnScheduledSearchInput, ClearFieldConfigurationsInput, ClearRecentQueriesInput, CloneParserInput, ColumnChange, ConfigurationFilter, ConflictResolutionConfiguration, CreateActionFromTemplateInput, CreateAlert, CreateAlertFromTemplateInput, CreateAwsS3SqsIngestFeed, CreateCustomLinkInteractionInput, CreateDashboardFromTemplateV2Input, CreateDashboardInput, CreateDashboardLinkInteractionInput, CreateEmailAction, CreateEventForwardingRule, CreateFdrFeed, CreateFieldAliasSchemaInput, CreateFilterAlert, CreateHumioRepoAction, CreateIngestListenerV3Input, CreateKafkaEventForwarder, CreateLocalFederatedConnectionInput, CreateOpsGenieAction, CreateOrUpdateExternalFunctionInput, CreateOrganizationPermissionTokenInput, CreatePagerDutyAction, CreateParserFromTemplateInput, CreateParserInput, CreateParserInputV2, CreatePersonalUserTokenInput, CreatePostMessageSlackAction, CreateRemoteFederatedConnectionInput, CreateSavedQueryInput, CreateScheduledSearch, CreateScheduledSearchFromTemplateInput, CreateSearchLinkInteractionInput, CreateSlackAction, CreateSystemPermissionTokenInput, CreateUploadFileAction, CreateVictorOpsAction, CreateViewPermissionsTokenInput, CreateWebhookAction, CustomLinkInteractionInput, DashboardLinkInteractionInput, DashboardUpdateFrequencyInput, DeleteAction, DeleteAlert, DeleteDashboardInput, DeleteDashboardInputV2, DeleteEventForwarderInput, DeleteEventForwardingRule, DeleteFdrFeed, DeleteFederatedConnectionInput, DeleteFieldAliasSchema, DeleteFilterAlert, DeleteIngestFeed, DeleteInteractionInput, DeleteSavedQueryInput, DeleteScheduledSearch, DeleteSearchDomainByIdInput, DisableAlert, DisableEventForwarderInput, DisableFieldAliasSchemaOnOrgInput, DisableFieldAliasSchemaOnViewInput, DisableFilterAlert, DisableOrganizationIocAccess, DisableStarScheduledSearch, DynamicConfigInputObject, EnableAlert, EnableEventForwarderInput, EnableFieldAliasSchemaOnOrgInput, EnableFieldAliasSchemaOnViewInput, EnableFilterAlert, EnableOrganizationIocAccess, EnableStarScheduledSearch, EnableWorkerQueryTracingInputType, EnabledInput, EnforceSubdomainsInput, EntitySearchInputType, EntitySearchSortInfoType, FederatedConnectionInputTag, FieldConfigurationInput, FieldInteractionConditionInput, FileFieldFilterType, FilterInput, FunctionListInput, GenerateAlertFromPackageTemplateInput, GenerateAlertFromTemplateInput, GenerateFilterAlertFromPackageTemplateInput, GenerateFilterAlertFromTemplateInput, GenerateScheduledSearchFromPackageTemplateInput, GenerateScheduledSearchFromTemplateInput, GetExternalFunctionInput, GroupRoleAssignment, HttpHeaderEntryInput, IPFilterIdInput, IPFilterInput, IPFilterUpdateInput, IngestFeedAwsAuthenticationInput, IngestFeedPreprocessingInput, IngestPartitionInput, InputData, InputDictionaryEntry, InstallPackageFromRegistryInput, KindInput, LanguageVersionInputType, LinkInput, LoginBridgeInput, LoginBridgeUpdateInput, MarkLimitDeletedInput, MigrateLimitsInput, NotificationInput, OidcConfigurationInput, OrderByUserFieldInput, OrganizationLimitsInput, ParameterFilePropertiesInput, ParameterFileValueFilter, ParameterFixedListOption, ParameterFixedListPropertiesInput, ParameterFreeTextPropertiesInput, ParameterInput, ParameterQueryPropertiesInput, ParameterSpecificationInput, ParserTestRunInput, QueryArgument, QueryArgumentInputType, QueryQuotaDefaultSettingsInput, QueryQuotaIntervalSettingInput, QueryQuotaUserSettingsInput, RedactEventsInputType, RemoveAlertLabel, RemoveAliasMappingInput, RemoveFromBlocklistInput, RemoveLabelScheduledSearch, RemoveLimitInput, RemoveOrganizationRoleFromGroupInput, RemoveParserInput, RemoveRepoCachePolicyInput, RemoveRoleFromGroupInput, RemoveSecondarySubdomainInput, RemoveStarFromAlert, RemoveStarFromQueryInput, RemoveStarScheduledSearch, RemoveStarToFieldInput, RemoveSystemRoleFromGroupInput, RemoveUserByIdInput, RemoveUserInput, RemoveUsersFromGroupInput, RenameSearchDomainByIdInput, RepoFilterInput, RestoreDeletedSearchDomainInput, ResubmitMarketoLeadData, RevokeSessionInput, RotateTokenInputData, SchemaFieldInput, SearchLinkInteractionInput, ServiceLevelIndicatorLogArg, SessionInput, SetDefaultSavedQueryInput, SetGlobalDefaultCachePolicyInput, SetLimitDisplayNameInput, SetOrgDefaultCachePolicyInput, SetPrimarySubdomainInput, SetRepoCachePolicyInput, SetSubdomainSettingsInput, SharedDashboardsSecurityPoliciesInput, SlackFieldEntryInput, SocialLoginSettingsInput, StopQueriesInput, TagGroupingRuleInput, TagsInput, TestAwsS3SqsIngestFeed, TestCaseInput, TestEmailAction, TestEventInput, TestFdrFeed, TestHumioRepoAction, TestKafkaEventForwarder, TestOpsGenieAction, TestPagerDutyAction, TestParserInputV2, TestPostMessageSlackAction, TestSlackAction, TestUploadFileAction, TestVictorOpsAction, TestWebhookAction, TokenInput, TokenSecurityPoliciesInput, TriggerPollIngestFeed, UpdateAlert, UpdateAwsS3SqsIngestFeed, UpdateCustomLinkInteractionInput, UpdateDashboardInput, UpdateDashboardLinkInteractionInput, UpdateDefaultQueryPrefixInput, UpdateDefaultRoleInput, UpdateDescription, UpdateEmailAction, UpdateEventForwardingRule, UpdateFdrFeed, UpdateFdrFeedControl, UpdateFieldAliasMappingInput, UpdateFieldAliasSchemaInput, UpdateFilterAlert, UpdateGroupInput, UpdateHumioRepoAction, UpdateIngestFeedDescription, UpdateIngestListenerV3Input, UpdateKafkaEventForwarder, UpdateLimitInput, UpdateLimitInputV2, UpdateLocalFederatedConnectionInput, UpdateLong, UpdateOidcConfigurationInput, UpdateOpsGenieAction, UpdateOrganizationPermissionsTokenPermissionsInput, UpdatePackageFromRegistryInput, UpdatePagerDutyAction, UpdateParametersInteractionInput, UpdateParserInput, UpdatePostMessageSlackAction, UpdateQueryPrefixInput, UpdateRemoteFederatedConnectionInput, UpdateRepoDataTypeInputObject, UpdateRepoLimitIdInputObject, UpdateRoleInput, UpdateSavedQueryInput, UpdateScheduledSearch, UpdateSearchLinkInteractionInput, UpdateSlackAction, UpdateSubscriptionInputObject, UpdateSystemPermissionsTokenPermissionsInput, UpdateUploadFileAction, UpdateUserByIdInput, UpdateVictorOpsAction, UpdateViewPermissionsTokenPermissionsInput, UpdateWebhookAction, UpgradeAccountData, UserRoleAssignment, UtmParams, ViewConnectionInput, WidgetInput, WidgetLinkPropertiesInput, WidgetNotePropertiesInput, WidgetQueryPropertiesInput, deleteExternalFunctionInput.
+// ActionSecurityPoliciesInput, AddAlertLabel, AddAliasMappingInput, AddIngestTokenV3Input, AddLabelScheduledSearch, AddLimitInput, AddLimitV2Input, AddRecentQueryInput, AddRoleInput, AddStarScheduledSearch, AddStarToAlert, AddStarToFieldInput, AddStarToQueryInput, AddSubdomainInput, AddToBlocklistByIdInput, AddToBlocklistInput, AddUserInput, AddUserInputV2, AddUsersToGroupInput, AliasInfoInput, AliasMappingInput, AnalyticsBrowser, AnalyticsBrowserInfo, AnalyticsDevice, AnalyticsDeviceInfo, AnalyticsEngine, AnalyticsFeature, AnalyticsInfo, AnalyticsLog, AnalyticsLogWithTimestamp, AnalyticsMetrics, AnalyticsOS, AnalyticsUserAgent, AnalyzeQueryArguments, ArgumentInput, AssignOrganizationRoleToGroupInput, AssignParserToIngestTokenInputV2, AssignRoleToGroupInput, AssignSystemRoleToGroupInput, BatchUpdateQueryOwnershipInput, BlockIngestOnOrgInput, CachePolicyInput, CancelRedactEventsInput, CheckLocalClusterConnectionInput, CheckRemoteClusterConnectionInput, ClearErrorOnAggregateAlertInput, ClearErrorOnAlertInput, ClearErrorOnFilterAlertInput, ClearErrorOnScheduledSearchInput, ClearFieldConfigurationsInput, ClearRecentQueriesInput, CloneParserInput, ClusterConnectionInputTag, ColumnChange, ConflictResolutionConfiguration, CreateActionFromTemplateInput, CreateAggregateAlert, CreateAlert, CreateAlertFromTemplateInput, CreateAwsS3SqsIngestFeed, CreateCustomLinkInteractionInput, CreateDashboardFromTemplateV2Input, CreateDashboardInput, CreateDashboardLinkInteractionInput, CreateEmailAction, CreateEventForwardingRule, CreateFdrFeed, CreateFieldAliasSchemaInput, CreateFilterAlert, CreateHumioRepoAction, CreateIngestListenerV3Input, CreateKafkaEventForwarder, CreateLocalClusterConnectionInput, CreateOpsGenieAction, CreateOrUpdateExternalFunctionInput, CreateOrganizationPermissionTokenInput, CreatePagerDutyAction, CreateParserFromTemplateInput, CreateParserInput, CreateParserInputV2, CreatePersonalUserTokenInput, CreatePostMessageSlackAction, CreateRemoteClusterConnectionInput, CreateSavedQueryInput, CreateScheduledReportInput, CreateScheduledReportLayoutInput, CreateScheduledReportParameterValueInput, CreateScheduledSearch, CreateScheduledSearchFromTemplateInput, CreateSearchLinkInteractionInput, CreateSlackAction, CreateSystemPermissionTokenInput, CreateUploadFileAction, CreateVictorOpsAction, CreateViewPermissionsTokenInput, CreateWebhookAction, CustomLinkInteractionInput, DashboardLinkInteractionInput, DashboardUpdateFrequencyInput, DeleteAction, DeleteAggregateAlert, DeleteAlert, DeleteClusterConnectionInput, DeleteDashboardInput, DeleteDashboardInputV2, DeleteEventForwarderInput, DeleteEventForwardingRule, DeleteFdrFeed, DeleteFieldAliasSchema, DeleteFilterAlert, DeleteIngestFeed, DeleteInteractionInput, DeleteParserInput, DeleteSavedQueryInput, DeleteScheduledReportInput, DeleteScheduledSearch, DeleteSearchDomainByIdInput, DisableAggregateAlert, DisableAlert, DisableEventForwarderInput, DisableFieldAliasSchemaOnOrgInput, DisableFieldAliasSchemaOnViewInput, DisableFilterAlert, DisableOrganizationIocAccess, DisableScheduledReportInput, DisableStarScheduledSearch, DynamicConfigInputObject, EnableAggregateAlert, EnableAlert, EnableEventForwarderInput, EnableFieldAliasSchemaOnOrgInput, EnableFieldAliasSchemaOnViewsInput, EnableFilterAlert, EnableOrganizationIocAccess, EnableScheduledReportInput, EnableStarScheduledSearch, EnableWorkerQueryTracingInputType, EnabledInput, EnforceSubdomainsInput, EntitySearchInputType, EntitySearchSortInfoType, FieldConfigurationInput, FieldHasValueInput, FieldInteractionConditionInput, FileFieldFilterType, FilterInput, FunctionListInput, GenerateAggregateAlertFromPackageTemplateInput, GenerateAggregateAlertFromTemplateInput, GenerateAlertFromPackageTemplateInput, GenerateAlertFromTemplateInput, GenerateFilterAlertFromPackageTemplateInput, GenerateFilterAlertFromTemplateInput, GenerateScheduledSearchFromPackageTemplateInput, GenerateScheduledSearchFromTemplateInput, GetExternalFunctionInput, GroupFilter, GroupRoleAssignment, HttpHeaderEntryInput, IPFilterIdInput, IPFilterInput, IPFilterUpdateInput, IngestFeedAwsAuthenticationInput, IngestFeedPreprocessingInput, IngestPartitionInput, InputData, InputDictionaryEntry, InstallPackageFromRegistryInput, KindInput, LanguageVersionInputType, LinkInput, LoginBridgeInput, LoginBridgeUpdateInput, MarkLimitDeletedInput, MigrateLimitsInput, NotificationInput, OidcConfigurationInput, OrderByUserFieldInput, OrganizationLimitsInput, ParameterFilePropertiesInput, ParameterFileValueFilter, ParameterFixedListOption, ParameterFixedListPropertiesInput, ParameterFreeTextPropertiesInput, ParameterInput, ParameterQueryPropertiesInput, ParameterSpecificationInput, ParserTestCaseAssertionsForOutputInput, ParserTestCaseInput, ParserTestCaseOutputAssertionsInput, ParserTestEventInput, ParserTestRunInput, QueryArgument, QueryArgumentInputType, QueryQuotaDefaultSettingsInput, QueryQuotaIntervalSettingInput, QueryQuotaUserSettingsInput, RedactEventsInputType, RemoveAlertLabel, RemoveAliasMappingInput, RemoveFromBlocklistInput, RemoveLabelScheduledSearch, RemoveLimitInput, RemoveOrganizationRoleFromGroupInput, RemoveParserInput, RemoveRepoCachePolicyInput, RemoveRoleFromGroupInput, RemoveSecondarySubdomainInput, RemoveStarFromAlert, RemoveStarFromQueryInput, RemoveStarScheduledSearch, RemoveStarToFieldInput, RemoveSystemRoleFromGroupInput, RemoveUserByIdInput, RemoveUserInput, RemoveUsersFromGroupInput, RenameSearchDomainByIdInput, RepoFilterInput, ReportErrorInput, ResetQuotaInput, RestoreDeletedSearchDomainInput, ResubmitMarketoLeadData, RevokeSessionInput, RotateTokenInputData, ScheduledReportResultFailedInput, ScheduledReportResultSucceededInput, SchemaFieldInput, SearchLinkInteractionInput, ServiceLevelIndicatorLogArg, SessionInput, SetDefaultSavedQueryInput, SetGlobalDefaultCachePolicyInput, SetLimitDisplayNameInput, SetOrgDefaultCachePolicyInput, SetPrimarySubdomainInput, SetRepoCachePolicyInput, SetSubdomainSettingsInput, SharedDashboardsSecurityPoliciesInput, SlackFieldEntryInput, SocialLoginSettingsInput, StopQueriesInput, TagGroupingRuleInput, TagsInput, TestAwsS3SqsIngestFeed, TestEmailAction, TestFdrFeed, TestHumioRepoAction, TestKafkaEventForwarder, TestOpsGenieAction, TestPagerDutyAction, TestParserInputV2, TestPostMessageSlackAction, TestSlackAction, TestUploadFileAction, TestVictorOpsAction, TestWebhookAction, TokenInput, TokenSecurityPoliciesInput, TriggerPollIngestFeed, UpdateAggregateAlert, UpdateAlert, UpdateAwsS3SqsIngestFeed, UpdateCustomLinkInteractionInput, UpdateDashboardInput, UpdateDashboardLinkInteractionInput, UpdateDefaultQueryPrefixInput, UpdateDefaultRoleInput, UpdateDescription, UpdateEmailAction, UpdateEventForwardingRule, UpdateFdrFeed, UpdateFdrFeedControl, UpdateFieldAliasMappingInput, UpdateFieldAliasSchemaInput, UpdateFilterAlert, UpdateGroupInput, UpdateHumioRepoAction, UpdateIngestFeedDescription, UpdateIngestListenerV3Input, UpdateKafkaEventForwarder, UpdateLimitInput, UpdateLimitInputV2, UpdateLocalClusterConnectionInput, UpdateLong, UpdateOidcConfigurationInput, UpdateOpsGenieAction, UpdateOrganizationPermissionsTokenPermissionsInput, UpdatePackageFromRegistryInput, UpdatePagerDutyAction, UpdateParametersInteractionInput, UpdateParserInput, UpdateParserInputV2, UpdateParserScriptInput, UpdatePostMessageSlackAction, UpdateQueryPrefixInput, UpdateRemoteClusterConnectionInput, UpdateRepoDataTypeInputObject, UpdateRepoLimitIdInputObject, UpdateRoleInput, UpdateSavedQueryInput, UpdateScheduledReportInput, UpdateScheduledReportLayoutInput, UpdateScheduledReportParameterValueInput, UpdateScheduledSearch, UpdateSearchLinkInteractionInput, UpdateSlackAction, UpdateSubscriptionInputObject, UpdateSystemPermissionsTokenPermissionsInput, UpdateUploadFileAction, UpdateUserByIdInput, UpdateVictorOpsAction, UpdateViewPermissionsTokenPermissionsInput, UpdateWebhookAction, UpgradeAccountData, UserRoleAssignment, UtmParams, ViewConnectionInput, WidgetInput, WidgetLinkPropertiesInput, WidgetNotePropertiesInput, WidgetQueryPropertiesInput, deleteExternalFunctionInput.
 type Input interface{}
 
 // ActionSecurityPoliciesInput represents data for updating action security policies.
@@ -331,24 +331,6 @@ type ArgumentInput struct {
 	Value graphql.String `json:"value"` // Required
 }
 
-// AssertFieldMissingInput represents an assertion that an event output from a parser test case does not have a given field.
-type AssertFieldMissingInput struct {
-	// The field name to assert does not exist.
-	FieldName graphql.String `json:"fieldName"` // Required
-	// The index of the output event to assert on. A parser can output zero to many events from a single input event, so the assertion should point to the specific event it should be asserted on.
-	EventIndex *graphql.Int `json:"eventIndex,omitempty"` // Optional
-}
-
-// AssertFieldValueEqualsInput represents an assertion that an event output from a parser test case has an expected value for a given field.
-type AssertFieldValueEqualsInput struct {
-	// The field name to assert the value of.
-	FieldName graphql.String `json:"fieldName"` // Required
-	// The value the field is expected to contain.
-	ExpectedValue graphql.String `json:"expectedValue"` // Required
-	// The index of the output event to assert on. A parser can output zero to many events from a single input event, so the assertion should point to the specific event it should be asserted on.
-	EventIndex *graphql.Int `json:"eventIndex,omitempty"` // Optional
-}
-
 type AssignOrganizationRoleToGroupInput struct {
 	GroupID graphql.String `json:"groupId"` // Required
 	RoleID  graphql.String `json:"roleId"`  // Required
@@ -398,32 +380,40 @@ type CancelRedactEventsInput struct {
 	RedactionTaskID graphql.String `json:"redactionTaskId"` // Required
 }
 
-// CheckLocalFederatedConnectionInput represents data for checking a local federated connection.
-type CheckLocalFederatedConnectionInput struct {
+// CheckLocalClusterConnectionInput represents data for checking a local cluster connection.
+type CheckLocalClusterConnectionInput struct {
 	// Name or id of the local view to connect with.
 	TargetViewName graphql.String `json:"targetViewName"` // Required
 	// Id of the connection to check.
 	ConnectionID *graphql.String `json:"connectionId,omitempty"` // Optional
 	// Additional tags that can be used to filter queries.
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	Tags *[]ClusterConnectionInputTag `json:"tags,omitempty"` // Optional
 	// Filter query that restricts the data visible through this connection.
 	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
 
-// CheckRemoteFederatedConnectionInput represents data for checking a remote federated connection.
-type CheckRemoteFederatedConnectionInput struct {
+// CheckRemoteClusterConnectionInput represents data for checking a remote cluster connection.
+type CheckRemoteClusterConnectionInput struct {
 	// Public URL of the remote cluster to connect with.
 	PublicURL graphql.String `json:"publicUrl"` // Required
 	// Id of the connection to check. Must be supplied if the token is not supplied.
 	ConnectionID *graphql.String `json:"connectionId,omitempty"` // Optional
-	// Name of the federated view to which the connection belongs. Must be supplied if the token is not supplied.
-	FederatedViewName *graphql.String `json:"federatedViewName,omitempty"` // Optional
+	// Name of the multi-cluster view to which the connection belongs. Must be supplied if the token is not supplied.
+	MultiClusterViewName *graphql.String `json:"multiClusterViewName,omitempty"` // Optional
 	// Access token for the remote view to connect with. Can be omitted if checking an existing connection with no token change.
 	Token *graphql.String `json:"token,omitempty"` // Optional
 	// Additional tags that can be used to filter queries.
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	Tags *[]ClusterConnectionInputTag `json:"tags,omitempty"` // Optional
 	// Filter query that restricts the data visible through this connection.
 	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
+}
+
+// ClearErrorOnAggregateAlertInput represents data for clearing the error on an aggregate alert.
+type ClearErrorOnAggregateAlertInput struct {
+	// Name of the view of the aggregate alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the aggregate alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // ClearErrorOnAlertInput represents data for clearing the error on an alert.
@@ -468,17 +458,17 @@ type CloneParserInput struct {
 	ParserIDToClone graphql.String `json:"parserIdToClone"` // Required
 }
 
+type ClusterConnectionInputTag struct {
+	Key   graphql.String `json:"key"`   // Required
+	Value graphql.String `json:"value"` // Required
+}
+
 // ColumnChange represents whether a column has been added or removed at the given index.
 type ColumnChange struct {
 	// Kind of change.
 	ChangeKind ColumnChangeKind `json:"changeKind"` // Required
 	// Index of column to change.
 	Index graphql.Int `json:"index"` // Required
-}
-
-type ConfigurationFilter struct {
-	NewQuery graphql.String  `json:"newQuery"`           // Required
-	OldQuery *graphql.String `json:"oldQuery,omitempty"` // Optional
 }
 
 type ConflictResolutionConfiguration struct {
@@ -495,6 +485,32 @@ type CreateActionFromTemplateInput struct {
 	Name graphql.String `json:"name"` // Required
 	// YAML specification of the action.
 	YamlTemplate YAML `json:"yamlTemplate"` // Required
+}
+
+// CreateAggregateAlert represents data for creating an aggregate alert.
+type CreateAggregateAlert struct {
+	// Name of the view of the aggregate alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Name of the aggregate alert.
+	Name graphql.String `json:"name"` // Required
+	// LogScale query to execute.
+	QueryString graphql.String `json:"queryString"` // Required
+	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname".
+	ActionIDsOrNames []graphql.String `json:"actionIdsOrNames"` // Required
+	// Ownership of the query run by this aggregate alert. If value is User, ownership will be based on the runAsUserId field.
+	QueryOwnershipType QueryOwnershipType `json:"queryOwnershipType"` // Required
+	// Description of the aggregate alert.
+	Description *graphql.String `json:"description,omitempty"` // Optional
+	// Labels attached to the aggregate alert.
+	Labels *[]graphql.String `json:"labels,omitempty"` // Optional
+	// Flag indicating whether the aggregate alert is enabled.
+	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
+	// Throttle time in seconds.
+	ThrottleTimeSeconds *Long `json:"throttleTimeSeconds,omitempty"` // Optional
+	// A field to throttle on. Can only be set if throttleTimeSeconds is set.
+	ThrottleField *graphql.String `json:"throttleField,omitempty"` // Optional
+	// The aggregate alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the aggregate alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
+	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
 }
 
 // CreateAlert represents data for creating an alert.
@@ -667,8 +683,10 @@ type CreateFilterAlert struct {
 	Labels *[]graphql.String `json:"labels,omitempty"` // Optional
 	// Flag indicating whether the filter alert is enabled.
 	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
-	// Allowed number of action triggers per minute for the filter alert. Please note that the maximum allowed number of triggers can vary based on the chosen actions.
-	TriggerLimit *graphql.Int `json:"triggerLimit,omitempty"` // Optional
+	// Throttle time in seconds.
+	ThrottleTimeSeconds *Long `json:"throttleTimeSeconds,omitempty"` // Optional
+	// A field to throttle on. Can only be set if throttleTimeSeconds is set.
+	ThrottleField *graphql.String `json:"throttleField,omitempty"` // Optional
 	// The filter alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the filter alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
 	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
 }
@@ -717,14 +735,14 @@ type CreateKafkaEventForwarder struct {
 	Enabled *graphql.Boolean `json:"enabled,omitempty"` // Optional
 }
 
-// CreateLocalFederatedConnectionInput represents data for creating a local federated connection.
-type CreateLocalFederatedConnectionInput struct {
-	// Name or id of the federated view to add the connection to.
-	FederatedViewName graphql.String `json:"federatedViewName"` // Required
+// CreateLocalClusterConnectionInput represents data for creating a local multi-cluster connection.
+type CreateLocalClusterConnectionInput struct {
+	// Name or id of the multi-cluster view to add the connection to.
+	MultiClusterViewName graphql.String `json:"multiClusterViewName"` // Required
 	// Name or id of the local view to connect with.
 	TargetViewName graphql.String `json:"targetViewName"` // Required
 	// Additional tags that can be used to filter queries.
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	Tags *[]ClusterConnectionInputTag `json:"tags,omitempty"` // Optional
 	// Filter query that restricts the data visible through this connection.
 	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
@@ -802,18 +820,20 @@ type CreateParserInput struct {
 type CreateParserInputV2 struct {
 	// The name to use for the parser.
 	Name graphql.String `json:"name"` // Required
-	// Test cases that can be used to help verify that the parser works as expected.
-	TestCases []TestCaseInput `json:"testCases"` // Required
 	// The parser script that is executed for every incoming event.
-	SourceCode graphql.String `json:"sourceCode"` // Required
+	Script graphql.String `json:"script"` // Required
+	// Test cases that can be used to help verify that the parser works as expected.
+	TestCases []ParserTestCaseInput `json:"testCases"` // Required
 	// The repository where the parser lives.
 	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
-	// Any fields which the parser should convert to tags after an event is parsed.
-	TagFields []graphql.String `json:"tagFields"` // Required
+	// Fields that are used as tags.
+	FieldsToTag []graphql.String `json:"fieldsToTag"` // Required
+	// A list of fields that will be removed from the event before it's parsed. These fields will not be included when calculating usage.
+	FieldsToBeRemovedBeforeParsing []graphql.String `json:"fieldsToBeRemovedBeforeParsing"` // Required
 	// Allows saving a parser with a name that is already in use, by overwriting the parser that previously had the name.
-	OverwriteExisting *graphql.Boolean `json:"overwriteExisting,omitempty"` // Optional
-	// The version of the Humio query language to use.
-	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"` // Optional
+	AllowOverwritingExistingParser *graphql.Boolean `json:"allowOverwritingExistingParser,omitempty"` // Optional
+	// A specific language version.
+	LanguageVersion *LanguageVersionInputType `json:"languageVersion,omitempty"` // Optional
 }
 
 type CreatePersonalUserTokenInput struct {
@@ -837,16 +857,16 @@ type CreatePostMessageSlackAction struct {
 	UseProxy graphql.Boolean `json:"useProxy"` // Required
 }
 
-// CreateRemoteFederatedConnectionInput represents data for creating a remote federated connection.
-type CreateRemoteFederatedConnectionInput struct {
-	// Name or id of the federated view to add the connection to.
-	FederatedViewName graphql.String `json:"federatedViewName"` // Required
+// CreateRemoteClusterConnectionInput represents data for creating a remote cluster connection.
+type CreateRemoteClusterConnectionInput struct {
+	// Name or id of the multi-cluster view to add the connection to.
+	MultiClusterViewName graphql.String `json:"multiClusterViewName"` // Required
 	// Public URL of the remote cluster to connect with.
 	PublicURL graphql.String `json:"publicUrl"` // Required
 	// Access token for the remote view to connect with.
 	Token graphql.String `json:"token"` // Required
 	// Additional tags that can be used to filter queries.
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	Tags *[]ClusterConnectionInputTag `json:"tags,omitempty"` // Optional
 	// Filter query that restricts the data visible through this connection.
 	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
@@ -864,6 +884,47 @@ type CreateSavedQueryInput struct {
 	CustomLinkInteractions       *[]CustomLinkInteractionInput       `json:"customLinkInteractions,omitempty"`       // Optional
 	SearchLinkInteractions       *[]SearchLinkInteractionInput       `json:"searchLinkInteractions,omitempty"`       // Optional
 	UpdateParametersInteractions *[]UpdateParametersInteractionInput `json:"updateParametersInteractions,omitempty"` // Optional
+}
+
+type CreateScheduledReportInput struct {
+	ViewName                  graphql.String                             `json:"viewName"`                  // Required
+	Name                      graphql.String                             `json:"name"`                      // Required
+	Enabled                   graphql.Boolean                            `json:"enabled"`                   // Required
+	Description               graphql.String                             `json:"description"`               // Required
+	DashboardID               graphql.String                             `json:"dashboardId"`               // Required
+	SharedTime                graphql.Boolean                            `json:"sharedTime"`                // Required
+	TimeWindowFrom            graphql.String                             `json:"timeWindowFrom"`            // Required
+	TimeWindowTo              graphql.String                             `json:"timeWindowTo"`              // Required
+	ScheduleFrequency         graphql.String                             `json:"scheduleFrequency"`         // Required
+	ScheduleFrequencyEvery    graphql.String                             `json:"scheduleFrequencyEvery"`    // Required
+	ScheduleFrequencyTime     graphql.String                             `json:"scheduleFrequencyTime"`     // Required
+	ScheduleFrequencyTimeZone graphql.String                             `json:"scheduleFrequencyTimeZone"` // Required
+	ScheduleFrequencyOn       []graphql.String                           `json:"scheduleFrequencyOn"`       // Required
+	ScheduleStartDate         graphql.String                             `json:"scheduleStartDate"`         // Required
+	ScheduleEndDate           graphql.String                             `json:"scheduleEndDate"`           // Required
+	Labels                    []graphql.String                           `json:"labels"`                    // Required
+	Parameters                []CreateScheduledReportParameterValueInput `json:"parameters"`                // Required
+	ActionIDs                 []graphql.String                           `json:"actionIds"`                 // Required
+	Layout                    CreateScheduledReportLayoutInput           `json:"layout"`                    // Required
+	Password                  *graphql.String                            `json:"password,omitempty"`        // Optional
+}
+
+type CreateScheduledReportLayoutInput struct {
+	PaperSize             graphql.String  `json:"paperSize"`             // Required
+	PaperOrientation      graphql.String  `json:"paperOrientation"`      // Required
+	PaperLayout           graphql.String  `json:"paperLayout"`           // Required
+	ShowDescription       graphql.Boolean `json:"showDescription"`       // Required
+	ShowTitleFrontpage    graphql.Boolean `json:"showTitleFrontpage"`    // Required
+	ShowParameters        graphql.Boolean `json:"showParameters"`        // Required
+	MaxNumberOfRows       graphql.Int     `json:"maxNumberOfRows"`       // Required
+	ShowTitleHeader       graphql.Boolean `json:"showTitleHeader"`       // Required
+	ShowExportDate        graphql.Boolean `json:"showExportDate"`        // Required
+	FooterShowPageNumbers graphql.Boolean `json:"footerShowPageNumbers"` // Required
+}
+
+type CreateScheduledReportParameterValueInput struct {
+	ID    graphql.String `json:"id"`    // Required
+	Value graphql.String `json:"value"` // Required
 }
 
 // CreateScheduledSearch represents data for creating a scheduled search.
@@ -1020,12 +1081,28 @@ type DeleteAction struct {
 	ID graphql.String `json:"id"` // Required
 }
 
+// DeleteAggregateAlert represents data for deleting an aggregate alert.
+type DeleteAggregateAlert struct {
+	// Name of the view of the aggregate alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the aggregate alert.
+	ID graphql.String `json:"id"` // Required
+}
+
 // DeleteAlert represents data for deleting an alert.
 type DeleteAlert struct {
 	// Name of the view of the alert.
 	ViewName graphql.String `json:"viewName"` // Required
 	// Id of the alert.
 	ID graphql.String `json:"id"` // Required
+}
+
+// DeleteClusterConnectionInput represents data for deleting a cluster connection.
+type DeleteClusterConnectionInput struct {
+	// Name or id of the multi-cluster view to delete the connection from.
+	MultiClusterViewName graphql.String `json:"multiClusterViewName"` // Required
+	// Id of the connection to delete.
+	ConnectionID graphql.String `json:"connectionId"` // Required
 }
 
 type DeleteDashboardInput struct {
@@ -1062,14 +1139,6 @@ type DeleteFdrFeed struct {
 	ID graphql.String `json:"id"` // Required
 }
 
-// DeleteFederatedConnectionInput represents data for deleting a federated connection.
-type DeleteFederatedConnectionInput struct {
-	// Name or id of the federated view to delete the connection from.
-	FederatedViewName graphql.String `json:"federatedViewName"` // Required
-	// Id of the connection to delete.
-	ConnectionID graphql.String `json:"connectionId"` // Required
-}
-
 type DeleteFieldAliasSchema struct {
 	SchemaID graphql.String `json:"schemaId"` // Required
 }
@@ -1095,9 +1164,19 @@ type DeleteInteractionInput struct {
 	ID   graphql.String `json:"id"`   // Required
 }
 
+type DeleteParserInput struct {
+	ID             graphql.String `json:"id"`             // Required
+	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
+}
+
 type DeleteSavedQueryInput struct {
 	ID       graphql.String `json:"id"`       // Required
 	ViewName graphql.String `json:"viewName"` // Required
+}
+
+type DeleteScheduledReportInput struct {
+	ViewName graphql.String `json:"viewName"` // Required
+	ID       graphql.String `json:"id"`       // Required
 }
 
 // DeleteScheduledSearch represents data for deleting a scheduled search.
@@ -1113,6 +1192,14 @@ type DeleteSearchDomainByIdInput struct {
 	ID graphql.String `json:"id"` // Required
 	// Optional message to why the search domain was deleted. Will be added to the audit log.
 	DeleteMessage *graphql.String `json:"deleteMessage,omitempty"` // Optional
+}
+
+// DisableAggregateAlert represents data for disabling an aggregate alert.
+type DisableAggregateAlert struct {
+	// Name of the view of the aggregate alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the aggregate alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // DisableAlert represents data for disabling an alert.
@@ -1152,6 +1239,11 @@ type DisableOrganizationIocAccess struct {
 	OrganizationID graphql.String `json:"organizationId"` // Required
 }
 
+type DisableScheduledReportInput struct {
+	ViewName graphql.String `json:"viewName"` // Required
+	ID       graphql.String `json:"id"`       // Required
+}
+
 // DisableStarScheduledSearch represents data for disabling a scheduled search.
 type DisableStarScheduledSearch struct {
 	// Name of the view of the scheduled search.
@@ -1163,6 +1255,14 @@ type DisableStarScheduledSearch struct {
 type DynamicConfigInputObject struct {
 	Config DynamicConfig  `json:"config"` // Required
 	Value  graphql.String `json:"value"`  // Required
+}
+
+// EnableAggregateAlert represents data for enabling an aggregate alert.
+type EnableAggregateAlert struct {
+	// Name of the view of the aggregate alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the aggregate alert.
+	ID graphql.String `json:"id"` // Required
 }
 
 // EnableAlert represents data for enabling an alert.
@@ -1183,9 +1283,9 @@ type EnableFieldAliasSchemaOnOrgInput struct {
 	SchemaID graphql.String `json:"schemaId"` // Required
 }
 
-type EnableFieldAliasSchemaOnViewInput struct {
-	ViewName graphql.String `json:"viewName"` // Required
-	SchemaID graphql.String `json:"schemaId"` // Required
+type EnableFieldAliasSchemaOnViewsInput struct {
+	ViewNames []graphql.String `json:"viewNames"` // Required
+	SchemaID  graphql.String   `json:"schemaId"`  // Required
 }
 
 // EnableFilterAlert represents data for enabling a filter alert.
@@ -1200,6 +1300,11 @@ type EnableFilterAlert struct {
 type EnableOrganizationIocAccess struct {
 	// Id of organization.
 	OrganizationID graphql.String `json:"organizationId"` // Required
+}
+
+type EnableScheduledReportInput struct {
+	ViewName graphql.String `json:"viewName"` // Required
+	ID       graphql.String `json:"id"`       // Required
 }
 
 // EnableStarScheduledSearch represents data for enabling a scheduled search.
@@ -1241,15 +1346,18 @@ type EntitySearchSortInfoType struct {
 	Order EntitySearchSortOrderType `json:"order"` // Required
 }
 
-type FederatedConnectionInputTag struct {
-	Key   graphql.String `json:"key"`   // Required
-	Value graphql.String `json:"value"` // Required
-}
-
 type FieldConfigurationInput struct {
 	ViewID    graphql.String `json:"viewId"`    // Required
 	FieldName graphql.String `json:"fieldName"` // Required
 	JSON      JSON           `json:"json"`      // Required
+}
+
+// FieldHasValueInput represents asserts that a given field has an expected value after having been parsed.
+type FieldHasValueInput struct {
+	// Field to assert on.
+	FieldName graphql.String `json:"fieldName"` // Required
+	// Value expected to be contained in the field.
+	ExpectedValue graphql.String `json:"expectedValue"` // Required
 }
 
 type FieldInteractionConditionInput struct {
@@ -1274,6 +1382,24 @@ type FilterInput struct {
 type FunctionListInput struct {
 	Version   LanguageVersionEnum `json:"version"`   // Required
 	Functions []graphql.String    `json:"functions"` // Required
+}
+
+// GenerateAggregateAlertFromPackageTemplateInput represents data for generating an unsaved aggregate alert object from a library package template.
+type GenerateAggregateAlertFromPackageTemplateInput struct {
+	// Name of the view of the aggregate alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// The id of the package of the aggregate alert template.
+	PackageID VersionedPackageSpecifier `json:"packageId"` // Required
+	// The name of the aggregate alert template in the package.
+	TemplateName graphql.String `json:"templateName"` // Required
+}
+
+// GenerateAggregateAlertFromTemplateInput represents data for generating an unsaved aggregate alert object from a yaml template.
+type GenerateAggregateAlertFromTemplateInput struct {
+	// Name of the view of the aggregate alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// YAML specification of the aggregate alert.
+	YamlTemplate YAML `json:"yamlTemplate"` // Required
 }
 
 // GenerateAlertFromPackageTemplateInput represents data for generating an unsaved alert object from a library package template.
@@ -1336,6 +1462,11 @@ type GetExternalFunctionInput struct {
 	Name graphql.String `json:"name"` // Required
 	// The view the external function should be accessible on.
 	View graphql.String `json:"view"` // Required
+}
+
+type GroupFilter struct {
+	NewQuery graphql.String  `json:"newQuery"`           // Required
+	OldQuery *graphql.String `json:"oldQuery,omitempty"` // Optional
 }
 
 type GroupRoleAssignment struct {
@@ -1410,7 +1541,7 @@ type KindInput struct {
 
 // LanguageVersionInputType represents a specific language version.
 type LanguageVersionInputType struct {
-	// The name of the language version.
+	// The name of the language version. The name is case insensitive.
 	Name graphql.String `json:"name"` // Required
 }
 
@@ -1502,6 +1633,8 @@ type OidcConfigurationInput struct {
 	DefaultIdp              *graphql.Boolean `json:"defaultIdp,omitempty"`           // Optional
 	HumioOwned              *graphql.Boolean `json:"humioOwned,omitempty"`           // Optional
 	LazyCreateUsers         *graphql.Boolean `json:"lazyCreateUsers,omitempty"`      // Optional
+	FederatedIdp            *graphql.String  `json:"federatedIdp,omitempty"`         // Optional
+	ScopeClaim              *graphql.String  `json:"scopeClaim,omitempty"`           // Optional
 }
 
 type OrderByUserFieldInput struct {
@@ -1593,18 +1726,52 @@ type ParameterSpecificationInput struct {
 	DefaultValue *[]graphql.String `json:"defaultValue,omitempty"` // Optional
 }
 
+// ParserTestCaseAssertionsForOutputInput represents assertions on the shape of a given test case output event. It is a key-pair value, where the index of the output event is the key, and the assertions are the value.
+type ParserTestCaseAssertionsForOutputInput struct {
+	// The index of the output event which the assertions should apply to.
+	OutputEventIndex graphql.Int `json:"outputEventIndex"` // Required
+	// Assertions on the shape of a given test case output event.
+	Assertions ParserTestCaseOutputAssertionsInput `json:"assertions"` // Required
+}
+
+// ParserTestCaseInput represents a test case for a parser.
+type ParserTestCaseInput struct {
+	// The event to parse and test on.
+	Event ParserTestEventInput `json:"event"` // Required
+	// Assertions on the shape of the test case output events. The list consists of key-value pairs to be treated as a map-construct, where the index of the output event is the key, and the assertions are the value.
+	OutputAssertions *[]ParserTestCaseAssertionsForOutputInput `json:"outputAssertions,omitempty"` // Optional
+}
+
+// ParserTestCaseOutputAssertionsInput represents assertions on the shape of a given test case output event.
+type ParserTestCaseOutputAssertionsInput struct {
+	// Names of fields which should not be present on the output event.
+	FieldsNotPresent *[]graphql.String `json:"fieldsNotPresent,omitempty"` // Optional
+	// Names of fields and their expected value on the output event. These are key-value pairs, and should be treated as a map-construct.
+	FieldsHaveValues *[]FieldHasValueInput `json:"fieldsHaveValues,omitempty"` // Optional
+}
+
+// ParserTestEventInput represents an event for a parser to parse during testing.
+type ParserTestEventInput struct {
+	// The contents of the `@rawstring` field when the event begins parsing.
+	RawString graphql.String `json:"rawString"` // Required
+}
+
 // ParserTestRunInput represents input for testing a parser.
 type ParserTestRunInput struct {
 	// The name of the repository the parser is located in. This is part of the test output in the `#repo` field in each parsed event.
-	RepositoryName graphql.String `json:"repositoryName"` // Required
+	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
 	// The name of the parser. This is part of the test output in the `#type` field in each parsed event.
 	ParserName graphql.String `json:"parserName"` // Required
-	// The parser script to be tested.
-	ParserScript graphql.String `json:"parserScript"` // Required
-	// The fields to tag in the parser.
-	TagFields []graphql.String `json:"tagFields"` // Required
-	// The test cases to test the parser against.
-	TestCases []TestCaseInput `json:"testCases"` // Required
+	// The parser script that is executed for every incoming event.
+	Script graphql.String `json:"script"` // Required
+	// Fields that are used as tags.
+	FieldsToTag []graphql.String `json:"fieldsToTag"` // Required
+	// A list of fields that will be removed from the event before it's parsed. These fields will not be included when calculating usage.
+	FieldsToBeRemovedBeforeParsing []graphql.String `json:"fieldsToBeRemovedBeforeParsing"` // Required
+	// The test cases to run the parsing script against.
+	TestCases []ParserTestCaseInput `json:"testCases"` // Required
+	// A specific language version.
+	LanguageVersion *LanguageVersionInputType `json:"languageVersion,omitempty"` // Optional
 }
 
 // QueryArgument represents an argument to a query.
@@ -1772,6 +1939,19 @@ type RepoFilterInput struct {
 	Filter graphql.String `json:"filter"` // Required
 }
 
+type ReportErrorInput struct {
+	ErrorType    graphql.String `json:"errorType"`    // Required
+	ErrorMessage graphql.String `json:"errorMessage"` // Required
+}
+
+// ResetQuotaInput represents data for resetting quota.
+type ResetQuotaInput struct {
+	// New quota value to set.
+	NewQuota *Long `json:"newQuota,omitempty"` // Optional
+	// New rate value to set.
+	NewRate *Long `json:"newRate,omitempty"` // Optional
+}
+
 type RestoreDeletedSearchDomainInput struct {
 	// The id of the search domain.
 	ID graphql.String `json:"id"` // Required
@@ -1789,6 +1969,14 @@ type RevokeSessionInput struct {
 
 type RotateTokenInputData struct {
 	ID graphql.String `json:"id"` // Required
+}
+
+type ScheduledReportResultFailedInput struct {
+	ReportErrors []ReportErrorInput `json:"reportErrors"` // Required
+}
+
+type ScheduledReportResultSucceededInput struct {
+	Filename graphql.String `json:"filename"` // Required
 }
 
 type SchemaFieldInput struct {
@@ -1910,16 +2098,6 @@ type TestAwsS3SqsIngestFeed struct {
 	Region graphql.String `json:"region"` // Required
 }
 
-// TestCaseInput represents a test case for a parser.
-type TestCaseInput struct {
-	// The event to parse and test on.
-	Event TestEventInput `json:"event"` // Required
-	// Any assertions to test that a field is not present in the parser output.
-	FieldMissingAssertions *[]AssertFieldMissingInput `json:"fieldMissingAssertions,omitempty"` // Optional
-	// Any assertions to test that a field contains a specific value in the parser output.
-	FieldValueEqualsAssertions *[]AssertFieldValueEqualsInput `json:"fieldValueEqualsAssertions,omitempty"` // Optional
-}
-
 // TestEmailAction represents data for testing an email action.
 type TestEmailAction struct {
 	// Name of the view of the action.
@@ -1940,12 +2118,6 @@ type TestEmailAction struct {
 	BodyTemplate *graphql.String `json:"bodyTemplate,omitempty"` // Optional
 	// Whether the result set should be be attached as a CSV file.
 	AttachCsv *graphql.Boolean `json:"attachCsv,omitempty"` // Optional
-}
-
-// TestEventInput represents an event for a parser to parse during testing.
-type TestEventInput struct {
-	// The contents of `@rawString` field when the event begins parsing.
-	RawString graphql.String `json:"rawString"` // Required
 }
 
 // TestFdrFeed represents data for testing an FDR feed.
@@ -2182,6 +2354,34 @@ type TriggerPollIngestFeed struct {
 	ID graphql.String `json:"id"` // Required
 }
 
+// UpdateAggregateAlert represents data for updating an aggregate alert.
+type UpdateAggregateAlert struct {
+	// Name of the view of the aggregate alert.
+	ViewName RepoOrViewName `json:"viewName"` // Required
+	// Id of the aggregate alert.
+	ID graphql.String `json:"id"` // Required
+	// Name of the aggregate alert.
+	Name graphql.String `json:"name"` // Required
+	// LogScale query to execute.
+	QueryString graphql.String `json:"queryString"` // Required
+	// List of ids or names for actions to fire on query result. Actions in packages can be referred to as "packagescope/packagename:actionname".
+	ActionIDsOrNames []graphql.String `json:"actionIdsOrNames"` // Required
+	// Labels attached to the aggregate alert.
+	Labels []graphql.String `json:"labels"` // Required
+	// Flag indicating whether the aggregate alert is enabled.
+	Enabled graphql.Boolean `json:"enabled"` // Required
+	// Ownership of the query run by this aggregate alert. If value is User, ownership will be based on the runAsUserId field.
+	QueryOwnershipType QueryOwnershipType `json:"queryOwnershipType"` // Required
+	// Description of the aggregate alert.
+	Description *graphql.String `json:"description,omitempty"` // Optional
+	// Throttle time in seconds.
+	ThrottleTimeSeconds *Long `json:"throttleTimeSeconds,omitempty"` // Optional
+	// A field to throttle on. Can only be set if throttleTimeSeconds is set.
+	ThrottleField *graphql.String `json:"throttleField,omitempty"` // Optional
+	// The aggregate alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the aggregate alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
+	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
+}
+
 // UpdateAlert represents data for updating an alert.
 type UpdateAlert struct {
 	// Name of the view of the alert.
@@ -2352,7 +2552,7 @@ type UpdateFdrFeedControl struct {
 	FileDownloadParallelism *UpdateLong `json:"fileDownloadParallelism,omitempty"` // Optional
 }
 
-// UpdateFieldAliasMappingInput represents [PREVIEW: This functionality is still under development and can change without warning.] Input object for field updateFieldAliasAliasMapping.
+// UpdateFieldAliasMappingInput represents [PREVIEW: This functionality is still under development and can change without warning.] Input object for field updateFieldAliasMapping.
 type UpdateFieldAliasMappingInput struct {
 	// ID of the schema that the alias mapping exists on.
 	SchemaID graphql.String `json:"schemaId"` // Required
@@ -2395,12 +2595,14 @@ type UpdateFilterAlert struct {
 	Labels []graphql.String `json:"labels"` // Required
 	// Flag indicating whether the filter alert is enabled.
 	Enabled graphql.Boolean `json:"enabled"` // Required
-	// Allowed number of action triggers per minute for the filter alert. Please note that the maximum allowed number of triggers can vary based on the chosen actions.
-	TriggerLimit graphql.Int `json:"triggerLimit"` // Required
 	// Ownership of the query run by this filter alert. If value is User, ownership will be based on the runAsUserId field.
 	QueryOwnershipType QueryOwnershipType `json:"queryOwnershipType"` // Required
 	// Description of the filter alert.
 	Description *graphql.String `json:"description,omitempty"` // Optional
+	// Throttle time in seconds.
+	ThrottleTimeSeconds *Long `json:"throttleTimeSeconds,omitempty"` // Optional
+	// A field to throttle on. Can only be set if throttleTimeSeconds is set.
+	ThrottleField *graphql.String `json:"throttleField,omitempty"` // Optional
 	// The filter alert will run with the permissions of the user corresponding to this id if the queryOwnershipType field is set to User. If the queryOwnershipType is set to Organization, whilst runAsUserId is set, this will result in an error. If not specified, the filter alert will run with the permissions of the calling user. It requires the 'ChangeTriggersToRunAsOtherUsers' permission to set this field to a user id different from the calling user.
 	RunAsUserID *graphql.String `json:"runAsUserId,omitempty"` // Optional
 }
@@ -2499,16 +2701,16 @@ type UpdateLimitInputV2 struct {
 	RepositoryLimit            *graphql.Int                    `json:"repositoryLimit,omitempty"`            // Optional
 }
 
-// UpdateLocalFederatedConnectionInput represents data for updating a local federated connection.
-type UpdateLocalFederatedConnectionInput struct {
-	// Name or id of the federated view that has the connection.
-	FederatedViewName graphql.String `json:"federatedViewName"` // Required
+// UpdateLocalClusterConnectionInput represents data for updating a local cluster connection.
+type UpdateLocalClusterConnectionInput struct {
+	// Name or id of the multi-cluster view that has the connection.
+	MultiClusterViewName graphql.String `json:"multiClusterViewName"` // Required
 	// Id of the connection to update.
 	ConnectionID graphql.String `json:"connectionId"` // Required
 	// Name or id of the local view to connect with.
 	TargetViewName *graphql.String `json:"targetViewName,omitempty"` // Optional
 	// Additional tags that can be used to filter queries.
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	Tags *[]ClusterConnectionInputTag `json:"tags,omitempty"` // Optional
 	// Filter query that restricts the data visible through this connection.
 	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
@@ -2538,6 +2740,8 @@ type UpdateOidcConfigurationInput struct {
 	DefaultIdp              *graphql.Boolean `json:"defaultIdp,omitempty"`           // Optional
 	HumioOwned              *graphql.Boolean `json:"humioOwned,omitempty"`           // Optional
 	LazyCreateUsers         *graphql.Boolean `json:"lazyCreateUsers,omitempty"`      // Optional
+	FederatedIdp            *graphql.String  `json:"federatedIdp,omitempty"`         // Optional
+	ScopeClaim              *graphql.String  `json:"scopeClaim,omitempty"`           // Optional
 }
 
 // UpdateOpsGenieAction represents data for updating an OpsGenie action.
@@ -2602,8 +2806,6 @@ type UpdateParserInput struct {
 	Name *graphql.String `json:"name,omitempty"` // Optional
 	// Test events that can be parsed by the parser.
 	TestData *[]graphql.String `json:"testData,omitempty"` // Optional
-	// [PREVIEW: Allows parser to have more extensive test cases than the `testData` field allows. If both `testCases` and `testData` are passed in, then `testCases` is the one that is used.].
-	TestCases *[]TestCaseInput `json:"testCases,omitempty"` // Optional
 	// The parser script that is executed for every incoming event.
 	SourceCode *graphql.String `json:"sourceCode,omitempty"` // Optional
 	// Any fields which the parser should convert to tags after an event is parsed.
@@ -2612,6 +2814,32 @@ type UpdateParserInput struct {
 	FieldsToBeRemovedBeforeParsing *[]graphql.String `json:"fieldsToBeRemovedBeforeParsing,omitempty"` // Optional
 	// The version of the Humio query language to use.
 	LanguageVersion *LanguageVersionEnum `json:"languageVersion,omitempty"` // Optional
+}
+
+// UpdateParserInputV2 represents input for updating a parser.
+type UpdateParserInputV2 struct {
+	// The repository where the parser lives.
+	RepositoryName RepoOrViewName `json:"repositoryName"` // Required
+	// The ID of the parser to update.
+	ID graphql.String `json:"id"` // Required
+	// The name to use for the parser.
+	Name *graphql.String `json:"name,omitempty"` // Optional
+	// Input for updating the parser script.
+	Script *UpdateParserScriptInput `json:"script,omitempty"` // Optional
+	// Test cases that can be used to help verify that the parser works as expected.
+	TestCases *[]ParserTestCaseInput `json:"testCases,omitempty"` // Optional
+	// Fields that are used as tags.
+	FieldsToTag *[]graphql.String `json:"fieldsToTag,omitempty"` // Optional
+	// A list of fields that will be removed from the event before it's parsed. These fields will not be included when calculating usage.
+	FieldsToBeRemovedBeforeParsing *[]graphql.String `json:"fieldsToBeRemovedBeforeParsing,omitempty"` // Optional
+}
+
+// UpdateParserScriptInput represents input for updating the parser script.
+type UpdateParserScriptInput struct {
+	// The parser script that is executed for every incoming event.
+	Script graphql.String `json:"script"` // Required
+	// A specific language version. If no version is provided, the version already set on the parser will be used.
+	LanguageVersion *LanguageVersionInputType `json:"languageVersion,omitempty"` // Optional
 }
 
 // UpdatePostMessageSlackAction represents data for updating a post-message Slack action.
@@ -2638,10 +2866,10 @@ type UpdateQueryPrefixInput struct {
 	GroupID     graphql.String `json:"groupId"`     // Required
 }
 
-// UpdateRemoteFederatedConnectionInput represents data for updating a remote federated connection.
-type UpdateRemoteFederatedConnectionInput struct {
-	// Name or id of the federated view that has the connection.
-	FederatedViewName graphql.String `json:"federatedViewName"` // Required
+// UpdateRemoteClusterConnectionInput represents data for updating a remote cluster connection.
+type UpdateRemoteClusterConnectionInput struct {
+	// Name or id of the multi-cluster view that has the connection.
+	MultiClusterViewName graphql.String `json:"multiClusterViewName"` // Required
 	// Id of the connection to update.
 	ConnectionID graphql.String `json:"connectionId"` // Required
 	// Public URL of the remote cluster to connect with.
@@ -2649,7 +2877,7 @@ type UpdateRemoteFederatedConnectionInput struct {
 	// Access token for the remote view to connect with.
 	Token *graphql.String `json:"token,omitempty"` // Optional
 	// Additional tags that can be used to filter queries.
-	Tags *[]FederatedConnectionInputTag `json:"tags,omitempty"` // Optional
+	Tags *[]ClusterConnectionInputTag `json:"tags,omitempty"` // Optional
 	// Filter query that restricts the data visible through this connection.
 	QueryPrefix *graphql.String `json:"queryPrefix,omitempty"` // Optional
 }
@@ -2689,6 +2917,49 @@ type UpdateSavedQueryInput struct {
 	CustomLinkInteractions       *[]CustomLinkInteractionInput       `json:"customLinkInteractions,omitempty"`       // Optional
 	SearchLinkInteractions       *[]SearchLinkInteractionInput       `json:"searchLinkInteractions,omitempty"`       // Optional
 	UpdateParametersInteractions *[]UpdateParametersInteractionInput `json:"updateParametersInteractions,omitempty"` // Optional
+}
+
+type UpdateScheduledReportInput struct {
+	ViewName                  graphql.String                              `json:"viewName"`                            // Required
+	ID                        graphql.String                              `json:"id"`                                  // Required
+	Name                      *graphql.String                             `json:"name,omitempty"`                      // Optional
+	Password                  *graphql.String                             `json:"password,omitempty"`                  // Optional
+	Enabled                   *graphql.Boolean                            `json:"enabled,omitempty"`                   // Optional
+	Description               *graphql.String                             `json:"description,omitempty"`               // Optional
+	DashboardID               *graphql.String                             `json:"dashboardId,omitempty"`               // Optional
+	LastReportSent            *graphql.String                             `json:"lastReportSent,omitempty"`            // Optional
+	SharedTime                *graphql.Boolean                            `json:"sharedTime,omitempty"`                // Optional
+	TimeWindowFrom            *graphql.String                             `json:"timeWindowFrom,omitempty"`            // Optional
+	TimeWindowTo              *graphql.String                             `json:"timeWindowTo,omitempty"`              // Optional
+	ScheduleFrequency         *graphql.String                             `json:"scheduleFrequency,omitempty"`         // Optional
+	ScheduleFrequencyEvery    *graphql.String                             `json:"scheduleFrequencyEvery,omitempty"`    // Optional
+	ScheduleFrequencyTime     *graphql.String                             `json:"scheduleFrequencyTime,omitempty"`     // Optional
+	ScheduleFrequencyTimeZone *graphql.String                             `json:"scheduleFrequencyTimeZone,omitempty"` // Optional
+	ScheduleFrequencyOn       *[]graphql.String                           `json:"scheduleFrequencyOn,omitempty"`       // Optional
+	ScheduleStartDate         *graphql.String                             `json:"scheduleStartDate,omitempty"`         // Optional
+	ScheduleEndDate           *graphql.String                             `json:"scheduleEndDate,omitempty"`           // Optional
+	Labels                    *[]graphql.String                           `json:"labels,omitempty"`                    // Optional
+	Parameters                *[]UpdateScheduledReportParameterValueInput `json:"parameters,omitempty"`                // Optional
+	ActionIDs                 *[]graphql.String                           `json:"actionIds,omitempty"`                 // Optional
+	Layout                    *UpdateScheduledReportLayoutInput           `json:"layout,omitempty"`                    // Optional
+}
+
+type UpdateScheduledReportLayoutInput struct {
+	PaperSize             *graphql.String  `json:"paperSize,omitempty"`             // Optional
+	PaperOrientation      *graphql.String  `json:"paperOrientation,omitempty"`      // Optional
+	PaperLayout           *graphql.String  `json:"paperLayout,omitempty"`           // Optional
+	ShowDescription       *graphql.Boolean `json:"showDescription,omitempty"`       // Optional
+	ShowTitleFrontpage    *graphql.Boolean `json:"showTitleFrontpage,omitempty"`    // Optional
+	ShowParameters        *graphql.Boolean `json:"showParameters,omitempty"`        // Optional
+	MaxNumberOfRows       *graphql.Int     `json:"maxNumberOfRows,omitempty"`       // Optional
+	ShowTitleHeader       *graphql.Boolean `json:"showTitleHeader,omitempty"`       // Optional
+	ShowExportDate        *graphql.Boolean `json:"showExportDate,omitempty"`        // Optional
+	FooterShowPageNumbers *graphql.Boolean `json:"footerShowPageNumbers,omitempty"` // Optional
+}
+
+type UpdateScheduledReportParameterValueInput struct {
+	ID    graphql.String `json:"id"`    // Required
+	Value graphql.String `json:"value"` // Required
 }
 
 // UpdateScheduledSearch represents data for updating a scheduled search.

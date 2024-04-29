@@ -2,8 +2,6 @@ module github.com/humio/cli
 
 go 1.21
 
-toolchain go1.22.1
-
 require (
 	github.com/cli/shurcooL-graphql v0.0.4
 	github.com/gofrs/uuid v3.2.0+incompatible
