@@ -37,10 +37,20 @@ func main() {
 
 	for filename, t := range templates {
 		var buf bytes.Buffer
-		err := t.Execute(&buf, schema)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "failed to execute template: %v\n", err)
-			os.Exit(1)
+		if filename == "api/interfaces.go" {
+			// Handling the ordering of interface declarations and their implementations is unpleasant within the template.
+			// To make it easier we preprocess the schema by pulling out just the data we need and in the order we need.
+			err := t.Execute(&buf, interfaces(*schema))
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "failed to execute template: %v\n", err)
+				os.Exit(1)
+			}
+		} else {
+			err := t.Execute(&buf, schema)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "failed to execute template: %v\n", err)
+				os.Exit(1)
+			}
 		}
 		out, err := format.Source(buf.Bytes())
 		if err != nil {
@@ -56,8 +66,73 @@ func main() {
 	}
 }
 
-func loadSchema(token, humioEndpoint string) (interface{}, error) {
-	var schema interface{}
+type response struct {
+	Data struct {
+		Schema schema `json:"__schema"`
+	} `json:"data"`
+}
+
+type schema struct {
+	QueryType struct {
+		Name string `json:"name"`
+	} `json:"queryType,omitempty"`
+
+	MutationType struct {
+		Name string `json:"name"`
+	} `json:"mutationType,omitempty"`
+
+	SubscriptionType struct {
+		Name string `json:"name"`
+	} `json:"subscriptionType,omitempty"`
+
+	Types []humioType `json:"types"`
+
+	Directives []struct {
+		Name        string       `json:"name"`
+		Description string       `json:"description,omitempty"`
+		Args        []inputValue `json:"args,omitempty"`
+		Locations   []string     `json:"locations,omitempty"`
+	} `json:"directives,omitempty"`
+}
+
+type humioType struct {
+	Kind        string `json:"kind"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Fields      []struct {
+		Name              string       `json:"name"`
+		Description       string       `json:"description"`
+		Args              []inputValue `json:"args,omitempty"`
+		Type              typeRef      `json:"type,omitempty"`
+		IsDeprecated      bool         `json:"isDeprecated"`
+		DeprecationReason string       `json:"deprecatedReason"`
+	} `json:"fields,omitempty"`
+	InputFields []inputValue `json:"inputFields,omitempty"`
+	Interfaces  []typeRef    `json:"interfaces,omitempty"`
+	EnumValues  []struct {
+		Name              string `json:"name"`
+		Description       string `json:"description"`
+		IsDeprecated      bool   `json:"isDeprecated"`
+		DeprecationReason string `json:"deprecatedReason"`
+	} `json:"enumValues,omitempty"`
+	PossibleTypes []typeRef `json:"possibleTypes,omitempty"`
+}
+
+type inputValue struct {
+	Name         string  `json:"name"`
+	Description  string  `json:"description"`
+	Type         typeRef `json:"type"`
+	DefaultValue string  `json:"defaultValue,omitempty"` // What type is this?
+}
+
+type typeRef struct {
+	Kind   string   `json:"kind"`
+	Name   string   `json:"name"`
+	OfType *typeRef `json:"ofType,omitempty"`
+}
+
+func loadSchema(token, humioEndpoint string) (*schema, error) {
+	var schema response
 	path, err := url.JoinPath(humioEndpoint, "/graphql")
 	if err != nil {
 		return nil, err
@@ -91,7 +166,23 @@ func loadSchema(token, humioEndpoint string) (interface{}, error) {
 		return nil, fmt.Errorf("non-200 status code: %v body: %q", resp.StatusCode, body)
 	}
 	err = json.NewDecoder(resp.Body).Decode(&schema)
-	return schema, err
+	return &schema.Data.Schema, err
+}
+
+// interfaces returns a map of GraphQL interface names to their implementation details.
+func interfaces(schema schema) map[string][]humioType {
+	ifaces := make(map[string][]humioType)
+
+	for _, t := range schema.Types {
+		if t.Kind == "INTERFACE" {
+			ifaces[t.Name] = append([]humioType{t}, ifaces[t.Name]...)
+		} else if t.Kind == "OBJECT" {
+			for _, interfaceType := range t.Interfaces {
+				ifaces[interfaceType.Name] = append(ifaces[interfaceType.Name], t)
+			}
+		}
+	}
+	return ifaces
 }
 
 var templates = map[string]*template.Template{
@@ -100,51 +191,63 @@ package api
 
 import graphql "github.com/cli/shurcooL-graphql"
 
-{{range .data.__schema.types | sortByName}}{{if eq .kind "INTERFACE"}}
-{{template "interface" .}}
-{{end}}{{end}}
-
-{{- define "interface" -}}
-type {{.name | identifier}} struct {
-	{{- range .fields}}
-		{{- if ne .name "fileFieldSearch"}}
-		{{.name | identifier}} {{.type | type}}
+{{range $iface, $elems := .}}
+{{range $elems}}{{if eq .Kind "INTERFACE"}}
+{{- if .Description}}
+// {{.Name}} {{.Description | clean | endSentence}}
+{{- end}}
+type {{.Name | identifier}} struct {
+	{{- range .Fields}}
+		{{- if ne .Name "fileFieldSearch"}}
+			{{.Name | identifier}} {{.Type | type}}
 		{{- end}}
 	{{- end}}
 }
-{{- end -}}
+{{else}}
+{{- if .Description}}
+// {{.Name}} {{.Description | clean | endSentence}}
+{{- end}}
+type {{.Name | identifier}} struct {
+	{{$iface}}
+	{{- range .Fields}}
+		{{- if ne .Name "fileFieldSearch"}}
+			{{.Name | identifier}} {{.Type | type}}
+		{{- end}}
+	{{- end}}
+}
+{{end}}{{end}}{{end}}
 `),
 
 	"api/enum.go": t(`// Code generated by generate.go; DO NOT EDIT.
 package api
 
-{{range .data.__schema.types | sortByName}}{{if and (eq .kind "ENUM") (not (internal .name))}}
+{{range .Types | sortByName}}{{if and (eq .Kind "ENUM") (not (internal .Name))}}
 {{template "enum" .}}
 {{end}}{{end}}
 
 {{- define "switchValues" -}}
-{{- range .enumValues }}
-	case {{.name | quote}}:
-		return {{enumIdentifier $.name .name}}, true
+{{- range .EnumValues }}
+	case {{.Name | quote}}:
+		return {{enumIdentifier $.Name .Name}}, true
 {{- end -}}
 {{- end -}}
 
 {{- define "enum" -}}
-{{- if .description}}
-// {{.name}} {{.description | clean | endSentence}}
+{{- if .Description}}
+// {{.Name}} {{.Description | clean | endSentence}}
 {{- end}}
-type {{.name}} string
+type {{.Name}} string
 
-{{if .description}}// {{.description | clean | fullSentence}}{{end}}
-const ({{range .enumValues}}
-	{{enumIdentifier $.name .name}} {{$.name}} = {{.name | quote}} {{if .description}}// {{.description | clean | fullSentence}}{{end}}{{end}}
+{{if .Description}}// {{.Description | clean | fullSentence}}{{end}}
+const ({{range .EnumValues}}
+	{{enumIdentifier $.Name .Name}} {{$.Name}} = {{.Name | quote}} {{if .Description}}// {{.Description | clean | fullSentence}}{{end}}{{end}}
 )
 
-func Valid{{.name}}(s string) ({{.name}}, bool) {
+func Valid{{.Name}}(s string) ({{.Name}}, bool) {
 	switch s {
 	{{- template "switchValues" .}}
 	}
-	return {{$.name}}(""), false
+	return {{$.Name}}(""), false
 }
 {{- end -}}
 	`),
@@ -163,31 +266,31 @@ type RepoOrViewName string
 
 // Input represents one of the Input structs:
 //
-// {{join (inputObjects .data.__schema.types) ", "}}.
+// {{join (inputObjects .Types) ", "}}.
 type Input interface{}
-{{range .data.__schema.types | sortByName}}{{if eq .kind "INPUT_OBJECT"}}
+{{range .Types | sortByName}}{{if eq .Kind "INPUT_OBJECT"}}
 {{template "inputObject" .}}
 {{end}}{{end}}
 
 {{- define "inputObject" -}}
-{{- if .description}}
-// {{.name}} {{.description | clean | endSentence}}
+{{- if .Description}}
+// {{.Name}} {{.Description | clean | endSentence}}
 {{- end}}
-     type {{.name}} struct {
-     	{{- range .inputFields}}
-     		{{- if eq .type.kind "NON_NULL"}}
-     			{{- if .description}}
-     				{{printf "// %s" .description | clean | fullSentence}}
+     type {{.Name}} struct {
+     	{{- range .InputFields}}
+     		{{- if eq .Type.Kind "NON_NULL"}}
+     			{{- if .Description}}
+     				{{printf "// %s" .Description | clean | fullSentence}}
      			{{- end}}
-     			{{.name | identifier}} {{.type | type}} ` + "`" + `json:"{{.name}}"` + "`" + ` // Required
+     			{{.Name | identifier}} {{.Type | type}} ` + "`" + `json:"{{.Name}}"` + "`" + ` // Required
      		{{- end}}
      	{{- end }}
-     	{{- range .inputFields}}
-     		{{- if ne .type.kind "NON_NULL"}}
-     			{{- if .description}}
-     				{{printf "// %s" .description | clean | fullSentence}}
+     	{{- range .InputFields}}
+     		{{- if ne .Type.Kind "NON_NULL"}}
+     			{{- if .Description}}
+     				{{printf "// %s" .Description | clean | fullSentence}}
      			{{- end}}
-     			{{.name | identifier}} {{.type | type}} ` + "`" + `json:"{{.name}},omitempty"` + "`" + ` // Optional
+     			{{.Name | identifier}} {{.Type | type}} ` + "`" + `json:"{{.Name}},omitempty"` + "`" + ` // Optional
      		{{- end}}
      	{{- end}}
      }
@@ -198,12 +301,15 @@ type Input interface{}
 
 func t(text string) *template.Template {
 	// typeString returns a string representation of GraphQL type t.
-	var typeString func(t map[string]interface{}) string
-	typeString = func(t map[string]interface{}) string {
+	var typeString func(t *typeRef) string
+	typeString = func(t *typeRef) string {
+		if t == nil {
+			return ""
+		}
 		baseTypes := []string{"Boolean", "Int", "Float", "String", "ID"}
-		switch t["kind"] {
+		switch t.Kind {
 		case "NON_NULL":
-			s := typeString(t["ofType"].(map[string]interface{}))
+			s := typeString(t.OfType)
 			if !strings.HasPrefix(s, "*") {
 				panic(fmt.Errorf("nullable type %q doesn't begin with '*'", s))
 			}
@@ -213,9 +319,9 @@ func t(text string) *template.Template {
 			}
 			return strippedName
 		case "LIST":
-			return "*[]" + typeString(t["ofType"].(map[string]interface{}))
+			return "*[]" + typeString(t.OfType)
 		default:
-			name := t["name"].(string)
+			name := t.Name
 			if slices.Contains(baseTypes, name) {
 				return "*graphql." + name
 			}
@@ -228,22 +334,21 @@ func t(text string) *template.Template {
 		"internal": func(s string) bool { return strings.HasPrefix(s, "__") },
 		"quote":    strconv.Quote,
 		"join":     strings.Join,
-		"sortByName": func(types []interface{}) []interface{} {
+		"sortByName": func(types []humioType) []humioType {
 			sort.Slice(types, func(i, j int) bool {
-				ni := types[i].(map[string]interface{})["name"].(string)
-				nj := types[j].(map[string]interface{})["name"].(string)
+				ni := types[i].Name
+				nj := types[j].Name
 				return ni < nj
 			})
 			return types
 		},
-		"inputObjects": func(types []interface{}) []string {
+		"inputObjects": func(types []humioType) []string {
 			var names []string
 			for _, t := range types {
-				t := t.(map[string]interface{})
-				if t["kind"].(string) != "INPUT_OBJECT" {
+				if t.Kind != "INPUT_OBJECT" {
 					continue
 				}
-				names = append(names, t["name"].(string))
+				names = append(names, t.Name)
 			}
 			sort.Strings(names)
 			return names
@@ -275,7 +380,6 @@ func t(text string) *template.Template {
 			}
 			return s
 		},
-		// "interfaceType": interfaceType,
 	}).Parse(text))
 }
 
