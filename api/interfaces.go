@@ -18,146 +18,238 @@ type Action struct {
 // EmailAction represents an email action.
 type EmailAction struct {
 	Action
-	Recipients                                       []graphql.String
-	SubjectTemplate                                  *graphql.String
-	BodyTemplate                                     *graphql.String
-	UseProxy                                         graphql.Boolean
-	AttachCsv                                        graphql.Boolean
-	Name                                             graphql.String
-	DisplayName                                      graphql.String
-	ID                                               graphql.String
-	YamlTemplate                                     YAML
-	PackageID                                        *VersionedPackageSpecifier
-	Package                                          *PackageInstallation
-	IsAllowedToRun                                   graphql.Boolean
+	// Recipients represents list of email addresses to send an email to.
+	Recipients []graphql.String
+	// SubjectTemplate represents subject of the email. Can be templated with values from the result.
+	SubjectTemplate *graphql.String
+	// BodyTemplate represents body of the email. Can be templated with values from the result.
+	BodyTemplate *graphql.String
+	// UseProxy represents defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean
+	// AttachCsv represents whether the result set should be be attached as a CSV file.
+	AttachCsv graphql.Boolean
+	// Name represents the name of the action.
+	Name graphql.String
+	// DisplayName represents the display name of the action.
+	DisplayName graphql.String
+	// ID represents the id of the action.
+	ID graphql.String
+	// YamlTemplate represents a template that can be used to recreate the action.
+	YamlTemplate YAML
+	PackageID    *VersionedPackageSpecifier
+	// Package represents the package if any which the action is part of.
+	Package *PackageInstallation
+	// IsAllowedToRun represents false if this type of action is disabled because of a security policy, true otherwise.
+	IsAllowedToRun graphql.Boolean
+	// RequiresOrganizationOwnedQueriesPermissionToEdit represents true if this action is used by triggers, where the query is run by the organization. If true, then the OrganizationOwnedQueries permission is required to edit the action.
 	RequiresOrganizationOwnedQueriesPermissionToEdit graphql.Boolean
 }
 
 // HumioRepoAction represents a HumioRepo action.
 type HumioRepoAction struct {
 	Action
-	IngestToken                                      graphql.String
-	Name                                             graphql.String
-	DisplayName                                      graphql.String
-	ID                                               graphql.String
-	YamlTemplate                                     YAML
-	PackageID                                        *VersionedPackageSpecifier
-	Package                                          *PackageInstallation
-	IsAllowedToRun                                   graphql.Boolean
+	// IngestToken represents humio ingest token for the dataspace that the action should ingest into.
+	IngestToken graphql.String
+	// Name represents the name of the action.
+	Name graphql.String
+	// DisplayName represents the display name of the action.
+	DisplayName graphql.String
+	// ID represents the id of the action.
+	ID graphql.String
+	// YamlTemplate represents a template that can be used to recreate the action.
+	YamlTemplate YAML
+	PackageID    *VersionedPackageSpecifier
+	// Package represents the package if any which the action is part of.
+	Package *PackageInstallation
+	// IsAllowedToRun represents false if this type of action is disabled because of a security policy, true otherwise.
+	IsAllowedToRun graphql.Boolean
+	// RequiresOrganizationOwnedQueriesPermissionToEdit represents true if this action is used by triggers, where the query is run by the organization. If true, then the OrganizationOwnedQueries permission is required to edit the action.
 	RequiresOrganizationOwnedQueriesPermissionToEdit graphql.Boolean
 }
 
 // OpsGenieAction represents an OpsGenie action.
 type OpsGenieAction struct {
 	Action
-	APIURL                                           graphql.String
-	GenieKey                                         graphql.String
-	UseProxy                                         graphql.Boolean
-	Name                                             graphql.String
-	DisplayName                                      graphql.String
-	ID                                               graphql.String
-	YamlTemplate                                     YAML
-	PackageID                                        *VersionedPackageSpecifier
-	Package                                          *PackageInstallation
-	IsAllowedToRun                                   graphql.Boolean
+	// APIURL represents opsGenie webhook url to send the request to.
+	APIURL graphql.String
+	// GenieKey represents key to authenticate with OpsGenie.
+	GenieKey graphql.String
+	// UseProxy represents defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean
+	// Name represents the name of the action.
+	Name graphql.String
+	// DisplayName represents the display name of the action.
+	DisplayName graphql.String
+	// ID represents the id of the action.
+	ID graphql.String
+	// YamlTemplate represents a template that can be used to recreate the action.
+	YamlTemplate YAML
+	PackageID    *VersionedPackageSpecifier
+	// Package represents the package if any which the action is part of.
+	Package *PackageInstallation
+	// IsAllowedToRun represents false if this type of action is disabled because of a security policy, true otherwise.
+	IsAllowedToRun graphql.Boolean
+	// RequiresOrganizationOwnedQueriesPermissionToEdit represents true if this action is used by triggers, where the query is run by the organization. If true, then the OrganizationOwnedQueries permission is required to edit the action.
 	RequiresOrganizationOwnedQueriesPermissionToEdit graphql.Boolean
 }
 
 // PagerDutyAction represents a PagerDuty action.
 type PagerDutyAction struct {
 	Action
-	Severity                                         graphql.String
-	RoutingKey                                       graphql.String
-	UseProxy                                         graphql.Boolean
-	Name                                             graphql.String
-	DisplayName                                      graphql.String
-	ID                                               graphql.String
-	YamlTemplate                                     YAML
-	PackageID                                        *VersionedPackageSpecifier
-	Package                                          *PackageInstallation
-	IsAllowedToRun                                   graphql.Boolean
+	// Severity represents severity level to give to the message.
+	Severity graphql.String
+	// RoutingKey represents routing key to authenticate with PagerDuty.
+	RoutingKey graphql.String
+	// UseProxy represents defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean
+	// Name represents the name of the action.
+	Name graphql.String
+	// DisplayName represents the display name of the action.
+	DisplayName graphql.String
+	// ID represents the id of the action.
+	ID graphql.String
+	// YamlTemplate represents a template that can be used to recreate the action.
+	YamlTemplate YAML
+	PackageID    *VersionedPackageSpecifier
+	// Package represents the package if any which the action is part of.
+	Package *PackageInstallation
+	// IsAllowedToRun represents false if this type of action is disabled because of a security policy, true otherwise.
+	IsAllowedToRun graphql.Boolean
+	// RequiresOrganizationOwnedQueriesPermissionToEdit represents true if this action is used by triggers, where the query is run by the organization. If true, then the OrganizationOwnedQueries permission is required to edit the action.
 	RequiresOrganizationOwnedQueriesPermissionToEdit graphql.Boolean
 }
 
 // SlackAction represents a Slack action.
 type SlackAction struct {
 	Action
-	URL                                              graphql.String
-	Fields                                           []SlackFieldEntry
-	UseProxy                                         graphql.Boolean
-	Name                                             graphql.String
-	DisplayName                                      graphql.String
-	ID                                               graphql.String
-	YamlTemplate                                     YAML
-	PackageID                                        *VersionedPackageSpecifier
-	Package                                          *PackageInstallation
-	IsAllowedToRun                                   graphql.Boolean
+	// URL represents slack webhook url to send the request to.
+	URL graphql.String
+	// Fields represents fields to include within the Slack message. Can be templated with values from the result.
+	Fields []SlackFieldEntry
+	// UseProxy represents defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean
+	// Name represents the name of the action.
+	Name graphql.String
+	// DisplayName represents the display name of the action.
+	DisplayName graphql.String
+	// ID represents the id of the action.
+	ID graphql.String
+	// YamlTemplate represents a template that can be used to recreate the action.
+	YamlTemplate YAML
+	PackageID    *VersionedPackageSpecifier
+	// Package represents the package if any which the action is part of.
+	Package *PackageInstallation
+	// IsAllowedToRun represents false if this type of action is disabled because of a security policy, true otherwise.
+	IsAllowedToRun graphql.Boolean
+	// RequiresOrganizationOwnedQueriesPermissionToEdit represents true if this action is used by triggers, where the query is run by the organization. If true, then the OrganizationOwnedQueries permission is required to edit the action.
 	RequiresOrganizationOwnedQueriesPermissionToEdit graphql.Boolean
 }
 
 // SlackPostMessageAction represents a slack post-message action.
 type SlackPostMessageAction struct {
 	Action
-	APIToken                                         graphql.String
-	Channels                                         []graphql.String
-	Fields                                           []SlackFieldEntry
-	UseProxy                                         graphql.Boolean
-	Name                                             graphql.String
-	DisplayName                                      graphql.String
-	ID                                               graphql.String
-	YamlTemplate                                     YAML
-	PackageID                                        *VersionedPackageSpecifier
-	Package                                          *PackageInstallation
-	IsAllowedToRun                                   graphql.Boolean
+	// APIToken represents api token to authenticate with Slack.
+	APIToken graphql.String
+	// Channels represents list of Slack channels to message.
+	Channels []graphql.String
+	// Fields represents fields to include within the Slack message. Can be templated with values from the result.
+	Fields []SlackFieldEntry
+	// UseProxy represents defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean
+	// Name represents the name of the action.
+	Name graphql.String
+	// DisplayName represents the display name of the action.
+	DisplayName graphql.String
+	// ID represents the id of the action.
+	ID graphql.String
+	// YamlTemplate represents a template that can be used to recreate the action.
+	YamlTemplate YAML
+	PackageID    *VersionedPackageSpecifier
+	// Package represents the package if any which the action is part of.
+	Package *PackageInstallation
+	// IsAllowedToRun represents false if this type of action is disabled because of a security policy, true otherwise.
+	IsAllowedToRun graphql.Boolean
+	// RequiresOrganizationOwnedQueriesPermissionToEdit represents true if this action is used by triggers, where the query is run by the organization. If true, then the OrganizationOwnedQueries permission is required to edit the action.
 	RequiresOrganizationOwnedQueriesPermissionToEdit graphql.Boolean
 }
 
 // UploadFileAction represents an upload file action.
 type UploadFileAction struct {
 	Action
-	FileName                                         graphql.String
-	Name                                             graphql.String
-	DisplayName                                      graphql.String
-	ID                                               graphql.String
-	YamlTemplate                                     YAML
-	PackageID                                        *VersionedPackageSpecifier
-	Package                                          *PackageInstallation
-	IsAllowedToRun                                   graphql.Boolean
+	// FileName represents file name for the uploaded file.
+	FileName graphql.String
+	// Name represents the name of the action.
+	Name graphql.String
+	// DisplayName represents the display name of the action.
+	DisplayName graphql.String
+	// ID represents the id of the action.
+	ID graphql.String
+	// YamlTemplate represents a template that can be used to recreate the action.
+	YamlTemplate YAML
+	PackageID    *VersionedPackageSpecifier
+	// Package represents the package if any which the action is part of.
+	Package *PackageInstallation
+	// IsAllowedToRun represents false if this type of action is disabled because of a security policy, true otherwise.
+	IsAllowedToRun graphql.Boolean
+	// RequiresOrganizationOwnedQueriesPermissionToEdit represents true if this action is used by triggers, where the query is run by the organization. If true, then the OrganizationOwnedQueries permission is required to edit the action.
 	RequiresOrganizationOwnedQueriesPermissionToEdit graphql.Boolean
 }
 
 // VictorOpsAction represents a VictorOps action.
 type VictorOpsAction struct {
 	Action
-	MessageType                                      graphql.String
-	NotifyURL                                        graphql.String
-	UseProxy                                         graphql.Boolean
-	Name                                             graphql.String
-	DisplayName                                      graphql.String
-	ID                                               graphql.String
-	YamlTemplate                                     YAML
-	PackageID                                        *VersionedPackageSpecifier
-	Package                                          *PackageInstallation
-	IsAllowedToRun                                   graphql.Boolean
+	// MessageType represents type of the VictorOps message to make.
+	MessageType graphql.String
+	// NotifyURL represents victorOps webhook url to send the request to.
+	NotifyURL graphql.String
+	// UseProxy represents defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean
+	// Name represents the name of the action.
+	Name graphql.String
+	// DisplayName represents the display name of the action.
+	DisplayName graphql.String
+	// ID represents the id of the action.
+	ID graphql.String
+	// YamlTemplate represents a template that can be used to recreate the action.
+	YamlTemplate YAML
+	PackageID    *VersionedPackageSpecifier
+	// Package represents the package if any which the action is part of.
+	Package *PackageInstallation
+	// IsAllowedToRun represents false if this type of action is disabled because of a security policy, true otherwise.
+	IsAllowedToRun graphql.Boolean
+	// RequiresOrganizationOwnedQueriesPermissionToEdit represents true if this action is used by triggers, where the query is run by the organization. If true, then the OrganizationOwnedQueries permission is required to edit the action.
 	RequiresOrganizationOwnedQueriesPermissionToEdit graphql.Boolean
 }
 
 // WebhookAction represents a webhook action.
 type WebhookAction struct {
 	Action
-	Method                                           graphql.String
-	URL                                              graphql.String
-	Headers                                          []HttpHeaderEntry
-	BodyTemplate                                     graphql.String
-	IgnoreSSL                                        graphql.Boolean
-	UseProxy                                         graphql.Boolean
-	Name                                             graphql.String
-	DisplayName                                      graphql.String
-	ID                                               graphql.String
-	YamlTemplate                                     YAML
-	PackageID                                        *VersionedPackageSpecifier
-	Package                                          *PackageInstallation
-	IsAllowedToRun                                   graphql.Boolean
+	// Method represents method to use for the request.
+	Method graphql.String
+	// URL represents url to send the http(s) request to.
+	URL graphql.String
+	// Headers represents headers of the http(s) request.
+	Headers []HttpHeaderEntry
+	// BodyTemplate represents body of the http(s) request. Can be templated with values from the result.
+	BodyTemplate graphql.String
+	// IgnoreSSL represents flag indicating whether SSL should be ignored for the request.
+	IgnoreSSL graphql.Boolean
+	// UseProxy represents defines whether the action should use the configured proxy to make web requests.
+	UseProxy graphql.Boolean
+	// Name represents the name of the action.
+	Name graphql.String
+	// DisplayName represents the display name of the action.
+	DisplayName graphql.String
+	// ID represents the id of the action.
+	ID graphql.String
+	// YamlTemplate represents a template that can be used to recreate the action.
+	YamlTemplate YAML
+	PackageID    *VersionedPackageSpecifier
+	// Package represents the package if any which the action is part of.
+	Package *PackageInstallation
+	// IsAllowedToRun represents false if this type of action is disabled because of a security policy, true otherwise.
+	IsAllowedToRun graphql.Boolean
+	// RequiresOrganizationOwnedQueriesPermissionToEdit represents true if this action is used by triggers, where the query is run by the organization. If true, then the OrganizationOwnedQueries permission is required to edit the action.
 	RequiresOrganizationOwnedQueriesPermissionToEdit graphql.Boolean
 }
 
@@ -173,7 +265,8 @@ type Auth0Authentication struct {
 	ClientID    graphql.String
 	AllowSignup graphql.Boolean
 	RedirectURL graphql.String
-	Name        graphql.String
+	// Name represents the display name of the authentication method.
+	Name graphql.String
 }
 
 // ByProxyAuthentication represents by proxy authentication. Authentication is provided by proxy.
@@ -250,22 +343,33 @@ type ClusterConnection struct {
 // LocalClusterConnection represents a local cluster connection.
 type LocalClusterConnection struct {
 	ClusterConnection
-	TargetViewID   graphql.String
+	// TargetViewID represents id of the local view to connect with.
+	TargetViewID graphql.String
+	// TargetViewName represents name of the local view to connect with.
 	TargetViewName RepoOrViewName
 	TargetViewType LocalTargetType
-	ID             graphql.String
-	ClusterID      graphql.String
-	Tags           []ClusterConnectionTag
-	QueryPrefix    graphql.String
+	// ID represents id of the connection.
+	ID graphql.String
+	// ClusterID represents cluster identity of the connection.
+	ClusterID graphql.String
+	// Tags represents cluster connection tags.
+	Tags []ClusterConnectionTag
+	// QueryPrefix represents cluster connection query prefix.
+	QueryPrefix graphql.String
 }
 
 // RemoteClusterConnection represents a remote cluster connection.
 type RemoteClusterConnection struct {
 	ClusterConnection
-	PublicURL   graphql.String
-	ID          graphql.String
-	ClusterID   graphql.String
-	Tags        []ClusterConnectionTag
+	// PublicURL represents public URL of the remote cluster to connect with.
+	PublicURL graphql.String
+	// ID represents id of the connection.
+	ID graphql.String
+	// ClusterID represents cluster identity of the connection.
+	ClusterID graphql.String
+	// Tags represents cluster connection tags.
+	Tags []ClusterConnectionTag
+	// QueryPrefix represents cluster connection query prefix.
 	QueryPrefix graphql.String
 }
 
@@ -279,21 +383,31 @@ type ClusterConnectionStatus struct {
 // LocalClusterConnectionStatus represents the status of a local cluster connection.
 type LocalClusterConnectionStatus struct {
 	ClusterConnectionStatus
-	ViewName      *graphql.String
-	ID            *graphql.String
-	IsValid       graphql.Boolean
+	// ViewName represents name of the local view.
+	ViewName *graphql.String
+	// ID represents id of the connection.
+	ID *graphql.String
+	// IsValid represents whether the connection is valid.
+	IsValid graphql.Boolean
+	// ErrorMessages represents errors if the connection is invalid.
 	ErrorMessages []ConnectionAspectErrorType
 }
 
 // RemoteClusterConnectionStatus represents the status of a remote cluster connection.
 type RemoteClusterConnectionStatus struct {
 	ClusterConnectionStatus
-	RemoteViewName            *graphql.String
-	RemoteServerVersion       *graphql.String
+	// RemoteViewName represents name of the remote view.
+	RemoteViewName *graphql.String
+	// RemoteServerVersion represents software version of the remote view.
+	RemoteServerVersion *graphql.String
+	// RemoteServerCompatVersion represents oldest server version that is protocol compatible with the remote server.
 	RemoteServerCompatVersion *graphql.String
-	ID                        *graphql.String
-	IsValid                   graphql.Boolean
-	ErrorMessages             []ConnectionAspectErrorType
+	// ID represents id of the connection.
+	ID *graphql.String
+	// IsValid represents whether the connection is valid.
+	IsValid graphql.Boolean
+	// ErrorMessages represents errors if the connection is invalid.
+	ErrorMessages []ConnectionAspectErrorType
 }
 
 // DashboardParameter represents represents a dashboard parameter.
@@ -309,61 +423,100 @@ type DashboardParameter struct {
 // FileDashboardParameter represents a dashboard parameter where suggestions are taken from uploaded files.
 type FileDashboardParameter struct {
 	DashboardParameter
-	FileName             graphql.String
-	ValueColumn          graphql.String
-	LabelColumn          *graphql.String
-	ValueFilters         []FileParameterValueFilter
+	// FileName represents the name of the file to perform lookups in.
+	FileName graphql.String
+	// ValueColumn represents the column where the value of suggestions are taken from,.
+	ValueColumn graphql.String
+	// LabelColumn represents the column where the label of suggestions are taken from,.
+	LabelColumn *graphql.String
+	// ValueFilters represents fields and values, where an entry in a file must match one of the given values for each field.
+	ValueFilters []FileParameterValueFilter
+	// InvalidInputPatterns represents regex patterns used to block parameter input.
 	InvalidInputPatterns *[]graphql.String
-	InvalidInputMessage  *graphql.String
-	ID                   graphql.String
-	Label                graphql.String
-	DefaultValueV2       *graphql.String
-	Order                *graphql.Int
-	IsMultiParam         *graphql.Boolean
-	DefaultMultiValues   *[]graphql.String
+	// InvalidInputMessage represents message when parameter input is blocked.
+	InvalidInputMessage *graphql.String
+	// ID represents the ID of the parameter.
+	ID graphql.String
+	// Label represents the label or 'name' displayed next to the input for the variable to make it more human-readable.
+	Label graphql.String
+	// DefaultValueV2 represents the value assigned to the parameter on dashboard load, if no other value is specified.
+	DefaultValueV2 *graphql.String
+	// Order represents a number that determines the order in which parameters are displayed on a dashboard. If null, the parameter is ordered after other parameters in alphanumerical order.
+	Order *graphql.Int
+	// IsMultiParam represents [PREVIEW: The multi-value parameters feature is still in development.] A flag indicating whether the parameter supports having multiple values.
+	IsMultiParam *graphql.Boolean
+	// DefaultMultiValues represents [PREVIEW: The multi-value parameters feature is still in development.] The value assigned to the multi-value parameter on dashboard load, if no other value is specified. This replaces defaultValue whenever isMultiParam is true.
+	DefaultMultiValues *[]graphql.String
 }
 
 // FixedListDashboardParameter represents a dashboard parameter with a fixed list of values to select from.
 type FixedListDashboardParameter struct {
 	DashboardParameter
-	Values             []FixedListParameterOption
-	ID                 graphql.String
-	Label              graphql.String
-	DefaultValueV2     *graphql.String
-	Order              *graphql.Int
-	IsMultiParam       *graphql.Boolean
+	Values []FixedListParameterOption
+	// ID represents the ID of the parameter.
+	ID graphql.String
+	// Label represents the label or 'name' displayed next to the input for the variable to make it more human-readable.
+	Label graphql.String
+	// DefaultValueV2 represents the value assigned to the parameter on dashboard load, if no other value is specified.
+	DefaultValueV2 *graphql.String
+	// Order represents a number that determines the order in which parameters are displayed on a dashboard. If null, the parameter is ordered after other parameters in alphanumerical order.
+	Order *graphql.Int
+	// IsMultiParam represents [PREVIEW: The multi-value parameters feature is still in development.] A flag indicating whether the parameter supports having multiple values.
+	IsMultiParam *graphql.Boolean
+	// DefaultMultiValues represents [PREVIEW: The multi-value parameters feature is still in development.] The value assigned to the multi-value parameter on dashboard load, if no other value is specified. This replaces defaultValue whenever isMultiParam is true.
 	DefaultMultiValues *[]graphql.String
 }
 
 // FreeTextDashboardParameter represents a dashboard parameter without restrictions or suggestions.
 type FreeTextDashboardParameter struct {
 	DashboardParameter
+	// InvalidInputPatterns represents regex patterns used to block parameter input.
 	InvalidInputPatterns *[]graphql.String
-	InvalidInputMessage  *graphql.String
-	ID                   graphql.String
-	Label                graphql.String
-	DefaultValueV2       *graphql.String
-	Order                *graphql.Int
-	IsMultiParam         *graphql.Boolean
-	DefaultMultiValues   *[]graphql.String
+	// InvalidInputMessage represents message when parameter input is blocked.
+	InvalidInputMessage *graphql.String
+	// ID represents the ID of the parameter.
+	ID graphql.String
+	// Label represents the label or 'name' displayed next to the input for the variable to make it more human-readable.
+	Label graphql.String
+	// DefaultValueV2 represents the value assigned to the parameter on dashboard load, if no other value is specified.
+	DefaultValueV2 *graphql.String
+	// Order represents a number that determines the order in which parameters are displayed on a dashboard. If null, the parameter is ordered after other parameters in alphanumerical order.
+	Order *graphql.Int
+	// IsMultiParam represents [PREVIEW: The multi-value parameters feature is still in development.] A flag indicating whether the parameter supports having multiple values.
+	IsMultiParam *graphql.Boolean
+	// DefaultMultiValues represents [PREVIEW: The multi-value parameters feature is still in development.] The value assigned to the multi-value parameter on dashboard load, if no other value is specified. This replaces defaultValue whenever isMultiParam is true.
+	DefaultMultiValues *[]graphql.String
 }
 
 // QueryBasedDashboardParameter represents a dashboard parameter where suggestions are sourced from query results from Humio.
 type QueryBasedDashboardParameter struct {
 	DashboardParameter
-	QueryString           graphql.String
-	TimeWindow            graphql.String
-	OptionValueField      graphql.String
-	OptionLabelField      graphql.String
+	// QueryString represents the Humio query executed to find suggestions for the parameter value.
+	QueryString graphql.String
+	// TimeWindow represents the time window (relative to now) in which Humio will search for suggestions. E.g. 24h or 30d.
+	TimeWindow graphql.String
+	// OptionValueField represents the field in the result set used as the 'value' of the suggestions.
+	OptionValueField graphql.String
+	// OptionLabelField represents the field in the result set used as the 'label' (the text in the dropdown) of the suggestions.
+	OptionLabelField graphql.String
+	// UseDashboardTimeIfSet represents if true, the parameters search time window will automatically change to match the dashboard's global time when active.
 	UseDashboardTimeIfSet graphql.Boolean
-	InvalidInputPatterns  *[]graphql.String
-	InvalidInputMessage   *graphql.String
-	ID                    graphql.String
-	Label                 graphql.String
-	DefaultValueV2        *graphql.String
-	Order                 *graphql.Int
-	IsMultiParam          *graphql.Boolean
-	DefaultMultiValues    *[]graphql.String
+	// InvalidInputPatterns represents regex patterns used to block parameter input.
+	InvalidInputPatterns *[]graphql.String
+	// InvalidInputMessage represents message when parameter input is blocked.
+	InvalidInputMessage *graphql.String
+	// ID represents the ID of the parameter.
+	ID graphql.String
+	// Label represents the label or 'name' displayed next to the input for the variable to make it more human-readable.
+	Label graphql.String
+	// DefaultValueV2 represents the value assigned to the parameter on dashboard load, if no other value is specified.
+	DefaultValueV2 *graphql.String
+	// Order represents a number that determines the order in which parameters are displayed on a dashboard. If null, the parameter is ordered after other parameters in alphanumerical order.
+	Order *graphql.Int
+	// IsMultiParam represents [PREVIEW: The multi-value parameters feature is still in development.] A flag indicating whether the parameter supports having multiple values.
+	IsMultiParam *graphql.Boolean
+	// DefaultMultiValues represents [PREVIEW: The multi-value parameters feature is still in development.] The value assigned to the multi-value parameter on dashboard load, if no other value is specified. This replaces defaultValue whenever isMultiParam is true.
+	DefaultMultiValues *[]graphql.String
 }
 
 // EventForwarder represents an event forwarder.
@@ -377,12 +530,18 @@ type EventForwarder struct {
 // KafkaEventForwarder represents a Kafka event forwarder.
 type KafkaEventForwarder struct {
 	EventForwarder
-	Topic       graphql.String
-	Properties  graphql.String
-	ID          graphql.String
-	Name        graphql.String
+	// Topic represents the Kafka topic the events should be forwarded to.
+	Topic graphql.String
+	// Properties represents the Kafka producer configuration used to forward events in the form of properties (x.y.z=abc). See https://library.humio.com/humio-server/ingesting-data-event-forwarders.html#kafka-configuration.
+	Properties graphql.String
+	// ID represents id of the event forwarder.
+	ID graphql.String
+	// Name represents name of the event forwarder.
+	Name graphql.String
+	// Description represents description of the event forwarder.
 	Description graphql.String
-	Enabled     graphql.Boolean
+	// Enabled represents is the event forwarder enabled.
+	Enabled graphql.Boolean
 }
 
 // IdentityProviderAuthentication represents an Identity Provider.
@@ -451,20 +610,29 @@ type License struct {
 // OnPremLicense represents represents information about a Humio License.
 type OnPremLicense struct {
 	License
+	// ExpiresAt represents the time at which the license expires.
 	ExpiresAt DateTime
-	IssuedAt  DateTime
-	UID       graphql.String
-	MaxUsers  *graphql.Int
-	Owner     graphql.String
-	IsSaaS    graphql.Boolean
-	IsOem     graphql.Boolean
+	// IssuedAt represents the time at which the license was issued.
+	IssuedAt DateTime
+	// UID represents license id.
+	UID graphql.String
+	// MaxUsers represents the maximum number of user accounts allowed in Humio. Unlimited if undefined.
+	MaxUsers *graphql.Int
+	// Owner represents the name of the entity the license was issued to.
+	Owner graphql.String
+	// IsSaaS represents indicates whether the license allows running Humio as a SaaS platform.
+	IsSaaS graphql.Boolean
+	// IsOem represents indicates whether the license is an OEM license.
+	IsOem graphql.Boolean
 }
 
 // TrialLicense represents represents information about an on-going trial of Humio.
 type TrialLicense struct {
 	License
+	// ExpiresAt represents the time at which the trial ends.
 	ExpiresAt DateTime
-	IssuedAt  DateTime
+	// IssuedAt represents the time at which the trial started.
+	IssuedAt DateTime
 }
 
 // QueryOwnership represents query ownership.
@@ -475,15 +643,19 @@ type QueryOwnership struct {
 // OrganizationOwnership represents query running with organization based ownership.
 type OrganizationOwnership struct {
 	QueryOwnership
+	// Organization represents organization owning and running the query.
 	Organization Organization
-	ID           graphql.String
+	// ID represents id of organization owning and running the query.
+	ID graphql.String
 }
 
 // UserOwnership represents query running with user based ownership.
 type UserOwnership struct {
 	QueryOwnership
+	// User represents user owning and running the query. If null, then the user doesn't exist anymore.
 	User *User
-	ID   graphql.String
+	// ID represents id of user owning and running the query.
+	ID graphql.String
 }
 
 // SearchDomain represents common interface for Repositories and Views.
@@ -534,132 +706,232 @@ type SearchDomain struct {
 // Repository represents a repository stores ingested data, configures parsers and data retention policies.
 type Repository struct {
 	SearchDomain
-	Type                         RepositoryType
-	DataType                     RepositoryDataType
-	Limit                        *LimitV2
-	IngestBlock                  *DateTime
-	UsageTag                     *graphql.String
-	Datasources                  []Datasource
-	UncompressedByteSize         Long
-	CompressedByteSize           Long
+	// Type represents repo Types are used for tracking trial status in Humio Cloud setups.
+	Type RepositoryType
+	// DataType represents repo data types are used for controlling the types of data are allowed in the repository.
+	DataType RepositoryDataType
+	// Limit represents the limit attached to the repository.
+	Limit *LimitV2
+	// IngestBlock represents the date and time in the future after which ingest for this repository will be re-enabled.
+	IngestBlock *DateTime
+	// UsageTag represents usage tag, used to group usage summary on repositories.
+	UsageTag *graphql.String
+	// Datasources represents data sources where data is ingested from. E.g. This can be specific log files or services sending data to Humio.
+	Datasources []Datasource
+	// UncompressedByteSize represents total size the data. Size is measured as the size stored before compression and is thus the size of the internal format, not the data that was ingested.
+	UncompressedByteSize Long
+	// CompressedByteSize represents total size of data. Size is measured as the size after compression.
+	CompressedByteSize Long
+	// UncompressedByteSizeOfMerged represents total size the data, merged parts. Size is measured as the size stored before compression and is thus the size of the internal format, not the data that was ingested.
 	UncompressedByteSizeOfMerged Long
-	CompressedByteSizeOfMerged   Long
-	TimeOfLatestIngest           *DateTime
-	TimeBasedRetention           *graphql.Float
-	IngestSizeBasedRetention     *graphql.Float
-	IngestTokens                 []IngestToken
-	StorageSizeBasedRetention    *graphql.Float
-	TimeBasedBackupRetention     *graphql.Float
-	IngestListeners              []IngestListener
-	MaxAutoShardCount            *graphql.Int
-	S3ArchivingConfiguration     *S3Configuration
-	CachePolicy                  *CachePolicy
-	EffectiveCachePolicy         CachePolicy
-	CurrentTagGroupings          []TagGroupingRule
-	EventForwardingRules         []EventForwardingRule
-	EventForwardersForSelection  []EventForwarderForSelection
-	FdrFeed                      FdrFeed
-	FdrFeeds                     []FdrFeed
-	FdrFeedControl               FdrFeedControl
-	FdrFeedControls              []FdrFeedControl
-	IngestFeed                   IngestFeed
-	IngestFeeds                  IngestFeedQueryResultSet
-	AwsExternalID                graphql.String
-	Parser                       *Parser
-	Parsers                      []Parser
-	ID                           graphql.String
-	Name                         RepoOrViewName
-	Description                  *graphql.String
-	DeletedDate                  *Long
-	PermanentlyDeletedAt         *Long
-	IsStarred                    graphql.Boolean
-	PackageV2                    Package2
-	PackageVersions              []RegistryPackageVersionInfo
-	AvailablePackages            []PackageRegistrySearchResultItem
-	InstalledPackages            []PackageInstallation
-	HasPackageInstalled          graphql.Boolean
-	Users                        []User
-	UsersAndGroups               UsersAndGroupsSearchResultSet
-	UsersV2                      Users
-	Groups                       []Group
-	StarredFields                []graphql.String
-	RecentQueriesV2              []RecentQuery
-	AutomaticSearch              graphql.Boolean
-	IsActionAllowed              graphql.Boolean
-	AllowedViewActions           []ViewAction
-	ViewerQueryPrefix            graphql.String
-	Tags                         []graphql.String
-	Interactions                 []ViewInteraction
-	Alert                        Alert
-	Alerts                       []Alert
-	Dashboard                    Dashboard
-	Dashboards                   []Dashboard
-	FilterAlert                  FilterAlert
-	FilterAlerts                 []FilterAlert
-	AggregateAlert               AggregateAlert
-	AggregateAlerts              []AggregateAlert
-	ScheduledSearch              ScheduledSearch
-	ScheduledSearches            []ScheduledSearch
-	Action                       Action
-	Actions                      []Action
-	SavedQuery                   SavedQuery
-	SavedQueries                 []SavedQuery
-	DefaultQuery                 *SavedQuery
-	Files                        []File
-	ScheduledReports             []ScheduledReport
-	ScheduledReport              *ScheduledReport
+	// CompressedByteSizeOfMerged represents total size of data, merged parts. Size is measured as the size after compression.
+	CompressedByteSizeOfMerged Long
+	// TimeOfLatestIngest represents the timestamp of the latest ingested data, or null if the repository is empty.
+	TimeOfLatestIngest *DateTime
+	// TimeBasedRetention represents the maximum time (in days) to keep data. Data old than this will be deleted.
+	TimeBasedRetention *graphql.Float
+	// IngestSizeBasedRetention represents retention (in Gigabytes) based on the size of data when it arrives to Humio, that is before parsing and compression. Humio will keep `at most` this amount of data.
+	IngestSizeBasedRetention *graphql.Float
+	IngestTokens             []IngestToken
+	// StorageSizeBasedRetention represents retention (in Gigabytes) based on the size of data when in storage, that is, after parsing and compression. Humio will keep `at least` this amount of data, but as close to this number as possible.
+	StorageSizeBasedRetention *graphql.Float
+	// TimeBasedBackupRetention represents sets time (in days) to keep backups before they are deleted.
+	TimeBasedBackupRetention *graphql.Float
+	// IngestListeners represents the ingest listeners configured for this repository.
+	IngestListeners []IngestListener
+	// MaxAutoShardCount represents maximum number of auto shards created.
+	MaxAutoShardCount *graphql.Int
+	// S3ArchivingConfiguration represents configuration for S3 archiving. E.g. bucket name and region.
+	S3ArchivingConfiguration *S3Configuration
+	// CachePolicy represents [PREVIEW: Cache policies are a limited feature and is subject to change] The cache policy set on this repo.
+	CachePolicy *CachePolicy
+	// EffectiveCachePolicy represents [PREVIEW: Cache policies are a limited feature and is subject to change] The cache policy of this repo that as will be applied. This will apply the cache policy of the repo, org-wide default, or global default. This will be (in order of precedence): 1. The repo cache policy, if set. 2. The organization-wide cache policy, if set. 3. The global cache policy, if set. 4. The default cache policy in which no segments are prioritized.
+	EffectiveCachePolicy CachePolicy
+	// CurrentTagGroupings represents tag grouping rules applied on the repository currently. Rules only apply to the tags they denote, and tags without rules do not have any grouping.
+	CurrentTagGroupings []TagGroupingRule
+	// EventForwardingRules represents the event forwarding rules configured for the repository.
+	EventForwardingRules []EventForwardingRule
+	// EventForwardersForSelection represents list event forwarders in the organization with only basic information.
+	EventForwardersForSelection []EventForwarderForSelection
+	// FdrFeed represents a saved FDR feed.
+	FdrFeed FdrFeed
+	// FdrFeeds represents saved FDR Feeds.
+	FdrFeeds []FdrFeed
+	// FdrFeedControl represents [PREVIEW: Feature currently being iterated on. Changes may occur.] Administrator control for an FDR feed.
+	FdrFeedControl FdrFeedControl
+	// FdrFeedControls represents [PREVIEW: Feature currently being iterated on. Changes may occur.] Administrator controls for FDR feeds.
+	FdrFeedControls []FdrFeedControl
+	// IngestFeed represents [PREVIEW: Experimental feature, not ready for production.] A saved Ingest feed.
+	IngestFeed IngestFeed
+	// IngestFeeds represents [PREVIEW: Experimental feature, not ready for production.] Saved ingest feeds.
+	IngestFeeds IngestFeedQueryResultSet
+	// AwsExternalID represents [PREVIEW: Experimental feature, not ready for production.] The AWS External ID used by new ingest feeds in this repository.
+	AwsExternalID graphql.String
+	// Parser represents a parser on the repository.
+	Parser *Parser
+	// Parsers represents saved parsers.
+	Parsers     []Parser
+	ID          graphql.String
+	Name        RepoOrViewName
+	Description *graphql.String
+	// DeletedDate represents the point in time the search domain was marked for deletion.
+	DeletedDate *Long
+	// PermanentlyDeletedAt represents the point in time the search domain will not be restorable anymore.
+	PermanentlyDeletedAt *Long
+	IsStarred            graphql.Boolean
+	// PackageV2 represents returns a specific version of a package given a package version.
+	PackageV2 Package2
+	// PackageVersions represents [PREVIEW: This may be moved to the Package2 object.] The available versions of a package.
+	PackageVersions []RegistryPackageVersionInfo
+	// AvailablePackages represents returns a list of available packages that can be installed.
+	AvailablePackages []PackageRegistrySearchResultItem
+	// InstalledPackages represents list packages installed on a specific view or repo.
+	InstalledPackages   []PackageInstallation
+	HasPackageInstalled graphql.Boolean
+	// Users represents users who has access.
+	Users []User
+	// UsersAndGroups represents users or groups who has access.
+	UsersAndGroups UsersAndGroupsSearchResultSet
+	// UsersV2 represents [PREVIEW] Search users with a given permission.
+	UsersV2 Users
+	// Groups represents groups with assigned roles.
+	Groups          []Group
+	StarredFields   []graphql.String
+	RecentQueriesV2 []RecentQuery
+	AutomaticSearch graphql.Boolean
+	// IsActionAllowed represents check if the current user is allowed to perform the given action on the view.
+	IsActionAllowed graphql.Boolean
+	// AllowedViewActions represents returns the all actions the user is allowed to perform on the view.
+	AllowedViewActions []ViewAction
+	// ViewerQueryPrefix represents the query prefix prepended to each search in this domain.
+	ViewerQueryPrefix graphql.String
+	// Tags represents all tags from all datasources.
+	Tags []graphql.String
+	// Interactions represents all interactions defined on the view.
+	Interactions []ViewInteraction
+	// Alert represents a saved alert.
+	Alert Alert
+	// Alerts represents saved alerts.
+	Alerts []Alert
+	// Dashboard represents a saved dashboard.
+	Dashboard Dashboard
+	// Dashboards represents all dashboards available on the view.
+	Dashboards []Dashboard
+	// FilterAlert represents a saved filter alert.
+	FilterAlert FilterAlert
+	// FilterAlerts represents saved filter alerts.
+	FilterAlerts []FilterAlert
+	// AggregateAlert represents [PREVIEW: Experimental feature, not ready for production.] A saved aggregate alert.
+	AggregateAlert AggregateAlert
+	// AggregateAlerts represents [PREVIEW: Experimental feature, not ready for production.] Saved aggregate alerts.
+	AggregateAlerts []AggregateAlert
+	// ScheduledSearch represents a saved scheduled search.
+	ScheduledSearch ScheduledSearch
+	// ScheduledSearches represents saved scheduled searches.
+	ScheduledSearches []ScheduledSearch
+	// Action represents a saved action.
+	Action Action
+	// Actions represents a list of saved actions.
+	Actions []Action
+	// SavedQuery represents a saved query.
+	SavedQuery SavedQuery
+	// SavedQueries represents saved queries.
+	SavedQueries    []SavedQuery
+	DefaultQuery    *SavedQuery
+	Files           []File
+	FileFieldSearch [][]DictionaryEntryType
+	// ScheduledReports represents [PREVIEW: ScheduledReports are under development] Saved scheduled reports.
+	ScheduledReports []ScheduledReport
+	// ScheduledReport represents [PREVIEW: ScheduledReports are under development] Saved scheduled report.
+	ScheduledReport *ScheduledReport
 }
 
 // View represents represents information about a view, pulling data from one or several repositories.
 type View struct {
 	SearchDomain
-	Connections             []ViewConnection
-	CrossOrgConnections     []CrossOrgViewConnection
-	ClusterConnections      []ClusterConnection
-	ClusterConnection       ClusterConnection
+	Connections         []ViewConnection
+	CrossOrgConnections []CrossOrgViewConnection
+	// ClusterConnections represents [PREVIEW: Experimental feature, not ready for production.] Cluster connections.
+	ClusterConnections []ClusterConnection
+	// ClusterConnection represents a specific connection.
+	ClusterConnection ClusterConnection
+	// CheckClusterConnections represents [PREVIEW: Experimental feature, not ready for production.] Check all this search domain's cluster connections.
 	CheckClusterConnections []ClusterConnectionStatus
-	IsFederated             graphql.Boolean
-	ID                      graphql.String
-	Name                    RepoOrViewName
-	Description             *graphql.String
-	DeletedDate             *Long
-	PermanentlyDeletedAt    *Long
-	IsStarred               graphql.Boolean
-	PackageV2               Package2
-	PackageVersions         []RegistryPackageVersionInfo
-	AvailablePackages       []PackageRegistrySearchResultItem
-	InstalledPackages       []PackageInstallation
-	HasPackageInstalled     graphql.Boolean
-	Users                   []User
-	UsersAndGroups          UsersAndGroupsSearchResultSet
-	UsersV2                 Users
-	Groups                  []Group
-	StarredFields           []graphql.String
-	RecentQueriesV2         []RecentQuery
-	AutomaticSearch         graphql.Boolean
-	IsActionAllowed         graphql.Boolean
-	AllowedViewActions      []ViewAction
-	ViewerQueryPrefix       graphql.String
-	Tags                    []graphql.String
-	Interactions            []ViewInteraction
-	Alert                   Alert
-	Alerts                  []Alert
-	Dashboard               Dashboard
-	Dashboards              []Dashboard
-	FilterAlert             FilterAlert
-	FilterAlerts            []FilterAlert
-	AggregateAlert          AggregateAlert
-	AggregateAlerts         []AggregateAlert
-	ScheduledSearch         ScheduledSearch
-	ScheduledSearches       []ScheduledSearch
-	Action                  Action
-	Actions                 []Action
-	SavedQuery              SavedQuery
-	SavedQueries            []SavedQuery
-	DefaultQuery            *SavedQuery
-	Files                   []File
-	ScheduledReports        []ScheduledReport
-	ScheduledReport         *ScheduledReport
+	// IsFederated represents [PREVIEW: Experimental feature, not ready for production.] True if the view is federated, false otherwise.
+	IsFederated graphql.Boolean
+	ID          graphql.String
+	Name        RepoOrViewName
+	Description *graphql.String
+	// DeletedDate represents the point in time the search domain was marked for deletion.
+	DeletedDate *Long
+	// PermanentlyDeletedAt represents the point in time the search domain will not be restorable anymore.
+	PermanentlyDeletedAt *Long
+	IsStarred            graphql.Boolean
+	// PackageV2 represents returns a specific version of a package given a package version.
+	PackageV2 Package2
+	// PackageVersions represents [PREVIEW: This may be moved to the Package2 object.] The available versions of a package.
+	PackageVersions []RegistryPackageVersionInfo
+	// AvailablePackages represents returns a list of available packages that can be installed.
+	AvailablePackages []PackageRegistrySearchResultItem
+	// InstalledPackages represents list packages installed on a specific view or repo.
+	InstalledPackages   []PackageInstallation
+	HasPackageInstalled graphql.Boolean
+	// Users represents users who has access.
+	Users []User
+	// UsersAndGroups represents users or groups who has access.
+	UsersAndGroups UsersAndGroupsSearchResultSet
+	// UsersV2 represents [PREVIEW] Search users with a given permission.
+	UsersV2 Users
+	// Groups represents groups with assigned roles.
+	Groups          []Group
+	StarredFields   []graphql.String
+	RecentQueriesV2 []RecentQuery
+	AutomaticSearch graphql.Boolean
+	// IsActionAllowed represents check if the current user is allowed to perform the given action on the view.
+	IsActionAllowed graphql.Boolean
+	// AllowedViewActions represents returns the all actions the user is allowed to perform on the view.
+	AllowedViewActions []ViewAction
+	// ViewerQueryPrefix represents the query prefix prepended to each search in this domain.
+	ViewerQueryPrefix graphql.String
+	// Tags represents all tags from all datasources.
+	Tags []graphql.String
+	// Interactions represents all interactions defined on the view.
+	Interactions []ViewInteraction
+	// Alert represents a saved alert.
+	Alert Alert
+	// Alerts represents saved alerts.
+	Alerts []Alert
+	// Dashboard represents a saved dashboard.
+	Dashboard Dashboard
+	// Dashboards represents all dashboards available on the view.
+	Dashboards []Dashboard
+	// FilterAlert represents a saved filter alert.
+	FilterAlert FilterAlert
+	// FilterAlerts represents saved filter alerts.
+	FilterAlerts []FilterAlert
+	// AggregateAlert represents [PREVIEW: Experimental feature, not ready for production.] A saved aggregate alert.
+	AggregateAlert AggregateAlert
+	// AggregateAlerts represents [PREVIEW: Experimental feature, not ready for production.] Saved aggregate alerts.
+	AggregateAlerts []AggregateAlert
+	// ScheduledSearch represents a saved scheduled search.
+	ScheduledSearch ScheduledSearch
+	// ScheduledSearches represents saved scheduled searches.
+	ScheduledSearches []ScheduledSearch
+	// Action represents a saved action.
+	Action Action
+	// Actions represents a list of saved actions.
+	Actions []Action
+	// SavedQuery represents a saved query.
+	SavedQuery SavedQuery
+	// SavedQueries represents saved queries.
+	SavedQueries    []SavedQuery
+	DefaultQuery    *SavedQuery
+	Files           []File
+	FileFieldSearch [][]DictionaryEntryType
+	// ScheduledReports represents [PREVIEW: ScheduledReports are under development] Saved scheduled reports.
+	ScheduledReports []ScheduledReport
+	// ScheduledReport represents [PREVIEW: ScheduledReports are under development] Saved scheduled report.
+	ScheduledReport *ScheduledReport
 }
 
 // Token represents a token.
@@ -675,49 +947,77 @@ type Token struct {
 // OrganizationPermissionsToken represents organization permissions token. The token allows the caller to work with organization-level permissions.
 type OrganizationPermissionsToken struct {
 	Token
+	// Permissions represents the set of permissions on the token.
 	Permissions []graphql.String
-	ID          graphql.String
-	Name        graphql.String
-	ExpireAt    *Long
-	IPFilter    *graphql.String
-	IPFilterV2  *IPFilter
-	CreatedAt   Long
+	// ID represents the id of the token.
+	ID graphql.String
+	// Name represents the name of the token.
+	Name graphql.String
+	// ExpireAt represents the time at which the token expires.
+	ExpireAt *Long
+	// IPFilter represents the ip filter on the token.
+	IPFilter *graphql.String
+	// IPFilterV2 represents the ip filter on the token.
+	IPFilterV2 *IPFilter
+	// CreatedAt represents the date the token was created.
+	CreatedAt Long
 }
 
 // SystemPermissionsToken represents system permissions token. The token allows the caller to work with system-level permissions.
 type SystemPermissionsToken struct {
 	Token
+	// Permissions represents the set of permissions on the token.
 	Permissions []graphql.String
-	ID          graphql.String
-	Name        graphql.String
-	ExpireAt    *Long
-	IPFilter    *graphql.String
-	IPFilterV2  *IPFilter
-	CreatedAt   Long
+	// ID represents the id of the token.
+	ID graphql.String
+	// Name represents the name of the token.
+	Name graphql.String
+	// ExpireAt represents the time at which the token expires.
+	ExpireAt *Long
+	// IPFilter represents the ip filter on the token.
+	IPFilter *graphql.String
+	// IPFilterV2 represents the ip filter on the token.
+	IPFilterV2 *IPFilter
+	// CreatedAt represents the date the token was created.
+	CreatedAt Long
 }
 
 // ViewPermissionsToken represents view permissions token. The token allows the caller to work with the same set of view-level permissions across multiple views.
 type ViewPermissionsToken struct {
 	Token
+	// Permissions represents the set of permissions on the token.
 	Permissions []graphql.String
-	Views       []SearchDomain
-	ID          graphql.String
-	Name        graphql.String
-	ExpireAt    *Long
-	IPFilter    *graphql.String
-	IPFilterV2  *IPFilter
-	CreatedAt   Long
+	// Views represents the set of views on the token. Will only list the views the user has access to.
+	Views []SearchDomain
+	// ID represents the id of the token.
+	ID graphql.String
+	// Name represents the name of the token.
+	Name graphql.String
+	// ExpireAt represents the time at which the token expires.
+	ExpireAt *Long
+	// IPFilter represents the ip filter on the token.
+	IPFilter *graphql.String
+	// IPFilterV2 represents the ip filter on the token.
+	IPFilterV2 *IPFilter
+	// CreatedAt represents the date the token was created.
+	CreatedAt Long
 }
 
 // PersonalUserToken represents personal token for a user. The token will inherit the same permissions as the user.
 type PersonalUserToken struct {
 	Token
-	ID         graphql.String
-	Name       graphql.String
-	ExpireAt   *Long
-	IPFilter   *graphql.String
+	// ID represents the id of the token.
+	ID graphql.String
+	// Name represents the name of the token.
+	Name graphql.String
+	// ExpireAt represents the time at which the token expires.
+	ExpireAt *Long
+	// IPFilter represents the ip filter on the token.
+	IPFilter *graphql.String
+	// IPFilterV2 represents the ip filter on the token.
 	IPFilterV2 *IPFilter
-	CreatedAt  Long
+	// CreatedAt represents the date the token was created.
+	CreatedAt Long
 }
 
 // Widget represents a dashboard widget.
@@ -762,12 +1062,14 @@ type NoteWidget struct {
 // QueryBasedWidget represents a widget with a visualization of a query result.
 type QueryBasedWidget struct {
 	Widget
-	QueryString  graphql.String
-	Start        graphql.String
-	End          graphql.String
-	IsLive       graphql.Boolean
-	WidgetType   graphql.String
-	Options      *JSON
+	QueryString graphql.String
+	Start       graphql.String
+	End         graphql.String
+	IsLive      graphql.Boolean
+	WidgetType  graphql.String
+	// Options represents an optional JSON value containing styling and other settings for the widget. This is solely used by the UI.
+	Options *JSON
+	// Interactions represents [PREVIEW: Widget based interaction feature is under preview.].
 	Interactions []QueryBasedWidgetInteraction
 	ID           graphql.String
 	Title        graphql.String
