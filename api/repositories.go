@@ -2,8 +2,10 @@ package api
 
 import (
 	"fmt"
-	graphql "github.com/cli/shurcooL-graphql"
 	"strings"
+
+	graphql "github.com/cli/shurcooL-graphql"
+	"github.com/humio/cli/api/internal/humiographql"
 )
 
 type Repositories struct {
@@ -11,13 +13,14 @@ type Repositories struct {
 }
 
 type Repository struct {
-	ID                     string
-	Name                   string
-	Description            string
-	RetentionDays          float64 `graphql:"timeBasedRetention"`
-	IngestRetentionSizeGB  float64 `graphql:"ingestSizeBasedRetention"`
-	StorageRetentionSizeGB float64 `graphql:"storageSizeBasedRetention"`
-	SpaceUsed              int64   `graphql:"compressedByteSize"`
+	ID                       string
+	Name                     string
+	Description              string
+	RetentionDays            float64                      `graphql:"timeBasedRetention"`
+	IngestRetentionSizeGB    float64                      `graphql:"ingestSizeBasedRetention"`
+	StorageRetentionSizeGB   float64                      `graphql:"storageSizeBasedRetention"`
+	SpaceUsed                int64                        `graphql:"compressedByteSize"`
+	S3ArchivingConfiguration humiographql.S3Configuration `graphql:"s3ArchivingConfiguration"`
 }
 
 func (c *Client) Repositories() *Repositories { return &Repositories{client: c} }
@@ -238,6 +241,90 @@ func (r *Repositories) UpdateDescription(name, description string) error {
 	variables := map[string]interface{}{
 		"name":        graphql.String(name),
 		"description": graphql.String(description),
+	}
+
+	return r.client.Mutate(&mutation, variables)
+}
+
+func (r *Repositories) EnableS3Archiving(name string) error {
+	existingRepo, err := r.Get(name)
+	if err != nil {
+		return err
+	}
+
+	if existingRepo.S3ArchivingConfiguration.IsConfigured() == false {
+		return fmt.Errorf("repository has no configuration for S3 archiving")
+	}
+
+	var mutation struct {
+		S3EnableArchiving struct {
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
+		} `graphql:"s3EnableArchiving(repositoryName: $name)"`
+	}
+
+	variables := map[string]interface{}{
+		"name": graphql.String(name),
+	}
+
+	return r.client.Mutate(&mutation, variables)
+}
+
+func (r *Repositories) DisableS3Archiving(name string) error {
+	existingRepo, err := r.Get(name)
+	if err != nil {
+		return err
+	}
+
+	if existingRepo.S3ArchivingConfiguration.IsConfigured() == false {
+		return fmt.Errorf("repository has no configuration for S3 archiving")
+	}
+
+	var mutation struct {
+		S3DisableArchiving struct {
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
+		} `graphql:"s3DisableArchiving(repositoryName: $name)"`
+	}
+
+	variables := map[string]interface{}{
+		"name": graphql.String(name),
+	}
+
+	return r.client.Mutate(&mutation, variables)
+}
+
+func (r *Repositories) UpdateS3ArchivingConfiguration(name string, bucket string, region string, format string) error {
+	_, err := r.Get(name)
+	if err != nil {
+		return err
+	}
+
+	if bucket == "" {
+		return fmt.Errorf("bucket name cannot have an empty value")
+	}
+
+	if region == "" {
+		return fmt.Errorf("region cannot have an empty value")
+	}
+
+	archivingFormat, ferr := humiographql.NewS3ArchivingFormat(format)
+	if ferr != nil {
+		return ferr
+	}
+
+	var mutation struct {
+		S3ConfigureArchiving struct {
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
+		} `graphql:"s3ConfigureArchiving(repositoryName: $name, bucket: $bucket, region: $region, format: $format)"`
+	}
+
+	variables := map[string]interface{}{
+		"name":   graphql.String(name),
+		"bucket": graphql.String(bucket),
+		"region": graphql.String(region),
+		"format": archivingFormat,
 	}
 
 	return r.client.Mutate(&mutation, variables)

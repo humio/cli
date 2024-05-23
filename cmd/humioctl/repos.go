@@ -45,6 +45,10 @@ func printRepoDetailsTable(cmd *cobra.Command, repo api.Repository) {
 		{format.String("Ingest Retention (Size)"), ByteCountDecimal(repo.IngestRetentionSizeGB * 1e9)},
 		{format.String("Storage Retention (Size)"), ByteCountDecimal(repo.StorageRetentionSizeGB * 1e9)},
 		{format.String("Retention (Days)"), format.Int(repo.RetentionDays)},
+		{format.String("S3 Archiving Enabled"), format.Bool(repo.S3ArchivingConfiguration.IsEnabled())},
+		{format.String("S3 Archiving Bucket"), format.String(repo.S3ArchivingConfiguration.Bucket)},
+		{format.String("S3 Archiving Region"), format.String(repo.S3ArchivingConfiguration.Region)},
+		{format.String("S3 Archiving Format"), format.String(repo.S3ArchivingConfiguration.Format)},
 	}
 
 	printDetailsTable(cmd, details)
