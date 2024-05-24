@@ -34,7 +34,7 @@ func newReposUpdateCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			if descriptionFlag.value == nil && retentionTimeFlag.value == nil && ingestSizeBasedRetentionFlag.value == nil && storageSizeBasedRetentionFlag.value == nil &&
-				enableS3ArchivingFlag == false && disableS3ArchivingFlag == false && s3ArchivingBucketFlag.value == nil && s3ArchivingRegionFlag.value == nil && s3ArchivingFormatFlag.value == nil {
+				!enableS3ArchivingFlag && !disableS3ArchivingFlag && s3ArchivingBucketFlag.value == nil && s3ArchivingRegionFlag.value == nil && s3ArchivingFormatFlag.value == nil {
 				exitOnError(cmd, fmt.Errorf("you must specify at least one flag to update"), "Nothing specified to update")
 			}
 			if descriptionFlag.value != nil {
@@ -59,12 +59,12 @@ func newReposUpdateCmd() *cobra.Command {
 				exitOnError(cmd, err, "Error updating S3 archiving configuration")
 			}
 
-			if disableS3ArchivingFlag == true {
+			if disableS3ArchivingFlag {
 				err := client.Repositories().DisableS3Archiving(repoName)
 				exitOnError(cmd, err, "Error disabling S3 archiving")
 			}
 
-			if enableS3ArchivingFlag == true {
+			if enableS3ArchivingFlag {
 				err := client.Repositories().EnableS3Archiving(repoName)
 				exitOnError(cmd, err, "Error enabling S3 archiving")
 			}

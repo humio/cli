@@ -252,7 +252,7 @@ func (r *Repositories) EnableS3Archiving(name string) error {
 		return err
 	}
 
-	if existingRepo.S3ArchivingConfiguration.IsConfigured() == false {
+	if !existingRepo.S3ArchivingConfiguration.IsConfigured() {
 		return fmt.Errorf("repository has no configuration for S3 archiving")
 	}
 
@@ -276,7 +276,7 @@ func (r *Repositories) DisableS3Archiving(name string) error {
 		return err
 	}
 
-	if existingRepo.S3ArchivingConfiguration.IsConfigured() == false {
+	if !existingRepo.S3ArchivingConfiguration.IsConfigured() {
 		return fmt.Errorf("repository has no configuration for S3 archiving")
 	}
 

@@ -15,7 +15,7 @@ type S3Configuration struct {
 // IsEnabled - determine if S3Configuration is enabled based on values and the Disabled field
 // to avoid a bool defaulting to false
 func (s *S3Configuration) IsEnabled() bool {
-	if s.IsConfigured() == false {
+	if !s.IsConfigured() {
 		return false
 	}
 	return !s.Disabled
