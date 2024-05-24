@@ -34,7 +34,7 @@ func newReposUpdateCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			if descriptionFlag.value == nil && retentionTimeFlag.value == nil && ingestSizeBasedRetentionFlag.value == nil && storageSizeBasedRetentionFlag.value == nil &&
-				s3ArchivingBucketFlag.value == nil && s3ArchivingRegionFlag.value == nil && s3ArchivingFormatFlag.value == nil {
+				enableS3ArchivingFlag == false && disableS3ArchivingFlag == false && s3ArchivingBucketFlag.value == nil && s3ArchivingRegionFlag.value == nil && s3ArchivingFormatFlag.value == nil {
 				exitOnError(cmd, fmt.Errorf("you must specify at least one flag to update"), "Nothing specified to update")
 			}
 			if descriptionFlag.value != nil {
