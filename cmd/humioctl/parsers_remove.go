@@ -30,7 +30,7 @@ func newParsersRemoveCmd() *cobra.Command {
 			parser := args[1]
 			client := NewApiClient(cmd)
 
-			err := client.Parsers().Remove(repo, parser)
+			err := client.Parsers().Delete(repo, parser)
 			exitOnError(cmd, err, "Error removing parser")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully removed parser %q from repository %q\n", parser, repo)

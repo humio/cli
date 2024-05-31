@@ -25,7 +25,7 @@ import (
 )
 
 func newParsersInstallCmd() *cobra.Command {
-	var force bool
+	var allowOverwritingExistingParser bool
 	var filePath, url, name string
 
 	cmd := cobra.Command{
@@ -70,12 +70,12 @@ Use the --force flag to update existing parsers with conflicting names.
 				parser.Name = name
 			}
 
-			err = client.Parsers().Add(repositoryName, &parser, force)
+			_, err = client.Parsers().Add(repositoryName, &parser, allowOverwritingExistingParser)
 			exitOnError(cmd, err, "Error installing parser")
 		},
 	}
 
-	cmd.Flags().BoolVarP(&force, "force", "f", false, "Overrides any parser with the same name. This can be used for updating parser that are already installed. (See --name)")
+	cmd.Flags().BoolVar(&allowOverwritingExistingParser, "allow-overwriting-existing-parser", false, "Overrides any parser with the same name. This can be used for updating parser that are already installed. (See --name)")
 	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the parser to install.")
 	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the parser file from.")
 	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the parser under a specific name, ignoring the `name` attribute in the parser file.")

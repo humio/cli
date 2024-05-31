@@ -3,6 +3,7 @@ module github.com/humio/cli
 go 1.22
 
 require (
+	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/cli/shurcooL-graphql v0.0.4
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/hpcloud/tail v1.0.0
