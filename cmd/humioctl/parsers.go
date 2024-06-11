@@ -28,6 +28,7 @@ func newParsersCmd() *cobra.Command {
 	cmd.AddCommand(newParsersListCmd())
 	cmd.AddCommand(newParsersRemoveCmd())
 	cmd.AddCommand(newParsersExportCmd())
+	cmd.AddCommand(newParsersShowCmd())
 
 	return cmd
 }

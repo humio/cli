@@ -1,6 +1,8 @@
 package humiographql
 
-import graphql "github.com/cli/shurcooL-graphql"
+import (
+	graphql "github.com/cli/shurcooL-graphql"
+)
 
 type FilterAlert struct {
 	ID             graphql.String   `graphql:"id"`

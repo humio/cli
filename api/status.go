@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
+
+	"github.com/Masterminds/semver/v3"
 )
 
 type StatusResponse struct {
@@ -14,6 +17,21 @@ type StatusResponse struct {
 
 func (s StatusResponse) IsDown() bool {
 	return s.Status != "OK" && s.Status != "WARN"
+}
+
+func (s StatusResponse) AtLeast(ver string) (bool, error) {
+	assumeLatest := true
+	version := strings.Split(s.Version, "-")
+	constraint, err := semver.NewConstraint(fmt.Sprintf(">= %s", ver))
+	if err != nil {
+		return assumeLatest, fmt.Errorf("could not parse constraint of `%s`: %w", fmt.Sprintf(">= %s", ver), err)
+	}
+	semverVersion, err := semver.NewVersion(version[0])
+	if err != nil {
+		return assumeLatest, fmt.Errorf("could not parse version of `%s`: %w", version[0], err)
+	}
+
+	return constraint.Check(semverVersion), nil
 }
 
 func (c *Client) Status() (*StatusResponse, error) {
