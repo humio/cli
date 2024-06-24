@@ -21,7 +21,7 @@ import (
 )
 
 func newReposUpdateCmd() *cobra.Command {
-	var allowDataDeletionFlag, enableS3ArchivingFlag, disableS3ArchivingFlag bool
+	var allowDataDeletionFlag, enableS3ArchivingFlag, disableS3ArchivingFlag, enableAutomaticSearchFlag, disableAutomaticSearchFlag bool
 	var descriptionFlag, s3ArchivingBucketFlag, s3ArchivingRegionFlag, s3ArchivingFormatFlag stringPtrFlag
 	var retentionTimeFlag, ingestSizeBasedRetentionFlag, storageSizeBasedRetentionFlag float64PtrFlag
 
@@ -34,7 +34,8 @@ func newReposUpdateCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			if descriptionFlag.value == nil && retentionTimeFlag.value == nil && ingestSizeBasedRetentionFlag.value == nil && storageSizeBasedRetentionFlag.value == nil &&
-				!enableS3ArchivingFlag && !disableS3ArchivingFlag && s3ArchivingBucketFlag.value == nil && s3ArchivingRegionFlag.value == nil && s3ArchivingFormatFlag.value == nil {
+				!enableS3ArchivingFlag && !disableS3ArchivingFlag && s3ArchivingBucketFlag.value == nil && s3ArchivingRegionFlag.value == nil && s3ArchivingFormatFlag.value == nil &&
+				!enableAutomaticSearchFlag && !disableAutomaticSearchFlag {
 				exitOnError(cmd, fmt.Errorf("you must specify at least one flag to update"), "Nothing specified to update")
 			}
 			if descriptionFlag.value != nil {
@@ -69,6 +70,15 @@ func newReposUpdateCmd() *cobra.Command {
 				exitOnError(cmd, err, "Error enabling S3 archiving")
 			}
 
+			if disableAutomaticSearchFlag {
+				err := client.Repositories().UpdateAutomaticSearch(repoName, false)
+				exitOnError(cmd, err, "Error disabling automatic search")
+			}
+			if enableAutomaticSearchFlag {
+				err := client.Repositories().UpdateAutomaticSearch(repoName, true)
+				exitOnError(cmd, err, "Error enabling automatic search")
+			}
+
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully updated repository %q\n", repoName)
 		},
 	}
@@ -85,6 +95,9 @@ func newReposUpdateCmd() *cobra.Command {
 	cmd.Flags().Var(&s3ArchivingFormatFlag, "s3-archiving-format", "The S3 archiving format to be used for S3 Archiving. Formats: RAW, NDJSON")
 	cmd.MarkFlagsRequiredTogether("s3-archiving-bucket", "s3-archiving-region", "s3-archiving-format")
 	cmd.MarkFlagsMutuallyExclusive("enable-s3-archiving", "disable-s3-archiving")
+	cmd.Flags().BoolVar(&enableAutomaticSearchFlag, "enable-automatic-search", false, "Enable automatic search for the repository.")
+	cmd.Flags().BoolVar(&disableAutomaticSearchFlag, "disable-automatic-search", false, "Disable automatic search for the repository.")
+	cmd.MarkFlagsMutuallyExclusive("enable-automatic-search", "disable-automatic-search")
 
 	return &cmd
 }

@@ -37,14 +37,16 @@ func newViewsListCmd() *cobra.Command {
 			for i, view := range views {
 				if viewOnly {
 					if view.Typename == viewTypeName {
-						rows[i] = []format.Value{format.String(view.Name)}
+						rows[i] = []format.Value{format.String(view.Name),
+							format.Bool(view.AutomaticSearch)}
 					}
 				} else {
-					rows[i] = []format.Value{format.String(view.Name)}
+					rows[i] = []format.Value{format.String(view.Name),
+						format.Bool(view.AutomaticSearch)}
 				}
 			}
 
-			printOverviewTable(cmd, []string{"Name"}, rows)
+			printOverviewTable(cmd, []string{"Name", "Automatic Search"}, rows)
 		},
 	}
 

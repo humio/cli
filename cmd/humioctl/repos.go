@@ -49,6 +49,7 @@ func printRepoDetailsTable(cmd *cobra.Command, repo api.Repository) {
 		{format.String("S3 Archiving Bucket"), format.String(repo.S3ArchivingConfiguration.Bucket)},
 		{format.String("S3 Archiving Region"), format.String(repo.S3ArchivingConfiguration.Region)},
 		{format.String("S3 Archiving Format"), format.String(repo.S3ArchivingConfiguration.Format)},
+		{format.String("Automatic Search"), format.Bool(repo.AutomaticSearch)},
 	}
 
 	printDetailsTable(cmd, details)
