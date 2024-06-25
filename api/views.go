@@ -17,9 +17,10 @@ type ViewConnection struct {
 }
 
 type ViewQueryData struct {
-	Name        string
-	Description string
-	ViewInfo    struct {
+	Name            string
+	Description     string
+	AutomaticSearch bool
+	ViewInfo        struct {
 		Connections []struct {
 			Repository struct{ Name string }
 			Filter     string
@@ -28,9 +29,10 @@ type ViewQueryData struct {
 }
 
 type View struct {
-	Name        string
-	Description string
-	Connections []ViewConnection
+	Name            string
+	Description     string
+	Connections     []ViewConnection
+	AutomaticSearch bool
 }
 
 func (c *Client) Views() *Views { return &Views{client: c} }
@@ -58,17 +60,19 @@ func (c *Views) Get(name string) (*View, error) {
 	}
 
 	view := View{
-		Name:        query.Result.Name,
-		Description: query.Result.Description,
-		Connections: connections,
+		Name:            query.Result.Name,
+		Description:     query.Result.Description,
+		Connections:     connections,
+		AutomaticSearch: query.Result.AutomaticSearch,
 	}
 
 	return &view, nil
 }
 
 type ViewListItem struct {
-	Name     string
-	Typename string `graphql:"__typename"`
+	Name            string
+	Typename        string `graphql:"__typename"`
+	AutomaticSearch bool
 }
 
 func (c *Views) List() ([]ViewListItem, error) {
@@ -148,6 +152,22 @@ func (c *Views) UpdateDescription(name string, description string) error {
 	variables := map[string]interface{}{
 		"name":        graphql.String(name),
 		"description": graphql.String(description),
+	}
+
+	return c.client.Mutate(&mutation, variables)
+}
+
+func (c *Views) UpdateAutomaticSearch(name string, automaticSearch bool) error {
+	var mutation struct {
+		SetAutomaticSearching struct {
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
+		} `graphql:"setAutomaticSearching(name: $name, automaticSearch: $automaticSearch)"`
+	}
+
+	variables := map[string]interface{}{
+		"name":            graphql.String(name),
+		"automaticSearch": graphql.Boolean(automaticSearch),
 	}
 
 	return c.client.Mutate(&mutation, variables)

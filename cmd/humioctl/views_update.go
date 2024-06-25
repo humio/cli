@@ -25,6 +25,8 @@ import (
 )
 
 func newViewsUpdateCmd() *cobra.Command {
+	var enableAutomaticSearchFlag, disableAutomaticSearchFlag bool
+
 	connsFlag := []string{}
 	connections := []api.ViewConnectionInput{}
 	description := ""
@@ -47,7 +49,7 @@ namely "repo1" and "repo2":
 			viewName := args[0]
 			client := NewApiClient(cmd)
 
-			if len(connsFlag) == 0 && description == "" {
+			if len(connsFlag) == 0 && description == "" && !enableAutomaticSearchFlag && !disableAutomaticSearchFlag {
 				exitOnError(cmd, fmt.Errorf("you must specify at least one flag"), "Nothing specified to update")
 			}
 
@@ -77,12 +79,24 @@ namely "repo1" and "repo2":
 				exitOnError(cmd, err, "Error updating view description")
 			}
 
+			if disableAutomaticSearchFlag {
+				err := client.Views().UpdateAutomaticSearch(viewName, false)
+				exitOnError(cmd, err, "Error disabling automatic search")
+			}
+			if enableAutomaticSearchFlag {
+				err := client.Views().UpdateAutomaticSearch(viewName, true)
+				exitOnError(cmd, err, "Error enabling automatic search")
+			}
+
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully updated view %q\n", viewName)
 		},
 	}
 
 	cmd.Flags().StringArrayVar(&connsFlag, "connection", connsFlag, "Sets a repository connection with the chosen filter in format: <repoName>=<filterString>")
 	cmd.Flags().StringVar(&description, "description", description, "Sets the view description.")
+	cmd.Flags().BoolVar(&enableAutomaticSearchFlag, "enable-automatic-search", false, "Enable automatic search for the view.")
+	cmd.Flags().BoolVar(&disableAutomaticSearchFlag, "disable-automatic-search", false, "Disable automatic search for the view.")
+	cmd.MarkFlagsMutuallyExclusive("enable-automatic-search", "disable-automatic-search")
 
 	return &cmd
 }

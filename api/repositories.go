@@ -21,6 +21,7 @@ type Repository struct {
 	StorageRetentionSizeGB   float64                      `graphql:"storageSizeBasedRetention"`
 	SpaceUsed                int64                        `graphql:"compressedByteSize"`
 	S3ArchivingConfiguration humiographql.S3Configuration `graphql:"s3ArchivingConfiguration"`
+	AutomaticSearch          bool                         `graphql:"automaticSearch"`
 }
 
 func (c *Client) Repositories() *Repositories { return &Repositories{client: c} }
@@ -325,6 +326,22 @@ func (r *Repositories) UpdateS3ArchivingConfiguration(name string, bucket string
 		"bucket": graphql.String(bucket),
 		"region": graphql.String(region),
 		"format": archivingFormat,
+	}
+
+	return r.client.Mutate(&mutation, variables)
+}
+
+func (r *Repositories) UpdateAutomaticSearch(name string, automaticSearch bool) error {
+	var mutation struct {
+		SetAutomaticSearching struct {
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
+		} `graphql:"setAutomaticSearching(name: $name, automaticSearch: $automaticSearch)"`
+	}
+
+	variables := map[string]interface{}{
+		"name":            graphql.String(name),
+		"automaticSearch": graphql.Boolean(automaticSearch),
 	}
 
 	return r.client.Mutate(&mutation, variables)
