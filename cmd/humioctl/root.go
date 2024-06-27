@@ -122,6 +122,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newActionsCmd())
 	rootCmd.AddCommand(newAlertsCmd())
 	rootCmd.AddCommand(newFilterAlertsCmd())
+	rootCmd.AddCommand(newScheduledSearchesCmd())
 	rootCmd.AddCommand(newPackagesCmd())
 	rootCmd.AddCommand(newGroupsCmd())
 	rootCmd.AddCommand(newFilesCmd())
