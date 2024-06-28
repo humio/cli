@@ -17,9 +17,7 @@ type Alert struct {
 	Labels             []graphql.String `graphql:"labels"`
 	LastError          graphql.String   `graphql:"lastError"`
 	QueryOwnership     QueryOwnership   `graphql:"queryOwnership"`
-	RunAsUser          struct {
-		ID graphql.String `graphql:"id"`
-	} `graphql:"runAsUser"`
+	RunAsUser          User             `graphql:"runAsUser"`
 }
 
 type CreateAlert struct {
