@@ -43,12 +43,14 @@ func newFilterAlertsListCmd() *cobra.Command {
 					format.String(filterAlert.Description),
 					format.String(strings.Join(filterAlert.ActionNames, ", ")),
 					format.String(strings.Join(filterAlert.Labels, ", ")),
+					format.Int(filterAlert.ThrottleTimeSeconds),
+					format.String(filterAlert.ThrottleField),
 					format.String(filterAlert.RunAsUserID),
 					format.String(filterAlert.QueryOwnershipType),
 				}
 			}
 
-			printOverviewTable(cmd, []string{"ID", "Name", "Enabled", "Description", "Actions", "Labels", "Run As User ID", "Query Ownership Type"}, rows)
+			printOverviewTable(cmd, []string{"ID", "Name", "Enabled", "Description", "Actions", "Labels", "Throttle Time Seconds", "Throttle Field", "Run As User ID", "Query Ownership Type"}, rows)
 		},
 	}
 
