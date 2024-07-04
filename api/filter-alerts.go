@@ -7,15 +7,17 @@ import (
 )
 
 type FilterAlert struct {
-	ID                 string   `graphql:"id"             yaml:"-"                       json:"id"`
-	Name               string   `graphql:"name"           yaml:"name"                    json:"name"`
-	Description        string   `graphql:"description"    yaml:"description,omitempty"   json:"description,omitempty"`
-	QueryString        string   `graphql:"queryString"    yaml:"queryString"             json:"queryString"`
-	ActionNames        []string `graphql:"actionNames"    yaml:"actionNames"             json:"actionNames"`
-	Labels             []string `graphql:"labels"         yaml:"labels"                  json:"labels"`
-	Enabled            bool     `graphql:"enabled"        yaml:"enabled"                 json:"enabled"`
-	QueryOwnershipType string   `graphql:"queryOwnership" yaml:"queryOwnershipType"      json:"queryOwnershipType"`
-	RunAsUserID        string   `graphql:"runAsUserId"    yaml:"runAsUserId,omitempty"   json:"runAsUserId,omitempty"`
+	ID                  string   `graphql:"id"                  yaml:"-"                              json:"id"`
+	Name                string   `graphql:"name"                yaml:"name"                          json:"name"`
+	Description         string   `graphql:"description"         yaml:"description,omitempty"         json:"description,omitempty"`
+	QueryString         string   `graphql:"queryString"         yaml:"queryString"                   json:"queryString"`
+	ActionNames         []string `graphql:"actionNames"         yaml:"actionNames"                   json:"actionNames"`
+	Labels              []string `graphql:"labels"              yaml:"labels"                        json:"labels"`
+	Enabled             bool     `graphql:"enabled"             yaml:"enabled"                       json:"enabled"`
+	QueryOwnershipType  string   `graphql:"queryOwnership"      yaml:"queryOwnershipType"            json:"queryOwnershipType"`
+	ThrottleTimeSeconds int      `graphql:"throttleTimeSeconds" yaml:"throttleTimeSeconds,omitempty" json:"throttleTimeSeconds,omitempty"`
+	ThrottleField       string   `graphql:"throttleField"       yaml:"throttleField,omitempty"       json:"throttleField"`
+	RunAsUserID         string   `graphql:"runAsUserId"         yaml:"runAsUserId,omitempty"         json:"runAsUserId,omitempty"`
 }
 
 type FilterAlerts struct {
@@ -72,16 +74,18 @@ func (fa *FilterAlerts) Update(viewName string, updatedFilterAlert *FilterAlert)
 	}
 
 	updateAlert := humiographql.UpdateFilterAlert{
-		ViewName:           humiographql.RepoOrViewName(viewName),
-		ID:                 graphql.String(updatedFilterAlert.ID),
-		Name:               graphql.String(updatedFilterAlert.Name),
-		Description:        graphql.String(updatedFilterAlert.Description),
-		QueryString:        graphql.String(updatedFilterAlert.QueryString),
-		ActionIdsOrNames:   actionNames,
-		Labels:             labels,
-		Enabled:            graphql.Boolean(updatedFilterAlert.Enabled),
-		RunAsUserID:        graphql.String(updatedFilterAlert.RunAsUserID),
-		QueryOwnershipType: humiographql.QueryOwnershipType(updatedFilterAlert.QueryOwnershipType),
+		ViewName:            humiographql.RepoOrViewName(viewName),
+		ID:                  graphql.String(updatedFilterAlert.ID),
+		Name:                graphql.String(updatedFilterAlert.Name),
+		Description:         graphql.String(updatedFilterAlert.Description),
+		QueryString:         graphql.String(updatedFilterAlert.QueryString),
+		ActionIdsOrNames:    actionNames,
+		Labels:              labels,
+		Enabled:             graphql.Boolean(updatedFilterAlert.Enabled),
+		RunAsUserID:         graphql.String(updatedFilterAlert.RunAsUserID),
+		ThrottleTimeSeconds: humiographql.Long(updatedFilterAlert.ThrottleTimeSeconds),
+		ThrottleField:       graphql.String(updatedFilterAlert.ThrottleField),
+		QueryOwnershipType:  humiographql.QueryOwnershipType(updatedFilterAlert.QueryOwnershipType),
 	}
 
 	variables := map[string]any{
@@ -118,15 +122,17 @@ func (fa *FilterAlerts) Create(viewName string, newFilterAlert *FilterAlert) (*F
 	}
 
 	createFilterAlert := humiographql.CreateFilterAlert{
-		ViewName:           humiographql.RepoOrViewName(viewName),
-		Name:               graphql.String(newFilterAlert.Name),
-		Description:        graphql.String(newFilterAlert.Description),
-		QueryString:        graphql.String(newFilterAlert.QueryString),
-		ActionIdsOrNames:   actionNames,
-		Labels:             labels,
-		Enabled:            graphql.Boolean(newFilterAlert.Enabled),
-		RunAsUserID:        graphql.String(newFilterAlert.RunAsUserID),
-		QueryOwnershipType: humiographql.QueryOwnershipType(newFilterAlert.QueryOwnershipType),
+		ViewName:            humiographql.RepoOrViewName(viewName),
+		Name:                graphql.String(newFilterAlert.Name),
+		Description:         graphql.String(newFilterAlert.Description),
+		QueryString:         graphql.String(newFilterAlert.QueryString),
+		ActionIdsOrNames:    actionNames,
+		Labels:              labels,
+		Enabled:             graphql.Boolean(newFilterAlert.Enabled),
+		ThrottleTimeSeconds: humiographql.Long(newFilterAlert.ThrottleTimeSeconds),
+		ThrottleField:       graphql.String(newFilterAlert.ThrottleField),
+		RunAsUserID:         graphql.String(newFilterAlert.RunAsUserID),
+		QueryOwnershipType:  humiographql.QueryOwnershipType(newFilterAlert.QueryOwnershipType),
 	}
 
 	variables := map[string]any{
@@ -209,14 +215,16 @@ func mapHumioGraphqlFilterAlertToFilterAlert(input humiographql.FilterAlert) Fil
 	}
 
 	return FilterAlert{
-		ID:                 string(input.ID),
-		Name:               string(input.Name),
-		Description:        string(input.Description),
-		QueryString:        string(input.QueryString),
-		ActionNames:        actionNames,
-		Labels:             labels,
-		Enabled:            bool(input.Enabled),
-		QueryOwnershipType: queryOwnershipType,
-		RunAsUserID:        runAsUserID,
+		ID:                  string(input.ID),
+		Name:                string(input.Name),
+		Description:         string(input.Description),
+		QueryString:         string(input.QueryString),
+		ActionNames:         actionNames,
+		Labels:              labels,
+		Enabled:             bool(input.Enabled),
+		ThrottleTimeSeconds: int(input.ThrottleTimeSeconds),
+		ThrottleField:       string(input.ThrottleField),
+		QueryOwnershipType:  queryOwnershipType,
+		RunAsUserID:         runAsUserID,
 	}
 }
