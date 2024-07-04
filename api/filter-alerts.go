@@ -7,7 +7,7 @@ import (
 )
 
 type FilterAlert struct {
-	ID                  string   `graphql:"id"                  yaml:"-"                              json:"id"`
+	ID                  string   `graphql:"id"                  yaml:"-"                             json:"id"`
 	Name                string   `graphql:"name"                yaml:"name"                          json:"name"`
 	Description         string   `graphql:"description"         yaml:"description,omitempty"         json:"description,omitempty"`
 	QueryString         string   `graphql:"queryString"         yaml:"queryString"                   json:"queryString"`
