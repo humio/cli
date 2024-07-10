@@ -29,8 +29,8 @@ type CreateFilterAlert struct {
 	ActionIdsOrNames    []graphql.String   `json:"actionIdsOrNames"`
 	Labels              []graphql.String   `json:"labels"`
 	Enabled             graphql.Boolean    `json:"enabled"`
-	ThrottleTimeSeconds Long               `json:"throttleTimeSeconds"`
-	ThrottleField       graphql.String     `json:"throttleField"`
+	ThrottleTimeSeconds Long               `json:"throttleTimeSeconds,omitempty"`
+	ThrottleField       graphql.String     `json:"throttleField,omitempty"`
 	RunAsUserID         graphql.String     `json:"runAsUserId,omitempty"`
 	QueryOwnershipType  QueryOwnershipType `json:"queryOwnershipType"`
 }
@@ -44,8 +44,8 @@ type UpdateFilterAlert struct {
 	ActionIdsOrNames    []graphql.String   `json:"actionIdsOrNames"`
 	Labels              []graphql.String   `json:"labels"`
 	Enabled             graphql.Boolean    `json:"enabled"`
-	ThrottleTimeSeconds Long               `json:"throttleTimeSeconds"`
-	ThrottleField       graphql.String     `json:"throttleField"`
+	ThrottleTimeSeconds Long               `json:"throttleTimeSeconds,omitempty"`
+	ThrottleField       graphql.String     `json:"throttleField,omitempty"`
 	RunAsUserID         graphql.String     `json:"runAsUserId,omitempty"`
 	QueryOwnershipType  QueryOwnershipType `json:"queryOwnershipType"`
 }
