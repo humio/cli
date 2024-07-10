@@ -16,7 +16,7 @@ type FilterAlert struct {
 	Enabled             bool     `graphql:"enabled"             yaml:"enabled"                       json:"enabled"`
 	QueryOwnershipType  string   `graphql:"queryOwnership"      yaml:"queryOwnershipType"            json:"queryOwnershipType"`
 	ThrottleTimeSeconds int      `graphql:"throttleTimeSeconds" yaml:"throttleTimeSeconds,omitempty" json:"throttleTimeSeconds,omitempty"`
-	ThrottleField       string   `graphql:"throttleField"       yaml:"throttleField,omitempty"       json:"throttleField"`
+	ThrottleField       string   `graphql:"throttleField"       yaml:"throttleField,omitempty"       json:"throttleField,omitempty"`
 	RunAsUserID         string   `graphql:"runAsUserId"         yaml:"runAsUserId,omitempty"         json:"runAsUserId,omitempty"`
 }
 
