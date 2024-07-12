@@ -3,21 +3,20 @@ package humiographql
 import graphql "github.com/cli/shurcooL-graphql"
 
 type ScheduledSearch struct {
-	ID                         graphql.String   `json:"id"`
-	Name                       graphql.String   `json:"name"`
-	Description                graphql.String   `json:"description,omitempty"`
-	QueryString                graphql.String   `json:"queryString"`
-	Start                      graphql.String   `json:"start"`
-	End                        graphql.String   `json:"end"`
-	TimeZone                   graphql.String   `json:"timezone"`
-	Schedule                   graphql.String   `json:"schedule"`
-	BackfillLimit              graphql.Int      `json:"backfillLimit"`
-	Enabled                    graphql.Boolean  `json:"enabled"`
-	ActionsV2                  []Action         `json:"actionsV2"`
-	RunAsUser                  User             `json:"runAsUser,omitempty"`
-	TimeOfNextPlannedExecution Long             `json:"timeOfNextPlannedExecution"`
-	Labels                     []graphql.String `json:"labels"`
-	QueryOwnership             QueryOwnership   `json:"queryOwnership"`
+	ID             graphql.String   `graphql:"id"`
+	Name           graphql.String   `graphql:"name"`
+	Description    graphql.String   `graphql:"description"`
+	QueryString    graphql.String   `graphql:"queryString"`
+	Start          graphql.String   `graphql:"start"`
+	End            graphql.String   `graphql:"end"`
+	TimeZone       graphql.String   `graphql:"timeZone"`
+	Schedule       graphql.String   `graphql:"schedule"`
+	BackfillLimit  graphql.Int      `graphql:"backfillLimit"`
+	Enabled        graphql.Boolean  `graphql:"enabled"`
+	ActionsV2      []Action         `graphql:"actionsV2"`
+	RunAsUser      User             `graphql:"runAsUser"`
+	Labels         []graphql.String `graphql:"labels"`
+	QueryOwnership QueryOwnership   `graphql:"queryOwnership"`
 }
 
 type CreateScheduledSearch struct {
