@@ -41,7 +41,7 @@ func newAggregateAlertsExportCmd() *cobra.Command {
 			aggregateAlerts, err := client.AggregateAlerts().List(view)
 			exitOnError(cmd, err, "Could not list aggregate alerts")
 
-			var aggregateAlert api.AggregateAlert
+			var aggregateAlert *api.AggregateAlert
 			for _, fa := range aggregateAlerts {
 				if fa.Name == aggregateAlertName {
 					aggregateAlert = fa

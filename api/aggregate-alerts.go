@@ -29,7 +29,11 @@ type AggregateAlerts struct {
 
 func (c *Client) AggregateAlerts() *AggregateAlerts { return &AggregateAlerts{client: c} }
 
-func (a *AggregateAlerts) List(viewName string) ([]AggregateAlert, error) {
+func (a *AggregateAlerts) List(viewName string) ([]*AggregateAlert, error) {
+	if viewName == "" {
+		return nil, fmt.Errorf("viewName must not be empty")
+	}
+
 	var query struct {
 		SearchDomain struct {
 			AggregateAlerts []humiographql.AggregateAlert `graphql:"aggregateAlerts"`
@@ -45,15 +49,20 @@ func (a *AggregateAlerts) List(viewName string) ([]AggregateAlert, error) {
 		return nil, err
 	}
 
-	var aggregateAlerts = make([]AggregateAlert, len(query.SearchDomain.AggregateAlerts))
+	var aggregateAlerts = make([]*AggregateAlert, len(query.SearchDomain.AggregateAlerts))
 	for i := range query.SearchDomain.AggregateAlerts {
-		aggregateAlerts[i] = mapHumioGraphqlAggregateAlertToAggregateAlert(query.SearchDomain.AggregateAlerts[i])
+		alert := mapHumioGraphqlAggregateAlertToAggregateAlert(query.SearchDomain.AggregateAlerts[i])
+		aggregateAlerts[i] = &alert
 	}
 
-	return aggregateAlerts, err
+	return aggregateAlerts, nil
 }
 
 func (a *AggregateAlerts) Update(viewName string, updatedAggregateAlert *AggregateAlert) (*AggregateAlert, error) {
+	if viewName == "" {
+		return nil, fmt.Errorf("viewName must not be empty")
+	}
+
 	if updatedAggregateAlert == nil {
 		return nil, fmt.Errorf("updatedAggregateAlert must not be nil")
 	}
@@ -109,6 +118,10 @@ func (a *AggregateAlerts) Update(viewName string, updatedAggregateAlert *Aggrega
 }
 
 func (a *AggregateAlerts) Create(viewName string, newAggregateAlert *AggregateAlert) (*AggregateAlert, error) {
+	if viewName == "" {
+		return nil, fmt.Errorf("viewName must not be empty")
+	}
+
 	if newAggregateAlert == nil {
 		return nil, fmt.Errorf("newAggregateAlert must not be nil")
 	}
@@ -159,6 +172,10 @@ func (a *AggregateAlerts) Create(viewName string, newAggregateAlert *AggregateAl
 }
 
 func (a *AggregateAlerts) Delete(viewName, aggregateAlertID string) error {
+	if viewName == "" {
+		return fmt.Errorf("viewName must not be empty")
+	}
+
 	if aggregateAlertID == "" {
 		return fmt.Errorf("aggregateAlertID is empty")
 	}
@@ -186,6 +203,14 @@ func (a *AggregateAlerts) Get(viewName string, aggregateAlertID string) (*Aggreg
 		SearchDomain struct {
 			AggregateAlert humiographql.AggregateAlert `graphql:"aggregateAlert(id: $aggregateAlertId)"`
 		} `graphql:"searchDomain(name: $viewName) "`
+	}
+
+	if viewName == "" {
+		return nil, fmt.Errorf("viewName must not be empty")
+	}
+
+	if aggregateAlertID == "" {
+		return nil, fmt.Errorf("aggregateAlertID must not be empty")
 	}
 
 	variables := map[string]any{
