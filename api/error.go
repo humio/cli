@@ -12,6 +12,7 @@ const (
 	EntityTypeAlert           EntityType = "alert"
 	EntityTypeFilterAlert     EntityType = "filter-alert"
 	EntityTypeScheduledSearch EntityType = "scheduled-search"
+	EntityTypeAggregateAlert  EntityType = "aggregate-alert"
 )
 
 func (e EntityType) String() string {
@@ -66,6 +67,13 @@ func FilterAlertNotFound(name string) error {
 func ScheduledSearchNotFound(name string) error {
 	return EntityNotFound{
 		entityType: EntityTypeScheduledSearch,
+		key:        name,
+	}
+}
+
+func AggregateAlertNotFound(name string) error {
+	return EntityNotFound{
+		entityType: EntityTypeAggregateAlert,
 		key:        name,
 	}
 }
