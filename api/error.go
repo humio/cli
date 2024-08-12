@@ -7,6 +7,7 @@ import (
 type EntityType string
 
 const (
+	EntityTypeIngestToken     EntityType = "ingest-token"
 	EntityTypeParser          EntityType = "parser"
 	EntityTypeAction          EntityType = "action"
 	EntityTypeAlert           EntityType = "alert"
@@ -34,6 +35,13 @@ func (e EntityNotFound) Key() string {
 
 func (e EntityNotFound) Error() string {
 	return fmt.Sprintf("%s %q not found", e.entityType.String(), e.key)
+}
+
+func IngestTokenNotFound(name string) error {
+	return EntityNotFound{
+		entityType: EntityTypeIngestToken,
+		key:        name,
+	}
 }
 
 func ParserNotFound(name string) error {

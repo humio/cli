@@ -832,7 +832,7 @@ func (n *Actions) Delete(viewName, actionName string) error {
 		}
 	}
 	if actionID == "" {
-		return fmt.Errorf("unable to find action")
+		return ActionNotFound(actionID)
 	}
 
 	var mutation struct {
