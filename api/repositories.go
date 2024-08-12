@@ -38,8 +38,7 @@ func (r *Repositories) Get(name string) (Repository, error) {
 	err := r.client.Query(&query, variables)
 
 	if err != nil {
-		// The graphql error message is vague if the repo already exists, so add a hint.
-		return query.Repository, fmt.Errorf("%w. Does the repo already exist?", err)
+		return query.Repository, RepositoryNotFound(name)
 	}
 
 	return query.Repository, nil

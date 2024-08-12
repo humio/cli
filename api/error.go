@@ -7,6 +7,8 @@ import (
 type EntityType string
 
 const (
+	EntityTypeRepository      EntityType = "repository"
+	EntityTypeView            EntityType = "view"
 	EntityTypeIngestToken     EntityType = "ingest-token"
 	EntityTypeParser          EntityType = "parser"
 	EntityTypeAction          EntityType = "action"
@@ -35,6 +37,20 @@ func (e EntityNotFound) Key() string {
 
 func (e EntityNotFound) Error() string {
 	return fmt.Sprintf("%s %q not found", e.entityType.String(), e.key)
+}
+
+func RepositoryNotFound(name string) error {
+	return EntityNotFound{
+		entityType: EntityTypeRepository,
+		key:        name,
+	}
+}
+
+func ViewNotFound(name string) error {
+	return EntityNotFound{
+		entityType: EntityTypeView,
+		key:        name,
+	}
 }
 
 func IngestTokenNotFound(name string) error {

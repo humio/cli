@@ -48,7 +48,7 @@ func (c *Views) Get(name string) (*View, error) {
 
 	err := c.client.Query(&query, variables)
 	if err != nil {
-		return nil, err
+		return nil, ViewNotFound(name)
 	}
 
 	connections := make([]ViewConnection, len(query.Result.ViewInfo.Connections))
