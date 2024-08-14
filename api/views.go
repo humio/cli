@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/humio/cli/api/internal/humiographql"
 	"sort"
 	"strings"
 
@@ -26,6 +27,7 @@ type ViewQueryData struct {
 			Filter     string
 		}
 	} `graphql:"... on View"`
+	Typename graphql.String `graphql:"__typename"`
 }
 
 type View struct {
@@ -49,6 +51,9 @@ func (c *Views) Get(name string) (*View, error) {
 	err := c.client.Query(&query, variables)
 	if err != nil {
 		return nil, ViewNotFound(name)
+	}
+	if query.Result.Typename != "View" {
+		return nil, ViewNotFound("name")
 	}
 
 	connections := make([]ViewConnection, len(query.Result.ViewInfo.Connections))
@@ -82,11 +87,18 @@ func (c *Views) List() ([]ViewListItem, error) {
 
 	err := c.client.Query(&query, nil)
 
-	sort.Slice(query.View, func(i, j int) bool {
-		return strings.ToLower(query.View[i].Name) < strings.ToLower(query.View[j].Name)
+	viewsList := []ViewListItem{}
+	for k, v := range query.View {
+		if v.Typename == string(humiographql.SearchDomainTypeView) {
+			viewsList = append(viewsList, query.View[k])
+		}
+	}
+
+	sort.Slice(viewsList, func(i, j int) bool {
+		return strings.ToLower(viewsList[i].Name) < strings.ToLower(viewsList[j].Name)
 	})
 
-	return query.View, err
+	return viewsList, err
 }
 
 type ViewConnectionInput struct {
@@ -112,6 +124,11 @@ func (c *Views) Create(name, description string, connections []ViewConnectionInp
 }
 
 func (c *Views) Delete(name, reason string) error {
+	_, err := c.Get(name)
+	if err != nil {
+		return err
+	}
+
 	var mutation struct {
 		DeleteSearchDomain struct {
 			// We have to make a selection, so just take __typename
@@ -142,6 +159,11 @@ func (c *Views) UpdateConnections(name string, connections []ViewConnectionInput
 }
 
 func (c *Views) UpdateDescription(name string, description string) error {
+	_, err := c.Get(name)
+	if err != nil {
+		return err
+	}
+
 	var mutation struct {
 		UpdateDescriptionMutation struct {
 			// We have to make a selection, so just take __typename
@@ -158,6 +180,11 @@ func (c *Views) UpdateDescription(name string, description string) error {
 }
 
 func (c *Views) UpdateAutomaticSearch(name string, automaticSearch bool) error {
+	_, err := c.Get(name)
+	if err != nil {
+		return err
+	}
+
 	var mutation struct {
 		SetAutomaticSearching struct {
 			// We have to make a selection, so just take __typename
