@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	graphql "github.com/cli/shurcooL-graphql"
 )
 
@@ -61,7 +60,7 @@ func (i *IngestTokens) Get(repoName, tokenName string) (*IngestToken, error) {
 		}
 	}
 
-	return nil, fmt.Errorf("could not find an ingest token with name '%s' in repo '%s'", tokenName, repoName)
+	return nil, IngestTokenNotFound(tokenName)
 }
 
 func toIngestToken(data ingestTokenData) *IngestToken {

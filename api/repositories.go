@@ -38,8 +38,7 @@ func (r *Repositories) Get(name string) (Repository, error) {
 	err := r.client.Query(&query, variables)
 
 	if err != nil {
-		// The graphql error message is vague if the repo already exists, so add a hint.
-		return query.Repository, fmt.Errorf("%w. Does the repo already exist?", err)
+		return query.Repository, RepositoryNotFound(name)
 	}
 
 	return query.Repository, nil
@@ -81,6 +80,11 @@ func (r *Repositories) Create(name string) error {
 }
 
 func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error {
+	_, err := r.Get(name)
+	if err != nil {
+		return err
+	}
+
 	if !allowDataDeletion {
 		return fmt.Errorf("repository may contain data and data deletion not enabled")
 	}
@@ -232,6 +236,11 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 }
 
 func (r *Repositories) UpdateDescription(name, description string) error {
+	_, err := r.Get(name)
+	if err != nil {
+		return err
+	}
+
 	var mutation struct {
 		UpdateDescription struct {
 			// We have to make a selection, so just take __typename
@@ -332,6 +341,11 @@ func (r *Repositories) UpdateS3ArchivingConfiguration(name string, bucket string
 }
 
 func (r *Repositories) UpdateAutomaticSearch(name string, automaticSearch bool) error {
+	_, err := r.Get(name)
+	if err != nil {
+		return err
+	}
+
 	var mutation struct {
 		SetAutomaticSearching struct {
 			// We have to make a selection, so just take __typename
