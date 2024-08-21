@@ -59,15 +59,34 @@ func (r *Repositories) List() ([]RepoListItem, error) {
 	return query.Repositories, err
 }
 
-func (r *Repositories) Create(name string) error {
+func (r *Repositories) Create(name, description string, retentionInDays int64, ingestInGB, storageInGB float64) error {
 	var mutation struct {
 		CreateRepository struct {
 			Repository Repository
-		} `graphql:"createRepository(name: $name)"`
+		} `graphql:"createRepository(name: $name, description: $description, retentionInMillis: $retentionMillis, retentionInIngestSizeBytes: $retentionIngest, retentionInStorageSizeBytes: $retentionStorage)"`
 	}
 
 	variables := map[string]interface{}{
-		"name": graphql.String(name),
+		"name":             graphql.String(name),
+		"description":      graphql.String(description),
+		"retentionMillis":  (*humiographql.Long)(nil),
+		"retentionIngest":  (*humiographql.Long)(nil),
+		"retentionStorage": (*humiographql.Long)(nil),
+	}
+
+	if retentionInDays > 0 {
+		retentionMillis := humiographql.ConvertDaysToMillis(retentionInDays)
+		variables["retentionMillis"] = humiographql.Long(retentionMillis)
+	}
+
+	if ingestInGB > 0 {
+		retentionIngest := humiographql.ConvertGBToBytes(ingestInGB)
+		variables["retentionIngest"] = humiographql.Long(retentionIngest)
+	}
+
+	if storageInGB > 0 {
+		retentionStorage := humiographql.ConvertGBToBytes(storageInGB)
+		variables["retentionStorage"] = humiographql.Long(retentionStorage)
 	}
 
 	err := r.client.Mutate(&mutation, variables)
