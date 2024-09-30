@@ -16,7 +16,7 @@ func (i *PersonalTokens) Create() (string, error) {
 		ApiToken string `graphql:"createPersonalUserToken(input: {})"`
 	}
 
-  err := i.client.Mutate(&mutation, variables)
+	err := i.client.Mutate(&mutation, variables)
 	if err != nil {
 		return "", err
 	}
