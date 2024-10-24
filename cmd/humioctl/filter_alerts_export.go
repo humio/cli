@@ -65,3 +65,42 @@ func newFilterAlertsExportCmd() *cobra.Command {
 
 	return &cmd
 }
+
+func newFilterAlertsExportAllCmd() *cobra.Command {
+	var outputDirectory string
+
+	cmd := cobra.Command{
+		Use:   "export-all <view>",
+		Short: "Export all filter alerts",
+		Long:  `Export all filter alerts to yaml files with naming <sanitized-filter-alert-name>.yaml. All non-alphanumeric characters will be replaced with underscore.`,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			view := args[0]
+			client := NewApiClient(cmd)
+
+			var filterAlerts []api.FilterAlert
+			filterAlerts, err := client.FilterAlerts().List(view)
+			exitOnError(cmd, err, "Error fetching filter alerts")
+
+			for _, filterAlert := range filterAlerts {
+				yamlData, err := yaml.Marshal(&filterAlert)
+				exitOnError(cmd, err, "Failed to serialize the filter alert")
+				filterAlertFilename := sanitizeTriggerName(filterAlert.Name) + ".yaml"
+
+				var outFilePath string
+				if outputDirectory != "" {
+					outFilePath = outputDirectory + "/" + filterAlertFilename
+				} else {
+					outFilePath = filterAlertFilename
+				}
+
+				err = os.WriteFile(outFilePath, yamlData, 0600)
+				exitOnError(cmd, err, "Error saving the filter alert to file")
+			}
+		},
+	}
+
+	cmd.Flags().StringVarP(&outputDirectory, "outputDirectory", "d", "", "The file path where the filter alerts should be written. Defaults to current directory.")
+
+	return &cmd
+}

@@ -3,14 +3,14 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/humio/cli/cmd/internal/format"
+	"github.com/spf13/cobra"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
+	"regexp"
 	"strconv"
-
-	"github.com/humio/cli/cmd/internal/format"
-	"github.com/spf13/cobra"
 )
 
 // GoReleaser will override these when building: https://goreleaser.com/customization/build/
@@ -157,4 +157,9 @@ func getBytesFromURL(url string) ([]byte, error) {
 		_ = response.Body.Close()
 	}()
 	return io.ReadAll(response.Body)
+}
+
+// Replaces all non-alphanumeric characters with underscore
+func sanitizeTriggerName(name string) string {
+	return regexp.MustCompile(`[^a-zA-Z0-9]`).ReplaceAllString(name, "_")
 }
