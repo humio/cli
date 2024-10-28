@@ -15,10 +15,10 @@
 package main
 
 import (
-	"os"
-
+	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
+	"os"
 )
 
 func newAlertsExportCmd() *cobra.Command {
@@ -50,6 +50,45 @@ func newAlertsExportCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&outputName, "output", "o", "", "The file path where the alert should be written. Defaults to ./<alert-name>.yaml")
+
+	return &cmd
+}
+
+func newAlertsExportAllCmd() *cobra.Command {
+	var outputDirectory string
+
+	cmd := cobra.Command{
+		Use:   "export-all <view>",
+		Short: "Export all alerts",
+		Long:  `Export all alerts to yaml files with naming <sanitized-alert-name>.yaml. All non-alphanumeric characters will be replaced with underscore.`,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			view := args[0]
+			client := NewApiClient(cmd)
+
+			var alerts []api.Alert
+			alerts, err := client.Alerts().List(view)
+			exitOnError(cmd, err, "Error fetching alerts")
+
+			for _, alert := range alerts {
+				yamlData, err := yaml.Marshal(&alert)
+				exitOnError(cmd, err, "Failed to serialize the alert")
+				alertFilename := sanitizeTriggerName(alert.Name) + ".yaml"
+
+				var outFilePath string
+				if outputDirectory != "" {
+					outFilePath = outputDirectory + "/" + alertFilename
+				} else {
+					outFilePath = alertFilename
+				}
+
+				err = os.WriteFile(outFilePath, yamlData, 0600)
+				exitOnError(cmd, err, "Error saving the alert to file")
+			}
+		},
+	}
+
+	cmd.Flags().StringVarP(&outputDirectory, "outputDirectory", "d", "", "The file path where the alerts should be written. Defaults to current directory.")
 
 	return &cmd
 }

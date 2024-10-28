@@ -27,6 +27,7 @@ func newFilterAlertsCmd() *cobra.Command {
 	cmd.AddCommand(newFilterAlertsListCmd())
 	cmd.AddCommand(newFilterAlertsInstallCmd())
 	cmd.AddCommand(newFilterAlertsExportCmd())
+	cmd.AddCommand(newFilterAlertsExportAllCmd())
 	cmd.AddCommand(newFilterAlertsRemoveCmd())
 	cmd.AddCommand(newFilterAlertsShowCmd())
 

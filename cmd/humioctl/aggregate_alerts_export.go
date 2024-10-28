@@ -65,3 +65,42 @@ func newAggregateAlertsExportCmd() *cobra.Command {
 
 	return &cmd
 }
+
+func newAggregateAlertsExportAllCmd() *cobra.Command {
+	var outputDirectory string
+
+	cmd := cobra.Command{
+		Use:   "export-all <view>",
+		Short: "Export all aggregate alerts",
+		Long:  `Export all aggregate alerts to yaml files with naming <sanitized-aggregate-alert-name>.yaml. All non-alphanumeric characters will be replaced with underscore.`,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			view := args[0]
+			client := NewApiClient(cmd)
+
+			var aggregateAlerts []*api.AggregateAlert
+			aggregateAlerts, err := client.AggregateAlerts().List(view)
+			exitOnError(cmd, err, "Error fetching aggregate alerts")
+
+			for _, aggregateAlert := range aggregateAlerts {
+				yamlData, err := yaml.Marshal(&aggregateAlert)
+				exitOnError(cmd, err, "Failed to serialize the aggregate alert")
+				alertFilename := sanitizeTriggerName(aggregateAlert.Name) + ".yaml"
+
+				var outFilePath string
+				if outputDirectory != "" {
+					outFilePath = outputDirectory + "/" + alertFilename
+				} else {
+					outFilePath = alertFilename
+				}
+
+				err = os.WriteFile(outFilePath, yamlData, 0600)
+				exitOnError(cmd, err, "Error saving the aggregate alert to file")
+			}
+		},
+	}
+
+	cmd.Flags().StringVarP(&outputDirectory, "outputDirectory", "d", "", "The file path where the aggregate alerts should be written. Defaults to current directory.")
+
+	return &cmd
+}

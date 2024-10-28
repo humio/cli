@@ -27,6 +27,7 @@ func newScheduledSearchesCmd() *cobra.Command {
 	cmd.AddCommand(newScheduledSearchesListCmd())
 	cmd.AddCommand(newScheduledSearchesInstallCmd())
 	cmd.AddCommand(newScheduledSearchesExportCmd())
+	cmd.AddCommand(newScheduledSearchesExportAllCmd())
 	cmd.AddCommand(newScheduledSearchesRemoveCmd())
 	cmd.AddCommand(newScheduledSearchesShowCmd())
 
