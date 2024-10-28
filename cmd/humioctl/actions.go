@@ -29,6 +29,7 @@ func newActionsCmd() *cobra.Command {
 	cmd.AddCommand(newActionsRemoveCmd())
 	cmd.AddCommand(newActionsInstallCmd())
 	cmd.AddCommand(newActionsExportCmd())
+	cmd.AddCommand(newActionsExportAllCmd())
 
 	return cmd
 }
