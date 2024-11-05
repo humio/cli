@@ -360,3 +360,19 @@ func (r *Repositories) UpdateAutomaticSearch(name string, automaticSearch bool) 
 
 	return r.client.Mutate(&mutation, variables)
 }
+
+func (r *Repositories) BlockIngest(name string, seconds int) error {
+	var mutation struct {
+		BlockIngest struct {
+			// We have to make a selection, so just take __typename
+			Typename graphql.String `graphql:"__typename"`
+		} `graphql:"blockIngest(repositoryName: $name, seconds: $seconds)"`
+	}
+
+	variables := map[string]interface{}{
+		"name":    graphql.String(name),
+		"seconds": graphql.Int(seconds),
+	}
+
+	return r.client.Mutate(&mutation, variables)
+}
