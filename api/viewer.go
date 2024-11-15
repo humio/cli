@@ -1,12 +1,15 @@
 package api
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Viewer struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Viewer() *Viewer { return &Viewer{client: c} }
 
 // Username fetches the username associated with the API Token in use.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Viewer) Username() (string, error) {
 	var query struct {
 		Viewer struct {
@@ -19,6 +22,7 @@ func (c *Viewer) Username() (string, error) {
 }
 
 // ApiToken fetches the api token for the user who is currently authenticated.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Viewer) ApiToken() (string, error) {
 	var query struct {
 		Viewer struct {

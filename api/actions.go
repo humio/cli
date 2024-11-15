@@ -2,25 +2,36 @@ package api
 
 import (
 	"fmt"
-	graphql "github.com/cli/shurcooL-graphql"
 	"reflect"
+
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 const (
-	ActionTypeEmail            string = "EmailAction"
-	ActionTypeHumioRepo        string = "HumioRepoAction"
-	ActionTypeOpsGenie         string = "OpsGenieAction"
-	ActionTypePagerDuty        string = "PagerDutyAction"
-	ActionTypeSlack            string = "SlackAction"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	ActionTypeEmail string = "EmailAction"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	ActionTypeHumioRepo string = "HumioRepoAction"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	ActionTypeOpsGenie string = "OpsGenieAction"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	ActionTypePagerDuty string = "PagerDutyAction"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	ActionTypeSlack string = "SlackAction"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 	ActionTypeSlackPostMessage string = "SlackPostMessageAction"
-	ActionTypeVictorOps        string = "VictorOpsAction"
-	ActionTypeWebhook          string = "WebhookAction"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	ActionTypeVictorOps string = "VictorOpsAction"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	ActionTypeWebhook string = "WebhookAction"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Actions struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type EmailAction struct {
 	Recipients      []string `graphql:"emailRecipients: recipients" yaml:"recipients,omitempty" json:"recipients,omitempty"`
 	SubjectTemplate string   `graphql:"emailSubjectTemplate: subjectTemplate" yaml:"subjectTemplate,omitempty" json:"subjectTemplate,omitempty"`
@@ -28,33 +39,39 @@ type EmailAction struct {
 	UseProxy        bool     `graphql:"emailUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type HumioRepoAction struct {
 	IngestToken string `graphql:"humioRepoIngestToken: ingestToken" yaml:"ingestToken,omitempty" json:"ingestToken,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type OpsGenieAction struct {
 	ApiUrl   string `graphql:"opsGenieApiUrl: apiUrl" yaml:"apiUrl,omitempty" json:"apiUrl,omitempty"`
 	GenieKey string `graphql:"opsGenieGenieKey: genieKey" yaml:"genieKey,omitempty" json:"genieKey,omitempty"`
 	UseProxy bool   `graphql:"opsGenieUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type PagerDutyAction struct {
 	Severity   string `graphql:"pagerDutySeverity: severity" yaml:"severity,omitempty" json:"severity,omitempty"`
 	RoutingKey string `graphql:"pagerDutyRoutingKey: routingKey" yaml:"routingKey,omitempty" json:"routingKey,omitempty"`
 	UseProxy   bool   `graphql:"pagerDutyUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type SlackFieldEntryInput struct {
 	FieldName string `graphql:"fieldName" yaml:"fieldName" json:"fieldName"`
 	Value     string `graphql:"value"     yaml:"value" json:"value"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type SlackAction struct {
 	Url      string                 `graphql:"slackUrl: url" yaml:"url,omitempty" json:"url,omitempty"`
 	Fields   []SlackFieldEntryInput `graphql:"slackFields: fields" yaml:"fields,omitempty" json:"fields,omitempty"`
 	UseProxy bool                   `graphql:"slackUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type SlackPostMessageAction struct {
 	ApiToken string                 `graphql:"slackPostMessageApiToken: apiToken" yaml:"apiToken,omitempty" json:"apiToken,omitempty"`
 	Channels []string               `graphql:"slackPostMessageChannels: channels" yaml:"channels,omitempty" json:"channels,omitempty"`
@@ -62,17 +79,20 @@ type SlackPostMessageAction struct {
 	UseProxy bool                   `graphql:"slackPostMessageUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type VictorOpsAction struct {
 	MessageType string `graphql:"victorOpsMessageType: messageType" yaml:"messageType,omitempty" json:"messageType,omitempty"`
 	NotifyUrl   string `graphql:"victorOpsNotifyUrl: notifyUrl" yaml:"notifyUrl,omitempty" json:"notifyUrl,omitempty"`
 	UseProxy    bool   `graphql:"victorOpsUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type HttpHeaderEntryInput struct {
 	Header string `graphql:"header"  yaml:"header" json:"header"`
 	Value  string `graphql:"value"   yaml:"value" json:"value"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type WebhookAction struct {
 	Method       string                 `graphql:"webhookMethod: method" yaml:"method,omitempty" json:"method,omitempty"`
 	Url          string                 `graphql:"webhookUrl: url" yaml:"url,omitempty" json:"url,omitempty"`
@@ -82,6 +102,7 @@ type WebhookAction struct {
 	UseProxy     bool                   `graphql:"webhookUseProxy: useProxy" yaml:"useProxy,omitempty" json:"useProxy,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Action struct {
 	Type string `graphql:"__typename" yaml:"type" json:"type"`
 	ID   string `graphql:"id"         yaml:"-"    json:"id"`
@@ -97,8 +118,10 @@ type Action struct {
 	WebhookAction          WebhookAction          `graphql:"... on WebhookAction"          yaml:"webhookAction,omitempty" json:"webhookAction,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Actions() *Actions { return &Actions{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (n *Actions) List(viewName string) ([]Action, error) {
 	var query struct {
 		SearchDomain struct {
@@ -114,6 +137,7 @@ func (n *Actions) List(viewName string) ([]Action, error) {
 	return query.SearchDomain.Actions, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 	if newAction == nil {
 		return nil, fmt.Errorf("action must not be nil")
@@ -454,6 +478,7 @@ func (n *Actions) Update(viewName string, newAction *Action) (*Action, error) {
 	return nil, fmt.Errorf("no action details specified or unsupported action type used")
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 	if newAction == nil {
 		return nil, fmt.Errorf("action must not be nil")
@@ -781,6 +806,7 @@ func (n *Actions) Add(viewName string, newAction *Action) (*Action, error) {
 	return nil, fmt.Errorf("no action details specified or unsupported action type used")
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (n *Actions) Get(viewName, actionName string) (*Action, error) {
 	actions, err := n.List(viewName)
 	if err != nil {
@@ -795,6 +821,7 @@ func (n *Actions) Get(viewName, actionName string) (*Action, error) {
 	return nil, ActionNotFound(actionName)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (n *Actions) GetByID(viewName, actionID string) (*Action, error) {
 	var query struct {
 		SearchDomain struct {
@@ -819,6 +846,7 @@ func (n *Actions) GetByID(viewName, actionID string) (*Action, error) {
 	return query.SearchDomain.Action, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (n *Actions) Delete(viewName, actionName string) error {
 	actions, err := n.List(viewName)
 	if err != nil {

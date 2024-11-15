@@ -16,6 +16,7 @@ type headerTransport struct {
 	headers map[string]string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func NewHttpTransport(config Config) *http.Transport {
 	dialContext := config.DialContext
 	if dialContext == nil {
@@ -86,6 +87,7 @@ func (c *Client) newHTTPClientWithHeaders(headers map[string]string) *http.Clien
 	}
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (h *headerTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	req2 := CloneRequest(req)
 	for key, val := range h.headers {
@@ -97,6 +99,7 @@ func (h *headerTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 // CloneRequest and CloneHeader copied from https://github.com/kubernetes/apimachinery/blob/a76b7114b20a2e56fd698bba815b1e2c82ec4bff/pkg/util/net/http.go#L469-L491
 
 // CloneRequest creates a shallow copy of the request along with a deep copy of the Headers.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func CloneRequest(req *http.Request) *http.Request {
 	r := new(http.Request)
 
@@ -110,6 +113,7 @@ func CloneRequest(req *http.Request) *http.Request {
 }
 
 // CloneHeader creates a deep copy of an http.Header.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func CloneHeader(in http.Header) http.Header {
 	out := make(http.Header, len(in))
 	for key, values := range in {

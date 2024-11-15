@@ -7,10 +7,12 @@ import (
 	graphql "github.com/cli/shurcooL-graphql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type SearchDomains struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type SearchDomainsQueryData struct {
 	Name            string
 	Description     string
@@ -18,14 +20,17 @@ type SearchDomainsQueryData struct {
 	Typename        graphql.String `graphql:"__typename"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type SearchDomain struct {
 	Name            string
 	Description     string
 	AutomaticSearch bool
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (s *Client) SearchDomains() *SearchDomains { return &SearchDomains{client: s} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (s *SearchDomains) Get(name string) (*SearchDomain, error) {
 	var query struct {
 		Result SearchDomainsQueryData `graphql:"searchDomain(name: $name)"`
@@ -49,12 +54,14 @@ func (s *SearchDomains) Get(name string) (*SearchDomain, error) {
 	return &searchDomain, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type SearchDomainListItem struct {
 	Name            string
 	Typename        string `graphql:"__typename"`
 	AutomaticSearch bool
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (s *SearchDomains) List() ([]SearchDomainListItem, error) {
 	var query struct {
 		SearchDomain []SearchDomainListItem `graphql:"searchDomains"`

@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	graphql "github.com/cli/shurcooL-graphql"
 	"io"
 	"net/http"
 	"net/url"
@@ -13,28 +12,35 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 // Packages is a API client for working with Humio packages.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Packages struct {
 	client *Client
 }
 
 // Packages constructs a Packages API client.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Packages() *Packages { return &Packages{client: c} }
 
 // ValidationResponse contain the results of a package validation.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ValidationResponse struct {
 	InstallationErrors []string `json:"installationErrors"`
 	ParseErrors        []string `json:"parseErrors"`
 }
 
 // IsValid returns true if there are no errors in the package
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (resp *ValidationResponse) IsValid() bool {
 	return (len(resp.InstallationErrors) == 0) && (len(resp.ParseErrors) == 0)
 }
 
 // InstalledPackage contain the details of an installed package
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type InstalledPackage struct {
 	ID          string
 	InstalledBy *struct {
@@ -59,6 +65,7 @@ func isDirectory(path string) (bool, error) {
 
 // Validate checks a package declaration validity against a Humio
 // server.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Packages) Validate(viewName string, absPath string) (*ValidationResponse, error) {
 	var zipFilePath string
 	var err error
@@ -106,6 +113,7 @@ func (p *Packages) Validate(viewName string, absPath string) (*ValidationRespons
 }
 
 // ListInstalled returns a list of installed packages
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
 	var query struct {
 		Repository struct {
@@ -122,6 +130,7 @@ func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
 }
 
 // InstallArchive installs a local package (zip file).
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Packages) InstallArchive(viewName string, pathToZip string) (*ValidationResponse, error) {
 	// #nosec G304
 	fileReader, err := os.Open(pathToZip)
@@ -175,6 +184,7 @@ func detailedInstallationError(response *http.Response) error {
 	return fmt.Errorf("%s", strings.Join(formattedErrors, ""))
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type InstallationErrors struct {
 	InstallationErrors []string `json:"installationErrors"`
 	ParseErrors        []string `json:"parseErrors"`
@@ -183,12 +193,15 @@ type InstallationErrors struct {
 
 type (
 	// VersionedPackageSpecifier is the ID and version of a package, e.g foo/bar@2.0.1
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 	VersionedPackageSpecifier string
 	// UnversionedPackageSpecifier is the ID of a package, e.g foo/bar
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 	UnversionedPackageSpecifier string
 )
 
 // UninstallPackage uninstalls a package by name.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Packages) UninstallPackage(viewName string, packageID string) error {
 
 	var mutation struct {
@@ -207,6 +220,7 @@ func (p *Packages) UninstallPackage(viewName string, packageID string) error {
 }
 
 // CreateArchive creates a archive by bundling the files in packageDirPath in a zip file.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Packages) CreateArchive(packageDirPath string, targetFileName string) error {
 	// #nosec G304
 	outFile, err := os.Create(targetFileName)
@@ -220,6 +234,7 @@ func (p *Packages) CreateArchive(packageDirPath string, targetFileName string) e
 }
 
 // InstallFromDirectory installs a package from a directory containing the package files.
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView string) (*ValidationResponse, error) {
 	zipFilePath, err := createTempZipFromFolder(packageDirPath)
 	if err != nil {

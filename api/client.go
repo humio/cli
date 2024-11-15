@@ -4,21 +4,24 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	graphql "github.com/cli/shurcooL-graphql"
 	"io"
 	"net"
 	"net/http"
 	"net/url"
 	"strings"
+
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
 const defaultUserAgent = "Humio-go-client/unknown"
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Client struct {
 	config        Config
 	httpTransport *http.Transport
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Config struct {
 	Address           *url.URL
 	UserAgent         string
@@ -29,37 +32,45 @@ type Config struct {
 	DialContext       func(ctx context.Context, network, addr string) (net.Conn, error)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func DefaultConfig() Config {
 	config := Config{}
 
 	return config
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Address() *url.URL {
 	return c.config.Address
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Token() string {
 	return c.config.Token
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) CACertificate() string {
 	return c.config.CACertificatePEM
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Insecure() bool {
 	return c.config.Insecure
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Config() Config {
 	return c.config
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func NewClient(config Config) *Client {
 	httpTransport := NewHttpTransport(config)
 	return NewClientWithTransport(config, httpTransport)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func NewClientWithTransport(config Config, httpTransport *http.Transport) *Client {
 	if config.Address != nil && !strings.HasSuffix(config.Address.Path, "/") {
 		config.Address.Path = config.Address.Path + "/"
@@ -75,6 +86,7 @@ func NewClientWithTransport(config Config, httpTransport *http.Transport) *Clien
 	}
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) headers() map[string]string {
 	headers := map[string]string{}
 
@@ -93,6 +105,7 @@ func (c *Client) headers() map[string]string {
 	return headers
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) newGraphQLClient() (*graphql.Client, error) {
 	httpClient := c.newHTTPClientWithHeaders(c.headers())
 	graphqlURL, err := c.Address().Parse("graphql")
@@ -102,6 +115,7 @@ func (c *Client) newGraphQLClient() (*graphql.Client, error) {
 	return graphql.NewClient(graphqlURL.String(), httpClient), nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Query(query interface{}, variables map[string]interface{}) error {
 	client, err := c.newGraphQLClient()
 	if err != nil {
@@ -110,6 +124,7 @@ func (c *Client) Query(query interface{}, variables map[string]interface{}) erro
 	return client.Query(context.Background(), query, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) error {
 	client, err := c.newGraphQLClient()
 	if err != nil {
@@ -119,13 +134,18 @@ func (c *Client) Mutate(mutation interface{}, variables map[string]interface{}) 
 }
 
 // JSONContentType is "application/json"
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 const JSONContentType string = "application/json"
+
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 const ZIPContentType string = "application/zip"
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) HTTPRequest(httpMethod string, path string, body io.Reader) (*http.Response, error) {
 	return c.HTTPRequestContext(context.Background(), httpMethod, path, body, JSONContentType)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) HTTPRequestContext(ctx context.Context, httpMethod string, path string, body io.Reader, contentType string) (*http.Response, error) {
 	if body == nil {
 		body = bytes.NewReader(nil)

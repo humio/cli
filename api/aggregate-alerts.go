@@ -2,10 +2,12 @@ package api
 
 import (
 	"fmt"
+
 	graphql "github.com/cli/shurcooL-graphql"
 	"github.com/humio/cli/api/internal/humiographql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type AggregateAlert struct {
 	ID                    string   `graphql:"id"                    yaml:"-"                       json:"id"`
 	Name                  string   `graphql:"name"                  yaml:"name"                    json:"name"`
@@ -23,12 +25,15 @@ type AggregateAlert struct {
 	RunAsUserID           string   `graphql:"runAsUserId"           yaml:"runAsUserId,omitempty"   json:"runAsUserId,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type AggregateAlerts struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) AggregateAlerts() *AggregateAlerts { return &AggregateAlerts{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *AggregateAlerts) List(viewName string) ([]*AggregateAlert, error) {
 	if viewName == "" {
 		return nil, fmt.Errorf("viewName must not be empty")
@@ -58,6 +63,7 @@ func (a *AggregateAlerts) List(viewName string) ([]*AggregateAlert, error) {
 	return aggregateAlerts, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *AggregateAlerts) Update(viewName string, updatedAggregateAlert *AggregateAlert) (*AggregateAlert, error) {
 	if viewName == "" {
 		return nil, fmt.Errorf("viewName must not be empty")
@@ -117,6 +123,7 @@ func (a *AggregateAlerts) Update(viewName string, updatedAggregateAlert *Aggrega
 	return &aggregateAlert, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *AggregateAlerts) Create(viewName string, newAggregateAlert *AggregateAlert) (*AggregateAlert, error) {
 	if viewName == "" {
 		return nil, fmt.Errorf("viewName must not be empty")
@@ -171,6 +178,7 @@ func (a *AggregateAlerts) Create(viewName string, newAggregateAlert *AggregateAl
 	return &aggregateAlert, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *AggregateAlerts) Delete(viewName, aggregateAlertID string) error {
 	if viewName == "" {
 		return fmt.Errorf("viewName must not be empty")
@@ -198,6 +206,7 @@ func (a *AggregateAlerts) Delete(viewName, aggregateAlertID string) error {
 	return err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *AggregateAlerts) Get(viewName string, aggregateAlertID string) (*AggregateAlert, error) {
 	var query struct {
 		SearchDomain struct {

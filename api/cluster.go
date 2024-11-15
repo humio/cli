@@ -2,14 +2,17 @@ package api
 
 import (
 	"fmt"
-	graphql "github.com/cli/shurcooL-graphql"
 	"math"
+
+	graphql "github.com/cli/shurcooL-graphql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Clusters struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ClusterNode struct {
 	Id                      int
 	Name                    string
@@ -35,11 +38,13 @@ type ClusterNode struct {
 	Zone string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type IngestPartition struct {
 	Id      int
 	NodeIds []int
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Cluster struct {
 	Nodes                               []ClusterNode
 	ClusterInfoAgeSeconds               float64
@@ -54,8 +59,10 @@ type Cluster struct {
 	IngestPartitions                    []IngestPartition
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Clusters() *Clusters { return &Clusters{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Clusters) Get() (Cluster, error) {
 	var query struct {
 		Cluster Cluster
@@ -65,12 +72,15 @@ func (c *Clusters) Get() (Cluster, error) {
 	return query.Cluster, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ClusterNodes struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) ClusterNodes() *ClusterNodes { return &ClusterNodes{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (n *ClusterNodes) List() ([]ClusterNode, error) {
 	var query struct {
 		Cluster struct {
@@ -82,6 +92,7 @@ func (n *ClusterNodes) List() ([]ClusterNode, error) {
 	return query.Cluster.Nodes, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (n *ClusterNodes) Get(nodeID int) (ClusterNode, error) {
 	var query struct {
 		Cluster struct {
@@ -103,6 +114,7 @@ func (n *ClusterNodes) Get(nodeID int) (ClusterNode, error) {
 	return ClusterNode{}, fmt.Errorf("node id not found in cluster")
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (n *ClusterNodes) Unregister(nodeID int, force bool) error {
 	if nodeID > math.MaxInt32 {
 		return fmt.Errorf("node id too large")
