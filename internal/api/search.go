@@ -100,10 +100,6 @@ func (q QueryJobs) Create(repository string, query Query) (string, error) {
 	return jsonResponse.ID, nil
 }
 
-func (q *QueryJobs) Poll(repository string, id string) (QueryResult, error) {
-	return q.PollContext(context.Background(), repository, id)
-}
-
 func (q *QueryJobs) PollContext(ctx context.Context, repository string, id string) (QueryResult, error) {
 	resp, err := q.client.HTTPRequestContext(ctx, http.MethodGet, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, nil, JSONContentType)
 

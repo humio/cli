@@ -34,23 +34,6 @@ type Health struct {
 	rawJson       []byte
 }
 
-func (c *Client) HealthString() (string, error) {
-	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/health", nil)
-	if err != nil {
-		return "", err
-	}
-	if resp == nil {
-		return "", fmt.Errorf("failed to get response")
-	}
-
-	bytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-
-	return string(bytes), nil
-}
-
 func (c *Client) Health() (Health, error) {
 	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/health-json", nil)
 	if err != nil {
@@ -97,8 +80,4 @@ func (h *Health) ChecksMap() map[string]HealthCheck {
 	}
 
 	return m
-}
-
-func (h *Health) Json() []byte {
-	return h.rawJson
 }

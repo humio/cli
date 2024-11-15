@@ -66,68 +66,6 @@ func (a *Alerts) List(searchDomainName string) ([]Alert, error) {
 	return alerts, nil
 }
 
-func (a *Alerts) Update(searchDomainName string, newAlert *Alert) (*Alert, error) {
-	if newAlert == nil {
-		return nil, fmt.Errorf("newAlert must not be nil")
-	}
-
-	if newAlert.ID == "" {
-		return nil, fmt.Errorf("newAlert must have non-empty newAlert id")
-	}
-
-	queryOwnershipType := humiographql.QueryOwnershipType(newAlert.QueryOwnershipType)
-
-	var ownershipRunAsID *string
-	if queryOwnershipType == humiographql.QueryOwnershipTypeUser {
-		ownershipRunAsID = &newAlert.RunAsUserID
-	}
-
-	resp, err := humiographql.UpdateAlert(
-		context.Background(),
-		a.client,
-		searchDomainName,
-		newAlert.ID,
-		newAlert.Name,
-		newAlert.Description,
-		newAlert.QueryString,
-		newAlert.QueryStart,
-		newAlert.ThrottleTimeMillis,
-		newAlert.Enabled,
-		newAlert.Actions,
-		newAlert.Labels,
-		ownershipRunAsID,
-		&queryOwnershipType,
-		newAlert.ThrottleField,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	respUpdate := resp.GetUpdateAlert()
-	respQueryOwnership := respUpdate.GetQueryOwnership()
-	runAsUserID := ""
-	if respQueryOwnership != nil {
-		runAsUserID = respQueryOwnership.GetId()
-	}
-	return &Alert{
-		ID:                 respUpdate.GetId(),
-		Name:               respUpdate.GetName(),
-		QueryString:        respUpdate.GetQueryString(),
-		QueryStart:         respUpdate.GetQueryStart(),
-		ThrottleField:      respUpdate.GetThrottleField(),
-		TimeOfLastTrigger:  respUpdate.GetTimeOfLastTrigger(),
-		IsStarred:          respUpdate.GetIsStarred(),
-		Description:        respUpdate.GetDescription(),
-		ThrottleTimeMillis: respUpdate.GetThrottleTimeMillis(),
-		Enabled:            respUpdate.GetEnabled(),
-		Actions:            respUpdate.GetActions(),
-		Labels:             respUpdate.GetLabels(),
-		LastError:          respUpdate.LastError,
-		RunAsUserID:        runAsUserID,
-		QueryOwnershipType: *respQueryOwnership.GetTypename(),
-	}, nil
-}
-
 func (a *Alerts) Add(searchDomainName string, newAlert *Alert) (*Alert, error) {
 	if newAlert == nil {
 		return nil, fmt.Errorf("newAlert must not be nil")

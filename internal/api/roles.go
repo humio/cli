@@ -60,61 +60,6 @@ func (r *Roles) List() ([]Role, error) {
 	return roles, nil
 }
 
-func (r *Roles) Create(role *Role) error {
-	viewPermissions := make([]humiographql.Permission, len(role.ViewPermissions))
-	for k, perm := range role.ViewPermissions {
-		viewPermissions[k] = humiographql.Permission(perm)
-	}
-	orgPermissions := make([]humiographql.OrganizationPermission, len(role.OrgPermissions))
-	for k, perm := range role.OrgPermissions {
-		orgPermissions[k] = humiographql.OrganizationPermission(perm)
-	}
-	systemPermissions := make([]humiographql.SystemPermission, len(role.SystemPermissions))
-	for k, perm := range role.SystemPermissions {
-		systemPermissions[k] = humiographql.SystemPermission(perm)
-	}
-
-	_, err := humiographql.CreateRole(context.Background(), r.client, role.DisplayName, viewPermissions, orgPermissions, systemPermissions)
-	return err
-}
-
-func (r *Roles) Update(rolename string, newRole *Role) error {
-	roleId, err := r.GetRoleID(rolename)
-	if roleId == "" || err != nil {
-		return fmt.Errorf("unable to find role")
-	}
-
-	if newRole == nil {
-		return fmt.Errorf("new role values must not be nil")
-	}
-
-	viewPermissions := make([]humiographql.Permission, len(newRole.ViewPermissions))
-	for k, perm := range newRole.ViewPermissions {
-		viewPermissions[k] = humiographql.Permission(perm)
-	}
-	orgPermissions := make([]humiographql.OrganizationPermission, len(newRole.OrgPermissions))
-	for k, perm := range newRole.OrgPermissions {
-		orgPermissions[k] = humiographql.OrganizationPermission(perm)
-	}
-	systemPermissions := make([]humiographql.SystemPermission, len(newRole.SystemPermissions))
-	for k, perm := range newRole.SystemPermissions {
-		systemPermissions[k] = humiographql.SystemPermission(perm)
-	}
-
-	_, err = humiographql.UpdateRole(context.Background(), r.client, roleId, newRole.DisplayName, viewPermissions, orgPermissions, systemPermissions)
-	return err
-}
-
-func (r *Roles) RemoveRole(rolename string) error {
-	role, err := r.client.Roles().Get(rolename)
-	if err != nil {
-		return err
-	}
-
-	_, err = humiographql.RemoveRoleByID(context.Background(), r.client, role.ID)
-	return err
-}
-
 func (r *Roles) Get(rolename string) (*Role, error) {
 	roleId, err := r.GetRoleID(rolename)
 	if roleId == "" || err != nil {

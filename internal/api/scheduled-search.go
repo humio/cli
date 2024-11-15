@@ -72,70 +72,6 @@ func (a *ScheduledSearches) List(searchDomainName string) ([]ScheduledSearch, er
 	return scheduledSearches, nil
 }
 
-func (a *ScheduledSearches) Update(searchDomainName string, updateScheduledSearch *ScheduledSearch) (*ScheduledSearch, error) {
-	if searchDomainName == "" {
-		return nil, fmt.Errorf("searchDomainName must not be empty")
-	}
-	if updateScheduledSearch == nil {
-		return nil, fmt.Errorf("updateScheduledSearch must not be nil")
-	}
-
-	if updateScheduledSearch.ID == "" {
-		return nil, fmt.Errorf("updateScheduledSearch must have non-empty ID")
-	}
-
-	queryOwnershipType := humiographql.QueryOwnershipType(updateScheduledSearch.QueryOwnershipType)
-	resp, err := humiographql.UpdateScheduledSearch(
-		context.Background(),
-		a.client,
-		searchDomainName,
-		updateScheduledSearch.ID,
-		updateScheduledSearch.Name,
-		updateScheduledSearch.Description,
-		updateScheduledSearch.QueryString,
-		updateScheduledSearch.QueryStart,
-		updateScheduledSearch.QueryEnd,
-		updateScheduledSearch.Schedule,
-		updateScheduledSearch.TimeZone,
-		updateScheduledSearch.BackfillLimit,
-		updateScheduledSearch.Enabled,
-		updateScheduledSearch.ActionNames,
-		updateScheduledSearch.OwnershipRunAsID,
-		updateScheduledSearch.Labels,
-		&queryOwnershipType,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	respScheduledSearch := resp.GetUpdateScheduledSearch()
-	actionNames := make([]string, len(respScheduledSearch.GetActionsV2()))
-	for kdx, action := range respScheduledSearch.GetActionsV2() {
-		actionNames[kdx] = action.GetName()
-	}
-	respQueryOwnership := respScheduledSearch.GetQueryOwnership()
-	runAsUserID := ""
-	if respQueryOwnership != nil {
-		runAsUserID = respQueryOwnership.GetId()
-	}
-	return &ScheduledSearch{
-		ID:                 respScheduledSearch.GetId(),
-		Name:               respScheduledSearch.GetName(),
-		Description:        respScheduledSearch.GetDescription(),
-		QueryString:        respScheduledSearch.GetQueryString(),
-		QueryStart:         respScheduledSearch.GetStart(),
-		QueryEnd:           respScheduledSearch.GetEnd(),
-		TimeZone:           respScheduledSearch.GetTimeZone(),
-		Schedule:           respScheduledSearch.GetSchedule(),
-		BackfillLimit:      respScheduledSearch.GetBackfillLimit(),
-		Enabled:            respScheduledSearch.GetEnabled(),
-		ActionNames:        actionNames,
-		OwnershipRunAsID:   runAsUserID,
-		Labels:             respScheduledSearch.GetLabels(),
-		QueryOwnershipType: string(queryOwnershipToQueryOwnershipType(respScheduledSearch.GetQueryOwnership())),
-	}, nil
-}
-
 func (a *ScheduledSearches) Create(searchDomainName string, newScheduledSearch *ScheduledSearch) (*ScheduledSearch, error) {
 	if searchDomainName == "" {
 		return nil, fmt.Errorf("searchDomainName must not be empty")
@@ -210,41 +146,4 @@ func (a *ScheduledSearches) Delete(searchDomainName, scheduledSearchID string) e
 
 	_, err := humiographql.DeleteScheduledSearchByID(context.Background(), a.client, searchDomainName, scheduledSearchID)
 	return err
-}
-
-func (a *ScheduledSearches) Get(searchDomainName string, scheduledSearchId string) (*ScheduledSearch, error) {
-	resp, err := humiographql.GetScheduledSearchByID(context.Background(), a.client, searchDomainName, scheduledSearchId)
-	if err != nil {
-		return nil, err
-	}
-
-	respSearchDomain := resp.GetSearchDomain()
-	respScheduledSearch := respSearchDomain.GetScheduledSearch()
-
-	respActions := respScheduledSearch.GetActionsV2()
-	actions := make([]string, len(respActions))
-	for idx, action := range respActions {
-		actions[idx] = action.GetName()
-	}
-	respQueryOwnership := respScheduledSearch.GetQueryOwnership()
-	runAsUserID := ""
-	if respQueryOwnership != nil {
-		runAsUserID = respQueryOwnership.GetId()
-	}
-	return &ScheduledSearch{
-		ID:                 respScheduledSearch.GetId(),
-		Name:               respScheduledSearch.GetName(),
-		Description:        respScheduledSearch.GetDescription(),
-		QueryString:        respScheduledSearch.GetQueryString(),
-		QueryStart:         respScheduledSearch.GetStart(),
-		QueryEnd:           respScheduledSearch.GetEnd(),
-		TimeZone:           respScheduledSearch.GetTimeZone(),
-		Schedule:           respScheduledSearch.GetSchedule(),
-		BackfillLimit:      respScheduledSearch.GetBackfillLimit(),
-		Enabled:            respScheduledSearch.GetEnabled(),
-		ActionNames:        actions,
-		OwnershipRunAsID:   runAsUserID,
-		Labels:             respScheduledSearch.GetLabels(),
-		QueryOwnershipType: string(queryOwnershipToQueryOwnershipType(respScheduledSearch.GetQueryOwnership())),
-	}, nil
 }

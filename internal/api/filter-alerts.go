@@ -61,55 +61,6 @@ func (fa *FilterAlerts) List(searchDomainName string) ([]FilterAlert, error) {
 	return filterAlerts, nil
 }
 
-func (fa *FilterAlerts) Update(searchDomainName string, updatedFilterAlert *FilterAlert) (*FilterAlert, error) {
-	if updatedFilterAlert == nil {
-		return nil, fmt.Errorf("updatedFilterAlert must not be nil")
-	}
-
-	if updatedFilterAlert.ID == "" {
-		return nil, fmt.Errorf("updatedFilterAlert must have non-empty ID")
-	}
-
-	resp, err := humiographql.UpdateFilterAlert(
-		context.Background(),
-		fa.client,
-		searchDomainName,
-		updatedFilterAlert.ID,
-		updatedFilterAlert.Name,
-		updatedFilterAlert.Description,
-		updatedFilterAlert.QueryString,
-		updatedFilterAlert.ActionNames,
-		updatedFilterAlert.Labels,
-		updatedFilterAlert.Enabled,
-		&updatedFilterAlert.OwnershipRunAsID,
-		updatedFilterAlert.ThrottleField,
-		*updatedFilterAlert.ThrottleTimeSeconds,
-		humiographql.QueryOwnershipType(updatedFilterAlert.QueryOwnershipType),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	respFilterAlert := resp.GetUpdateFilterAlert()
-	actionNames := make([]string, len(respFilterAlert.GetActions()))
-	for kdx, action := range respFilterAlert.GetActions() {
-		actionNames[kdx] = action.GetName()
-	}
-	return &FilterAlert{
-		ID:                  respFilterAlert.GetId(),
-		Name:                respFilterAlert.GetName(),
-		Description:         respFilterAlert.GetDescription(),
-		QueryString:         respFilterAlert.GetQueryString(),
-		ActionNames:         actionNames,
-		Labels:              respFilterAlert.GetLabels(),
-		Enabled:             respFilterAlert.GetEnabled(),
-		ThrottleField:       respFilterAlert.GetThrottleField(),
-		ThrottleTimeSeconds: respFilterAlert.GetThrottleTimeSeconds(),
-		QueryOwnershipType:  string(queryOwnershipToQueryOwnershipType(respFilterAlert.GetQueryOwnership())),
-		OwnershipRunAsID:    respFilterAlert.GetQueryOwnership().GetId(),
-	}, nil
-}
-
 func (fa *FilterAlerts) Create(searchDomainName string, newFilterAlert *FilterAlert) (*FilterAlert, error) {
 	if searchDomainName == "" {
 		return nil, fmt.Errorf("searchDomainName must not be empty")
@@ -170,39 +121,4 @@ func (fa *FilterAlerts) Delete(searchDomainName, filterAlertID string) error {
 
 	_, err := humiographql.DeleteFilterAlert(context.Background(), fa.client, searchDomainName, filterAlertID)
 	return err
-}
-
-func (fa *FilterAlerts) Get(searchDomainName string, filterAlertID string) (*FilterAlert, error) {
-	if searchDomainName == "" {
-		return nil, fmt.Errorf("searchDomainName must not be empty")
-	}
-
-	if filterAlertID == "" {
-		return nil, fmt.Errorf("filterAlertID must not be empty")
-	}
-
-	resp, err := humiographql.GetFilterAlertByID(context.Background(), fa.client, searchDomainName, filterAlertID)
-	if err != nil {
-		return nil, err
-	}
-
-	respSearchDomain := resp.GetSearchDomain()
-	respFilterAlert := respSearchDomain.GetFilterAlert()
-	actionNames := make([]string, len(respFilterAlert.GetActions()))
-	for kdx, action := range respFilterAlert.GetActions() {
-		actionNames[kdx] = action.GetName()
-	}
-	return &FilterAlert{
-		ID:                  respFilterAlert.GetId(),
-		Name:                respFilterAlert.GetName(),
-		Description:         respFilterAlert.GetDescription(),
-		QueryString:         respFilterAlert.GetQueryString(),
-		ActionNames:         actionNames,
-		Labels:              respFilterAlert.GetLabels(),
-		Enabled:             respFilterAlert.GetEnabled(),
-		ThrottleField:       respFilterAlert.ThrottleField,
-		ThrottleTimeSeconds: respFilterAlert.GetThrottleTimeSeconds(),
-		QueryOwnershipType:  string(queryOwnershipToQueryOwnershipType(respFilterAlert.GetQueryOwnership())),
-		OwnershipRunAsID:    respFilterAlert.GetQueryOwnership().GetId(),
-	}, nil
 }

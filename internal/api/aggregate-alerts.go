@@ -67,70 +67,6 @@ func (a *AggregateAlerts) List(searchDomainName string) ([]AggregateAlert, error
 	return aggregateAlerts, nil
 }
 
-func (a *AggregateAlerts) Update(searchDomainName string, updatedAggregateAlert *AggregateAlert) (*AggregateAlert, error) {
-	if searchDomainName == "" {
-		return nil, fmt.Errorf("viewName must not be empty")
-	}
-
-	if updatedAggregateAlert == nil {
-		return nil, fmt.Errorf("updatedAggregateAlert must not be nil")
-	}
-
-	if updatedAggregateAlert.ID == "" {
-		return nil, fmt.Errorf("updatedAggregateAlert must have non-empty ID")
-	}
-
-	var ownershipRunAsID *string
-	if humiographql.QueryOwnershipType(updatedAggregateAlert.QueryOwnershipType) == humiographql.QueryOwnershipTypeUser {
-		ownershipRunAsID = &updatedAggregateAlert.OwnershipRunAsID
-	}
-
-	resp, err := humiographql.UpdateAggregateAlert(
-		context.Background(),
-		a.client,
-		searchDomainName,
-		updatedAggregateAlert.ID,
-		updatedAggregateAlert.Name,
-		updatedAggregateAlert.Description,
-		updatedAggregateAlert.QueryString,
-		updatedAggregateAlert.SearchIntervalSeconds,
-		updatedAggregateAlert.ActionNames,
-		updatedAggregateAlert.Labels,
-		updatedAggregateAlert.Enabled,
-		ownershipRunAsID,
-		updatedAggregateAlert.ThrottleField,
-		updatedAggregateAlert.ThrottleTimeSeconds,
-		humiographql.TriggerMode(updatedAggregateAlert.TriggerMode),
-		humiographql.QueryTimestampType(updatedAggregateAlert.QueryTimestampType),
-		humiographql.QueryOwnershipType(updatedAggregateAlert.QueryOwnershipType),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	respAggregateAlert := resp.GetUpdateAggregateAlert()
-	actionNames := make([]string, len(respAggregateAlert.GetActions()))
-	for kdx, action := range respAggregateAlert.GetActions() {
-		actionNames[kdx] = action.GetName()
-	}
-	return &AggregateAlert{
-		ID:                    respAggregateAlert.GetId(),
-		Name:                  respAggregateAlert.GetName(),
-		Description:           respAggregateAlert.GetDescription(),
-		QueryString:           respAggregateAlert.GetQueryString(),
-		SearchIntervalSeconds: respAggregateAlert.GetSearchIntervalSeconds(),
-		ActionNames:           actionNames,
-		Labels:                respAggregateAlert.GetLabels(),
-		Enabled:               respAggregateAlert.GetEnabled(),
-		ThrottleField:         respAggregateAlert.ThrottleField,
-		ThrottleTimeSeconds:   respAggregateAlert.GetThrottleTimeSeconds(),
-		QueryOwnershipType:    string(queryOwnershipToQueryOwnershipType(respAggregateAlert.GetQueryOwnership())),
-		TriggerMode:           string(respAggregateAlert.GetTriggerMode()),
-		QueryTimestampType:    string(respAggregateAlert.GetQueryTimestampType()),
-		OwnershipRunAsID:      respAggregateAlert.GetQueryOwnership().GetId(),
-	}, nil
-}
-
 func (a *AggregateAlerts) Create(searchDomainName string, newAggregateAlert *AggregateAlert) (*AggregateAlert, error) {
 	if searchDomainName == "" {
 		return nil, fmt.Errorf("viewName must not be empty")
@@ -201,41 +137,4 @@ func (a *AggregateAlerts) Delete(searchDomainName, aggregateAlertID string) erro
 
 	_, err := humiographql.DeleteAggregateAlert(context.Background(), a.client, searchDomainName, aggregateAlertID)
 	return err
-}
-
-func (a *AggregateAlerts) Get(searchDomainName string, aggregateAlertID string) (*AggregateAlert, error) {
-	if searchDomainName == "" {
-		return nil, fmt.Errorf("viewName must not be empty")
-	}
-
-	if aggregateAlertID == "" {
-		return nil, fmt.Errorf("aggregateAlertID must not be empty")
-	}
-
-	resp, err := humiographql.GetAggregateAlertByID(context.Background(), a.client, searchDomainName, aggregateAlertID)
-	if err != nil {
-		return nil, err
-	}
-	respSearchDomain := resp.GetSearchDomain()
-	respAggregateAlert := respSearchDomain.GetAggregateAlert()
-	actionNames := make([]string, len(respAggregateAlert.GetActions()))
-	for kdx, action := range respAggregateAlert.GetActions() {
-		actionNames[kdx] = action.GetName()
-	}
-	return &AggregateAlert{
-		ID:                    respAggregateAlert.GetId(),
-		Name:                  respAggregateAlert.GetName(),
-		Description:           respAggregateAlert.GetDescription(),
-		QueryString:           respAggregateAlert.GetQueryString(),
-		SearchIntervalSeconds: respAggregateAlert.GetSearchIntervalSeconds(),
-		ActionNames:           actionNames,
-		Labels:                respAggregateAlert.GetLabels(),
-		Enabled:               respAggregateAlert.GetEnabled(),
-		ThrottleField:         respAggregateAlert.ThrottleField,
-		ThrottleTimeSeconds:   respAggregateAlert.GetThrottleTimeSeconds(),
-		QueryOwnershipType:    string(queryOwnershipToQueryOwnershipType(respAggregateAlert.GetQueryOwnership())),
-		TriggerMode:           string(respAggregateAlert.GetTriggerMode()),
-		QueryTimestampType:    string(respAggregateAlert.GetQueryTimestampType()),
-		OwnershipRunAsID:      respAggregateAlert.GetQueryOwnership().GetId(),
-	}, nil
 }
