@@ -1,0 +1,157 @@
+fragment ParserDetails on Parser {
+    id
+    name
+    displayName
+    description
+    isBuiltIn
+    script
+    fieldsToTag
+    fieldsToBeRemovedBeforeParsing
+    testCases {
+        event {
+            rawString
+        }
+        outputAssertions {
+            assertions {
+                fieldsHaveValues {
+                    fieldName
+                    expectedValue
+                }
+                fieldsNotPresent
+            }
+            outputEventIndex
+        }
+    }
+}
+
+query ListParsers(
+    $RepositoryName: String!
+) {
+    repository(
+        name: $RepositoryName
+    ) {
+        parsers {
+            id
+            name
+            isBuiltIn
+        }
+    }
+}
+
+mutation LegacyDeleteParserByID(
+    $RepositoryName: String!
+    $ParserID: String!
+) {
+    removeParser(input: {
+        repositoryName: $RepositoryName
+        id: $ParserID
+    }) {
+        __typename
+    }
+}
+
+mutation DeleteParserByID(
+    $RepositoryName: RepoOrViewName!
+    $ParserID: String!
+) {
+    deleteParser(input: {
+        repositoryName: $RepositoryName
+        id: $ParserID
+    }) {
+        __typename
+    }
+}
+mutation LegacyCreateParser(
+    $RepositoryName: String!
+    $Name: String!
+    $TestData: [String!]!
+    $TagFields: [String!]!
+    $SourceCode: String!
+    $Force: Boolean!
+) {
+    createParser(input: {
+        name: $Name
+        repositoryName: $RepositoryName
+        testData: $TestData
+        tagFields: $TagFields
+        sourceCode: $SourceCode
+        force: $Force
+    }) {
+        parser {
+            ...ParserDetails
+        }
+    }
+}
+
+
+mutation CreateParser(
+    $RepositoryName: RepoOrViewName!
+    $Name: String!
+    $Script: String!
+    $TestCases: [ParserTestCaseInput!]!
+    $FieldsToTag: [String!]!
+    $FieldsToBeRemovedBeforeParsing: [String!]!
+    $AllowOverridingExistingParser: Boolean!
+) {
+    createParserV2(input: {
+        name: $Name
+        script: $Script
+        testCases: $TestCases
+        repositoryName: $RepositoryName
+        fieldsToTag: $FieldsToTag
+        fieldsToBeRemovedBeforeParsing: $FieldsToBeRemovedBeforeParsing
+        allowOverwritingExistingParser: $AllowOverridingExistingParser
+    }) {
+        ...ParserDetails
+    }
+}
+
+query LegacyGetParser(
+    $RepositoryName: String!
+    $ParserName: String!
+) {
+    repository(
+        name: $RepositoryName
+    ) {
+        parser(
+            name: $ParserName
+        ) {
+            id
+            name
+            sourceCode
+            testData
+            tagFields
+        }
+    }
+}
+
+query GetParserByID(
+    $RepositoryName: String!
+    $ParserID: String!
+) {
+    repository(
+        name: $RepositoryName
+    ) {
+        parser(
+            id: $ParserID
+        ) {
+            ...ParserDetails
+        }
+    }
+}
+
+query GetParserYAMLByName(
+    $RepositoryName: String!
+    $ParserName: String!
+) {
+    repository(
+        name: $RepositoryName
+    ) {
+        parser(
+            name: $ParserName
+        ) {
+            name
+            yamlTemplate
+        }
+    }
+}

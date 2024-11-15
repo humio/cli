@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +38,7 @@ func newFeatureFlagsDisableCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "disable [--global | --user <user-id> | --organization <organization-id>] <feature-flag>",
-		Short: "disable a feature flag",
+		Short: "Disable a feature flag",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			enableDisableFeatureFlag(cmd, args, global, organizationID, userID, false)
@@ -60,7 +60,7 @@ func enableDisableFeatureFlag(cmd *cobra.Command, args []string, global bool, or
 		postTense = "Enabled"
 	}
 
-	flag := api.FeatureFlag(args[0])
+	flag := api.FeatureFlagName(args[0])
 
 	if global && len(organizationID) > 0 && len(userID) > 0 {
 		cmd.PrintErrln("cannot specify --global, --user and --organization at the same time")
@@ -94,7 +94,7 @@ func enableDisableFeatureFlag(cmd *cobra.Command, args []string, global bool, or
 
 	var foundFlag bool
 	for _, f := range flags {
-		if f == flag {
+		if f.Flag == flag {
 			foundFlag = true
 			break
 		}

@@ -18,15 +18,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
 
 func newScheduledSearchesInstallCmd() *cobra.Command {
-	var (
-		filePath, url string
-	)
+	var filePath, url, name string
 
 	cmd := cobra.Command{
 		Use:   "install [flags] <view>",
@@ -65,6 +63,10 @@ The install command allows you to install scheduled searches from a URL or from 
 			err = yaml.Unmarshal(content, &scheduledSearch)
 			exitOnError(cmd, err, "Could not unmarshal the scheduled search")
 
+			if name != "" {
+				scheduledSearch.Name = name
+			}
+
 			_, err = client.ScheduledSearches().Create(viewName, &scheduledSearch)
 			exitOnError(cmd, err, "Could not create the scheduled search")
 
@@ -74,6 +76,7 @@ The install command allows you to install scheduled searches from a URL or from 
 
 	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the scheduled search to install.")
 	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the scheduled search file from.")
+	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the alert under a specific name, ignoring the `name` attribute in the alert file.")
 	cmd.MarkFlagsMutuallyExclusive("file", "url")
 	return &cmd
 }

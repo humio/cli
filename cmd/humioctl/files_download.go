@@ -13,9 +13,10 @@ func newFilesDownloadCmd() *cobra.Command {
 	)
 
 	cmd := &cobra.Command{
-		Use:  "download <view-name> <file-name>",
-		Long: `Download a file.`,
-		Args: cobra.ExactArgs(2),
+		Use:   "download <view-name> <file-name>",
+		Long:  `Download a file.`,
+		Short: "Download a file.",
+		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			viewName := args[0]
 			fileName := args[1]

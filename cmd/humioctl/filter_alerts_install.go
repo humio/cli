@@ -18,15 +18,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
 
 func newFilterAlertsInstallCmd() *cobra.Command {
-	var (
-		filePath, url string
-	)
+	var filePath, url, name string
 
 	cmd := cobra.Command{
 		Use:   "install [flags] <view>",
@@ -65,6 +63,10 @@ The install command allows you to install filter alerts from a URL or from a loc
 			err = yaml.Unmarshal(content, &filterAlert)
 			exitOnError(cmd, err, "Could not unmarshal the filter alert")
 
+			if name != "" {
+				filterAlert.Name = name
+			}
+
 			_, err = client.FilterAlerts().Create(viewName, &filterAlert)
 			exitOnError(cmd, err, "Could not create the filter alert")
 
@@ -74,6 +76,7 @@ The install command allows you to install filter alerts from a URL or from a loc
 
 	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the filter alert to install.")
 	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the filter alert file from.")
+	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the alert under a specific name, ignoring the `name` attribute in the alert file.")
 	cmd.MarkFlagsMutuallyExclusive("file", "url")
 	return &cmd
 }

@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/api"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 

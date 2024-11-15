@@ -20,7 +20,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -99,6 +99,10 @@ func getURLAction(url string) ([]byte, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	if response == nil {
+		return nil, fmt.Errorf("failed to get response")
 	}
 
 	defer func() {

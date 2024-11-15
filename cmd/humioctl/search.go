@@ -13,7 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/humio/cli/prompt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"

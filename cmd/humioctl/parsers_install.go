@@ -15,11 +15,12 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -93,6 +94,9 @@ func getURLParser(url string) ([]byte, error) {
 	response, err := http.Get(url)
 	if err != nil {
 		return nil, err
+	}
+	if response == nil {
+		return nil, fmt.Errorf("failed to get response")
 	}
 	defer func() {
 		_ = response.Body.Close()

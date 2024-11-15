@@ -1,0 +1,5 @@
+mutation RotateTokenByID(
+    $TokenID: String!
+) {
+    rotateToken(input:{id:$TokenID})
+}

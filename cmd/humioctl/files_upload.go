@@ -18,7 +18,8 @@ func newFilesUploadCmd() *cobra.Command {
 		Long: `Upload a file to a view.
 
 Specify '-' as the input file to read from stdin.`,
-		Args: cobra.ExactArgs(2),
+		Short: "Upload a file.",
+		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			if args[1] == "-" && saveAsFileName == "" {
 				cmd.PrintErr("When the input file is stdin, the file name must be provided with --name.\n")

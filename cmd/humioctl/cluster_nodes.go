@@ -15,8 +15,8 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/api"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -55,7 +55,7 @@ func printClusterNodeDetailsTable(cmd *cobra.Command, node api.ClusterNode) {
 		{format.String("Solitary segment size"), ByteCountDecimal(node.SolitarySegmentSize)},
 		{format.String("Is available"), format.Bool(node.IsAvailable)},
 		{format.String("Last heartbeat"), format.String(node.LastHeartbeat)},
-		{format.String("Availability Zone"), format.String(node.Zone)},
+		{format.String("Availability Zone"), format.StringPtr(node.Zone)},
 	}
 
 	printDetailsTable(cmd, details)

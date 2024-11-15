@@ -1,0 +1,71 @@
+fragment IngestTokenDetails on IngestToken {
+    name
+    token
+    parser {
+        name
+    }
+}
+query ListIngestTokens(
+    $RepositoryName: String!
+) {
+    repository(
+        name: $RepositoryName
+    ) {
+        ingestTokens {
+            ...IngestTokenDetails
+        }
+    }
+}
+
+mutation AddIngestToken(
+    $RepositoryName: String!
+    $Name: String!
+    $ParserName: String
+) {
+    addIngestTokenV3(input: {
+        repositoryName: $RepositoryName
+        name: $Name
+        parser: $ParserName
+    }) {
+        ...IngestTokenDetails
+    }
+}
+
+mutation AssignParserToIngestToken(
+    $RepositoryName: String!
+    $IngestTokenName: String!
+    $ParserName: String!
+) {
+    assignParserToIngestTokenV2(input: {
+        repositoryName: $RepositoryName
+        parser: $ParserName
+        tokenName: $IngestTokenName
+    }) {
+       __typename
+    }
+}
+
+mutation UnassignParserToIngestToken(
+    $RepositoryName: String!
+    $IngestTokenName: String!
+) {
+    unassignIngestToken(
+        repositoryName: $RepositoryName
+        tokenName: $IngestTokenName
+    ) {
+        __typename
+    }
+}
+
+
+mutation RemoveIngestToken(
+    $RepositoryName: String!
+    $Name: String!
+) {
+    removeIngestToken(
+        repositoryName: $RepositoryName
+        name: $Name
+    ) {
+        __typename
+    }
+}

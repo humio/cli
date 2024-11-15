@@ -17,7 +17,7 @@ package main
 import (
 	"strings"
 
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -51,7 +51,7 @@ func newAlertsListCmd() *cobra.Command {
 				rows = append(rows, []format.Value{
 					format.String(alert.Name),
 					format.Bool(alert.Enabled),
-					format.String(alert.Description),
+					format.StringPtr(alert.Description),
 					format.String(strings.Join(notifierNames, ", "))})
 			}
 

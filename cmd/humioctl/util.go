@@ -3,14 +3,15 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/humio/cli/cmd/internal/format"
-	"github.com/spf13/cobra"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
 	"regexp"
 	"strconv"
+
+	"github.com/humio/cli/internal/format"
+	"github.com/spf13/cobra"
 )
 
 // GoReleaser will override these when building: https://goreleaser.com/customization/build/
@@ -151,6 +152,9 @@ func getBytesFromURL(url string) ([]byte, error) {
 
 	if err != nil {
 		return nil, err
+	}
+	if response == nil {
+		return nil, fmt.Errorf("failed to get reponse")
 	}
 
 	defer func() {

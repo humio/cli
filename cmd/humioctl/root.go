@@ -20,8 +20,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
+	"github.com/humio/cli/internal/api"
+	"github.com/humio/cli/internal/viperkey"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -128,6 +128,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newGroupsCmd())
 	rootCmd.AddCommand(newFilesCmd())
 	rootCmd.AddCommand(newFeatureFlagsCmd())
+	rootCmd.AddCommand(newTokensCmd())
 
 	// Hidden Commands
 	rootCmd.AddCommand(newWelcomeCmd())
@@ -161,6 +162,10 @@ func initConfig() {
 	if profileFlag != "" {
 		profile, err := loadProfile(profileFlag)
 		exitOnError(rootCmd, err, "Failed to load profile")
+		if profile == nil {
+			rootCmd.PrintErr("failed to load profile")
+			os.Exit(1)
+		}
 
 		// Explicitly bound address or token have precedence
 		if address == "" {

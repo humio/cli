@@ -1,0 +1,25 @@
+mutation CreateView(
+    $ViewName: String!
+    $Description: String
+    $Connections: [ViewConnectionInput!]
+) {
+    createView(
+        name: $ViewName
+        description: $Description
+        connections: $Connections
+    ) {
+        __typename
+    }
+}
+
+mutation UpdateViewConnections(
+    $ViewName: String!
+    $Connections: [ViewConnectionInput!]!
+) {
+    updateView(
+        viewName: $ViewName
+        connections: $Connections
+    ) {
+        name
+    }
+}

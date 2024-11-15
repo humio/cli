@@ -43,15 +43,15 @@ func newReposUpdateCmd() *cobra.Command {
 				exitOnError(cmd, err, "Error updating repository description")
 			}
 			if retentionTimeFlag.value != nil {
-				err := client.Repositories().UpdateTimeBasedRetention(repoName, *retentionTimeFlag.value, allowDataDeletionFlag)
+				err := client.Repositories().UpdateTimeBasedRetention(repoName, retentionTimeFlag.value, allowDataDeletionFlag)
 				exitOnError(cmd, err, "Error updating repository retention time in days")
 			}
 			if ingestSizeBasedRetentionFlag.value != nil {
-				err := client.Repositories().UpdateIngestBasedRetention(repoName, *ingestSizeBasedRetentionFlag.value, allowDataDeletionFlag)
+				err := client.Repositories().UpdateIngestBasedRetention(repoName, ingestSizeBasedRetentionFlag.value, allowDataDeletionFlag)
 				exitOnError(cmd, err, "Error updating repository ingest size based retention")
 			}
 			if storageSizeBasedRetentionFlag.value != nil {
-				err := client.Repositories().UpdateStorageBasedRetention(repoName, *storageSizeBasedRetentionFlag.value, allowDataDeletionFlag)
+				err := client.Repositories().UpdateStorageBasedRetention(repoName, storageSizeBasedRetentionFlag.value, allowDataDeletionFlag)
 				exitOnError(cmd, err, "Error updating repository storage size based retention")
 			}
 

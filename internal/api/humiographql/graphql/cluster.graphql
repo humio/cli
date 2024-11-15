@@ -1,0 +1,62 @@
+fragment ClusterNode on Cluster {
+    nodes {
+        id
+        name
+        uri
+        uuid
+        clusterInfoAgeSeconds
+        inboundSegmentSize
+        outboundSegmentSize
+        canBeSafelyUnregistered
+        currentSize
+        primarySize
+        secondarySize
+        totalSizeOfPrimary
+        totalSizeOfSecondary
+        freeOnPrimary
+        freeOnSecondary
+        wipSize
+        targetSize
+        solitarySegmentSize
+        isAvailable
+        lastHeartbeat
+        zone
+    }
+}
+
+query GetCluster {
+    cluster {
+        ...ClusterNode
+        clusterInfoAgeSeconds
+        underReplicatedSegmentSize
+        overReplicatedSegmentSize
+        missingSegmentSize
+        properlyReplicatedSegmentSize
+        targetUnderReplicatedSegmentSize
+        targetOverReplicatedSegmentSize
+        targetMissingSegmentSize
+        targetProperlyReplicatedSegmentSize
+        ingestPartitions {
+            id
+            nodeIds
+        }
+    }
+}
+
+query ListClusterNodes {
+    cluster {
+        ...ClusterNode
+    }
+}
+
+mutation UnregisterClusterNode(
+    $NodeID: Int!
+    $Force: Boolean!
+) {
+    clusterUnregisterNode(
+        nodeID: $NodeID
+        force: $Force
+    ) {
+        __typename
+    }
+}
