@@ -82,10 +82,10 @@ func newAggregateAlertsExportAllCmd() *cobra.Command {
 			aggregateAlerts, err := client.AggregateAlerts().List(view)
 			exitOnError(cmd, err, "Error fetching aggregate alerts")
 
-			for _, aggregateAlert := range aggregateAlerts {
-				yamlData, err := yaml.Marshal(&aggregateAlert)
+			for i := range aggregateAlerts {
+				yamlData, err := yaml.Marshal(&aggregateAlerts[i])
 				exitOnError(cmd, err, "Failed to serialize the aggregate alert")
-				alertFilename := sanitizeTriggerName(aggregateAlert.Name) + ".yaml"
+				alertFilename := sanitizeTriggerName(aggregateAlerts[i].Name) + ".yaml"
 
 				var outFilePath string
 				if outputDirectory != "" {

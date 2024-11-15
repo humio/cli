@@ -71,10 +71,10 @@ func newActionsExportAllCmd() *cobra.Command {
 			actions, err := client.Actions().List(view)
 			exitOnError(cmd, err, "Error fetching actions")
 
-			for _, action := range actions {
-				yamlData, err := yaml.Marshal(&action)
+			for i := range actions {
+				yamlData, err := yaml.Marshal(&actions[i])
 				exitOnError(cmd, err, "Failed to serialize the action")
-				actionFilename := sanitizeTriggerName(action.Name) + ".yaml"
+				actionFilename := sanitizeTriggerName(actions[i].Name) + ".yaml"
 
 				var outFilePath string
 				if outputDirectory != "" {

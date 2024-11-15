@@ -82,10 +82,10 @@ func newFilterAlertsExportAllCmd() *cobra.Command {
 			filterAlerts, err := client.FilterAlerts().List(view)
 			exitOnError(cmd, err, "Error fetching filter alerts")
 
-			for _, filterAlert := range filterAlerts {
-				yamlData, err := yaml.Marshal(&filterAlert)
+			for i := range filterAlerts {
+				yamlData, err := yaml.Marshal(&filterAlerts[i])
 				exitOnError(cmd, err, "Failed to serialize the filter alert")
-				filterAlertFilename := sanitizeTriggerName(filterAlert.Name) + ".yaml"
+				filterAlertFilename := sanitizeTriggerName(filterAlerts[i].Name) + ".yaml"
 
 				var outFilePath string
 				if outputDirectory != "" {

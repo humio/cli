@@ -71,10 +71,10 @@ func newAlertsExportAllCmd() *cobra.Command {
 			alerts, err := client.Alerts().List(view)
 			exitOnError(cmd, err, "Error fetching alerts")
 
-			for _, alert := range alerts {
-				yamlData, err := yaml.Marshal(&alert)
+			for i := range alerts {
+				yamlData, err := yaml.Marshal(&alerts[i])
 				exitOnError(cmd, err, "Failed to serialize the alert")
-				alertFilename := sanitizeTriggerName(alert.Name) + ".yaml"
+				alertFilename := sanitizeTriggerName(alerts[i].Name) + ".yaml"
 
 				var outFilePath string
 				if outputDirectory != "" {
