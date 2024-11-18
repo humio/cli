@@ -100,9 +100,14 @@ func (a *Alerts) Add(searchDomainName string, newAlert *Alert) (*Alert, error) {
 
 	respUpdate := resp.GetCreateAlert()
 	respQueryOwnership := respUpdate.GetQueryOwnership()
-	runAsUserID := ""
+	respRunAsUserID := ""
+	respOwnershipType := ""
 	if respQueryOwnership != nil {
-		runAsUserID = respQueryOwnership.GetId()
+		respRunAsUserID = respQueryOwnership.GetId()
+		respOwnershipTypename := respQueryOwnership.GetTypename()
+		if respOwnershipTypename != nil {
+			respOwnershipType = *respOwnershipTypename
+		}
 	}
 	return &Alert{
 		ID:                 respUpdate.GetId(),
@@ -118,8 +123,8 @@ func (a *Alerts) Add(searchDomainName string, newAlert *Alert) (*Alert, error) {
 		Actions:            respUpdate.GetActions(),
 		Labels:             respUpdate.GetLabels(),
 		LastError:          respUpdate.LastError,
-		RunAsUserID:        runAsUserID,
-		QueryOwnershipType: *respQueryOwnership.GetTypename(),
+		RunAsUserID:        respRunAsUserID,
+		QueryOwnershipType: respOwnershipType,
 	}, nil
 }
 
