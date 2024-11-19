@@ -32,44 +32,6 @@ query ListAggregateAlerts(
     }
 }
 
-mutation UpdateAggregateAlert(
-    $SearchDomainName: RepoOrViewName!
-    $ID: String!
-    $Name: String!
-    $Description: String
-    $QueryString: String!
-    $SearchIntervalSeconds: Long!
-    $ActionIdsOrNames: [String!]!
-    $Labels: [String!]!
-    $Enabled: Boolean!
-    $RunAsUserID: String
-    $ThrottleField: String
-    $ThrottleTimeSeconds: Long!
-    $TriggerMode: TriggerMode!
-    $QueryTimestampMode: QueryTimestampType!
-    $QueryOwnershipType: QueryOwnershipType!
-) {
-    updateAggregateAlert(input: {
-        viewName: $SearchDomainName
-        id: $ID
-        name: $Name
-        description: $Description
-        queryString: $QueryString
-        searchIntervalSeconds: $SearchIntervalSeconds
-        actionIdsOrNames: $ActionIdsOrNames
-        labels: $Labels
-        enabled: $Enabled
-        runAsUserId: $RunAsUserID
-        throttleField: $ThrottleField
-        throttleTimeSeconds: $ThrottleTimeSeconds
-        triggerMode: $TriggerMode
-        queryTimestampType: $QueryTimestampMode
-        queryOwnershipType: $QueryOwnershipType
-    }) {
-        ...AggregateAlertDetails
-    }
-}
-
 mutation CreateAggregateAlert(
     $SearchDomainName: RepoOrViewName!
     $Name: String!
