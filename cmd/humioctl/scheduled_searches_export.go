@@ -15,9 +15,9 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
 	"os"
 
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -82,10 +82,10 @@ func newScheduledSearchesExportAllCmd() *cobra.Command {
 			scheduledSearches, err := client.ScheduledSearches().List(view)
 			exitOnError(cmd, err, "Error fetching scheduled searches")
 
-			for _, scheduledSearch := range scheduledSearches {
-				yamlData, err := yaml.Marshal(&scheduledSearch)
+			for i := range scheduledSearches {
+				yamlData, err := yaml.Marshal(&scheduledSearches[i])
 				exitOnError(cmd, err, "Failed to serialize the scheduled search")
-				scheduledSearchFilename := sanitizeTriggerName(scheduledSearch.Name) + ".yaml"
+				scheduledSearchFilename := sanitizeTriggerName(scheduledSearches[i].Name) + ".yaml"
 
 				var outFilePath string
 				if outputDirectory != "" {

@@ -15,10 +15,11 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
+	"os"
+
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
-	"os"
 )
 
 func newAlertsExportCmd() *cobra.Command {
@@ -70,10 +71,10 @@ func newAlertsExportAllCmd() *cobra.Command {
 			alerts, err := client.Alerts().List(view)
 			exitOnError(cmd, err, "Error fetching alerts")
 
-			for _, alert := range alerts {
-				yamlData, err := yaml.Marshal(&alert)
+			for i := range alerts {
+				yamlData, err := yaml.Marshal(&alerts[i])
 				exitOnError(cmd, err, "Failed to serialize the alert")
-				alertFilename := sanitizeTriggerName(alert.Name) + ".yaml"
+				alertFilename := sanitizeTriggerName(alerts[i].Name) + ".yaml"
 
 				var outFilePath string
 				if outputDirectory != "" {

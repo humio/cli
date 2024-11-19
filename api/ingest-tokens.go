@@ -4,16 +4,19 @@ import (
 	graphql "github.com/cli/shurcooL-graphql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type IngestTokens struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type IngestToken struct {
 	Name           string `json:"name"`
 	Token          string `json:"token"`
 	AssignedParser string `json:"parser"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) IngestTokens() *IngestTokens { return &IngestTokens{client: c} }
 
 type ingestTokenData struct {
@@ -24,6 +27,7 @@ type ingestTokenData struct {
 	}
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (i *IngestTokens) List(repo string) ([]IngestToken, error) {
 	var query struct {
 		Result struct {
@@ -48,6 +52,7 @@ func (i *IngestTokens) List(repo string) ([]IngestToken, error) {
 	return tokens, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (i *IngestTokens) Get(repoName, tokenName string) (*IngestToken, error) {
 	tokensInRepo, err := i.List(repoName)
 	if err != nil {
@@ -76,6 +81,7 @@ func toIngestToken(data ingestTokenData) *IngestToken {
 	}
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (i *IngestTokens) Add(repositoryName string, tokenName string, parser string) (*IngestToken, error) {
 	variables := map[string]interface{}{
 		"tokenName":      graphql.String(tokenName),
@@ -111,6 +117,7 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parser strin
 	return &ingestToken, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (i *IngestTokens) Update(repositoryName string, tokenName string, parser string) (*IngestToken, error) {
 	if parser == "" {
 		var mutation struct {
@@ -152,6 +159,7 @@ func (i *IngestTokens) Update(repositoryName string, tokenName string, parser st
 	return i.Get(repositoryName, tokenName)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (i *IngestTokens) Remove(repositoryName string, tokenName string) error {
 	var mutation struct {
 		Result struct {

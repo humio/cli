@@ -1,0 +1,69 @@
+fragment RoleDetails on Role{
+    id
+    displayName
+    viewPermissions
+    organizationPermissions
+    systemPermissions
+}
+
+query ListRoles {
+    roles {
+        ...RoleDetails
+    }
+}
+
+mutation CreateRole(
+    $RoleName: String!
+    $ViewPermissions: [Permission!]!
+    $OrganizationPermissions: [OrganizationPermission!]
+    $SystemPermissions: [SystemPermission!]
+) {
+    createRole(input: {
+        displayName: $RoleName
+        viewPermissions: $ViewPermissions
+        organizationPermissions: $OrganizationPermissions
+        systemPermissions: $SystemPermissions
+    }) {
+        role {
+            ...RoleDetails
+        }
+    }
+}
+
+mutation UpdateRole(
+    $RoleID: String!
+    $RoleName: String!
+    $ViewPermissions: [Permission!]!
+    $OrganizationPermissions: [OrganizationPermission!]
+    $SystemPermissions: [SystemPermission!]
+) {
+    updateRole(input: {
+        roleId: $RoleID
+        displayName: $RoleName
+        viewPermissions: $ViewPermissions
+        organizationPermissions: $OrganizationPermissions
+        systemPermissions: $SystemPermissions
+    }) {
+        role {
+            ...RoleDetails
+        }
+    }
+}
+
+mutation RemoveRoleByID(
+    $RoleID: String!
+) {
+    removeRole(roleId: $RoleID) {
+        __typename
+    }
+}
+
+query GetRoleByID(
+    $RoleID: String!
+) {
+    role(
+        roleId: $RoleID
+    ) {
+        ...RoleDetails
+    }
+}

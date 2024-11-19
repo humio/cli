@@ -3,27 +3,32 @@ package api
 import (
 	"context"
 	"fmt"
-	graphql "github.com/cli/shurcooL-graphql"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"net/url"
 
+	graphql "github.com/cli/shurcooL-graphql"
+
 	"golang.org/x/sync/errgroup"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Files struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type File struct {
 	ID          string
 	Name        string
 	ContentHash string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Files() *Files { return &Files{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *Files) List(viewName string) ([]File, error) {
 	var query struct {
 		SearchDomain struct {
@@ -39,6 +44,7 @@ func (f *Files) List(viewName string) ([]File, error) {
 	return query.SearchDomain.Files, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *Files) Delete(viewName string, fileName string) error {
 	var query struct {
 		RemoveFile struct {
@@ -55,6 +61,7 @@ func (f *Files) Delete(viewName string, fileName string) error {
 	return f.client.Mutate(&query, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *Files) Upload(viewName string, fileName string, reader io.Reader) error {
 	pr, pw := io.Pipe()
 
@@ -98,6 +105,7 @@ func (f *Files) Upload(viewName string, fileName string, reader io.Reader) error
 	return nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *Files) Download(viewName string, fileName string) (io.Reader, error) {
 	resp, err := f.client.HTTPRequest(http.MethodGet, fmt.Sprintf("api/v1/dataspaces/%s/files/%s", url.PathEscape(viewName), url.PathEscape(fileName)), nil)
 	if err != nil {

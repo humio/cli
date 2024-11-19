@@ -2,10 +2,12 @@ package api
 
 import (
 	"fmt"
+
 	graphql "github.com/cli/shurcooL-graphql"
 	"github.com/humio/cli/api/internal/humiographql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type FilterAlert struct {
 	ID                  string   `graphql:"id"                  yaml:"-"                             json:"id"`
 	Name                string   `graphql:"name"                yaml:"name"                          json:"name"`
@@ -20,12 +22,15 @@ type FilterAlert struct {
 	RunAsUserID         string   `graphql:"runAsUserId"         yaml:"runAsUserId,omitempty"         json:"runAsUserId,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type FilterAlerts struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) FilterAlerts() *FilterAlerts { return &FilterAlerts{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (fa *FilterAlerts) List(viewName string) ([]FilterAlert, error) {
 	var query struct {
 		SearchDomain struct {
@@ -50,6 +55,7 @@ func (fa *FilterAlerts) List(viewName string) ([]FilterAlert, error) {
 	return filterAlerts, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (fa *FilterAlerts) Update(viewName string, updatedFilterAlert *FilterAlert) (*FilterAlert, error) {
 	if updatedFilterAlert == nil {
 		return nil, fmt.Errorf("updatedFilterAlert must not be nil")
@@ -102,6 +108,7 @@ func (fa *FilterAlerts) Update(viewName string, updatedFilterAlert *FilterAlert)
 	return &filterAlert, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (fa *FilterAlerts) Create(viewName string, newFilterAlert *FilterAlert) (*FilterAlert, error) {
 	if newFilterAlert == nil {
 		return nil, fmt.Errorf("newFilterAlert must not be nil")
@@ -149,6 +156,7 @@ func (fa *FilterAlerts) Create(viewName string, newFilterAlert *FilterAlert) (*F
 	return &filterAlert, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (fa *FilterAlerts) Delete(viewName, filterAlertID string) error {
 	if filterAlertID == "" {
 		return fmt.Errorf("filterAlertID is empty")
@@ -172,6 +180,7 @@ func (fa *FilterAlerts) Delete(viewName, filterAlertID string) error {
 	return err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (fa *FilterAlerts) Get(viewName string, filterAlertID string) (*FilterAlert, error) {
 	var query struct {
 		SearchDomain struct {

@@ -1,0 +1,42 @@
+schema: schema/_schema.graphql
+operations:
+  - graphql/actions.graphql
+  - graphql/aggregate-alerts.graphql
+  - graphql/alerts.graphql
+  - graphql/cluster.graphql
+  - graphql/featureflags.graphql
+  - graphql/files.graphql
+  - graphql/filter-alerts.graphql
+  - graphql/fragments.graphql
+  - graphql/groups.graphql
+  - graphql/ingest-tokens.graphql
+  - graphql/license.graphql
+  - graphql/packages.graphql
+  - graphql/parsers.graphql
+  - graphql/repositories.graphql
+  - graphql/roles.graphql
+  - graphql/scheduled-search.graphql
+  - graphql/searchdomains.graphql
+  - graphql/token.graphql
+  - graphql/viewer.graphql
+  - graphql/views.graphql
+  - graphql/users.graphql
+generated: humiographql.go
+
+bindings:
+  DateTime:
+    type: time.Time
+  RepoOrViewName:
+    type: string
+  Long:
+    type: int64
+  VersionedPackageSpecifier:
+    type: string
+  UnversionedPackageSpecifier:
+    type: string
+  PackageVersion:
+    type: string
+  YAML:
+    type: string
+
+optional: pointer

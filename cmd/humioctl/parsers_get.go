@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/humio/cli/cmd/internal/format"
-	"github.com/spf13/cobra"
 	"strings"
+
+	"github.com/humio/cli/internal/format"
+	"github.com/spf13/cobra"
 )
 
 func newParsersShowCmd() *cobra.Command {
@@ -26,7 +27,7 @@ func newParsersShowCmd() *cobra.Command {
 				{format.String("Script"), format.String(parser.Script)},
 				{format.String("TagFields"), format.String(strings.Join(parser.FieldsToTag, "\n"))},
 				{format.String("FieldsToBeRemovedBeforeParsing"), format.String(strings.Join(parser.FieldsToBeRemovedBeforeParsing, "\n"))},
-				{format.String("TestCases"), format.String(fmt.Sprintf("%+v", parser.TestCases))},
+				{format.String("TestCasesRAW"), format.String(fmt.Sprintf("%+v", parser.TestCases))},
 			}
 
 			printDetailsTable(cmd, details)

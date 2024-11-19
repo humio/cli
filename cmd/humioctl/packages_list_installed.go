@@ -15,7 +15,7 @@
 package main
 
 import (
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +38,7 @@ func listInstalledPackagesCmd() *cobra.Command {
 					format.String(installedPackage.InstalledBy.Username),
 					valueOrEmpty(installedPackage.UpdatedBy.Username),
 					format.String(installedPackage.Source),
-					valueOrEmpty(installedPackage.AvailableUpdate),
+					format.StringPtr(installedPackage.AvailableUpdate),
 				})
 			}
 

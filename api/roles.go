@@ -2,13 +2,16 @@ package api
 
 import (
 	"fmt"
+
 	graphql "github.com/cli/shurcooL-graphql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Roles struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Role struct {
 	ID                string   `graphql:"id"`
 	DisplayName       string   `graphql:"displayName"`
@@ -19,8 +22,10 @@ type Role struct {
 	OrgPermissions    []string `graphql:"organizationPermissions"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Roles() *Roles { return &Roles{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Roles) List() ([]Role, error) {
 	var query struct {
 		Roles struct {
@@ -38,6 +43,7 @@ func (r *Roles) List() ([]Role, error) {
 	return RolesList, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Roles) Create(role *Role) error {
 	var mutation struct {
 		Role `graphql:"createRole(input: {displayName: $displayName, viewPermissions: $permissions, color: $color, systemPermissions: $systemPermissions, organizationPermissions: $orgPermissions})"`
@@ -70,6 +76,7 @@ func (r *Roles) Create(role *Role) error {
 	return r.client.Mutate(mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Roles) Update(rolename string, newRole *Role) error {
 	roleId, err := r.GetRoleID(rolename)
 	if roleId == "" || err != nil {
@@ -112,6 +119,7 @@ func (r *Roles) Update(rolename string, newRole *Role) error {
 	return r.client.Mutate(mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Roles) RemoveRole(rolename string) error {
 	var mutation struct {
 		RemoveRole struct {
@@ -132,6 +140,7 @@ func (r *Roles) RemoveRole(rolename string) error {
 	return r.client.Mutate(mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Roles) Get(rolename string) (*Role, error) {
 	roleId, err := r.GetRoleID(rolename)
 	if roleId == "" || err != nil {
@@ -154,6 +163,7 @@ func (r *Roles) Get(rolename string) (*Role, error) {
 	return &query.Role, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Roles) GetRoleID(rolename string) (string, error) {
 	roles, err := r.List()
 	if err != nil {

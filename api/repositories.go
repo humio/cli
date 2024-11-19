@@ -8,10 +8,12 @@ import (
 	"github.com/humio/cli/api/internal/humiographql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Repositories struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Repository struct {
 	ID                       string
 	Name                     string
@@ -24,8 +26,10 @@ type Repository struct {
 	AutomaticSearch          bool                         `graphql:"automaticSearch"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Repositories() *Repositories { return &Repositories{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) Get(name string) (Repository, error) {
 	var query struct {
 		Repository Repository `graphql:"repository(name: $name)"`
@@ -44,12 +48,14 @@ func (r *Repositories) Get(name string) (Repository, error) {
 	return query.Repository, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type RepoListItem struct {
 	ID        string
 	Name      string
 	SpaceUsed int64 `graphql:"compressedByteSize"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) List() ([]RepoListItem, error) {
 	var query struct {
 		Repositories []RepoListItem `graphql:"repositories"`
@@ -59,6 +65,7 @@ func (r *Repositories) List() ([]RepoListItem, error) {
 	return query.Repositories, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) Create(name string) error {
 	var mutation struct {
 		CreateRepository struct {
@@ -79,6 +86,7 @@ func (r *Repositories) Create(name string) error {
 	return nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error {
 	_, err := r.Get(name)
 	if err != nil {
@@ -103,18 +111,24 @@ func (r *Repositories) Delete(name, reason string, allowDataDeletion bool) error
 	return r.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type DefaultGroupEnum string
 
 const (
-	DefaultGroupEnumMember     DefaultGroupEnum = "Member"
-	DefaultGroupEnumAdmin      DefaultGroupEnum = "Admin"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	DefaultGroupEnumMember DefaultGroupEnum = "Member"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	DefaultGroupEnumAdmin DefaultGroupEnum = "Admin"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 	DefaultGroupEnumEliminator DefaultGroupEnum = "Eliminator"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (e DefaultGroupEnum) String() string {
 	return string(e)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (e *DefaultGroupEnum) ParseString(s string) bool {
 	switch strings.ToLower(s) {
 	case "member":
@@ -131,6 +145,7 @@ func (e *DefaultGroupEnum) ParseString(s string) bool {
 	}
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) UpdateUserGroup(name, username string, groups ...DefaultGroupEnum) error {
 	if len(groups) == 0 {
 		return fmt.Errorf("at least one group must be defined")
@@ -151,6 +166,7 @@ func (r *Repositories) UpdateUserGroup(name, username string, groups ...DefaultG
 	return r.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays float64, allowDataDeletion bool) error {
 	existingRepo, err := r.Get(name)
 	if err != nil {
@@ -179,6 +195,7 @@ func (r *Repositories) UpdateTimeBasedRetention(name string, retentionInDays flo
 	return r.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB float64, allowDataDeletion bool) error {
 	existingRepo, err := r.Get(name)
 	if err != nil {
@@ -207,6 +224,7 @@ func (r *Repositories) UpdateStorageBasedRetention(name string, storageInGB floa
 	return r.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float64, allowDataDeletion bool) error {
 	existingRepo, err := r.Get(name)
 	if err != nil {
@@ -235,6 +253,7 @@ func (r *Repositories) UpdateIngestBasedRetention(name string, ingestInGB float6
 	return r.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) UpdateDescription(name, description string) error {
 	_, err := r.Get(name)
 	if err != nil {
@@ -256,6 +275,7 @@ func (r *Repositories) UpdateDescription(name, description string) error {
 	return r.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) EnableS3Archiving(name string) error {
 	existingRepo, err := r.Get(name)
 	if err != nil {
@@ -280,6 +300,7 @@ func (r *Repositories) EnableS3Archiving(name string) error {
 	return r.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) DisableS3Archiving(name string) error {
 	existingRepo, err := r.Get(name)
 	if err != nil {
@@ -304,6 +325,7 @@ func (r *Repositories) DisableS3Archiving(name string) error {
 	return r.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) UpdateS3ArchivingConfiguration(name string, bucket string, region string, format string) error {
 	_, err := r.Get(name)
 	if err != nil {
@@ -340,6 +362,7 @@ func (r *Repositories) UpdateS3ArchivingConfiguration(name string, bucket string
 	return r.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (r *Repositories) UpdateAutomaticSearch(name string, automaticSearch bool) error {
 	_, err := r.Get(name)
 	if err != nil {

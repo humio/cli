@@ -2,22 +2,28 @@ package api
 
 import (
 	"errors"
+
 	graphql "github.com/cli/shurcooL-graphql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Groups struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Group struct {
 	ID          string
 	DisplayName string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Groups() *Groups { return &Groups{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 var ErrUserNotFound = errors.New("user not found")
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (g *Groups) List() ([]Group, error) {
 	var query struct {
 		Page struct {
@@ -33,6 +39,7 @@ func (g *Groups) List() ([]Group, error) {
 	return query.Page.Groups, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (g *Groups) AddUserToGroup(groupID string, userID string) error {
 	var mutation struct {
 		AddUsersToGroup struct {
@@ -69,6 +76,7 @@ func (g *Groups) AddUserToGroup(groupID string, userID string) error {
 	return nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (g *Groups) RemoveUserFromGroup(groupID string, userID string) error {
 	var mutation struct {
 		RemoveUsersFromGroup struct {

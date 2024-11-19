@@ -2,13 +2,16 @@ package api
 
 import (
 	"errors"
+
 	graphql "github.com/cli/shurcooL-graphql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Users struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type User struct {
 	ID          string
 	Username    string
@@ -21,6 +24,7 @@ type User struct {
 	CreatedAt   string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type UserChangeSet struct {
 	IsRoot      *bool
 	FullName    *string
@@ -30,8 +34,10 @@ type UserChangeSet struct {
 	Email       *string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Users() *Users { return &Users{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (u *Users) List() ([]User, error) {
 	var query struct {
 		Users []User `graphql:"users"`
@@ -41,6 +47,7 @@ func (u *Users) List() ([]User, error) {
 	return query.Users, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (u *Users) Get(username string) (User, error) {
 	var query struct {
 		Users []User `graphql:"users(search: $username)"`
@@ -64,6 +71,7 @@ func (u *Users) Get(username string) (User, error) {
 	return User{}, errors.New("user not found")
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (u *Users) Update(username string, changeset UserChangeSet) (User, error) {
 	var mutation struct {
 		Result struct{ User User } `graphql:"updateUser(input: {username: $username, company: $company, isRoot: $isRoot, fullName: $fullName, picture: $picture, email: $email, countryCode: $countryCode})"`
@@ -73,6 +81,7 @@ func (u *Users) Update(username string, changeset UserChangeSet) (User, error) {
 	return mutation.Result.User, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (u *Users) Add(username string, changeset UserChangeSet) (User, error) {
 	var mutation struct {
 		Result struct {
@@ -89,6 +98,7 @@ func (u *Users) Add(username string, changeset UserChangeSet) (User, error) {
 	return u.Get(username)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (u *Users) Remove(username string) (User, error) {
 	var mutation struct {
 		Result struct {
@@ -104,6 +114,7 @@ func (u *Users) Remove(username string) (User, error) {
 	return mutation.Result.User, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (u *Users) RotateToken(userID string) (string, error) {
 	var mutation struct {
 		Token string `graphql:"rotateToken(input:{id:$id})"`
@@ -121,6 +132,7 @@ func (u *Users) RotateToken(userID string) (string, error) {
 	return mutation.Token, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func userChangesetToVars(username string, changeset UserChangeSet) map[string]interface{} {
 	return map[string]interface{}{
 		"username":    graphql.String(username),

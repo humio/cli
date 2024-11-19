@@ -14,7 +14,7 @@ import (
 
 	"github.com/gofrs/uuid"
 	"github.com/hpcloud/tail"
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/humio/cli/shipper"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/spf13/cobra"

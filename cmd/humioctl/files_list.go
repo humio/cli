@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -22,11 +22,10 @@ func newFilesListCmd() *cobra.Command {
 				rows = append(rows, []format.Value{
 					format.String(file.Name),
 					format.String(file.ContentHash),
-					format.String(file.ID),
 				})
 			}
 
-			printOverviewTable(cmd, []string{"Name", "Content Hash", "ID"}, rows)
+			printOverviewTable(cmd, []string{"Name", "Content Hash"}, rows)
 		},
 	}
 

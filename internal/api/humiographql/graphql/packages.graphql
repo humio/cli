@@ -1,0 +1,33 @@
+query ListInstalledPackages(
+    $SearchDomainName: String!
+) {
+    searchDomain(
+        name: $SearchDomainName
+    ) {
+        installedPackages {
+            id
+            installedBy {
+                username
+                timestamp
+            }
+            updatedBy {
+                username
+                timestamp
+            }
+            source
+            availableUpdate
+        }
+    }
+}
+
+mutation UninstallPackage(
+    $SearchDomainName: String!
+    $PackageID: UnversionedPackageSpecifier!
+) {
+    uninstallPackage(
+        viewName: $SearchDomainName
+        packageId: $PackageID
+    ) {
+        __typename
+    }
+}

@@ -1,0 +1,132 @@
+fragment ScheduledSearchDetails on ScheduledSearch {
+    id
+    name
+    description
+    queryString
+    start
+    end
+    timeZone
+    schedule
+    backfillLimit
+    enabled
+    actionsV2 {
+        name
+    }
+    labels
+
+    # @genqlient(typename: "SharedQueryOwnershipType")
+    queryOwnership {
+        ...QueryOwnership
+    }
+}
+
+query ListScheduledSearches(
+    $SearchDomainName: String!
+) {
+    searchDomain(
+        name: $SearchDomainName
+    ) {
+        scheduledSearches {
+            ...ScheduledSearchDetails
+        }
+    }
+}
+
+mutation UpdateScheduledSearch(
+    $SearchDomainName: String!
+    $ID: String!
+    $Name: String!
+    $Description: String
+    $QueryString: String!
+    $QueryStart: String!
+    $QueryEnd: String!
+    $Schedule: String!
+    $TimeZone: String!
+    $BackfillLimit: Int!
+    $Enabled: Boolean!
+    $ActionIdsOrNames: [String!]!
+    $RunAsUserID: String!
+    $Labels: [String!]!
+    $QueryOwnershipType: QueryOwnershipType
+) {
+    updateScheduledSearch(input: {
+        viewName: $SearchDomainName
+        id: $ID
+        name: $Name
+        description: $Description
+        queryString: $QueryString
+        queryStart: $QueryStart
+        queryEnd: $QueryEnd
+        schedule: $Schedule
+        timeZone: $TimeZone
+        backfillLimit: $BackfillLimit
+        enabled: $Enabled
+        actions: $ActionIdsOrNames
+        runAsUserId: $RunAsUserID
+        labels: $Labels
+        queryOwnershipType: $QueryOwnershipType
+    }) {
+        ...ScheduledSearchDetails
+    }
+}
+
+mutation CreateScheduledSearch(
+    $SearchDomainName: String!
+    $Name: String!
+    $Description: String
+    $QueryString: String!
+    $QueryStart: String!
+    $QueryEnd: String!
+    $Schedule: String!
+    $TimeZone: String!
+    $BackfillLimit: Int!
+    $Enabled: Boolean!
+    $ActionIdsOrNames: [String!]!
+    $RunAsUserID: String
+    $Labels: [String!]!
+    $QueryOwnershipType: QueryOwnershipType
+) {
+    createScheduledSearch(input: {
+        viewName: $SearchDomainName
+        name: $Name
+        description: $Description
+        queryString: $QueryString
+        queryStart: $QueryStart
+        queryEnd: $QueryEnd
+        schedule: $Schedule
+        timeZone: $TimeZone
+        backfillLimit: $BackfillLimit
+        enabled: $Enabled
+        actions: $ActionIdsOrNames
+        runAsUserId: $RunAsUserID
+        labels: $Labels
+        queryOwnershipType: $QueryOwnershipType
+    }) {
+        ...ScheduledSearchDetails
+    }
+}
+
+mutation DeleteScheduledSearchByID(
+    $SearchDomainName: String!
+    $ScheduledSearchID: String!
+) {
+    deleteScheduledSearch(input: {
+        viewName: $SearchDomainName
+        id: $ScheduledSearchID
+    })
+}
+
+query GetScheduledSearchByID(
+    $SearchDomainName: String!
+    $ScheduledSearchID: String!
+) {
+    searchDomain(
+        name: $SearchDomainName
+    ) {
+        scheduledSearch(
+            id: $ScheduledSearchID
+        ) {
+            ...ScheduledSearchDetails
+        }
+    }
+}

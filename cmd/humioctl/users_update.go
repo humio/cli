@@ -17,7 +17,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/humio/cli/api"
 	"github.com/spf13/cobra"
 )
 
@@ -34,14 +33,15 @@ func newUsersUpdateCmd() *cobra.Command {
 			userName := args[0]
 			client := NewApiClient(cmd)
 
-			_, apiErr := client.Users().Update(userName, api.UserChangeSet{
-				IsRoot:      rootFlag.value,
-				FullName:    nameFlag.value,
-				Company:     companyFlag.value,
-				CountryCode: countryCodeFlag.value,
-				Email:       emailFlag.value,
-				Picture:     pictureFlag.value,
-			})
+			_, apiErr := client.Users().Update(
+				userName,
+				rootFlag.value,
+				nameFlag.value,
+				companyFlag.value,
+				countryCodeFlag.value,
+				emailFlag.value,
+				pictureFlag.value,
+			)
 			exitOnError(cmd, apiErr, "Error updating user")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully updated user with username %q\n", userName)

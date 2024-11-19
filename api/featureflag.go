@@ -2,16 +2,20 @@ package api
 
 import graphql "github.com/cli/shurcooL-graphql"
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type FeatureFlag string
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type FeatureFlags struct {
 	c *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) FeatureFlags() *FeatureFlags {
 	return &FeatureFlags{c: c}
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *FeatureFlags) SupportedFlags() ([]FeatureFlag, error) {
 	var query struct {
 		Type struct {
@@ -34,6 +38,7 @@ func (f *FeatureFlags) SupportedFlags() ([]FeatureFlag, error) {
 	return result, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *FeatureFlags) EnableGlobally(flag FeatureFlag) error {
 	var mutation struct {
 		EnableFeature bool `graphql:"enableFeature(feature: $feature)"`
@@ -46,6 +51,7 @@ func (f *FeatureFlags) EnableGlobally(flag FeatureFlag) error {
 	return f.c.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *FeatureFlags) DisableGlobally(flag FeatureFlag) error {
 	var mutation struct {
 		DisableFeature bool `graphql:"disableFeature(feature: $feature)"`
@@ -58,6 +64,7 @@ func (f *FeatureFlags) DisableGlobally(flag FeatureFlag) error {
 	return f.c.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *FeatureFlags) EnableForOrganization(organizationID string, flag FeatureFlag) error {
 	var mutation struct {
 		EnableFeature bool `graphql:"enableFeatureForOrg(feature: $feature, orgId: $orgId)"`
@@ -71,6 +78,7 @@ func (f *FeatureFlags) EnableForOrganization(organizationID string, flag Feature
 	return f.c.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *FeatureFlags) DisableForOrganization(organizationID string, flag FeatureFlag) error {
 	var mutation struct {
 		DisableFeature bool `graphql:"disableFeatureForOrg(feature: $feature, orgId: $orgId)"`
@@ -84,6 +92,7 @@ func (f *FeatureFlags) DisableForOrganization(organizationID string, flag Featur
 	return f.c.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *FeatureFlags) EnableForUser(userID string, flag FeatureFlag) error {
 	var mutation struct {
 		EnableFeature bool `graphql:"enableFeatureForUser(feature: $feature, userId: $userId)"`
@@ -97,6 +106,7 @@ func (f *FeatureFlags) EnableForUser(userID string, flag FeatureFlag) error {
 	return f.c.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (f *FeatureFlags) DisableForUser(userID string, flag FeatureFlag) error {
 	var mutation struct {
 		DisableFeature bool `graphql:"disableFeatureForUser(feature: $feature, userId: $userId)"`

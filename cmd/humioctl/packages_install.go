@@ -21,7 +21,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 )
 
@@ -92,6 +92,9 @@ func getURLPackage(url string) (*os.File, error) {
 	response, err := http.Get(zipBallURL)
 	if err != nil {
 		return nil, err
+	}
+	if response == nil {
+		return nil, fmt.Errorf("failed to get response")
 	}
 
 	if response.StatusCode >= 400 {

@@ -1,0 +1,118 @@
+fragment RepositoryDetails on Repository {
+  id
+  name
+  description
+  timeBasedRetention
+  ingestSizeBasedRetention
+  storageSizeBasedRetention
+  compressedByteSize
+  automaticSearch
+  s3ArchivingConfiguration {
+    bucket
+    region
+    disabled
+    format
+  }
+}
+
+query GetRepository(
+  $RepositoryName: String!
+) {
+  repository(
+    name: $RepositoryName
+  ) {
+    ...RepositoryDetails
+  }
+}
+
+query ListRepositories
+{
+  repositories {
+    id
+    name
+    compressedByteSize
+  }
+}
+
+mutation CreateRepository(
+  $RepositoryName: String!
+) {
+  createRepository(
+    name: $RepositoryName
+  ) {
+    repository {
+      ...RepositoryDetails
+    }
+  }
+}
+
+mutation UpdateTimeBasedRetention(
+  $RepositoryName: String!
+  $RetentionInDays: Float
+) {
+  updateRetention(
+    repositoryName: $RepositoryName
+    timeBasedRetention: $RetentionInDays
+  ) {
+    __typename
+  }
+}
+
+mutation UpdateStorageBasedRetention(
+  $RepositoryName: String!
+  $StorageInGB: Float
+) {
+  updateRetention(
+    repositoryName: $RepositoryName
+    storageSizeBasedRetention: $StorageInGB
+  ) {
+    __typename
+  }
+}
+
+mutation UpdateIngestBasedRetention(
+  $RepositoryName: String!
+  $IngestInGB: Float
+) {
+  updateRetention(
+    repositoryName: $RepositoryName
+    ingestSizeBasedRetention: $IngestInGB
+  ) {
+    __typename
+  }
+}
+
+mutation EnableS3Archiving(
+  $RepositoryName: String!
+) {
+  s3EnableArchiving(
+    repositoryName: $RepositoryName
+  ) {
+    __typename
+  }
+}
+
+mutation DisableS3Archiving(
+  $RepositoryName: String!
+) {
+  s3DisableArchiving(
+    repositoryName: $RepositoryName
+  ) {
+    __typename
+  }
+}
+
+mutation UpdateS3ArchivingConfiguration(
+  $RepositoryName: String!
+  $BucketName: String!
+  $BucketRegion: String!
+  $Format: S3ArchivingFormat!
+) {
+  s3ConfigureArchiving(repositoryName: $RepositoryName
+    bucket: $BucketName
+    region: $BucketRegion
+    format: $Format
+  ) {
+    __typename
+  }
+}

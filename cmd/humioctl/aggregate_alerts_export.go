@@ -15,9 +15,9 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
 	"os"
 
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -41,7 +41,7 @@ func newAggregateAlertsExportCmd() *cobra.Command {
 			aggregateAlerts, err := client.AggregateAlerts().List(view)
 			exitOnError(cmd, err, "Could not list aggregate alerts")
 
-			var aggregateAlert *api.AggregateAlert
+			var aggregateAlert api.AggregateAlert
 			for _, fa := range aggregateAlerts {
 				if fa.Name == aggregateAlertName {
 					aggregateAlert = fa
@@ -78,14 +78,14 @@ func newAggregateAlertsExportAllCmd() *cobra.Command {
 			view := args[0]
 			client := NewApiClient(cmd)
 
-			var aggregateAlerts []*api.AggregateAlert
+			var aggregateAlerts []api.AggregateAlert
 			aggregateAlerts, err := client.AggregateAlerts().List(view)
 			exitOnError(cmd, err, "Error fetching aggregate alerts")
 
-			for _, aggregateAlert := range aggregateAlerts {
-				yamlData, err := yaml.Marshal(&aggregateAlert)
+			for i := range aggregateAlerts {
+				yamlData, err := yaml.Marshal(&aggregateAlerts[i])
 				exitOnError(cmd, err, "Failed to serialize the aggregate alert")
-				alertFilename := sanitizeTriggerName(aggregateAlert.Name) + ".yaml"
+				alertFilename := sanitizeTriggerName(aggregateAlerts[i].Name) + ".yaml"
 
 				var outFilePath string
 				if outputDirectory != "" {

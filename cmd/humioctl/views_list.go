@@ -15,7 +15,7 @@
 package main
 
 import (
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 

@@ -10,15 +10,18 @@ import (
 	"github.com/Masterminds/semver/v3"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type StatusResponse struct {
 	Status  string
 	Version string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (s StatusResponse) IsDown() bool {
 	return s.Status != "OK" && s.Status != "WARN"
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (s StatusResponse) AtLeast(ver string) (bool, error) {
 	assumeLatest := true
 	version := strings.Split(s.Version, "-")
@@ -34,6 +37,7 @@ func (s StatusResponse) AtLeast(ver string) (bool, error) {
 	return constraint.Check(semverVersion), nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Status() (*StatusResponse, error) {
 	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/status", nil)
 

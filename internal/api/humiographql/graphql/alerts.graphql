@@ -1,0 +1,108 @@
+fragment AlertDetails on Alert {
+    id
+    name
+    queryString
+    queryStart
+    throttleField
+    timeOfLastTrigger
+    isStarred
+    description
+    throttleTimeMillis
+    enabled
+    actions
+    labels
+    lastError
+
+    # @genqlient(typename: "SharedQueryOwnershipType")
+    queryOwnership {
+        ...QueryOwnership
+    }
+}
+
+query ListAlerts(
+    $SearchDomainName: String!
+) {
+    searchDomain(
+        name: $SearchDomainName
+    ) {
+        alerts {
+            ...AlertDetails
+        }
+    }
+}
+
+mutation UpdateAlert(
+    $SearchDomainName: String!
+    $AlertID: String!
+    $Name: String!
+    $Description: String
+    $QueryString: String!
+    $QueryStart: String!
+    $ThrottleTimeMillis: Long!
+    $Enabled: Boolean!
+    $Actions: [String!]!
+    $Labels: [String!]!
+    $RunAsUserID: String
+    $QueryOwnershipType: QueryOwnershipType
+    $ThrottleField: String
+) {
+    updateAlert(input: {
+        id: $AlertID
+        viewName: $SearchDomainName
+        name: $Name
+        description: $Description
+        queryString: $QueryString
+        queryStart: $QueryStart
+        throttleTimeMillis: $ThrottleTimeMillis
+        enabled: $Enabled
+        actions: $Actions
+        labels: $Labels
+        runAsUserId: $RunAsUserID
+        queryOwnershipType: $QueryOwnershipType
+        throttleField: $ThrottleField
+    }) {
+        ...AlertDetails
+    }
+}
+
+mutation CreateAlert(
+    $SearchDomainName: String!
+    $Name: String!
+    $Description: String
+    $QueryString: String!
+    $QueryStart: String!
+    $ThrottleTimeMillis: Long!
+    $Enabled: Boolean
+    $Actions: [String!]!
+    $Labels: [String!]
+    $RunAsUserID: String
+    $QueryOwnershipType: QueryOwnershipType
+    $ThrottleField: String
+) {
+    createAlert(input: {
+        viewName: $SearchDomainName
+        name: $Name
+        description: $Description
+        queryString: $QueryString
+        queryStart: $QueryStart
+        throttleTimeMillis: $ThrottleTimeMillis
+        enabled: $Enabled
+        actions: $Actions
+        labels: $Labels
+        runAsUserId: $RunAsUserID
+        queryOwnershipType: $QueryOwnershipType
+        throttleField: $ThrottleField
+    }) {
+        ...AlertDetails
+    }
+}
+
+mutation DeleteAlert(
+    $SearchDomainName: String!
+    $AlertID: String!
+) {
+    deleteAlert(input: {
+        viewName: $SearchDomainName
+        id: $AlertID
+    })
+}

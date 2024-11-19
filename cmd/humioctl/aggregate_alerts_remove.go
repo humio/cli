@@ -16,8 +16,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/humio/cli/api"
 
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +35,7 @@ func newAggregateAlertsRemoveCmd() *cobra.Command {
 			aggregateAlerts, err := client.AggregateAlerts().List(viewName)
 			exitOnError(cmd, err, "Could not list aggregate alerts")
 
-			var aggregateAlert *api.AggregateAlert
+			var aggregateAlert api.AggregateAlert
 			for _, fa := range aggregateAlerts {
 				if fa.Name == aggregateAlertName {
 					aggregateAlert = fa

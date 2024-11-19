@@ -1,22 +1,26 @@
 package api
 
 import (
-	"github.com/humio/cli/api/internal/humiographql"
 	"sort"
 	"strings"
+
+	"github.com/humio/cli/api/internal/humiographql"
 
 	graphql "github.com/cli/shurcooL-graphql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Views struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ViewConnection struct {
 	RepoName string
 	Filter   string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ViewQueryData struct {
 	Name            string
 	Description     string
@@ -30,6 +34,7 @@ type ViewQueryData struct {
 	Typename graphql.String `graphql:"__typename"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type View struct {
 	Name            string
 	Description     string
@@ -37,8 +42,10 @@ type View struct {
 	AutomaticSearch bool
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Views() *Views { return &Views{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Views) Get(name string) (*View, error) {
 	var query struct {
 		Result ViewQueryData `graphql:"searchDomain(name: $name)"`
@@ -74,12 +81,14 @@ func (c *Views) Get(name string) (*View, error) {
 	return &view, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ViewListItem struct {
 	Name            string
 	Typename        string `graphql:"__typename"`
 	AutomaticSearch bool
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Views) List() ([]ViewListItem, error) {
 	var query struct {
 		View []ViewListItem `graphql:"searchDomains"`
@@ -101,11 +110,13 @@ func (c *Views) List() ([]ViewListItem, error) {
 	return viewsList, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ViewConnectionInput struct {
 	RepositoryName graphql.String `json:"repositoryName"`
 	Filter         graphql.String `json:"filter"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Views) Create(name, description string, connections []ViewConnectionInput) error {
 	var mutation struct {
 		CreateView struct {
@@ -123,6 +134,7 @@ func (c *Views) Create(name, description string, connections []ViewConnectionInp
 	return c.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Views) Delete(name, reason string) error {
 	_, err := c.Get(name)
 	if err != nil {
@@ -143,6 +155,7 @@ func (c *Views) Delete(name, reason string) error {
 	return c.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Views) UpdateConnections(name string, connections []ViewConnectionInput) error {
 	var mutation struct {
 		View struct {
@@ -158,6 +171,7 @@ func (c *Views) UpdateConnections(name string, connections []ViewConnectionInput
 	return c.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Views) UpdateDescription(name string, description string) error {
 	_, err := c.Get(name)
 	if err != nil {
@@ -179,6 +193,7 @@ func (c *Views) UpdateDescription(name string, description string) error {
 	return c.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Views) UpdateAutomaticSearch(name string, automaticSearch bool) error {
 	_, err := c.Get(name)
 	if err != nil {

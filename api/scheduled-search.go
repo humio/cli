@@ -2,10 +2,12 @@ package api
 
 import (
 	"fmt"
+
 	graphql "github.com/cli/shurcooL-graphql"
 	"github.com/humio/cli/api/internal/humiographql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ScheduledSearch struct {
 	ID                 string   `graphql:"id"                         yaml:"-"                          json:"id"`
 	Name               string   `graphql:"name"                       yaml:"name"                       json:"name"`
@@ -23,12 +25,15 @@ type ScheduledSearch struct {
 	QueryOwnershipType string   `graphql:"queryOwnership"             yaml:"queryOwnershipType"         json:"queryOwnershipType"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ScheduledSearches struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) ScheduledSearches() *ScheduledSearches { return &ScheduledSearches{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *ScheduledSearches) List(viewName string) ([]ScheduledSearch, error) {
 	var query struct {
 		SearchDomain struct {
@@ -53,6 +58,7 @@ func (a *ScheduledSearches) List(viewName string) ([]ScheduledSearch, error) {
 	return scheduledSearches, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *ScheduledSearches) Update(viewName string, updateScheduledSearch *ScheduledSearch) (*ScheduledSearch, error) {
 	if updateScheduledSearch == nil {
 		return nil, fmt.Errorf("updateScheduledSearch must not be nil")
@@ -108,6 +114,7 @@ func (a *ScheduledSearches) Update(viewName string, updateScheduledSearch *Sched
 	return &scheduledSearch, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *ScheduledSearches) Create(viewName string, newScheduledSearch *ScheduledSearch) (*ScheduledSearch, error) {
 	if newScheduledSearch == nil {
 		return nil, fmt.Errorf("newScheduledSearch must not be nil")
@@ -158,6 +165,7 @@ func (a *ScheduledSearches) Create(viewName string, newScheduledSearch *Schedule
 	return &scheduledSearch, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *ScheduledSearches) Delete(viewName, scheduledSearchID string) error {
 	if scheduledSearchID == "" {
 		return fmt.Errorf("scheduledSearchID is empty")
@@ -181,6 +189,7 @@ func (a *ScheduledSearches) Delete(viewName, scheduledSearchID string) error {
 	return err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *ScheduledSearches) Get(viewName string, scheduledSearchId string) (*ScheduledSearch, error) {
 	var query struct {
 		SearchDomain struct {

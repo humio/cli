@@ -17,7 +17,7 @@ package main
 import (
 	"strings"
 
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -38,15 +38,15 @@ func newAlertsShowCmd() *cobra.Command {
 				{format.String("ID"), format.String(alert.ID)},
 				{format.String("Name"), format.String(alert.Name)},
 				{format.String("Enabled"), format.Bool(alert.Enabled)},
-				{format.String("Description"), format.String(alert.Description)},
+				{format.String("Description"), format.StringPtr(alert.Description)},
 				{format.String("Query Start"), format.String(alert.QueryStart)},
 				{format.String("Query String"), format.String(alert.QueryString)},
 				{format.String("Labels"), format.String(strings.Join(alert.Labels, ", "))},
 				{format.String("Throttle Time Millis"), format.Int(alert.ThrottleTimeMillis)},
 				{format.String("Is Starred"), format.Bool(alert.IsStarred)},
-				{format.String("Last Error"), format.String(alert.LastError)},
-				{format.String("Throttle Field"), format.String(alert.ThrottleField)},
-				{format.String("Time Of Last Trigger"), format.Int(alert.TimeOfLastTrigger)},
+				{format.String("Last Error"), format.StringPtr(alert.LastError)},
+				{format.String("Throttle Field"), format.StringPtr(alert.ThrottleField)},
+				{format.String("Time Of Last Trigger"), format.IntPtr(alert.TimeOfLastTrigger)},
 				{format.String("Run As User ID"), format.String(alert.RunAsUserID)},
 				{format.String("Query Ownership Type"), format.String(alert.QueryOwnershipType)},
 			}

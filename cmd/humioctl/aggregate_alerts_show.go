@@ -15,10 +15,11 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/internal/format"
-	"github.com/spf13/cobra"
 	"strings"
+
+	"github.com/humio/cli/internal/api"
+	"github.com/humio/cli/internal/format"
+	"github.com/spf13/cobra"
 )
 
 func newAggregateAlertsShowCmd() *cobra.Command {
@@ -34,7 +35,7 @@ func newAggregateAlertsShowCmd() *cobra.Command {
 			aggregateAlerts, err := client.AggregateAlerts().List(view)
 			exitOnError(cmd, err, "Could not list aggregate alert")
 
-			var aggregateAlert *api.AggregateAlert
+			var aggregateAlert api.AggregateAlert
 			for _, fa := range aggregateAlerts {
 				if fa.Name == name {
 					aggregateAlert = fa
@@ -48,17 +49,17 @@ func newAggregateAlertsShowCmd() *cobra.Command {
 			details := [][]format.Value{
 				{format.String("ID"), format.String(aggregateAlert.ID)},
 				{format.String("Name"), format.String(aggregateAlert.Name)},
-				{format.String("Description"), format.String(aggregateAlert.Description)},
+				{format.String("Description"), format.StringPtr(aggregateAlert.Description)},
 				{format.String("Query String"), format.String(aggregateAlert.QueryString)},
 				{format.String("Search Interval Seconds"), format.Int(aggregateAlert.SearchIntervalSeconds)},
 				{format.String("Actions"), format.String(strings.Join(aggregateAlert.ActionNames, ", "))},
 				{format.String("Labels"), format.String(strings.Join(aggregateAlert.Labels, ", "))},
 				{format.String("Enabled"), format.Bool(aggregateAlert.Enabled)},
-				{format.String("Throttle Field"), format.String(aggregateAlert.ThrottleField)},
+				{format.String("Throttle Field"), format.StringPtr(aggregateAlert.ThrottleField)},
 				{format.String("Throttle Time Seconds"), format.Int(aggregateAlert.ThrottleTimeSeconds)},
 				{format.String("Query Timestamp Type"), format.String(aggregateAlert.QueryTimestampType)},
 				{format.String("Trigger Mode"), format.String(aggregateAlert.TriggerMode)},
-				{format.String("Run As User ID"), format.String(aggregateAlert.RunAsUserID)},
+				{format.String("Run As User ID"), format.String(aggregateAlert.OwnershipRunAsID)},
 				{format.String("Query Ownership Type"), format.String(aggregateAlert.QueryOwnershipType)},
 			}
 
