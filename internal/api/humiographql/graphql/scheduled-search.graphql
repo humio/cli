@@ -32,44 +32,6 @@ query ListScheduledSearches(
     }
 }
 
-mutation UpdateScheduledSearch(
-    $SearchDomainName: String!
-    $ID: String!
-    $Name: String!
-    $Description: String
-    $QueryString: String!
-    $QueryStart: String!
-    $QueryEnd: String!
-    $Schedule: String!
-    $TimeZone: String!
-    $BackfillLimit: Int!
-    $Enabled: Boolean!
-    $ActionIdsOrNames: [String!]!
-    $RunAsUserID: String!
-    $Labels: [String!]!
-    $QueryOwnershipType: QueryOwnershipType
-) {
-    updateScheduledSearch(input: {
-        viewName: $SearchDomainName
-        id: $ID
-        name: $Name
-        description: $Description
-        queryString: $QueryString
-        queryStart: $QueryStart
-        queryEnd: $QueryEnd
-        schedule: $Schedule
-        timeZone: $TimeZone
-        backfillLimit: $BackfillLimit
-        enabled: $Enabled
-        actions: $ActionIdsOrNames
-        runAsUserId: $RunAsUserID
-        labels: $Labels
-        queryOwnershipType: $QueryOwnershipType
-    }) {
-        ...ScheduledSearchDetails
-    }
-}
-
 mutation CreateScheduledSearch(
     $SearchDomainName: String!
     $Name: String!
@@ -114,19 +76,4 @@ mutation DeleteScheduledSearchByID(
         viewName: $SearchDomainName
         id: $ScheduledSearchID
     })
-}
-
-query GetScheduledSearchByID(
-    $SearchDomainName: String!
-    $ScheduledSearchID: String!
-) {
-    searchDomain(
-        name: $SearchDomainName
-    ) {
-        scheduledSearch(
-            id: $ScheduledSearchID
-        ) {
-            ...ScheduledSearchDetails
-        }
-    }
 }

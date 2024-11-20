@@ -29,38 +29,6 @@ query ListFilterAlerts(
     }
 }
 
-mutation UpdateFilterAlert(
-    $SearchDomainName: RepoOrViewName!
-    $ID: String!
-    $Name: String!
-    $Description: String
-    $QueryString: String!
-    $ActionIdsOrNames: [String!]!
-    $Labels: [String!]!
-    $Enabled: Boolean!
-    $RunAsUserID: String
-    $ThrottleField: String
-    $ThrottleTimeSeconds: Long!
-    $QueryOwnershipType: QueryOwnershipType!
-) {
-    updateFilterAlert(input: {
-        viewName: $SearchDomainName
-        id: $ID
-        name: $Name
-        description: $Description
-        queryString: $QueryString
-        actionIdsOrNames: $ActionIdsOrNames
-        labels: $Labels
-        enabled: $Enabled
-        runAsUserId: $RunAsUserID
-        throttleField: $ThrottleField
-        throttleTimeSeconds: $ThrottleTimeSeconds
-        queryOwnershipType: $QueryOwnershipType
-    }) {
-        ...FilterAlertDetails
-    }
-}
-
 mutation CreateFilterAlert(
     $SearchDomainName: RepoOrViewName!
     $Name: String!
