@@ -131,7 +131,7 @@ func (p *Packages) ListInstalled(viewName string) ([]InstalledPackage, error) {
 
 // InstallArchive installs a local package (zip file).
 // Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
-func (p *Packages) InstallArchive(viewName string, pathToZip string) (*ValidationResponse, error) {
+func (p *Packages) InstallArchive(viewName string, pathToZip string, ownership string) (*ValidationResponse, error) {
 	// #nosec G304
 	fileReader, err := os.Open(pathToZip)
 	if err != nil {
@@ -140,7 +140,7 @@ func (p *Packages) InstallArchive(viewName string, pathToZip string) (*Validatio
 	// #nosec G307
 	defer fileReader.Close()
 
-	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(viewName) + "&overwrite=true"
+	urlPath := "api/v1/packages/install?view=" + url.QueryEscape(viewName) + "&overwrite=true" + "&queryOwnershipType=" + ownership
 	response, err := p.client.HTTPRequestContext(context.Background(), "POST", urlPath, fileReader, ZIPContentType)
 	if err != nil {
 		return nil, err
@@ -235,7 +235,7 @@ func (p *Packages) CreateArchive(packageDirPath string, targetFileName string) e
 
 // InstallFromDirectory installs a package from a directory containing the package files.
 // Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
-func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView string) (*ValidationResponse, error) {
+func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView string, ownership string) (*ValidationResponse, error) {
 	zipFilePath, err := createTempZipFromFolder(packageDirPath)
 	if err != nil {
 		return nil, err
@@ -251,7 +251,7 @@ func (p *Packages) InstallFromDirectory(packageDirPath string, targetRepoOrView 
 	defer zipFile.Close()
 	defer os.Remove(zipFile.Name())
 
-	return p.InstallArchive(targetRepoOrView, zipFilePath)
+	return p.InstallArchive(targetRepoOrView, zipFilePath, ownership)
 }
 
 func createTempZipFromFolder(baseFolder string) (string, error) {
