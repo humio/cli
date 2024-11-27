@@ -27,7 +27,7 @@ import (
 
 func installPackageCmd() *cobra.Command {
 	var (
-		ownership string
+		queryOwnership string
 	)
 
 	cmd := cobra.Command{
@@ -37,10 +37,10 @@ func installPackageCmd() *cobra.Command {
 Packages can be installed from a directory, Github Repository URL, Zip File, or
 Zip File URL.
 
-  $ humioctl packages install myrepo /path/to/package/dir/ --ownership organization 
-  $ humioctl packages install myrepo /path/to/pazkage.zip --ownership organization
-  $ humioctl packages install myrepo https://github.com/org/mypackage-name -ownership organization
-  $ humioctl packages install myrepo https://content.example.com/mypackage-name.zip -ownership organization
+  $ humioctl packages install myrepo /path/to/package/dir/ --queryOwnership organization 
+  $ humioctl packages install myrepo /path/to/pazkage.zip --queryOwnership user
+  $ humioctl packages install myrepo https://github.com/org/mypackage-name -queryOwnership organization
+  $ humioctl packages install myrepo https://content.example.com/mypackage-name.zip -queryOwnership user
 `,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -58,20 +58,20 @@ Zip File URL.
 			isDir, err := isDirectory(path)
 			exitOnError(cmd, err, "Errors installing archive")
 
-			if ownership == "" {
-				ownership = "user"
+			if queryOwnership == "" {
+				queryOwnership = "user"
 			}
 
-			if ownership != "organization" && ownership != "user" {
+			if queryOwnership != "organization" && queryOwnership != "user" {
 				cmd.PrintErrln("query ownership must be set to either `organization` or `user`")
 				os.Exit(1)
 			}
 
 			var validationResult *api.ValidationResponse
 			if isDir {
-				validationResult, err = client.Packages().InstallFromDirectory(path, repoOrViewName, ownership)
+				validationResult, err = client.Packages().InstallFromDirectory(path, repoOrViewName, queryOwnership)
 			} else {
-				validationResult, err = client.Packages().InstallArchive(repoOrViewName, path, ownership)
+				validationResult, err = client.Packages().InstallArchive(repoOrViewName, path, queryOwnership)
 			}
 			exitOnError(cmd, err, "Errors installing archive")
 
@@ -83,7 +83,7 @@ Zip File URL.
 		},
 	}
 
-	cmd.Flags().StringVarP(&ownership, "ownership", "o", "", "The query ownership of installed queries e.g. in triggers. Possible are `organization` and `user`. Defaults to `user`")
+	cmd.Flags().StringVarP(&queryOwnership, "queryOwnership", "q", "", "The query ownership of installed queries e.g. in triggers. Possible values are `organization` and `user`. Defaults to `user`")
 
 	return &cmd
 }
