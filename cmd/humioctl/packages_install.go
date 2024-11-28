@@ -26,6 +26,10 @@ import (
 )
 
 func installPackageCmd() *cobra.Command {
+	var (
+		queryOwnership string
+	)
+
 	cmd := cobra.Command{
 		Use:   "install <repo-or-view> <path-to-package-dir>",
 		Short: "Installs a package.",
@@ -33,10 +37,10 @@ func installPackageCmd() *cobra.Command {
 Packages can be installed from a directory, Github Repository URL, Zip File, or
 Zip File URL.
 
-  $ humioctl packages install myrepo /path/to/package/dir/
-  $ humioctl packages install myrepo /path/to/pazkage.zip
-  $ humioctl packages install myrepo https://github.com/org/mypackage-name
-  $ humioctl packages install myrepo https://content.example.com/mypackage-name.zip
+  $ humioctl packages install myrepo /path/to/package/dir/ --queryOwnership organization 
+  $ humioctl packages install myrepo /path/to/pazkage.zip --queryOwnership user
+  $ humioctl packages install myrepo https://github.com/org/mypackage-name -queryOwnership organization
+  $ humioctl packages install myrepo https://content.example.com/mypackage-name.zip -queryOwnership user
 `,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -54,11 +58,20 @@ Zip File URL.
 			isDir, err := isDirectory(path)
 			exitOnError(cmd, err, "Errors installing archive")
 
+			if queryOwnership == "" {
+				queryOwnership = "user"
+			}
+
+			if queryOwnership != "organization" && queryOwnership != "user" {
+				cmd.PrintErrln("query ownership must be set to either `organization` or `user`")
+				os.Exit(1)
+			}
+
 			var validationResult *api.ValidationResponse
 			if isDir {
-				validationResult, err = client.Packages().InstallFromDirectory(path, repoOrViewName)
+				validationResult, err = client.Packages().InstallFromDirectory(path, repoOrViewName, queryOwnership)
 			} else {
-				validationResult, err = client.Packages().InstallArchive(repoOrViewName, path)
+				validationResult, err = client.Packages().InstallArchive(repoOrViewName, path, queryOwnership)
 			}
 			exitOnError(cmd, err, "Errors installing archive")
 
@@ -69,6 +82,8 @@ Zip File URL.
 			fmt.Fprintf(cmd.OutOrStdout(), "Successfully installed package in: %s\n", path)
 		},
 	}
+
+	cmd.Flags().StringVarP(&queryOwnership, "queryOwnership", "q", "", "The query ownership of installed queries e.g. in triggers. Possible values are `organization` and `user`. Defaults to `user`")
 
 	return &cmd
 }
