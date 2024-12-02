@@ -111,6 +111,7 @@ Common Management Commands:
 	rootCmd.AddCommand(newIngestCmd())
 	rootCmd.AddCommand(newProfilesCmd())
 	rootCmd.AddCommand(newIngestTokensCmd())
+	rootCmd.AddCommand(newPersonalTokensCmd())
 	rootCmd.AddCommand(newViewsCmd())
 	rootCmd.AddCommand(newCompletionCmd())
 	rootCmd.AddCommand(newLicenseCmd())
