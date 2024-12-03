@@ -1,0 +1,83 @@
+fragment UserDetails on User {
+    id
+    username
+    fullName
+    email
+    company
+    countryCode
+    picture
+    isRoot
+    createdAt
+}
+
+query GetUsersByUsername(
+    $Username: String!
+) {
+    users(search: $Username) {
+        ...UserDetails
+    }
+}
+
+query ListUsers {
+    users {
+        ...UserDetails
+    }
+}
+
+mutation AddUser(
+    $Username: String!
+    $Company: String
+    $IsRoot: Boolean
+    $FullName: String
+    $Picture: String
+    $Email: String
+    $CountryCode: String
+) {
+    addUserV2(input: {
+        username: $Username
+        company: $Company
+        isRoot: $IsRoot
+        fullName: $FullName
+        picture: $Picture
+        email: $Email
+        countryCode: $CountryCode
+    }) {
+        ... on User {
+            ...UserDetails
+        }
+    }
+}
+
+mutation UpdateUser(
+    $Username: String!
+    $Company: String
+    $IsRoot: Boolean
+    $FullName: String
+    $Picture: String
+    $Email: String
+    $CountryCode: String
+) {
+    updateUser(input: {
+        username: $Username
+        company: $Company
+        isRoot: $IsRoot
+        fullName: $FullName
+        picture: $Picture
+        email: $Email
+        countryCode: $CountryCode
+    }) {
+        __typename
+    }
+}
+
+mutation RemoveUser(
+    $Username: String!
+) {
+    removeUser(input: {
+        username: $Username
+    }) {
+        user {
+            ...UserDetails
+        }
+    }
+}

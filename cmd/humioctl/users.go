@@ -15,8 +15,8 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/api"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +31,6 @@ func newUsersCmd() *cobra.Command {
 	cmd.AddCommand(newUsersUpdateCmd())
 	cmd.AddCommand(newUsersListCmd())
 	cmd.AddCommand(newUsersShowCmd())
-	cmd.AddCommand(newUsersRotateApiTokenCmd())
 
 	return cmd
 }
@@ -39,12 +38,12 @@ func newUsersCmd() *cobra.Command {
 func printUserDetailsTable(cmd *cobra.Command, user api.User) {
 	details := [][]format.Value{
 		{format.String("Username"), format.String(user.Username)},
-		{format.String("Name"), format.String(user.FullName)},
-		{format.String("Is Root"), yesNo(user.IsRoot)},
-		{format.String("Email"), format.String(user.Email)},
+		{format.String("Name"), format.StringPtr(user.FullName)},
+		{format.String("Is Root"), format.Bool(user.IsRoot)},
+		{format.String("Email"), format.StringPtr(user.Email)},
 		{format.String("Created At"), format.String(user.CreatedAt)},
-		{format.String("Country Code"), format.String(user.CountryCode)},
-		{format.String("Company"), format.String(user.Company)},
+		{format.String("Country Code"), format.StringPtr(user.CountryCode)},
+		{format.String("Company"), format.StringPtr(user.Company)},
 		{format.String("ID"), format.String(user.ID)},
 	}
 

@@ -15,10 +15,10 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
 	"strings"
 
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/api"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -50,13 +50,13 @@ func newFilterAlertsShowCmd() *cobra.Command {
 				{format.String("ID"), format.String(filterAlert.ID)},
 				{format.String("Name"), format.String(filterAlert.Name)},
 				{format.String("Enabled"), format.Bool(filterAlert.Enabled)},
-				{format.String("Description"), format.String(filterAlert.Description)},
+				{format.String("Description"), format.StringPtr(filterAlert.Description)},
 				{format.String("Query String"), format.String(filterAlert.QueryString)},
 				{format.String("Labels"), format.String(strings.Join(filterAlert.Labels, ", "))},
 				{format.String("Actions"), format.String(strings.Join(filterAlert.ActionNames, ", "))},
-				{format.String("Throttle Time Seconds"), format.Int(filterAlert.ThrottleTimeSeconds)},
-				{format.String("Throttle Field"), format.String(filterAlert.ThrottleField)},
-				{format.String("Run As User ID"), format.String(filterAlert.RunAsUserID)},
+				{format.String("Throttle Time Seconds"), format.IntPtr(filterAlert.ThrottleTimeSeconds)},
+				{format.String("Throttle Field"), format.StringPtr(filterAlert.ThrottleField)},
+				{format.String("Run As User ID"), format.String(filterAlert.OwnershipRunAsID)},
 				{format.String("Query Ownership Type"), format.String(filterAlert.QueryOwnershipType)},
 			}
 

@@ -7,9 +7,10 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"regexp"
 	"strconv"
 
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -152,9 +153,17 @@ func getBytesFromURL(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	if response == nil {
+		return nil, fmt.Errorf("failed to get reponse")
+	}
 
 	defer func() {
 		_ = response.Body.Close()
 	}()
 	return io.ReadAll(response.Body)
+}
+
+// Replaces all non-alphanumeric characters with underscore
+func sanitizeTriggerName(name string) string {
+	return regexp.MustCompile(`[^a-zA-Z0-9]`).ReplaceAllString(name, "_")
 }

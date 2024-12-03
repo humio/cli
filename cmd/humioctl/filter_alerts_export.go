@@ -15,9 +15,9 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
 	"os"
 
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -62,6 +62,45 @@ func newFilterAlertsExportCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&outputName, "output", "o", "", "The file path where the filter alert should be written. Defaults to ./<filter-alert-name>.yaml")
+
+	return &cmd
+}
+
+func newFilterAlertsExportAllCmd() *cobra.Command {
+	var outputDirectory string
+
+	cmd := cobra.Command{
+		Use:   "export-all <view>",
+		Short: "Export all filter alerts",
+		Long:  `Export all filter alerts to yaml files with naming <sanitized-filter-alert-name>.yaml. All non-alphanumeric characters will be replaced with underscore.`,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			view := args[0]
+			client := NewApiClient(cmd)
+
+			var filterAlerts []api.FilterAlert
+			filterAlerts, err := client.FilterAlerts().List(view)
+			exitOnError(cmd, err, "Error fetching filter alerts")
+
+			for i := range filterAlerts {
+				yamlData, err := yaml.Marshal(&filterAlerts[i])
+				exitOnError(cmd, err, "Failed to serialize the filter alert")
+				filterAlertFilename := sanitizeTriggerName(filterAlerts[i].Name) + ".yaml"
+
+				var outFilePath string
+				if outputDirectory != "" {
+					outFilePath = outputDirectory + "/" + filterAlertFilename
+				} else {
+					outFilePath = filterAlertFilename
+				}
+
+				err = os.WriteFile(outFilePath, yamlData, 0600)
+				exitOnError(cmd, err, "Error saving the filter alert to file")
+			}
+		},
+	}
+
+	cmd.Flags().StringVarP(&outputDirectory, "outputDirectory", "d", "", "The file path where the filter alerts should be written. Defaults to current directory.")
 
 	return &cmd
 }

@@ -16,8 +16,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/humio/cli/api"
 
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 )
 

@@ -9,8 +9,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
+	"github.com/humio/cli/internal/api"
+	"github.com/humio/cli/internal/viperkey"
 	"github.com/humio/cli/prompt"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/spf13/cobra"
@@ -61,6 +61,10 @@ func saveConfig() error {
 
 func addAccount(newName string, profile *login) {
 	profiles := viper.GetStringMap(viperkey.Profiles)
+
+	if profiles == nil {
+		profiles = map[string]interface{}{}
+	}
 
 	profiles[newName] = map[string]interface{}{
 		viperkey.Address:       profile.address,

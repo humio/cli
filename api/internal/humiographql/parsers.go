@@ -60,7 +60,7 @@ type Parser struct {
 	ID                             graphql.String   `graphql:"id"`
 	Name                           graphql.String   `graphql:"name"`
 	DisplayName                    graphql.String   `graphql:"displayName"`
-	Description                    graphql.String   `graphql:"description""`
+	Description                    graphql.String   `graphql:"description"`
 	IsBuiltIn                      graphql.Boolean  `graphql:"isBuiltIn"`
 	Script                         graphql.String   `graphql:"script"`
 	FieldsToTag                    []graphql.String `graphql:"fieldsToTag"`
@@ -70,7 +70,7 @@ type Parser struct {
 
 type CreateParserInputV2 struct {
 	Name                           graphql.String        `json:"name"`
-	Script                         graphql.String        `json:"script""`
+	Script                         graphql.String        `json:"script"`
 	TestCases                      []ParserTestCaseInput `json:"testCases"`
 	RepositoryName                 RepoOrViewName        `json:"repositoryName"`
 	FieldsToTag                    []graphql.String      `json:"fieldsToTag"`

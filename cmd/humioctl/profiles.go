@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
+	"github.com/humio/cli/internal/viperkey"
 	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

@@ -5,19 +5,6 @@ import (
 	"fmt"
 )
 
-type yesNo bool
-
-func (y yesNo) String() string {
-	if y {
-		return "yes"
-	}
-	return "no"
-}
-
-func (y yesNo) MarshalJSON() ([]byte, error) {
-	return json.Marshal(bool(y))
-}
-
 type checkmark bool
 
 func (c checkmark) String() string {

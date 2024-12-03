@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -18,10 +18,14 @@ func newFeatureFlagsSupportedCmd() *cobra.Command {
 
 			var rows [][]format.Value
 			for _, flag := range flags {
-				rows = append(rows, []format.Value{format.String(flag)})
+				rows = append(rows, []format.Value{
+					format.String(flag.Flag),
+					format.Bool(flag.Experimental),
+					format.String(flag.Description),
+				})
 			}
 
-			printOverviewTable(cmd, []string{"Feature Flag"}, rows)
+			printOverviewTable(cmd, []string{"Feature Flag", "Experimental", "Description"}, rows)
 		},
 	}
 

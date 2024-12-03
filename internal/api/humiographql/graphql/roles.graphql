@@ -1,0 +1,23 @@
+fragment RoleDetails on Role{
+    id
+    displayName
+    viewPermissions
+    organizationPermissions
+    systemPermissions
+}
+
+query ListRoles {
+    roles {
+        ...RoleDetails
+    }
+}
+
+query GetRoleByID(
+    $RoleID: String!
+) {
+    role(
+        roleId: $RoleID
+    ) {
+        ...RoleDetails
+    }
+}

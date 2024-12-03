@@ -1,0 +1,63 @@
+query GetSupportedFeatureFlags {
+    featureFlags(includeExperimentalFeatures: true) {
+        flag
+        experimental
+        description
+    }
+}
+
+mutation EnableFeatureFlagGlobally(
+    $Flag: FeatureFlag!
+) {
+    enableFeature(
+        feature: $Flag
+    )
+}
+
+mutation DisableFeatureFlagGlobally(
+    $Flag: FeatureFlag!
+) {
+    disableFeature(
+        feature: $Flag
+    )
+}
+
+mutation EnableFeatureFlagForOrganization(
+    $Flag: FeatureFlag!
+    $OrganizationID: String!
+) {
+    enableFeatureForOrg(
+        feature: $Flag
+        orgId: $OrganizationID
+    )
+}
+
+mutation DisableFeatureFlagForOrganization(
+    $Flag: FeatureFlag!
+    $OrganizationID: String!
+) {
+    disableFeatureForOrg(
+        feature: $Flag
+        orgId: $OrganizationID
+    )
+}
+
+mutation EnableFeatureFlagForUser(
+    $Flag: FeatureFlag!
+    $UserID: String!
+) {
+    enableFeatureForUser(
+        feature: $Flag
+        userId: $UserID
+    )
+}
+
+mutation DisableFeatureFlagForUser(
+    $Flag: FeatureFlag!
+    $UserID: String!
+) {
+    disableFeatureForUser(
+        feature: $Flag
+        userId: $UserID
+    )
+}

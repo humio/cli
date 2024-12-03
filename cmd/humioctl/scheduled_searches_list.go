@@ -15,9 +15,10 @@
 package main
 
 import (
-	"github.com/humio/cli/cmd/internal/format"
-	"github.com/spf13/cobra"
 	"strings"
+
+	"github.com/humio/cli/internal/format"
+	"github.com/spf13/cobra"
 )
 
 func newScheduledSearchesListCmd() *cobra.Command {
@@ -38,7 +39,7 @@ func newScheduledSearchesListCmd() *cobra.Command {
 				rows[i] = []format.Value{
 					format.String(scheduledSearch.ID),
 					format.String(scheduledSearch.Name),
-					format.String(scheduledSearch.Description),
+					format.StringPtr(scheduledSearch.Description),
 					format.String(scheduledSearch.QueryStart),
 					format.String(scheduledSearch.QueryEnd),
 					format.String(scheduledSearch.TimeZone),
@@ -47,7 +48,7 @@ func newScheduledSearchesListCmd() *cobra.Command {
 					format.String(strings.Join(scheduledSearch.ActionNames, ", ")),
 					format.String(strings.Join(scheduledSearch.Labels, ", ")),
 					format.Bool(scheduledSearch.Enabled),
-					format.String(scheduledSearch.RunAsUserID),
+					format.String(scheduledSearch.OwnershipRunAsID),
 					format.String(scheduledSearch.QueryOwnershipType),
 				}
 			}

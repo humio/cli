@@ -2,15 +2,18 @@ package api
 
 import graphql "github.com/cli/shurcooL-graphql"
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Licenses struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type License interface {
 	ExpiresAt() string
 	IssuedAt() string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type OnPremLicense struct {
 	ID            string
 	ExpiresAtVal  string
@@ -19,16 +22,20 @@ type OnPremLicense struct {
 	NumberOfSeats int
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (l OnPremLicense) IssuedAt() string {
 	return l.IssuedAtVal
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (l OnPremLicense) ExpiresAt() string {
 	return l.ExpiresAtVal
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Licenses() *Licenses { return &Licenses{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (l *Licenses) Install(license string) error {
 
 	var mutation struct {
@@ -44,6 +51,7 @@ func (l *Licenses) Install(license string) error {
 	return l.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (l *Licenses) Get() (License, error) {
 	var query struct {
 		InstalledLicense struct {

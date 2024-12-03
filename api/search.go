@@ -10,12 +10,15 @@ import (
 	"net/url"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type QueryJobs struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) QueryJobs() *QueryJobs { return &QueryJobs{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Query struct {
 	QueryString                string            `json:"queryString"`
 	Start                      string            `json:"start,omitempty"`
@@ -26,6 +29,7 @@ type Query struct {
 	ShowQueryEventDistribution bool              `json:"showQueryEventDistribution,omitempty"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type QueryResultMetadata struct {
 	EventCount       uint64                 `json:"eventCount"`
 	ExtraData        map[string]interface{} `json:"extraData"`
@@ -42,6 +46,7 @@ type QueryResultMetadata struct {
 	WorkDone         uint64                 `json:"workDone"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type QueryResult struct {
 	Cancelled bool                     `json:"cancelled"`
 	Done      bool                     `json:"done"`
@@ -49,14 +54,17 @@ type QueryResult struct {
 	Metadata  QueryResultMetadata      `json:"metaData"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type QueryError struct {
 	error string
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (e QueryError) Error() string {
 	return e.error
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (q QueryJobs) Create(repository string, query Query) (string, error) {
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(query)
@@ -96,10 +104,12 @@ func (q QueryJobs) Create(repository string, query Query) (string, error) {
 	return jsonResponse.ID, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (q *QueryJobs) Poll(repository string, id string) (QueryResult, error) {
 	return q.PollContext(context.Background(), repository, id)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (q *QueryJobs) PollContext(ctx context.Context, repository string, id string) (QueryResult, error) {
 	resp, err := q.client.HTTPRequestContext(ctx, http.MethodGet, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, nil, JSONContentType)
 
@@ -118,6 +128,7 @@ func (q *QueryJobs) PollContext(ctx context.Context, repository string, id strin
 	return result, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (q *QueryJobs) Delete(repository string, id string) error {
 	_, err := q.client.HTTPRequest(http.MethodDelete, "api/v1/repositories/"+url.QueryEscape(repository)+"/queryjobs/"+id, nil)
 	return err

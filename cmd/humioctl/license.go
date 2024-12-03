@@ -15,8 +15,8 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/api"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +38,9 @@ func printLicenseDetailsTable(cmd *cobra.Command, license api.License) {
 	if onprem, ok := license.(api.OnPremLicense); ok {
 		details = append(details, []format.Value{format.String("License ID"), format.String(onprem.ID)})
 		details = append(details, []format.Value{format.String("Issued To"), format.String(onprem.IssuedTo)})
-		details = append(details, []format.Value{format.String("Number Of Seats"), format.Int(onprem.NumberOfSeats)})
+		if onprem.NumberOfSeats != nil {
+			details = append(details, []format.Value{format.String("Number Of Seats"), format.Int(*onprem.NumberOfSeats)})
+		}
 	}
 
 	details = append(details, []format.Value{format.String("Issued At"), format.String(license.IssuedAt())})

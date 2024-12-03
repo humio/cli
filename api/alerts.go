@@ -2,10 +2,12 @@ package api
 
 import (
 	"fmt"
+
 	graphql "github.com/cli/shurcooL-graphql"
 	"github.com/humio/cli/api/internal/humiographql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Alert struct {
 	ID                 string   `graphql:"id"                 yaml:"-"                            json:"id"`
 	Name               string   `graphql:"name"               yaml:"name"                         json:"name"`
@@ -25,16 +27,21 @@ type Alert struct {
 }
 
 const (
-	QueryOwnershipTypeUser         string = "User"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	QueryOwnershipTypeUser string = "User"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 	QueryOwnershipTypeOrganization string = "Organization"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Alerts struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Alerts() *Alerts { return &Alerts{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *Alerts) List(viewName string) ([]Alert, error) {
 	var query struct {
 		SearchDomain struct {
@@ -55,6 +62,7 @@ func (a *Alerts) List(viewName string) ([]Alert, error) {
 	return alerts, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *Alerts) Update(viewName string, newAlert *Alert) (*Alert, error) {
 	if newAlert == nil {
 		return nil, fmt.Errorf("newAlert must not be nil")
@@ -108,6 +116,7 @@ func (a *Alerts) Update(viewName string, newAlert *Alert) (*Alert, error) {
 	return &alert, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *Alerts) Add(viewName string, newAlert *Alert) (*Alert, error) {
 	if newAlert == nil {
 		return nil, fmt.Errorf("newAlert must not be nil")
@@ -155,6 +164,7 @@ func (a *Alerts) Add(viewName string, newAlert *Alert) (*Alert, error) {
 	return &alert, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *Alerts) Get(viewName, alertName string) (*Alert, error) {
 	alerts, err := a.List(viewName)
 	if err != nil {
@@ -169,6 +179,7 @@ func (a *Alerts) Get(viewName, alertName string) (*Alert, error) {
 	return nil, AlertNotFound(alertName)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (a *Alerts) Delete(viewName, alertName string) error {
 	actions, err := a.List(viewName)
 	if err != nil {

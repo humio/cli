@@ -18,8 +18,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/humio/cli/cmd/humioctl/internal/viperkey"
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
+	"github.com/humio/cli/internal/viperkey"
 	"github.com/humio/cli/prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

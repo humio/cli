@@ -1,0 +1,92 @@
+fragment AggregateAlertDetails on AggregateAlert {
+    id
+    name
+    description
+    queryString
+    searchIntervalSeconds
+    throttleTimeSeconds
+    throttleField
+    actions {
+        name
+    }
+    labels
+    enabled
+    triggerMode
+    queryTimestampType
+
+    # @genqlient(typename: "SharedQueryOwnershipType")
+    queryOwnership {
+        ...QueryOwnership
+    }
+}
+
+query ListAggregateAlerts(
+    $SearchDomainName: String!
+) {
+    searchDomain(
+        name: $SearchDomainName
+    ) {
+        aggregateAlerts {
+            ...AggregateAlertDetails
+        }
+    }
+}
+
+mutation CreateAggregateAlert(
+    $SearchDomainName: RepoOrViewName!
+    $Name: String!
+    $Description: String
+    $QueryString: String!
+    $SearchIntervalSeconds: Long!
+    $ActionIdsOrNames: [String!]!
+    $Labels: [String!]!
+    $Enabled: Boolean!
+    $RunAsUserID: String
+    $ThrottleField: String
+    $ThrottleTimeSeconds: Long!
+    $TriggerMode: TriggerMode!
+    $QueryTimestampMode: QueryTimestampType!
+    $QueryOwnershipType: QueryOwnershipType!
+) {
+    createAggregateAlert(input: {
+        viewName: $SearchDomainName
+        name: $Name
+        description: $Description
+        queryString: $QueryString
+        searchIntervalSeconds: $SearchIntervalSeconds
+        actionIdsOrNames: $ActionIdsOrNames
+        labels: $Labels
+        enabled: $Enabled
+        runAsUserId: $RunAsUserID
+        throttleField: $ThrottleField
+        throttleTimeSeconds: $ThrottleTimeSeconds
+        triggerMode: $TriggerMode
+        queryTimestampType: $QueryTimestampMode
+        queryOwnershipType: $QueryOwnershipType
+    }) {
+        ...AggregateAlertDetails
+    }
+}
+
+mutation DeleteAggregateAlert(
+    $SearchDomainName: RepoOrViewName!
+    $AggregateAlertID: String!
+) {
+    deleteAggregateAlert(input: {
+        id: $AggregateAlertID
+        viewName: $SearchDomainName
+    })
+}
+
+query GetAggregateAlertByID(
+    $SearchDomainName: String!
+    $AggregateAlertID: String!
+) {
+    searchDomain(
+        name: $SearchDomainName
+    ) {
+        aggregateAlert(id: $AggregateAlertID) {
+            ...AggregateAlertDetails
+        }
+    }
+}

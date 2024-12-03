@@ -2,27 +2,33 @@ package api
 
 import (
 	"fmt"
+
 	graphql "github.com/cli/shurcooL-graphql"
 	"github.com/humio/cli/api/internal/humiographql"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 const LogScaleVersionWithParserAPIv2 = "1.129.0"
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ParserTestEvent struct {
 	RawString string `json:"rawString" yaml:"rawString"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ParserTestCaseAssertions struct {
 	OutputEventIndex int               `json:"outputEventIndex" yaml:"outputEventIndex"`
 	FieldsNotPresent []string          `json:"fieldsNotPresent" yaml:"fieldsNotPresent"`
 	FieldsHaveValues map[string]string `json:"fieldsHaveValues" yaml:"fieldsHaveValues"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ParserTestCase struct {
 	Event      ParserTestEvent            `json:"event"      yaml:"event"`
 	Assertions []ParserTestCaseAssertions `json:"assertions" yaml:"assertions"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Parser struct {
 	ID                             string
 	Name                           string
@@ -32,18 +38,22 @@ type Parser struct {
 	FieldsToBeRemovedBeforeParsing []string         `json:"fieldsToBeRemovedBeforeParsing,omitempty" yaml:"fieldsToBeRemovedBeforeParsing"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Parsers struct {
 	client *Client
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Parsers() *Parsers { return &Parsers{client: c} }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type ParserListItem struct {
 	ID        string
 	Name      string
 	IsBuiltIn bool
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Parsers) List(repositoryName string) ([]ParserListItem, error) {
 	var query struct {
 		Repository struct {
@@ -63,6 +73,7 @@ func (p *Parsers) List(repositoryName string) ([]ParserListItem, error) {
 	return parsers, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Parsers) Delete(repositoryName string, parserName string) error {
 	status, err := p.client.Status()
 	if err != nil {
@@ -114,6 +125,7 @@ func (p *Parsers) Delete(repositoryName string, parserName string) error {
 	return p.client.Mutate(&mutation, variables)
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Parsers) Add(repositoryName string, newParser *Parser, allowOverwritingExistingParser bool) (*Parser, error) {
 	if newParser == nil {
 		return nil, fmt.Errorf("newFilterAlert must not be nil")
@@ -233,6 +245,7 @@ func mapParserTestCaseToInput(p ParserTestCase) humiographql.ParserTestCaseInput
 	}
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error) {
 	status, err := p.client.Status()
 	if err != nil {
@@ -322,6 +335,7 @@ func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error)
 	return &parser, nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (p *Parsers) Export(repositoryName string, parserName string) (string, error) {
 
 	var query struct {

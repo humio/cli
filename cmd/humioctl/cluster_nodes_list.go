@@ -17,8 +17,7 @@ package main
 import (
 	"sort"
 
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -35,10 +34,7 @@ func newClusterNodesListCmd() *cobra.Command {
 			exitOnError(cmd, err, "Error fetching cluster nodes")
 
 			sort.Slice(nodes, func(i, j int) bool {
-				var a, b api.ClusterNode
-				a = nodes[j]
-				b = nodes[j]
-				return a.Name < b.Name
+				return nodes[i].Name < nodes[j].Name
 			})
 
 			rows := make([][]format.Value, len(nodes))
@@ -47,7 +43,7 @@ func newClusterNodesListCmd() *cobra.Command {
 					format.Int(node.Id),
 					format.String(node.Name),
 					format.Bool(node.CanBeSafelyUnregistered),
-					format.String(node.Zone),
+					format.StringPtr(node.Zone),
 				}
 			}
 

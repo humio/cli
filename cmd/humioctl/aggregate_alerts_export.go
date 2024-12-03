@@ -15,9 +15,9 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
 	"os"
 
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -41,7 +41,7 @@ func newAggregateAlertsExportCmd() *cobra.Command {
 			aggregateAlerts, err := client.AggregateAlerts().List(view)
 			exitOnError(cmd, err, "Could not list aggregate alerts")
 
-			var aggregateAlert *api.AggregateAlert
+			var aggregateAlert api.AggregateAlert
 			for _, fa := range aggregateAlerts {
 				if fa.Name == aggregateAlertName {
 					aggregateAlert = fa
@@ -62,6 +62,45 @@ func newAggregateAlertsExportCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&outputName, "output", "o", "", "The file path where the aggregate alert should be written. Defaults to ./<aggregate-alert-name>.yaml")
+
+	return &cmd
+}
+
+func newAggregateAlertsExportAllCmd() *cobra.Command {
+	var outputDirectory string
+
+	cmd := cobra.Command{
+		Use:   "export-all <view>",
+		Short: "Export all aggregate alerts",
+		Long:  `Export all aggregate alerts to yaml files with naming <sanitized-aggregate-alert-name>.yaml. All non-alphanumeric characters will be replaced with underscore.`,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			view := args[0]
+			client := NewApiClient(cmd)
+
+			var aggregateAlerts []api.AggregateAlert
+			aggregateAlerts, err := client.AggregateAlerts().List(view)
+			exitOnError(cmd, err, "Error fetching aggregate alerts")
+
+			for i := range aggregateAlerts {
+				yamlData, err := yaml.Marshal(&aggregateAlerts[i])
+				exitOnError(cmd, err, "Failed to serialize the aggregate alert")
+				alertFilename := sanitizeTriggerName(aggregateAlerts[i].Name) + ".yaml"
+
+				var outFilePath string
+				if outputDirectory != "" {
+					outFilePath = outputDirectory + "/" + alertFilename
+				} else {
+					outFilePath = alertFilename
+				}
+
+				err = os.WriteFile(outFilePath, yamlData, 0600)
+				exitOnError(cmd, err, "Error saving the aggregate alert to file")
+			}
+		},
+	}
+
+	cmd.Flags().StringVarP(&outputDirectory, "outputDirectory", "d", "", "The file path where the aggregate alerts should be written. Defaults to current directory.")
 
 	return &cmd
 }

@@ -17,7 +17,13 @@ func FormatterFromCommand(cmd *cobra.Command) Formatter {
 	}
 
 	var formatter string
-	if value := cmd.Flags().Lookup("format").Value; value != nil {
+
+	format := cmd.Flags().Lookup("format")
+	if format == nil {
+		panic("could not fetch format")
+	}
+
+	if value := format.Value; value != nil {
 		formatter = value.String()
 	}
 	factory := factories[formatter]
@@ -57,10 +63,31 @@ func ToValues(strings [][]string) [][]Value {
 }
 
 type String string
-type Int int
+type Int int64
 type Float float64
 type Bool bool
 type MultiValue []Value
+
+func StringPtr(s *string) Value {
+	if s == nil {
+		return String("-")
+	}
+	return String(*s)
+}
+
+func IntPtr(i *int64) Value {
+	if i == nil {
+		return Int(0)
+	}
+	return Int(*i)
+}
+
+func Float64Ptr(f *float64) Value {
+	if f == nil {
+		return Float(0)
+	}
+	return Float(*f)
+}
 
 func (m MultiValue) String() string {
 	var s []string

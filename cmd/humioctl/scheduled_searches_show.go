@@ -15,10 +15,11 @@
 package main
 
 import (
-	"github.com/humio/cli/api"
-	"github.com/humio/cli/cmd/internal/format"
-	"github.com/spf13/cobra"
 	"strings"
+
+	"github.com/humio/cli/internal/api"
+	"github.com/humio/cli/internal/format"
+	"github.com/spf13/cobra"
 )
 
 func newScheduledSearchesShowCmd() *cobra.Command {
@@ -48,7 +49,7 @@ func newScheduledSearchesShowCmd() *cobra.Command {
 			details := [][]format.Value{
 				{format.String("ID"), format.String(scheduledSearch.ID)},
 				{format.String("Name"), format.String(scheduledSearch.Name)},
-				{format.String("Description"), format.String(scheduledSearch.Description)},
+				{format.String("Description"), format.StringPtr(scheduledSearch.Description)},
 				{format.String("Query String"), format.String(scheduledSearch.QueryString)},
 				{format.String("Query Start"), format.String(scheduledSearch.QueryStart)},
 				{format.String("Query End"), format.String(scheduledSearch.QueryEnd)},
@@ -57,7 +58,7 @@ func newScheduledSearchesShowCmd() *cobra.Command {
 				{format.String("Backfill Limit"), format.Int(scheduledSearch.BackfillLimit)},
 				{format.String("Enabled"), format.Bool(scheduledSearch.Enabled)},
 				{format.String("Actions"), format.String(strings.Join(scheduledSearch.ActionNames, ", "))},
-				{format.String("Run As User ID"), format.String(scheduledSearch.RunAsUserID)},
+				{format.String("Run As User ID"), format.String(scheduledSearch.OwnershipRunAsID)},
 				{format.String("Labels"), format.String(strings.Join(scheduledSearch.Labels, ", "))},
 				{format.String("Query Ownership Type"), format.String(scheduledSearch.QueryOwnershipType)},
 			}

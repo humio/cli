@@ -1,0 +1,23 @@
+query ListFiles(
+    $SearchDomainName: String!
+) {
+    searchDomain(
+        name: $SearchDomainName
+    ) {
+        files {
+            contentHash
+            nameAndPath {
+                name
+            }
+        }
+    }
+}
+
+mutation RemoveFile(
+    $SearchDomainName: String!
+    $FileName: String!
+) {
+    removeFile(name: $SearchDomainName,fileName: $FileName) {
+        __typename
+    }
+}

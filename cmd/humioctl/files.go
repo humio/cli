@@ -7,7 +7,7 @@ import (
 func newFilesCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "files",
-		Short: "Manage files",
+		Short: "Manage lookup files",
 	}
 
 	cmd.AddCommand(newFilesListCmd())

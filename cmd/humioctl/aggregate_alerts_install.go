@@ -18,15 +18,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
 
 func newAggregateAlertsInstallCmd() *cobra.Command {
-	var (
-		filePath, url string
-	)
+	var filePath, url, name string
 
 	cmd := cobra.Command{
 		Use:   "install [flags] <view>",
@@ -65,6 +63,10 @@ The install command allows you to install aggregate alerts from a URL or from a 
 			err = yaml.Unmarshal(content, &aggregateAlert)
 			exitOnError(cmd, err, "Could not unmarshal the aggregate alert")
 
+			if name != "" {
+				aggregateAlert.Name = name
+			}
+
 			_, err = client.AggregateAlerts().Create(viewName, &aggregateAlert)
 			exitOnError(cmd, err, "Could not create the aggregate alert")
 
@@ -74,6 +76,8 @@ The install command allows you to install aggregate alerts from a URL or from a 
 
 	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the aggregate alert to install.")
 	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the aggregate alert file from.")
+	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the action under a specific name, ignoring the `name` attribute in the action file.")
+
 	cmd.MarkFlagsMutuallyExclusive("file", "url")
 	return &cmd
 }

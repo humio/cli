@@ -1,0 +1,3 @@
+fragment QueryOwnership on QueryOwnership {
+    id
+}

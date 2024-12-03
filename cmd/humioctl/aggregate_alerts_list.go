@@ -15,9 +15,10 @@
 package main
 
 import (
-	"github.com/humio/cli/cmd/internal/format"
-	"github.com/spf13/cobra"
 	"strings"
+
+	"github.com/humio/cli/internal/format"
+	"github.com/spf13/cobra"
 )
 
 func newAggregateAlertsListCmd() *cobra.Command {
@@ -38,16 +39,16 @@ func newAggregateAlertsListCmd() *cobra.Command {
 				rows[i] = []format.Value{
 					format.String(aggregateAlert.ID),
 					format.String(aggregateAlert.Name),
-					format.String(aggregateAlert.Description),
+					format.StringPtr(aggregateAlert.Description),
 					format.String(strings.Join(aggregateAlert.ActionNames, ", ")),
 					format.String(strings.Join(aggregateAlert.Labels, ", ")),
 					format.Bool(aggregateAlert.Enabled),
-					format.String(aggregateAlert.ThrottleField),
+					format.StringPtr(aggregateAlert.ThrottleField),
 					format.Int(aggregateAlert.ThrottleTimeSeconds),
 					format.Int(aggregateAlert.SearchIntervalSeconds),
 					format.String(aggregateAlert.QueryTimestampType),
 					format.String(aggregateAlert.TriggerMode),
-					format.String(aggregateAlert.RunAsUserID),
+					format.String(aggregateAlert.OwnershipRunAsID),
 					format.String(aggregateAlert.QueryOwnershipType),
 				}
 			}

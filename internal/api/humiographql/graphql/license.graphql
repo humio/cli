@@ -1,0 +1,19 @@
+query GetLicense {
+    installedLicense {
+        expiresAt
+        issuedAt
+        ... on OnPremLicense {
+            uid
+            owner
+            maxUsers
+        }
+    }
+}
+
+mutation UpdateLicenseKey(
+    $LicenseKey: String!
+) {
+    updateLicenseKey(license: $LicenseKey) {
+        __typename
+    }
+}

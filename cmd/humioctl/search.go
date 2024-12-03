@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"math"
@@ -13,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"github.com/humio/cli/prompt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -21,12 +22,13 @@ import (
 
 func newSearchCmd() *cobra.Command {
 	var (
-		start      string
-		end        string
-		live       bool
-		fmtStr     string
-		noWrap     bool
-		noProgress bool
+		start        string
+		end          string
+		live         bool
+		fmtStr       string
+		noWrap       bool
+		noProgress   bool
+		jsonProgress bool
 	)
 
 	cmd := &cobra.Command{
@@ -39,6 +41,14 @@ func newSearchCmd() *cobra.Command {
 			client := NewApiClient(cmd)
 
 			ctx := contextCancelledOnInterrupt(context.Background())
+
+			// get the search start time, used for json output
+			startMillis := time.Now().UnixMilli()
+
+			// set noProgress if getting json
+			if jsonProgress {
+				noProgress = true
+			}
 
 			// run in lambda func to be able to defer and delete the query job
 			err := func() error {
@@ -90,6 +100,10 @@ func newSearchCmd() *cobra.Command {
 					if progress != nil {
 						progress.Update(result)
 					}
+					if jsonProgress {
+						jsonProgress, _ := printQueryResultProgressJson(result, args, startMillis)
+						fmt.Printf("%s\n", jsonProgress)
+					}
 					result, err = poller.WaitAndPollContext(ctx)
 					if err != nil {
 						return err
@@ -101,7 +115,15 @@ func newSearchCmd() *cobra.Command {
 					progress.Finish()
 				}
 
-				printer.print(result)
+				if jsonProgress {
+					jsonProgress, _ := printQueryResultProgressJson(result, args, startMillis)
+					fmt.Printf("%s\n", jsonProgress)
+				}
+
+				// no output if using jsonProgress
+				if !jsonProgress {
+					printer.print(result)
+				}
 
 				if live {
 					for {
@@ -139,6 +161,7 @@ func newSearchCmd() *cobra.Command {
 		"{@timestamp:-40} left aligns and right pads to 40 characters.")
 	cmd.Flags().BoolVarP(&noWrap, "no-wrap", "n", false, "Do not autowrap long strings.")
 	cmd.Flags().BoolVar(&noProgress, "no-progress", false, "Do not should progress information.")
+	cmd.Flags().BoolVar(&jsonProgress, "json-progress", false, "Print progress in json format. This disables progress and output, useful for logging search metadata.")
 
 	return cmd
 }
@@ -212,6 +235,52 @@ func (b *queryResultProgressBar) additionalInfoHits() string {
 
 func (b *queryResultProgressBar) Finish() {
 	b.bar.Finish()
+}
+
+type queryResultProgressJson struct {
+	Timestamp   int64   `json:"timestamp"`
+	StartMillis int64   `json:"startMillis"`
+	Repo        string  `json:"repo"`
+	QueryString string  `json:"queryString"`
+	Start       uint64  `json:"start"`
+	End         uint64  `json:"end"`
+	TotalWork   uint64  `json:"totalWork"`
+	WorkDone    uint64  `json:"workDone"`
+	TimeMillis  uint64  `json:"timeMillis"`
+	EpsValue    float64 `json:"epsValue"`
+	BpsValue    float64 `json:"bpsValue"`
+	EventCount  uint64  `json:"eventCount"`
+	Done        bool    `json:"done"`
+}
+
+func printQueryResultProgressJson(result api.QueryResult, args []string, startMillis int64) (string, error) {
+	var epsValue, bpsValue float64
+
+	if result.Metadata.TimeMillis > 0 {
+		epsValue = float64(result.Metadata.ProcessedEvents) / float64(result.Metadata.TimeMillis) * 1000
+		bpsValue = float64(result.Metadata.ProcessedBytes) / float64(result.Metadata.TimeMillis) * 1000
+	}
+
+	timestamp := time.Now().UnixMilli()
+
+	jsonResult := &queryResultProgressJson{
+		Timestamp:   timestamp,
+		StartMillis: startMillis,
+		Repo:        args[0],
+		QueryString: args[1],
+		Start:       result.Metadata.QueryStart,
+		End:         result.Metadata.QueryEnd,
+		TotalWork:   result.Metadata.TotalWork,
+		WorkDone:    result.Metadata.WorkDone,
+		TimeMillis:  result.Metadata.TimeMillis,
+		EpsValue:    epsValue,
+		BpsValue:    bpsValue,
+		EventCount:  result.Metadata.EventCount,
+		Done:        result.Done,
+	}
+
+	data, err := json.Marshal(jsonResult)
+	return string(data), err
 }
 
 type queryJobPoller struct {

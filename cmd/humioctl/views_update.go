@@ -18,9 +18,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/humio/cli/api"
-
-	graphql "github.com/cli/shurcooL-graphql"
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 )
 
@@ -66,8 +64,8 @@ namely "repo1" and "repo2":
 					connections = append(
 						connections,
 						api.ViewConnectionInput{
-							RepositoryName: graphql.String(repo),
-							Filter:         graphql.String(filter),
+							RepositoryName: repo,
+							Filter:         filter,
 						})
 				}
 				err := client.Views().UpdateConnections(viewName, connections)

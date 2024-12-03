@@ -15,7 +15,7 @@
 package main
 
 import (
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -33,8 +33,8 @@ func newUsersListCmd() *cobra.Command {
 			for i, user := range users {
 				rows[i] = []format.Value{
 					format.String(user.Username),
-					format.String(user.FullName),
-					yesNo(user.IsRoot),
+					format.StringPtr(user.FullName),
+					format.Bool(user.IsRoot),
 					format.String(user.CreatedAt),
 					format.String(user.ID),
 				}

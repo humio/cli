@@ -17,7 +17,7 @@ package main
 import (
 	"strings"
 
-	"github.com/humio/cli/cmd/internal/format"
+	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
@@ -40,12 +40,12 @@ func newFilterAlertsListCmd() *cobra.Command {
 					format.String(filterAlert.ID),
 					format.String(filterAlert.Name),
 					format.Bool(filterAlert.Enabled),
-					format.String(filterAlert.Description),
+					format.StringPtr(filterAlert.Description),
 					format.String(strings.Join(filterAlert.ActionNames, ", ")),
 					format.String(strings.Join(filterAlert.Labels, ", ")),
-					format.Int(filterAlert.ThrottleTimeSeconds),
-					format.String(filterAlert.ThrottleField),
-					format.String(filterAlert.RunAsUserID),
+					format.IntPtr(filterAlert.ThrottleTimeSeconds),
+					format.StringPtr(filterAlert.ThrottleField),
+					format.String(filterAlert.OwnershipRunAsID),
 					format.String(filterAlert.QueryOwnershipType),
 				}
 			}

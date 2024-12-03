@@ -1,0 +1,83 @@
+fragment FilterAlertDetails on FilterAlert {
+    id
+    name
+    description
+    queryString
+    throttleTimeSeconds
+    throttleField
+    actions {
+        name
+    }
+    labels
+    enabled
+
+    # @genqlient(typename: "SharedQueryOwnershipType")
+    queryOwnership {
+        ...QueryOwnership
+    }
+}
+
+query ListFilterAlerts(
+    $SearchDomainName: String!
+) {
+    searchDomain(
+        name: $SearchDomainName
+    ) {
+        filterAlerts {
+            ...FilterAlertDetails
+        }
+    }
+}
+
+mutation CreateFilterAlert(
+    $SearchDomainName: RepoOrViewName!
+    $Name: String!
+    $Description: String
+    $QueryString: String!
+    $ActionIdsOrNames: [String!]!
+    $Labels: [String!]!
+    $Enabled: Boolean!
+    $RunAsUserID: String
+    $ThrottleField: String
+    $ThrottleTimeSeconds: Long!
+    $QueryOwnershipType: QueryOwnershipType!
+) {
+    createFilterAlert(input: {
+        viewName: $SearchDomainName
+        name: $Name
+        description: $Description
+        queryString: $QueryString
+        actionIdsOrNames: $ActionIdsOrNames
+        labels: $Labels
+        enabled: $Enabled
+        runAsUserId: $RunAsUserID
+        throttleField: $ThrottleField
+        throttleTimeSeconds: $ThrottleTimeSeconds
+        queryOwnershipType: $QueryOwnershipType
+    }) {
+        ...FilterAlertDetails
+    }
+}
+
+mutation DeleteFilterAlert(
+    $SearchDomainName: RepoOrViewName!
+    $FilterAlertID: String!
+) {
+    deleteFilterAlert(input: {
+        id: $FilterAlertID
+        viewName: $SearchDomainName
+    })
+}
+
+query GetFilterAlertByID(
+    $SearchDomainName: String!
+    $FilterAlertID: String!
+) {
+    searchDomain(
+        name: $SearchDomainName
+    ) {
+        filterAlert(id: $FilterAlertID) {
+            ...FilterAlertDetails
+        }
+    }
+}

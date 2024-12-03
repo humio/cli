@@ -8,14 +8,19 @@ import (
 	"net/http"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type StatusValue string
 
 const (
-	StatusOK   StatusValue = "OK"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
+	StatusOK StatusValue = "OK"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 	StatusWarn StatusValue = "WARN"
+	// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 	StatusDown StatusValue = "DOWN"
 )
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type HealthCheck struct {
 	Name          string                 `json:"name"`
 	Status        StatusValue            `json:"status"`
@@ -23,6 +28,7 @@ type HealthCheck struct {
 	Fields        map[string]interface{} `json:"fields"`
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Health struct {
 	Status        StatusValue   `json:"status"`
 	StatusMessage string        `json:"statusMessage"`
@@ -34,6 +40,7 @@ type Health struct {
 	rawJson       []byte
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) HealthString() (string, error) {
 	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/health", nil)
 	if err != nil {
@@ -48,6 +55,7 @@ func (c *Client) HealthString() (string, error) {
 	return string(bytes), nil
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (c *Client) Health() (Health, error) {
 	resp, err := c.HTTPRequest(http.MethodGet, "api/v1/health-json", nil)
 	if err != nil {
@@ -80,6 +88,7 @@ func (c *Client) Health() (Health, error) {
 	return health, err
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (h *Health) ChecksMap() map[string]HealthCheck {
 	m := map[string]HealthCheck{}
 
@@ -92,6 +101,7 @@ func (h *Health) ChecksMap() map[string]HealthCheck {
 	return m
 }
 
+// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 func (h *Health) Json() []byte {
 	return h.rawJson
 }

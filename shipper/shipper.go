@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/humio/cli/api"
+	"github.com/humio/cli/internal/api"
 	"golang.org/x/sync/errgroup"
 )
 

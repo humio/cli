@@ -17,6 +17,7 @@ package main
 import (
 	"os"
 
+	"github.com/humio/cli/internal/api"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -50,6 +51,45 @@ func newActionsExportCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&outputName, "output", "o", "", "The file path where the action should be written. Defaults to ./<action-name>.yaml")
+
+	return &cmd
+}
+
+func newActionsExportAllCmd() *cobra.Command {
+	var outputDirectory string
+
+	cmd := cobra.Command{
+		Use:   "export-all <view>",
+		Short: "Export all actions",
+		Long:  `Export all actions to yaml files with naming <sanitized-action-name>.yaml. All non-alphanumeric characters will be replaced with underscore.`,
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			view := args[0]
+			client := NewApiClient(cmd)
+
+			var actions []api.Action
+			actions, err := client.Actions().List(view)
+			exitOnError(cmd, err, "Error fetching actions")
+
+			for i := range actions {
+				yamlData, err := yaml.Marshal(&actions[i])
+				exitOnError(cmd, err, "Failed to serialize the action")
+				actionFilename := sanitizeTriggerName(actions[i].Name) + ".yaml"
+
+				var outFilePath string
+				if outputDirectory != "" {
+					outFilePath = outputDirectory + "/" + actionFilename
+				} else {
+					outFilePath = actionFilename
+				}
+
+				err = os.WriteFile(outFilePath, yamlData, 0600)
+				exitOnError(cmd, err, "Error saving the action to file")
+			}
+		},
+	}
+
+	cmd.Flags().StringVarP(&outputDirectory, "outputDirectory", "d", "", "The file path where the actions should be written. Defaults to current directory.")
 
 	return &cmd
 }

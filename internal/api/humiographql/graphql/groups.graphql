@@ -1,0 +1,36 @@
+query ListGroups {
+    groupsPage(
+        pageNumber: 1
+        pageSize: 2147483647
+    ) {
+        page {
+            id
+            displayName
+        }
+    }
+}
+
+
+mutation AddUserToGroup(
+    $GroupID: String!
+    $UserID: String!
+) {
+    addUsersToGroup(input: {
+        groupId: $GroupID
+        users: [$UserID]
+    }) {
+        __typename
+    }
+}
+
+mutation RemoveUserFromGroup(
+    $GroupID: String!
+    $UserID: String!
+) {
+    removeUsersFromGroup(input: {
+        groupId: $GroupID
+        users: [$UserID]
+    }) {
+       __typename
+    }
+}

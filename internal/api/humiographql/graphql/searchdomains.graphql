@@ -1,0 +1,66 @@
+mutation DeleteSearchDomain(
+  $SearchDomainName: String!
+  $DeleteMessage: String!
+) {
+  deleteSearchDomain(
+    name: $SearchDomainName
+    deleteMessage: $DeleteMessage
+  ) {
+    __typename
+  }
+}
+
+mutation UpdateDescriptionForSearchDomain(
+  $SearchDomainName: String!
+  $NewDescription: String!
+) {
+  updateDescriptionForSearchDomain(
+    name: $SearchDomainName
+    newDescription: $NewDescription
+  ) {
+    __typename
+  }
+}
+
+
+mutation SetAutomaticSearching(
+  $SearchDomainName: String!
+  $AutomaticSearch: Boolean!
+) {
+  setAutomaticSearching(
+    name: $SearchDomainName
+    automaticSearch: $AutomaticSearch
+  ) {
+      __typename
+  }
+}
+
+query GetSearchDomain(
+  $SearchDomainName: String!
+) {
+  searchDomain(
+    name: $SearchDomainName
+  ) {
+    id
+    name
+    description
+    automaticSearch
+    ... on View {
+      connections {
+        repository {
+          name
+        }
+        filter
+      }
+    }
+    __typename
+  }
+}
+
+query ListSearchDomains
+{
+  searchDomains {
+    name
+    automaticSearch
+  }
+}
