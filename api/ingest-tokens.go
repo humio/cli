@@ -81,16 +81,20 @@ func toIngestToken(data ingestTokenData) *IngestToken {
 	}
 }
 
-// Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
-func (i *IngestTokens) Add(repositoryName string, tokenName string, parser string) (*IngestToken, error) {
+func (i *IngestTokens) Add(repositoryName string, tokenName string, parser string, customToken string) (*IngestToken, error) {
 	variables := map[string]interface{}{
 		"tokenName":      graphql.String(tokenName),
 		"repositoryName": graphql.String(repositoryName),
 		"parser":         (*graphql.String)(nil),
+		"customToken":    (*graphql.String)(nil),
 	}
 
 	if parser != "" {
 		variables["parser"] = graphql.String(parser)
+	}
+
+	if customToken != "" {
+		variables["customToken"] = graphql.String(customToken)
 	}
 
 	var mutation struct {
@@ -100,7 +104,7 @@ func (i *IngestTokens) Add(repositoryName string, tokenName string, parser strin
 			Parser struct {
 				Name string
 			}
-		} `graphql:"addIngestTokenV3(input: { repositoryName: $repositoryName, name: $tokenName, parser: $parser})"`
+		} `graphql:"addIngestTokenV3(input: { repositoryName: $repositoryName, name: $tokenName, parser: $parser, customToken: $customToken})"`
 	}
 
 	err := i.client.Mutate(&mutation, variables)
