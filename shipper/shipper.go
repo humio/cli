@@ -142,7 +142,7 @@ func (s *LogShipper) sendBatch(messages []string) {
 			return err
 		}
 
-		if resp.StatusCode > 400 {
+		if resp.StatusCode >= 400 {
 			responseData, err := io.ReadAll(resp.Body)
 
 			if err != nil {
