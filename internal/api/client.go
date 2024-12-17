@@ -95,7 +95,11 @@ func (c *Client) MakeRequest(ctx context.Context, req *graphql.Request, resp *gr
 	if err != nil {
 		return err
 	}
-	graphqlURL, err := c.Address().Parse("graphql")
+	opName := "unknown"
+	if req.OpName != "" {
+		opName = req.OpName
+	}
+	graphqlURL, err := c.Address().Parse(fmt.Sprintf("graphql?id=%s", opName))
 	if err != nil {
 		return nil
 	}
