@@ -1,4 +1,4 @@
-// Copyright © 2024 CrowdStrike
+// Copyright © 2025 CrowdStrike
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func newScheduledSearchesInstallCmd() *cobra.Command {
+func newScheduledSearchesV2InstallCmd() *cobra.Command {
 	var filePath, url, name string
 
 	cmd := cobra.Command{
@@ -33,9 +33,12 @@ func newScheduledSearchesInstallCmd() *cobra.Command {
 
 The install command allows you to install scheduled searches from a URL or from a local file, e.g.
 
-  $ humioctl scheduled-searches install viewName --url=https://example.com/acme/scheduled-search.yaml
+  $ humioctl scheduled-searches-v2 install viewName --url=https://example.com/acme/scheduled-search-v2.yaml
 
-  $ humioctl scheduled-searches install viewName --file=./scheduled-searches.yaml
+  $ humioctl scheduled-searches-v2 install viewName --file=./scheduled-searches-v2.yaml
+
+  $ humioctl scheduled-searches-v2 install viewName --file=./scheduled-search-v1.yaml
+	This will install the legacy scheduled search with the CreateScheduledSearch mutation (deprecated for removal in 1.231).
 `,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -59,18 +62,34 @@ The install command allows you to install scheduled searches from a URL or from 
 			client := NewApiClient(cmd)
 			viewName := args[0]
 
-			var scheduledSearch api.ScheduledSearch
-			err = yaml.Unmarshal(content, &scheduledSearch)
-			exitOnError(cmd, err, "Could not unmarshal the scheduled search")
+			var scheduledSearchV2 api.ScheduledSearchV2
+			scheduledSearchV2, parseErr := tryParseScheduledSearchV2(content)
+			if parseErr != nil {
+				_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Yaml file could not be parsed as scheduled search v2, err='%s'. Attempting to parse as scheduled search v1 and create using deprecated CreateScheduledSearch mutation.\n", parseErr)
+				var scheduledSearchV1 api.ScheduledSearch
+				err = yaml.UnmarshalStrict(content, &scheduledSearchV1)
 
-			if name != "" {
-				scheduledSearch.Name = name
+				exitOnError(cmd, err, "Could not unmarshal the scheduled search as a scheduled search v1.")
+
+				if name != "" {
+					scheduledSearchV1.Name = name
+				}
+
+				_, err = client.ScheduledSearches().Create(viewName, &scheduledSearchV1)
+				exitOnError(cmd, err, "Could not create the scheduled search using deprecated CreateScheduledSearch mutation.")
+
+				_, _ = fmt.Fprintln(cmd.OutOrStdout(), "Scheduled search v1 created using deprecated CreateScheduledSearch mutation.")
+			} else {
+				if name != "" {
+					scheduledSearchV2.Name = name
+				}
+
+				_, err = client.ScheduledSearchesV2().Create(viewName, &scheduledSearchV2)
+				exitOnError(cmd, err, "Could not create the scheduled search")
+
+				_, _ = fmt.Fprintln(cmd.OutOrStdout(), "Scheduled search created")
+				os.Exit(1)
 			}
-
-			_, err = client.ScheduledSearches().Create(viewName, &scheduledSearch)
-			exitOnError(cmd, err, "Could not create the scheduled search")
-
-			fmt.Fprintln(cmd.OutOrStdout(), "Scheduled search created")
 		},
 	}
 
@@ -79,4 +98,14 @@ The install command allows you to install scheduled searches from a URL or from 
 	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the scheduled search under a specific name, ignoring the `name` attribute in the scheduled search file.")
 	cmd.MarkFlagsMutuallyExclusive("file", "url")
 	return &cmd
+}
+
+func tryParseScheduledSearchV2(content []byte) (api.ScheduledSearchV2, error) {
+	var scheduledSearchV2 api.ScheduledSearchV2
+	err := yaml.UnmarshalStrict(content, &scheduledSearchV2)
+	if err != nil {
+		return api.ScheduledSearchV2{}, err
+	} else {
+		return scheduledSearchV2, nil
+	}
 }
