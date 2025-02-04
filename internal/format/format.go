@@ -63,7 +63,7 @@ func ToValues(strings [][]string) [][]Value {
 }
 
 type String string
-type Int int64
+type Int64 int64
 type Float float64
 type Bool bool
 type MultiValue []Value
@@ -75,11 +75,18 @@ func StringPtr(s *string) Value {
 	return String(*s)
 }
 
-func IntPtr(i *int64) Value {
+func IntPtr(i *int) Value {
 	if i == nil {
-		return Int(0)
+		return Int64(0)
 	}
-	return Int(*i)
+	return Int64(*i)
+}
+
+func Int64Ptr(i *int64) Value {
+	if i == nil {
+		return Int64(0)
+	}
+	return Int64(*i)
 }
 
 func Float64Ptr(f *float64) Value {
@@ -127,11 +134,11 @@ func (b Bool) MarshalJSON() ([]byte, error) {
 	return json.Marshal(bool(b))
 }
 
-func (i Int) String() string {
+func (i Int64) String() string {
 	return strconv.Itoa(int(i))
 }
 
-func (i Int) MarshalJSON() ([]byte, error) {
+func (i Int64) MarshalJSON() ([]byte, error) {
 	return json.Marshal(int(i))
 }
 

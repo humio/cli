@@ -1,4 +1,4 @@
-// Copyright © 2024 CrowdStrike
+// Copyright © 2025 CrowdStrike
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
 package main
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/humio/cli/internal/format"
 	"github.com/spf13/cobra"
 )
 
-func newScheduledSearchesListCmd() *cobra.Command {
+func newScheduledSearchesV2ListCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "list <view>",
 		Short: "List all scheduled searches in a view.",
@@ -30,30 +31,33 @@ func newScheduledSearchesListCmd() *cobra.Command {
 			view := args[0]
 			client := NewApiClient(cmd)
 
-			scheduledSearches, err := client.ScheduledSearches().List(view)
+			scheduledSearches, err := client.ScheduledSearchesV2().List(view)
 			exitOnError(cmd, err, "Error fetching scheduled searches")
 
 			var rows = make([][]format.Value, len(scheduledSearches))
 			for i := range scheduledSearches {
 				scheduledSearch := scheduledSearches[i]
+
 				rows[i] = []format.Value{
 					format.String(scheduledSearch.ID),
 					format.String(scheduledSearch.Name),
 					format.StringPtr(scheduledSearch.Description),
-					format.String(scheduledSearch.QueryStart),
-					format.String(scheduledSearch.QueryEnd),
+					format.String(strconv.FormatInt(scheduledSearch.SearchIntervalSeconds, 10)),
+					format.Int64Ptr(scheduledSearch.SearchIntervalOffsetSeconds),
+					format.Int64Ptr(scheduledSearch.MaxWaitTimeSeconds),
 					format.String(scheduledSearch.TimeZone),
 					format.String(scheduledSearch.Schedule),
-					format.Int64(scheduledSearch.BackfillLimit),
+					format.IntPtr(scheduledSearch.BackfillLimitV2),
 					format.String(strings.Join(scheduledSearch.ActionNames, ", ")),
 					format.String(strings.Join(scheduledSearch.Labels, ", ")),
 					format.Bool(scheduledSearch.Enabled),
 					format.String(scheduledSearch.OwnershipRunAsID),
+					format.String(scheduledSearch.QueryTimestampType),
 					format.String(scheduledSearch.QueryOwnershipType),
 				}
 			}
 
-			printOverviewTable(cmd, []string{"ID", "Name", "Description", "Query Start", "Query End", "Time Zone", "Schedule", "Backfill Limit", "Action Names", "Labels", "Enabled", "Run As User ID", "Query Ownership Type"}, rows)
+			printOverviewTable(cmd, []string{"ID", "Name", "Description", "Search Interval Seconds", "Search Interval Offset Seconds", "Max Wait Time", "Time Zone", "Schedule", "Backfill Limit", "Action Names", "Labels", "Enabled", "Run As User ID", "Query Timestamp Type", "Query Ownership Type"}, rows)
 		},
 	}
 
