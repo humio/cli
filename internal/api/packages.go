@@ -184,12 +184,12 @@ func detailedInstallationError(response *http.Response) error {
 
 	body, err := io.ReadAll(response.Body) // response body is []byte
 	if err != nil {
-		return fmt.Errorf("the package could not be installed")
+		return fmt.Errorf("the package could not be installed, err=%q", err)
 	}
 
 	var result InstallationErrors
 	if err := json.Unmarshal(body, &result); err != nil {
-		return fmt.Errorf("the package could not be installed and the reason returned could not be parsed")
+		return fmt.Errorf("the package could not be installed and the reason returned could not be parsed, err=%q response=%q", err, body)
 	}
 
 	allErrors := append(result.ParseErrors, result.InstallationErrors...)
