@@ -1,4 +1,4 @@
-// Copyright © 2024 CrowdStrike
+// Copyright © 2025 CrowdStrike
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package main
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/humio/cli/internal/api"
@@ -22,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newScheduledSearchesShowCmd() *cobra.Command {
+func newScheduledSearchesV2ShowCmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "show <view> <name>",
 		Short: "Show details about a scheduled search in a view.",
@@ -32,10 +33,10 @@ func newScheduledSearchesShowCmd() *cobra.Command {
 			name := args[1]
 			client := NewApiClient(cmd)
 
-			scheduledSearches, err := client.ScheduledSearches().List(view)
+			scheduledSearches, err := client.ScheduledSearchesV2().List(view)
 			exitOnError(cmd, err, "Could not list scheduled searches")
 
-			var scheduledSearch api.ScheduledSearch
+			var scheduledSearch api.ScheduledSearchV2
 			for _, ss := range scheduledSearches {
 				if ss.Name == name {
 					scheduledSearch = ss
@@ -51,15 +52,17 @@ func newScheduledSearchesShowCmd() *cobra.Command {
 				{format.String("Name"), format.String(scheduledSearch.Name)},
 				{format.String("Description"), format.StringPtr(scheduledSearch.Description)},
 				{format.String("Query String"), format.String(scheduledSearch.QueryString)},
-				{format.String("Query Start"), format.String(scheduledSearch.QueryStart)},
-				{format.String("Query End"), format.String(scheduledSearch.QueryEnd)},
+				{format.String("Search Interval Seconds"), format.String(strconv.FormatInt(scheduledSearch.SearchIntervalSeconds, 10))},
+				{format.String("Search Interval Offset Seconds"), format.Int64Ptr(scheduledSearch.SearchIntervalOffsetSeconds)},
+				{format.String("Max Wait Time Seconds"), format.Int64Ptr(scheduledSearch.MaxWaitTimeSeconds)},
 				{format.String("Time Zone"), format.String(scheduledSearch.TimeZone)},
 				{format.String("Schedule"), format.String(scheduledSearch.Schedule)},
-				{format.String("Backfill Limit"), format.Int64(scheduledSearch.BackfillLimit)},
+				{format.String("Backfill Limit"), format.IntPtr(scheduledSearch.BackfillLimitV2)},
 				{format.String("Enabled"), format.Bool(scheduledSearch.Enabled)},
 				{format.String("Actions"), format.String(strings.Join(scheduledSearch.ActionNames, ", "))},
 				{format.String("Run As User ID"), format.String(scheduledSearch.OwnershipRunAsID)},
 				{format.String("Labels"), format.String(strings.Join(scheduledSearch.Labels, ", "))},
+				{format.String("Query Timestamp Type"), format.String(scheduledSearch.QueryTimestampType)},
 				{format.String("Query Ownership Type"), format.String(scheduledSearch.QueryOwnershipType)},
 			}
 
