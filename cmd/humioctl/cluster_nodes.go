@@ -35,7 +35,7 @@ func newClusterNodesCmd() *cobra.Command {
 
 func printClusterNodeDetailsTable(cmd *cobra.Command, node api.ClusterNode) {
 	details := [][]format.Value{
-		{format.String("ID"), format.Int64(node.Id)},
+		{format.String("ID"), format.Int(node.Id)},
 		{format.String("Name"), format.String(node.Name)},
 		{format.String("URI"), format.String(node.Uri)},
 		{format.String("UUID"), format.String(node.Uuid)},

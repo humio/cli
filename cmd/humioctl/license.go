@@ -39,7 +39,7 @@ func printLicenseDetailsTable(cmd *cobra.Command, license api.License) {
 		details = append(details, []format.Value{format.String("License ID"), format.String(onprem.ID)})
 		details = append(details, []format.Value{format.String("Issued To"), format.String(onprem.IssuedTo)})
 		if onprem.NumberOfSeats != nil {
-			details = append(details, []format.Value{format.String("Number Of Seats"), format.Int64(*onprem.NumberOfSeats)})
+			details = append(details, []format.Value{format.String("Number Of Seats"), format.Int(*onprem.NumberOfSeats)})
 		}
 	}
 

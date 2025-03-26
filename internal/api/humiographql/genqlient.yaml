@@ -16,7 +16,6 @@ operations:
   - graphql/repositories.graphql
   - graphql/roles.graphql
   - graphql/scheduled-search.graphql
-  - graphql/scheduled-search-v2.graphql
   - graphql/searchdomains.graphql
   - graphql/token.graphql
   - graphql/viewer.graphql

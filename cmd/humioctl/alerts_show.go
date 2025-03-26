@@ -42,11 +42,11 @@ func newAlertsShowCmd() *cobra.Command {
 				{format.String("Query Start"), format.String(alert.QueryStart)},
 				{format.String("Query String"), format.String(alert.QueryString)},
 				{format.String("Labels"), format.String(strings.Join(alert.Labels, ", "))},
-				{format.String("Throttle Time Millis"), format.Int64(alert.ThrottleTimeMillis)},
+				{format.String("Throttle Time Millis"), format.Int(alert.ThrottleTimeMillis)},
 				{format.String("Is Starred"), format.Bool(alert.IsStarred)},
 				{format.String("Last Error"), format.StringPtr(alert.LastError)},
 				{format.String("Throttle Field"), format.StringPtr(alert.ThrottleField)},
-				{format.String("Time Of Last Trigger"), format.Int64Ptr(alert.TimeOfLastTrigger)},
+				{format.String("Time Of Last Trigger"), format.IntPtr(alert.TimeOfLastTrigger)},
 				{format.String("Run As User ID"), format.String(alert.RunAsUserID)},
 				{format.String("Query Ownership Type"), format.String(alert.QueryOwnershipType)},
 			}

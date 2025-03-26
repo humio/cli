@@ -16,7 +16,7 @@ type SearchDomain struct {
 	AutomaticSearch bool
 }
 
-func (c *Client) SearchDomains() *SearchDomains { return &SearchDomains{client: c} }
+func (s *Client) SearchDomains() *SearchDomains { return &SearchDomains{client: s} }
 
 func (s *SearchDomains) Get(name string) (*SearchDomain, error) {
 	resp, err := humiographql.GetSearchDomain(context.Background(), s.client, name)

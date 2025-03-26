@@ -44,7 +44,7 @@ func newScheduledSearchesListCmd() *cobra.Command {
 					format.String(scheduledSearch.QueryEnd),
 					format.String(scheduledSearch.TimeZone),
 					format.String(scheduledSearch.Schedule),
-					format.Int64(scheduledSearch.BackfillLimit),
+					format.Int(scheduledSearch.BackfillLimit),
 					format.String(strings.Join(scheduledSearch.ActionNames, ", ")),
 					format.String(strings.Join(scheduledSearch.Labels, ", ")),
 					format.Bool(scheduledSearch.Enabled),

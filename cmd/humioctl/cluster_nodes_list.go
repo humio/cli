@@ -40,7 +40,7 @@ func newClusterNodesListCmd() *cobra.Command {
 			rows := make([][]format.Value, len(nodes))
 			for i, node := range nodes {
 				rows[i] = []format.Value{
-					format.Int64(node.Id),
+					format.Int(node.Id),
 					format.String(node.Name),
 					format.Bool(node.CanBeSafelyUnregistered),
 					format.StringPtr(node.Zone),
