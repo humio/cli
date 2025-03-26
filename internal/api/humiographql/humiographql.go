@@ -194,16 +194,12 @@ type ActionDetailsEmailAction struct {
 	// An action that can be invoked from a trigger.
 	Name string `json:"name"`
 	// List of email addresses to send an email to.
-	// Stability: Long-term
 	Recipients []string `json:"recipients"`
 	// Subject of the email. Can be templated with values from the result.
-	// Stability: Long-term
 	SubjectTemplate *string `json:"subjectTemplate"`
 	// Body of the email. Can be templated with values from the result.
-	// Stability: Long-term
 	EmailBodyTemplate *string `json:"emailBodyTemplate"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -231,10 +227,8 @@ func (v *ActionDetailsEmailAction) GetUseProxy() bool { return v.UseProxy }
 // Field entry in a Slack message
 type ActionDetailsFieldsSlackFieldEntry struct {
 	// Key of a Slack field.
-	// Stability: Long-term
 	FieldName string `json:"fieldName"`
 	// Value of a Slack field.
-	// Stability: Long-term
 	Value string `json:"value"`
 }
 
@@ -250,10 +244,8 @@ func (v *ActionDetailsFieldsSlackFieldEntry) GetValue() string { return v.Value 
 // A http request header.
 type ActionDetailsHeadersHttpHeaderEntry struct {
 	// Key of a http(s) header.
-	// Stability: Long-term
 	Header string `json:"header"`
 	// Value of a http(s) header.
-	// Stability: Long-term
 	Value string `json:"value"`
 }
 
@@ -273,7 +265,6 @@ type ActionDetailsHumioRepoAction struct {
 	// An action that can be invoked from a trigger.
 	Name string `json:"name"`
 	// Humio ingest token for the dataspace that the action should ingest into.
-	// Stability: Long-term
 	IngestToken string `json:"ingestToken"`
 }
 
@@ -296,13 +287,10 @@ type ActionDetailsOpsGenieAction struct {
 	// An action that can be invoked from a trigger.
 	Name string `json:"name"`
 	// OpsGenie webhook url to send the request to.
-	// Stability: Long-term
 	ApiUrl string `json:"apiUrl"`
 	// Key to authenticate with OpsGenie.
-	// Stability: Long-term
 	GenieKey string `json:"genieKey"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -331,13 +319,10 @@ type ActionDetailsPagerDutyAction struct {
 	// An action that can be invoked from a trigger.
 	Name string `json:"name"`
 	// Severity level to give to the message.
-	// Stability: Long-term
 	Severity string `json:"severity"`
 	// Routing key to authenticate with PagerDuty.
-	// Stability: Long-term
 	RoutingKey string `json:"routingKey"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -366,13 +351,10 @@ type ActionDetailsSlackAction struct {
 	// An action that can be invoked from a trigger.
 	Name string `json:"name"`
 	// Slack webhook url to send the request to.
-	// Stability: Long-term
 	Url string `json:"url"`
 	// Fields to include within the Slack message. Can be templated with values from the result.
-	// Stability: Long-term
 	Fields []ActionDetailsFieldsSlackFieldEntry `json:"fields"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -401,16 +383,12 @@ type ActionDetailsSlackPostMessageAction struct {
 	// An action that can be invoked from a trigger.
 	Name string `json:"name"`
 	// Api token to authenticate with Slack.
-	// Stability: Long-term
 	ApiToken string `json:"apiToken"`
 	// List of Slack channels to message.
-	// Stability: Long-term
 	Channels []string `json:"channels"`
 	// Fields to include within the Slack message. Can be templated with values from the result.
-	// Stability: Long-term
 	Fields []ActionDetailsFieldsSlackFieldEntry `json:"fields"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -444,7 +422,6 @@ type ActionDetailsUploadFileAction struct {
 	// An action that can be invoked from a trigger.
 	Name string `json:"name"`
 	// File name for the uploaded file.
-	// Stability: Long-term
 	FileName string `json:"fileName"`
 }
 
@@ -467,13 +444,10 @@ type ActionDetailsVictorOpsAction struct {
 	// An action that can be invoked from a trigger.
 	Name string `json:"name"`
 	// Type of the VictorOps message to make.
-	// Stability: Long-term
 	MessageType string `json:"messageType"`
 	// VictorOps webhook url to send the request to.
-	// Stability: Long-term
 	NotifyUrl string `json:"notifyUrl"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -502,22 +476,16 @@ type ActionDetailsWebhookAction struct {
 	// An action that can be invoked from a trigger.
 	Name string `json:"name"`
 	// Method to use for the request.
-	// Stability: Long-term
 	Method string `json:"method"`
 	// Url to send the http(s) request to.
-	// Stability: Long-term
 	Url string `json:"url"`
 	// Headers of the http(s) request.
-	// Stability: Long-term
 	Headers []ActionDetailsHeadersHttpHeaderEntry `json:"headers"`
 	// Body of the http(s) request. Can be templated with values from the result.
-	// Stability: Long-term
 	WebhookBodyTemplate string `json:"WebhookBodyTemplate"`
 	// Flag indicating whether SSL should be ignored for the request.
-	// Stability: Long-term
 	IgnoreSSL bool `json:"ignoreSSL"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -623,7 +591,6 @@ func (v *AddIngestTokenAddIngestTokenV3IngestToken) __premarshalJSON() (*__prema
 // AddIngestTokenResponse is returned by AddIngestToken on success.
 type AddIngestTokenResponse struct {
 	// Create a new Ingest API Token.
-	// Stability: Long-term
 	AddIngestTokenV3 AddIngestTokenAddIngestTokenV3IngestToken `json:"addIngestTokenV3"`
 }
 
@@ -834,7 +801,6 @@ func __marshalAddUserAddUserV2UserOrPendingUser(v *AddUserAddUserV2UserOrPending
 // AddUserResponse is returned by AddUser on success.
 type AddUserResponse struct {
 	// Add or invite a user. Calling this with an invitation token, will activate the account. By activating the account the client accepts LogScale's Terms and Conditions: https://www.humio.com/terms-and-conditions
-	// Stability: Long-term
 	AddUserV2 AddUserAddUserV2UserOrPendingUser `json:"-"`
 }
 
@@ -917,7 +883,6 @@ func (v *AddUserToGroupAddUsersToGroupAddUsersToGroupMutation) GetTypename() *st
 // AddUserToGroupResponse is returned by AddUserToGroup on success.
 type AddUserToGroupResponse struct {
 	// Adds users to an existing group.
-	// Stability: Long-term
 	AddUsersToGroup AddUserToGroupAddUsersToGroupAddUsersToGroupMutation `json:"addUsersToGroup"`
 }
 
@@ -932,43 +897,30 @@ func (v *AddUserToGroupResponse) GetAddUsersToGroup() AddUserToGroupAddUsersToGr
 // An aggregate alert.
 type AggregateAlertDetails struct {
 	// Id of the aggregate alert.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// Name of the aggregate alert.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// Description of the aggregate alert.
-	// Stability: Long-term
 	Description *string `json:"description"`
 	// LogScale query to execute.
-	// Stability: Long-term
 	QueryString string `json:"queryString"`
 	// Search interval in seconds.
-	// Stability: Long-term
 	SearchIntervalSeconds int64 `json:"searchIntervalSeconds"`
 	// Throttle time in seconds.
-	// Stability: Long-term
 	ThrottleTimeSeconds int64 `json:"throttleTimeSeconds"`
 	// A field to throttle on. Can only be set if throttleTimeSeconds is set.
-	// Stability: Long-term
 	ThrottleField *string `json:"throttleField"`
 	// List of actions to fire on query result.
-	// Stability: Long-term
 	Actions []AggregateAlertDetailsActionsAction `json:"-"`
 	// Labels attached to the aggregate alert.
-	// Stability: Long-term
 	Labels []string `json:"labels"`
 	// Flag indicating whether the aggregate alert is enabled.
-	// Stability: Long-term
 	Enabled bool `json:"enabled"`
 	// Trigger mode used for triggering the alert.
-	// Stability: Long-term
 	TriggerMode TriggerMode `json:"triggerMode"`
 	// Timestamp type to use for a query.
-	// Stability: Long-term
 	QueryTimestampType QueryTimestampType `json:"queryTimestampType"`
 	// Ownership of the query run by this alert
-	// Stability: Long-term
 	QueryOwnership SharedQueryOwnershipType `json:"-"`
 }
 
@@ -1478,45 +1430,32 @@ func (v *AggregateAlertDetailsActionsWebhookAction) GetName() string { return v.
 // An alert.
 type AlertDetails struct {
 	// Id of the alert.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// Name of the alert.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// LogScale query to execute.
-	// Stability: Long-term
 	QueryString string `json:"queryString"`
 	// Start of the relative time interval for the query.
-	// Stability: Long-term
 	QueryStart string `json:"queryStart"`
 	// Field to throttle on.
-	// Stability: Long-term
 	ThrottleField *string `json:"throttleField"`
 	// Unix timestamp for when the alert was last triggered.
-	// Stability: Long-term
 	TimeOfLastTrigger *int64 `json:"timeOfLastTrigger"`
 	// Flag indicating whether the calling user has 'starred' the alert.
 	IsStarred bool `json:"isStarred"`
 	// Name of the alert.
-	// Stability: Long-term
 	Description *string `json:"description"`
 	// Throttle time in milliseconds.
-	// Stability: Long-term
 	ThrottleTimeMillis int64 `json:"throttleTimeMillis"`
 	// Flag indicating whether the alert is enabled.
-	// Stability: Long-term
 	Enabled bool `json:"enabled"`
 	// List of ids for actions to fire on query result.
-	// Stability: Long-term
 	Actions []string `json:"actions"`
 	// Labels attached to the alert.
-	// Stability: Long-term
 	Labels []string `json:"labels"`
 	// Last error encountered while running the alert.
-	// Stability: Long-term
 	LastError *string `json:"lastError"`
 	// Ownership of the query run by this alert
-	// Stability: Long-term
 	QueryOwnership SharedQueryOwnershipType `json:"-"`
 }
 
@@ -1680,7 +1619,6 @@ func (v *AssignParserToIngestTokenAssignParserToIngestTokenV2IngestToken) GetTyp
 // AssignParserToIngestTokenResponse is returned by AssignParserToIngestToken on success.
 type AssignParserToIngestTokenResponse struct {
 	// Assign an ingest token to be associated with a parser.
-	// Stability: Long-term
 	AssignParserToIngestTokenV2 AssignParserToIngestTokenAssignParserToIngestTokenV2IngestToken `json:"assignParserToIngestTokenV2"`
 }
 
@@ -1694,7 +1632,6 @@ func (v *AssignParserToIngestTokenResponse) GetAssignParserToIngestTokenV2() Ass
 //
 // Information about the LogScale cluster.
 type ClusterNode struct {
-	// Stability: Long-term
 	Nodes []ClusterNodeNodesClusterNode `json:"nodes"`
 }
 
@@ -1706,62 +1643,41 @@ func (v *ClusterNode) GetNodes() []ClusterNodeNodesClusterNode { return v.Nodes 
 //
 // A node in the a LogScale Cluster.
 type ClusterNodeNodesClusterNode struct {
-	// Stability: Long-term
-	Id int `json:"id"`
-	// Stability: Long-term
-	Name string `json:"name"`
-	// Stability: Long-term
-	Uri string `json:"uri"`
-	// Stability: Long-term
-	Uuid string `json:"uuid"`
-	// Stability: Long-term
+	Id                    int     `json:"id"`
+	Name                  string  `json:"name"`
+	Uri                   string  `json:"uri"`
+	Uuid                  string  `json:"uuid"`
 	ClusterInfoAgeSeconds float64 `json:"clusterInfoAgeSeconds"`
 	// The size in GB of data this node needs to receive.
-	// Stability: Long-term
 	InboundSegmentSize float64 `json:"inboundSegmentSize"`
 	// The size in GB of data this node has that others need.
-	// Stability: Short-term
-	OutboundSegmentSize float64 `json:"outboundSegmentSize"`
-	// Stability: Long-term
-	CanBeSafelyUnregistered bool `json:"canBeSafelyUnregistered"`
+	OutboundSegmentSize     float64 `json:"outboundSegmentSize"`
+	CanBeSafelyUnregistered bool    `json:"canBeSafelyUnregistered"`
 	// The size in GB of data currently on this node.
-	// Stability: Long-term
 	CurrentSize float64 `json:"currentSize"`
 	// The size in GB of the data currently on this node that are in the primary storage location.
-	// Stability: Long-term
 	PrimarySize float64 `json:"primarySize"`
 	// The size in GB of the data currently on this node that are in the secondary storage location. Zero if no secondary is configured.
-	// Stability: Long-term
 	SecondarySize float64 `json:"secondarySize"`
 	// The total size in GB of the primary storage location on this node.
-	// Stability: Long-term
 	TotalSizeOfPrimary float64 `json:"totalSizeOfPrimary"`
 	// The total size in GB of the secondary storage location on this node. Zero if no secondary is configured.
-	// Stability: Long-term
 	TotalSizeOfSecondary float64 `json:"totalSizeOfSecondary"`
 	// The size in GB of the free space on this node of the primary storage location.
-	// Stability: Long-term
 	FreeOnPrimary float64 `json:"freeOnPrimary"`
 	// The size in GB of the free space on this node of the secondary storage location. Zero if no secondary is configured.
-	// Stability: Long-term
 	FreeOnSecondary float64 `json:"freeOnSecondary"`
 	// The size in GB of work-in-progress data files.
-	// Stability: Long-term
 	WipSize float64 `json:"wipSize"`
 	// The size in GB of data once the node has received the data allocated to it.
-	// Stability: Long-term
 	TargetSize float64 `json:"targetSize"`
 	// The size in GB of data that only exists on this node - i.e. only one replica exists in the cluster.
-	// Stability: Long-term
 	SolitarySegmentSize float64 `json:"solitarySegmentSize"`
 	// A flag indicating whether the node is considered up or down by the cluster coordinated. This is based on the `lastHeartbeat` field.
-	// Stability: Long-term
 	IsAvailable bool `json:"isAvailable"`
 	// The last time a heartbeat was received from the node.
-	// Stability: Long-term
 	LastHeartbeat time.Time `json:"lastHeartbeat"`
-	// Stability: Long-term
-	Zone *string `json:"zone"`
+	Zone          *string   `json:"zone"`
 }
 
 // GetId returns ClusterNodeNodesClusterNode.Id, and is useful for accessing the field via an interface.
@@ -2015,7 +1931,6 @@ func (v *CreateAggregateAlertCreateAggregateAlert) __premarshalJSON() (*__premar
 // CreateAggregateAlertResponse is returned by CreateAggregateAlert on success.
 type CreateAggregateAlertResponse struct {
 	// Create an aggregate alert.
-	// Stability: Long-term
 	CreateAggregateAlert CreateAggregateAlertCreateAggregateAlert `json:"createAggregateAlert"`
 }
 
@@ -2177,7 +2092,6 @@ func (v *CreateAlertCreateAlert) __premarshalJSON() (*__premarshalCreateAlertCre
 // CreateAlertResponse is returned by CreateAlert on success.
 type CreateAlertResponse struct {
 	// Create an alert.
-	// Stability: Long-term
 	CreateAlert CreateAlertCreateAlert `json:"createAlert"`
 }
 
@@ -2190,22 +2104,16 @@ func (v *CreateAlertResponse) GetCreateAlert() CreateAlertCreateAlert { return v
 // An email action.
 type CreateEmailActionCreateEmailAction struct {
 	// The id of the action.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// The name of the action.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// List of email addresses to send an email to.
-	// Stability: Long-term
 	Recipients []string `json:"recipients"`
 	// Subject of the email. Can be templated with values from the result.
-	// Stability: Long-term
 	SubjectTemplate *string `json:"subjectTemplate"`
 	// Body of the email. Can be templated with values from the result.
-	// Stability: Long-term
 	BodyTemplate *string `json:"bodyTemplate"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -2230,7 +2138,6 @@ func (v *CreateEmailActionCreateEmailAction) GetUseProxy() bool { return v.UsePr
 // CreateEmailActionResponse is returned by CreateEmailAction on success.
 type CreateEmailActionResponse struct {
 	// Create an email action.
-	// Stability: Long-term
 	CreateEmailAction CreateEmailActionCreateEmailAction `json:"createEmailAction"`
 }
 
@@ -2391,7 +2298,6 @@ func (v *CreateFilterAlertCreateFilterAlert) __premarshalJSON() (*__premarshalCr
 // CreateFilterAlertResponse is returned by CreateFilterAlert on success.
 type CreateFilterAlertResponse struct {
 	// Create a filter alert.
-	// Stability: Long-term
 	CreateFilterAlert CreateFilterAlertCreateFilterAlert `json:"createFilterAlert"`
 }
 
@@ -2406,13 +2312,10 @@ func (v *CreateFilterAlertResponse) GetCreateFilterAlert() CreateFilterAlertCrea
 // A LogScale repository action.
 type CreateHumioRepoActionCreateHumioRepoAction struct {
 	// The id of the action.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// The name of the action.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// Humio ingest token for the dataspace that the action should ingest into.
-	// Stability: Long-term
 	IngestToken string `json:"ingestToken"`
 }
 
@@ -2428,7 +2331,6 @@ func (v *CreateHumioRepoActionCreateHumioRepoAction) GetIngestToken() string { r
 // CreateHumioRepoActionResponse is returned by CreateHumioRepoAction on success.
 type CreateHumioRepoActionResponse struct {
 	// Create a LogScale repository action.
-	// Stability: Long-term
 	CreateHumioRepoAction CreateHumioRepoActionCreateHumioRepoAction `json:"createHumioRepoAction"`
 }
 
@@ -2443,19 +2345,14 @@ func (v *CreateHumioRepoActionResponse) GetCreateHumioRepoAction() CreateHumioRe
 // An OpsGenie action
 type CreateOpsGenieActionCreateOpsGenieAction struct {
 	// The id of the action.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// The name of the action.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// OpsGenie webhook url to send the request to.
-	// Stability: Long-term
 	ApiUrl string `json:"apiUrl"`
 	// Key to authenticate with OpsGenie.
-	// Stability: Long-term
 	GenieKey string `json:"genieKey"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -2477,7 +2374,6 @@ func (v *CreateOpsGenieActionCreateOpsGenieAction) GetUseProxy() bool { return v
 // CreateOpsGenieActionResponse is returned by CreateOpsGenieAction on success.
 type CreateOpsGenieActionResponse struct {
 	// Create an OpsGenie action.
-	// Stability: Long-term
 	CreateOpsGenieAction CreateOpsGenieActionCreateOpsGenieAction `json:"createOpsGenieAction"`
 }
 
@@ -2492,19 +2388,14 @@ func (v *CreateOpsGenieActionResponse) GetCreateOpsGenieAction() CreateOpsGenieA
 // A PagerDuty action.
 type CreatePagerDutyActionCreatePagerDutyAction struct {
 	// The id of the action.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// The name of the action.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// Severity level to give to the message.
-	// Stability: Long-term
 	Severity string `json:"severity"`
 	// Routing key to authenticate with PagerDuty.
-	// Stability: Long-term
 	RoutingKey string `json:"routingKey"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -2526,7 +2417,6 @@ func (v *CreatePagerDutyActionCreatePagerDutyAction) GetUseProxy() bool { return
 // CreatePagerDutyActionResponse is returned by CreatePagerDutyAction on success.
 type CreatePagerDutyActionResponse struct {
 	// Create a PagerDuty action.
-	// Stability: Long-term
 	CreatePagerDutyAction CreatePagerDutyActionCreatePagerDutyAction `json:"createPagerDutyAction"`
 }
 
@@ -2651,7 +2541,6 @@ func (v *CreateParserCreateParserV2Parser) __premarshalJSON() (*__premarshalCrea
 // CreateParserResponse is returned by CreateParser on success.
 type CreateParserResponse struct {
 	// Create a parser.
-	// Stability: Long-term
 	CreateParserV2 CreateParserCreateParserV2Parser `json:"createParserV2"`
 }
 
@@ -2662,7 +2551,6 @@ func (v *CreateParserResponse) GetCreateParserV2() CreateParserCreateParserV2Par
 
 // CreateRepositoryCreateRepositoryCreateRepositoryMutation includes the requested fields of the GraphQL type CreateRepositoryMutation.
 type CreateRepositoryCreateRepositoryCreateRepositoryMutation struct {
-	// Stability: Long-term
 	Repository CreateRepositoryCreateRepositoryCreateRepositoryMutationRepository `json:"repository"`
 }
 
@@ -2795,7 +2683,6 @@ func (v *CreateRepositoryCreateRepositoryCreateRepositoryMutationRepository) __p
 // CreateRepositoryResponse is returned by CreateRepository on success.
 type CreateRepositoryResponse struct {
 	// Create a new repository.
-	// Stability: Short-term
 	CreateRepository CreateRepositoryCreateRepositoryCreateRepositoryMutation `json:"createRepository"`
 }
 
@@ -2996,234 +2883,20 @@ func (v *CreateScheduledSearchResponse) GetCreateScheduledSearch() CreateSchedul
 	return v.CreateScheduledSearch
 }
 
-// CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch includes the requested fields of the GraphQL type ScheduledSearch.
-// The GraphQL type's documentation follows.
-//
-// Information about a scheduled search
-type CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch struct {
-	ScheduledSearchV2Details `json:"-"`
-}
-
-// GetId returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.Id, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetId() string {
-	return v.ScheduledSearchV2Details.Id
-}
-
-// GetName returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.Name, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetName() string {
-	return v.ScheduledSearchV2Details.Name
-}
-
-// GetDescription returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.Description, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetDescription() *string {
-	return v.ScheduledSearchV2Details.Description
-}
-
-// GetQueryString returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.QueryString, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetQueryString() string {
-	return v.ScheduledSearchV2Details.QueryString
-}
-
-// GetSearchIntervalSeconds returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.SearchIntervalSeconds, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetSearchIntervalSeconds() int64 {
-	return v.ScheduledSearchV2Details.SearchIntervalSeconds
-}
-
-// GetSearchIntervalOffsetSeconds returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.SearchIntervalOffsetSeconds, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetSearchIntervalOffsetSeconds() *int64 {
-	return v.ScheduledSearchV2Details.SearchIntervalOffsetSeconds
-}
-
-// GetMaxWaitTimeSeconds returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.MaxWaitTimeSeconds, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetMaxWaitTimeSeconds() *int64 {
-	return v.ScheduledSearchV2Details.MaxWaitTimeSeconds
-}
-
-// GetTimeZone returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.TimeZone, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetTimeZone() string {
-	return v.ScheduledSearchV2Details.TimeZone
-}
-
-// GetSchedule returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.Schedule, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetSchedule() string {
-	return v.ScheduledSearchV2Details.Schedule
-}
-
-// GetBackfillLimitV2 returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.BackfillLimitV2, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetBackfillLimitV2() *int {
-	return v.ScheduledSearchV2Details.BackfillLimitV2
-}
-
-// GetEnabled returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.Enabled, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetEnabled() bool {
-	return v.ScheduledSearchV2Details.Enabled
-}
-
-// GetActionsV2 returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.ActionsV2, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetActionsV2() []ScheduledSearchV2DetailsActionsV2Action {
-	return v.ScheduledSearchV2Details.ActionsV2
-}
-
-// GetLabels returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.Labels, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetLabels() []string {
-	return v.ScheduledSearchV2Details.Labels
-}
-
-// GetQueryTimestampType returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.QueryTimestampType, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetQueryTimestampType() QueryTimestampType {
-	return v.ScheduledSearchV2Details.QueryTimestampType
-}
-
-// GetQueryOwnership returns CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.QueryOwnership, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) GetQueryOwnership() SharedQueryOwnershipType {
-	return v.ScheduledSearchV2Details.QueryOwnership
-}
-
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) UnmarshalJSON(b []byte) error {
-
-	if string(b) == "null" {
-		return nil
-	}
-
-	var firstPass struct {
-		*CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch
-		graphql.NoUnmarshalJSON
-	}
-	firstPass.CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch = v
-
-	err := json.Unmarshal(b, &firstPass)
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(
-		b, &v.ScheduledSearchV2Details)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-type __premarshalCreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch struct {
-	Id string `json:"id"`
-
-	Name string `json:"name"`
-
-	Description *string `json:"description"`
-
-	QueryString string `json:"queryString"`
-
-	SearchIntervalSeconds int64 `json:"searchIntervalSeconds"`
-
-	SearchIntervalOffsetSeconds *int64 `json:"searchIntervalOffsetSeconds"`
-
-	MaxWaitTimeSeconds *int64 `json:"maxWaitTimeSeconds"`
-
-	TimeZone string `json:"timeZone"`
-
-	Schedule string `json:"schedule"`
-
-	BackfillLimitV2 *int `json:"backfillLimitV2"`
-
-	Enabled bool `json:"enabled"`
-
-	ActionsV2 []json.RawMessage `json:"actionsV2"`
-
-	Labels []string `json:"labels"`
-
-	QueryTimestampType QueryTimestampType `json:"queryTimestampType"`
-
-	QueryOwnership json.RawMessage `json:"queryOwnership"`
-}
-
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) MarshalJSON() ([]byte, error) {
-	premarshaled, err := v.__premarshalJSON()
-	if err != nil {
-		return nil, err
-	}
-	return json.Marshal(premarshaled)
-}
-
-func (v *CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch) __premarshalJSON() (*__premarshalCreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch, error) {
-	var retval __premarshalCreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch
-
-	retval.Id = v.ScheduledSearchV2Details.Id
-	retval.Name = v.ScheduledSearchV2Details.Name
-	retval.Description = v.ScheduledSearchV2Details.Description
-	retval.QueryString = v.ScheduledSearchV2Details.QueryString
-	retval.SearchIntervalSeconds = v.ScheduledSearchV2Details.SearchIntervalSeconds
-	retval.SearchIntervalOffsetSeconds = v.ScheduledSearchV2Details.SearchIntervalOffsetSeconds
-	retval.MaxWaitTimeSeconds = v.ScheduledSearchV2Details.MaxWaitTimeSeconds
-	retval.TimeZone = v.ScheduledSearchV2Details.TimeZone
-	retval.Schedule = v.ScheduledSearchV2Details.Schedule
-	retval.BackfillLimitV2 = v.ScheduledSearchV2Details.BackfillLimitV2
-	retval.Enabled = v.ScheduledSearchV2Details.Enabled
-	{
-
-		dst := &retval.ActionsV2
-		src := v.ScheduledSearchV2Details.ActionsV2
-		*dst = make(
-			[]json.RawMessage,
-			len(src))
-		for i, src := range src {
-			dst := &(*dst)[i]
-			var err error
-			*dst, err = __marshalScheduledSearchV2DetailsActionsV2Action(
-				&src)
-			if err != nil {
-				return nil, fmt.Errorf(
-					"unable to marshal CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.ScheduledSearchV2Details.ActionsV2: %w", err)
-			}
-		}
-	}
-	retval.Labels = v.ScheduledSearchV2Details.Labels
-	retval.QueryTimestampType = v.ScheduledSearchV2Details.QueryTimestampType
-	{
-
-		dst := &retval.QueryOwnership
-		src := v.ScheduledSearchV2Details.QueryOwnership
-		var err error
-		*dst, err = __marshalSharedQueryOwnershipType(
-			&src)
-		if err != nil {
-			return nil, fmt.Errorf(
-				"unable to marshal CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch.ScheduledSearchV2Details.QueryOwnership: %w", err)
-		}
-	}
-	return &retval, nil
-}
-
-// CreateScheduledSearchV2Response is returned by CreateScheduledSearchV2 on success.
-type CreateScheduledSearchV2Response struct {
-	// Create a scheduled search.
-	// Stability: Long-term
-	CreateScheduledSearchV2 CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch `json:"createScheduledSearchV2"`
-}
-
-// GetCreateScheduledSearchV2 returns CreateScheduledSearchV2Response.CreateScheduledSearchV2, and is useful for accessing the field via an interface.
-func (v *CreateScheduledSearchV2Response) GetCreateScheduledSearchV2() CreateScheduledSearchV2CreateScheduledSearchV2ScheduledSearch {
-	return v.CreateScheduledSearchV2
-}
-
 // CreateSlackActionCreateSlackAction includes the requested fields of the GraphQL type SlackAction.
 // The GraphQL type's documentation follows.
 //
 // A Slack action
 type CreateSlackActionCreateSlackAction struct {
 	// The id of the action.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// The name of the action.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// Fields to include within the Slack message. Can be templated with values from the result.
-	// Stability: Long-term
 	Fields []CreateSlackActionCreateSlackActionFieldsSlackFieldEntry `json:"fields"`
 	// Slack webhook url to send the request to.
-	// Stability: Long-term
 	Url string `json:"url"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -3250,10 +2923,8 @@ func (v *CreateSlackActionCreateSlackAction) GetUseProxy() bool { return v.UsePr
 // Field entry in a Slack message
 type CreateSlackActionCreateSlackActionFieldsSlackFieldEntry struct {
 	// Value of a Slack field.
-	// Stability: Long-term
 	Value string `json:"value"`
 	// Key of a Slack field.
-	// Stability: Long-term
 	FieldName string `json:"fieldName"`
 }
 
@@ -3268,7 +2939,6 @@ func (v *CreateSlackActionCreateSlackActionFieldsSlackFieldEntry) GetFieldName()
 // CreateSlackActionResponse is returned by CreateSlackAction on success.
 type CreateSlackActionResponse struct {
 	// Create a Slack action.
-	// Stability: Long-term
 	CreateSlackAction CreateSlackActionCreateSlackAction `json:"createSlackAction"`
 }
 
@@ -3283,22 +2953,16 @@ func (v *CreateSlackActionResponse) GetCreateSlackAction() CreateSlackActionCrea
 // A slack post-message action.
 type CreateSlackPostMessageActionCreateSlackPostMessageAction struct {
 	// The id of the action.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// The name of the action.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// Api token to authenticate with Slack.
-	// Stability: Long-term
 	ApiToken string `json:"apiToken"`
 	// List of Slack channels to message.
-	// Stability: Long-term
 	Channels []string `json:"channels"`
 	// Fields to include within the Slack message. Can be templated with values from the result.
-	// Stability: Long-term
 	Fields []CreateSlackPostMessageActionCreateSlackPostMessageActionFieldsSlackFieldEntry `json:"fields"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -3334,10 +2998,8 @@ func (v *CreateSlackPostMessageActionCreateSlackPostMessageAction) GetUseProxy()
 // Field entry in a Slack message
 type CreateSlackPostMessageActionCreateSlackPostMessageActionFieldsSlackFieldEntry struct {
 	// Value of a Slack field.
-	// Stability: Long-term
 	Value string `json:"value"`
 	// Key of a Slack field.
-	// Stability: Long-term
 	FieldName string `json:"fieldName"`
 }
 
@@ -3354,7 +3016,6 @@ func (v *CreateSlackPostMessageActionCreateSlackPostMessageActionFieldsSlackFiel
 // CreateSlackPostMessageActionResponse is returned by CreateSlackPostMessageAction on success.
 type CreateSlackPostMessageActionResponse struct {
 	// Create a post message Slack action.
-	// Stability: Long-term
 	CreateSlackPostMessageAction CreateSlackPostMessageActionCreateSlackPostMessageAction `json:"createSlackPostMessageAction"`
 }
 
@@ -3369,13 +3030,10 @@ func (v *CreateSlackPostMessageActionResponse) GetCreateSlackPostMessageAction()
 // An upload file action.
 type CreateUploadFileActionCreateUploadFileAction struct {
 	// The id of the action.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// The name of the action.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// File name for the uploaded file.
-	// Stability: Long-term
 	FileName string `json:"fileName"`
 }
 
@@ -3391,7 +3049,6 @@ func (v *CreateUploadFileActionCreateUploadFileAction) GetFileName() string { re
 // CreateUploadFileActionResponse is returned by CreateUploadFileAction on success.
 type CreateUploadFileActionResponse struct {
 	// Create an upload file action.
-	// Stability: Long-term
 	CreateUploadFileAction CreateUploadFileActionCreateUploadFileAction `json:"createUploadFileAction"`
 }
 
@@ -3406,19 +3063,14 @@ func (v *CreateUploadFileActionResponse) GetCreateUploadFileAction() CreateUploa
 // A VictorOps action.
 type CreateVictorOpsActionCreateVictorOpsAction struct {
 	// The id of the action.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// The name of the action.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// Type of the VictorOps message to make.
-	// Stability: Long-term
 	MessageType string `json:"messageType"`
 	// VictorOps webhook url to send the request to.
-	// Stability: Long-term
 	NotifyUrl string `json:"notifyUrl"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -3440,7 +3092,6 @@ func (v *CreateVictorOpsActionCreateVictorOpsAction) GetUseProxy() bool { return
 // CreateVictorOpsActionResponse is returned by CreateVictorOpsAction on success.
 type CreateVictorOpsActionResponse struct {
 	// Create a VictorOps action.
-	// Stability: Long-term
 	CreateVictorOpsAction CreateVictorOpsActionCreateVictorOpsAction `json:"createVictorOpsAction"`
 }
 
@@ -3463,7 +3114,6 @@ func (v *CreateViewCreateView) GetTypename() *string { return v.Typename }
 // CreateViewResponse is returned by CreateView on success.
 type CreateViewResponse struct {
 	// Create a new view.
-	// Stability: Long-term
 	CreateView CreateViewCreateView `json:"createView"`
 }
 
@@ -3476,28 +3126,20 @@ func (v *CreateViewResponse) GetCreateView() CreateViewCreateView { return v.Cre
 // A webhook action
 type CreateWebhookActionCreateWebhookAction struct {
 	// The id of the action.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// The name of the action.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// Url to send the http(s) request to.
-	// Stability: Long-term
 	Url string `json:"url"`
 	// Method to use for the request.
-	// Stability: Long-term
 	Method string `json:"method"`
 	// Headers of the http(s) request.
-	// Stability: Long-term
 	Headers []CreateWebhookActionCreateWebhookActionHeadersHttpHeaderEntry `json:"headers"`
 	// Body of the http(s) request. Can be templated with values from the result.
-	// Stability: Long-term
 	BodyTemplate string `json:"bodyTemplate"`
 	// Flag indicating whether SSL should be ignored for the request.
-	// Stability: Long-term
 	IgnoreSSL bool `json:"ignoreSSL"`
 	// Defines whether the action should use the configured proxy to make web requests.
-	// Stability: Long-term
 	UseProxy bool `json:"useProxy"`
 }
 
@@ -3533,10 +3175,8 @@ func (v *CreateWebhookActionCreateWebhookAction) GetUseProxy() bool { return v.U
 // A http request header.
 type CreateWebhookActionCreateWebhookActionHeadersHttpHeaderEntry struct {
 	// Value of a http(s) header.
-	// Stability: Long-term
 	Value string `json:"value"`
 	// Key of a http(s) header.
-	// Stability: Long-term
 	Header string `json:"header"`
 }
 
@@ -3553,7 +3193,6 @@ func (v *CreateWebhookActionCreateWebhookActionHeadersHttpHeaderEntry) GetHeader
 // CreateWebhookActionResponse is returned by CreateWebhookAction on success.
 type CreateWebhookActionResponse struct {
 	// Create a webhook action.
-	// Stability: Long-term
 	CreateWebhookAction CreateWebhookActionCreateWebhookAction `json:"createWebhookAction"`
 }
 
@@ -3565,7 +3204,6 @@ func (v *CreateWebhookActionResponse) GetCreateWebhookAction() CreateWebhookActi
 // DeleteActionByIDResponse is returned by DeleteActionByID on success.
 type DeleteActionByIDResponse struct {
 	// Delete an action.
-	// Stability: Long-term
 	DeleteAction bool `json:"deleteAction"`
 }
 
@@ -3575,7 +3213,6 @@ func (v *DeleteActionByIDResponse) GetDeleteAction() bool { return v.DeleteActio
 // DeleteAggregateAlertResponse is returned by DeleteAggregateAlert on success.
 type DeleteAggregateAlertResponse struct {
 	// Delete an aggregate alert.
-	// Stability: Long-term
 	DeleteAggregateAlert bool `json:"deleteAggregateAlert"`
 }
 
@@ -3585,7 +3222,6 @@ func (v *DeleteAggregateAlertResponse) GetDeleteAggregateAlert() bool { return v
 // DeleteAlertResponse is returned by DeleteAlert on success.
 type DeleteAlertResponse struct {
 	// Delete an alert.
-	// Stability: Long-term
 	DeleteAlert bool `json:"deleteAlert"`
 }
 
@@ -3595,7 +3231,6 @@ func (v *DeleteAlertResponse) GetDeleteAlert() bool { return v.DeleteAlert }
 // DeleteFilterAlertResponse is returned by DeleteFilterAlert on success.
 type DeleteFilterAlertResponse struct {
 	// Delete a filter alert.
-	// Stability: Long-term
 	DeleteFilterAlert bool `json:"deleteFilterAlert"`
 }
 
@@ -3613,7 +3248,6 @@ func (v *DeleteParserByIDDeleteParserBooleanResultType) GetTypename() *string { 
 // DeleteParserByIDResponse is returned by DeleteParserByID on success.
 type DeleteParserByIDResponse struct {
 	// Delete a parser.
-	// Stability: Long-term
 	DeleteParser DeleteParserByIDDeleteParserBooleanResultType `json:"deleteParser"`
 }
 
@@ -3625,24 +3259,11 @@ func (v *DeleteParserByIDResponse) GetDeleteParser() DeleteParserByIDDeleteParse
 // DeleteScheduledSearchByIDResponse is returned by DeleteScheduledSearchByID on success.
 type DeleteScheduledSearchByIDResponse struct {
 	// Delete a scheduled search.
-	// Stability: Long-term
 	DeleteScheduledSearch bool `json:"deleteScheduledSearch"`
 }
 
 // GetDeleteScheduledSearch returns DeleteScheduledSearchByIDResponse.DeleteScheduledSearch, and is useful for accessing the field via an interface.
 func (v *DeleteScheduledSearchByIDResponse) GetDeleteScheduledSearch() bool {
-	return v.DeleteScheduledSearch
-}
-
-// DeleteScheduledSearchV2ByIDResponse is returned by DeleteScheduledSearchV2ByID on success.
-type DeleteScheduledSearchV2ByIDResponse struct {
-	// Delete a scheduled search.
-	// Stability: Long-term
-	DeleteScheduledSearch bool `json:"deleteScheduledSearch"`
-}
-
-// GetDeleteScheduledSearch returns DeleteScheduledSearchV2ByIDResponse.DeleteScheduledSearch, and is useful for accessing the field via an interface.
-func (v *DeleteScheduledSearchV2ByIDResponse) GetDeleteScheduledSearch() bool {
 	return v.DeleteScheduledSearch
 }
 
@@ -3659,7 +3280,6 @@ func (v *DeleteSearchDomainDeleteSearchDomainBooleanResultType) GetTypename() *s
 // DeleteSearchDomainResponse is returned by DeleteSearchDomain on success.
 type DeleteSearchDomainResponse struct {
 	// Delete a repository or view.
-	// Stability: Long-term
 	DeleteSearchDomain DeleteSearchDomainDeleteSearchDomainBooleanResultType `json:"deleteSearchDomain"`
 }
 
@@ -3671,7 +3291,6 @@ func (v *DeleteSearchDomainResponse) GetDeleteSearchDomain() DeleteSearchDomainD
 // DisableFeatureFlagForOrganizationResponse is returned by DisableFeatureFlagForOrganization on success.
 type DisableFeatureFlagForOrganizationResponse struct {
 	// Disable a feature for a specific organization.
-	// Stability: Short-term
 	DisableFeatureForOrg bool `json:"disableFeatureForOrg"`
 }
 
@@ -3683,7 +3302,6 @@ func (v *DisableFeatureFlagForOrganizationResponse) GetDisableFeatureForOrg() bo
 // DisableFeatureFlagForUserResponse is returned by DisableFeatureFlagForUser on success.
 type DisableFeatureFlagForUserResponse struct {
 	// Disable a feature for a specific user.
-	// Stability: Short-term
 	DisableFeatureForUser bool `json:"disableFeatureForUser"`
 }
 
@@ -3695,7 +3313,6 @@ func (v *DisableFeatureFlagForUserResponse) GetDisableFeatureForUser() bool {
 // DisableFeatureFlagGloballyResponse is returned by DisableFeatureFlagGlobally on success.
 type DisableFeatureFlagGloballyResponse struct {
 	// Disable a feature.
-	// Stability: Short-term
 	DisableFeature bool `json:"disableFeature"`
 }
 
@@ -3705,7 +3322,6 @@ func (v *DisableFeatureFlagGloballyResponse) GetDisableFeature() bool { return v
 // DisableS3ArchivingResponse is returned by DisableS3Archiving on success.
 type DisableS3ArchivingResponse struct {
 	// Disables the archiving job for the repository.
-	// Stability: Short-term
 	S3DisableArchiving DisableS3ArchivingS3DisableArchivingBooleanResultType `json:"s3DisableArchiving"`
 }
 
@@ -3727,7 +3343,6 @@ func (v *DisableS3ArchivingS3DisableArchivingBooleanResultType) GetTypename() *s
 // EnableFeatureFlagForOrganizationResponse is returned by EnableFeatureFlagForOrganization on success.
 type EnableFeatureFlagForOrganizationResponse struct {
 	// Enable a feature for a specific organization.
-	// Stability: Short-term
 	EnableFeatureForOrg bool `json:"enableFeatureForOrg"`
 }
 
@@ -3739,7 +3354,6 @@ func (v *EnableFeatureFlagForOrganizationResponse) GetEnableFeatureForOrg() bool
 // EnableFeatureFlagForUserResponse is returned by EnableFeatureFlagForUser on success.
 type EnableFeatureFlagForUserResponse struct {
 	// Enable a feature for a specific user.
-	// Stability: Short-term
 	EnableFeatureForUser bool `json:"enableFeatureForUser"`
 }
 
@@ -3751,7 +3365,6 @@ func (v *EnableFeatureFlagForUserResponse) GetEnableFeatureForUser() bool {
 // EnableFeatureFlagGloballyResponse is returned by EnableFeatureFlagGlobally on success.
 type EnableFeatureFlagGloballyResponse struct {
 	// Enable a feature.
-	// Stability: Short-term
 	EnableFeature bool `json:"enableFeature"`
 }
 
@@ -3761,7 +3374,6 @@ func (v *EnableFeatureFlagGloballyResponse) GetEnableFeature() bool { return v.E
 // EnableS3ArchivingResponse is returned by EnableS3Archiving on success.
 type EnableS3ArchivingResponse struct {
 	// Enables the archiving job for the repository.
-	// Stability: Short-term
 	S3EnableArchiving EnableS3ArchivingS3EnableArchivingBooleanResultType `json:"s3EnableArchiving"`
 }
 
@@ -3784,193 +3396,86 @@ func (v *EnableS3ArchivingS3EnableArchivingBooleanResultType) GetTypename() *str
 type FeatureFlag string
 
 const (
-	// Export data to bucket storage.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning.] Export data to bucket storage.
 	FeatureFlagExporttobucket FeatureFlag = "ExportToBucket"
-	// Enable repeating queries. Can be used instead of live queries for functions having limitations around live queries.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning.] Enable repeating queries. Can be used instead of live queries for functions having limitations around live queries.
 	FeatureFlagRepeatingqueries FeatureFlag = "RepeatingQueries"
-	// Enable custom ingest tokens not generated by LogScale.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning.] Enable custom ingest tokens not generated by LogScale.
 	FeatureFlagCustomingesttokens FeatureFlag = "CustomIngestTokens"
-	// Use new organization limits.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enable permission tokens.
+	FeatureFlagPermissiontokens FeatureFlag = "PermissionTokens"
+	// [PREVIEW: This functionality is still under development and can change without warning.] Assign default roles for groups.
+	FeatureFlagDefaultrolesforgroups FeatureFlag = "DefaultRolesForGroups"
+	// [PREVIEW: This functionality is still under development and can change without warning.] Use new organization limits.
 	FeatureFlagNeworganizationlimits FeatureFlag = "NewOrganizationLimits"
-	// Enable ArrayFunctions in query language.
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning.] Authenticate cookies server-side.
+	FeatureFlagCookieauthserverside FeatureFlag = "CookieAuthServerSide"
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enable ArrayFunctions in query language.
 	FeatureFlagArrayfunctions FeatureFlag = "ArrayFunctions"
-	// Enable geography functions in query language.
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enable geography functions in query language.
 	FeatureFlagGeographyfunctions FeatureFlag = "GeographyFunctions"
-	// Prioritize newer over older segments.
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Prioritize newer over older segments.
 	FeatureFlagCachepolicies FeatureFlag = "CachePolicies"
-	// Enable searching across LogScale clusters.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enable searching across LogScale clusters.
 	FeatureFlagMulticlustersearch FeatureFlag = "MultiClusterSearch"
-	// Enable subdomains for current cluster.
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enable subdomains for current cluster.
 	FeatureFlagSubdomainfororganizations FeatureFlag = "SubdomainForOrganizations"
-	// Enable Humio Managed repositories. The customer is not permitted to change certain configurations in a LogScale Managed repository.
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enable Humio Managed repositories. The customer is not permitted to change certain configurations in a LogScale Managed repository.
 	FeatureFlagManagedrepositories FeatureFlag = "ManagedRepositories"
-	// Allow users to configure FDR feeds for managed repositories
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Allow users to configure FDR feeds for managed repositories
 	FeatureFlagManagedrepositoriesallowfdrconfig FeatureFlag = "ManagedRepositoriesAllowFDRConfig"
-	// The UsagePage shows data from ingestAfterFieldRemovalSize instead of segmentWriteBytes
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning.] The UsagePage shows data from ingestAfterFieldRemovalSize instead of segmentWriteBytes
 	FeatureFlagUsagepageusingingestafterfieldremovalsize FeatureFlag = "UsagePageUsingIngestAfterFieldRemovalSize"
-	// Enable falcon data connector
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning.] Enable falcon data connector
 	FeatureFlagFalcondataconnector FeatureFlag = "FalconDataConnector"
-	// Flag for testing, does nothing
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Flag for testing, does nothing
 	FeatureFlagSleepfunction FeatureFlag = "SleepFunction"
-	// Enable login bridge
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning.] Enable login bridge
 	FeatureFlagLoginbridge FeatureFlag = "LoginBridge"
-	// Enables download of macos installer for logcollector through fleet management
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables download of macos installer for logcollector through fleet management
 	FeatureFlagMacosinstallerforlogcollector FeatureFlag = "MacosInstallerForLogCollector"
-	// Enables ephemeral hosts support for fleet management
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables UsageJob to log average usage as part of usage log
+	FeatureFlagLogaverageusage FeatureFlag = "LogAverageUsage"
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables ephemeral hosts support for fleet management
 	FeatureFlagFleetephemeralhosts FeatureFlag = "FleetEphemeralHosts"
-	// Prevents the archiving logic from splitting segments into multiple archived files based on their tag groups
-	// Stability: Preview
-	FeatureFlagDontsplitsegmentsforarchiving FeatureFlag = "DontSplitSegmentsForArchiving"
-	// Enables fleet management collector metrics
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables fleet management collector metrics
 	FeatureFlagFleetcollectormetrics FeatureFlag = "FleetCollectorMetrics"
-	// No currentHosts writes for segments in buckets
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] No currentHosts writes for segments in buckets
 	FeatureFlagNocurrentsforbucketsegments FeatureFlag = "NoCurrentsForBucketSegments"
-	// Force a refresh of ClusterManagementStats cache before calculating UnregisterNodeBlockers in clusterUnregisterNode mutation
-	// Stability: Preview
-	FeatureFlagRefreshclustermanagementstatsinunregisternode FeatureFlag = "RefreshClusterManagementStatsInUnregisterNode"
-	// Pre-merge mini-segments
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Pre-merge mini-segments
 	FeatureFlagPremergeminisegments FeatureFlag = "PreMergeMiniSegments"
-	// Use new store for Autosharding rules
-	// Stability: Preview
-	FeatureFlagNewautoshardrulestore FeatureFlag = "NewAutoshardRuleStore"
-	// Use a new segment file format on write - not readable by older versions
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Use a new segment file format on write - not readable by older versions
 	FeatureFlagWritenewsegmentfileformat FeatureFlag = "WriteNewSegmentFileFormat"
-	// When using the new segment file format on write, also do the old solely for comparison
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
-	FeatureFlagMeasurenewsegmentfileformat FeatureFlag = "MeasureNewSegmentFileFormat"
-	// Enables fleet management collector debug logging
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables fleet management collector debug logging
 	FeatureFlagFleetcollectordebuglogging FeatureFlag = "FleetCollectorDebugLogging"
-	// Resolve field names during codegen rather than for every event
-	// Stability: Preview
-	FeatureFlagResolvefieldscodegen FeatureFlag = "ResolveFieldsCodeGen"
-	// Enables LogScale Collector remote updates
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables LogScale Collector remote updates
 	FeatureFlagFleetremoteupdates FeatureFlag = "FleetRemoteUpdates"
-	// Enables alternate query merge target handling
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables alternate query merge target handling
 	FeatureFlagAlternatequerymergetargethandling FeatureFlag = "AlternateQueryMergeTargetHandling"
-	// Allow digesters to start without having all the minis for the current merge target. Requires the AlternateQueryMergeTargetHandling feature flag to be enabled
-	// Stability: Preview
-	FeatureFlagDigestersdontneedmergetargetminis FeatureFlag = "DigestersDontNeedMergeTargetMinis"
-	// Enables labels for fleet management
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables query optimizations for fleet management
+	FeatureFlagFleetusestaticqueries FeatureFlag = "FleetUseStaticQueries"
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables labels for fleet management
 	FeatureFlagFleetlabels FeatureFlag = "FleetLabels"
-	// Segment rebalancer handles mini segments. Can only take effect when the AlternateQueryMergeTargetHandling and DigestersDontNeedMergeTargetMinis feature flags are also enabled
-	// Stability: Preview
-	FeatureFlagSegmentrebalancerhandlesminis FeatureFlag = "SegmentRebalancerHandlesMinis"
-	// Enables dashboards on fleet overview page
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
-	FeatureFlagFleetoverviewdashboards FeatureFlag = "FleetOverviewDashboards"
-	// Enables archiving for Google Cloud Storage
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
-	FeatureFlagGooglecloudarchiving FeatureFlag = "GoogleCloudArchiving"
-	// Enables TablePage UI on fleet management pages.
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
-	FeatureFlagFleettablepageui FeatureFlag = "FleetTablePageUI"
-	// Disables periodic ingestOffset pushing for datasources in favor of alternate handling
-	// Stability: Preview
-	FeatureFlagReplaceperiodicingestoffsetpushing FeatureFlag = "ReplacePeriodicIngestOffsetPushing"
-	// Lets the cluster know that non-evicted nodes undergoing a graceful shutdown should be considered alive for 5 minutes with regards to segment rebalancing
-	// Stability: Preview
-	FeatureFlagSetconsideredaliveuntilongracefulshutdown FeatureFlag = "SetConsideredAliveUntilOnGracefulShutdown"
-	// Enables Field Aliasing
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables Field Aliasing
 	FeatureFlagFieldaliasing FeatureFlag = "FieldAliasing"
-	// External Functions
-	// THIS FUNCTIONALITY IS RESTRICTED: Enabling this functionality should not be done in any production environment.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] External Functions
 	FeatureFlagExternalfunctions FeatureFlag = "ExternalFunctions"
-	// Enable the LogScale Query Assistant
-	// THIS FUNCTIONALITY IS RESTRICTED: Enabling this functionality should not be done in any production environment.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enable the LogScale Query Assistant
 	FeatureFlagQueryassistant FeatureFlag = "QueryAssistant"
-	// Enable Flight Control support in cluster
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enable Flight Control support in cluster
 	FeatureFlagFlightcontrol FeatureFlag = "FlightControl"
-	// Enables a limit on query backtracking
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enable organization level security policies. For instance the ability to only enable certain action types.
+	FeatureFlagOrganizationsecuritypolicies FeatureFlag = "OrganizationSecurityPolicies"
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables a limit on query backtracking
 	FeatureFlagQuerybacktrackinglimit FeatureFlag = "QueryBacktrackingLimit"
-	// Adds a derived #repo.cid tag when searching in views or dataspaces within an organization with an associated CID
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Adds a derived #repo.cid tag when searching in views or dataspaces within an organization with an associated CID
 	FeatureFlagDerivedcidtag FeatureFlag = "DerivedCidTag"
-	// Live tables
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Live tables
 	FeatureFlagLivetables FeatureFlag = "LiveTables"
-	// Enables graph queries
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
-	FeatureFlagGraphqueries FeatureFlag = "GraphQueries"
-	// Enables the MITRE Detection Annotation function
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables the MITRE Detection Annotation function
 	FeatureFlagMitredetectionannotation FeatureFlag = "MitreDetectionAnnotation"
-	// Enables having multiple role bindings for a single view in the same group. This feature can only be enabled when min version is at least 1.150.0
-	// Stability: Preview
+	// [PREVIEW: This functionality is still under development and can change without warning. THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] Enables having multiple role bindings for a single view in the same group. This feature flag does nothing until min version is at least 1.150.0
 	FeatureFlagMultipleviewrolebindings FeatureFlag = "MultipleViewRoleBindings"
-	// When enabled, queries exceeding the AggregatorOutputRowLimit will get cancelled. When disabled, queries will continue to run, but a log is produced whenever the limit is exceeded.
-	// Stability: Preview
-	FeatureFlagCancelqueriesexceedingaggregateoutputrowlimit FeatureFlag = "CancelQueriesExceedingAggregateOutputRowLimit"
-	// Enables mapping one group to more than one LogScale group with the same lookup name during group synchronization.
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
-	FeatureFlagOnetomanygroupsynchronization FeatureFlag = "OneToManyGroupSynchronization"
-	// Enables support specifying the query time interval using the query function setTimeInterval()
-	// Stability: Preview
-	FeatureFlagTimeintervalinquery FeatureFlag = "TimeIntervalInQuery"
-	// Enables LLM parser generation
-	// THIS FUNCTIONALITY IS EXPERIMENTAL: Enabling experimental functionality is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.
-	// Stability: Preview
-	FeatureFlagLlmparsergeneration FeatureFlag = "LlmParserGeneration"
-	// Enables the external data source sync job to sync entity data
-	// THIS FUNCTIONALITY IS RESTRICTED: Enabling this functionality should not be done in any production environment.
-	// Stability: Preview
-	FeatureFlagExternaldatasourcesyncforentity FeatureFlag = "ExternalDataSourceSyncForEntity"
-	// Enables the external data source sync job to sync identity data
-	// THIS FUNCTIONALITY IS RESTRICTED: Enabling this functionality should not be done in any production environment.
-	// Stability: Preview
-	FeatureFlagExternaldatasourcesyncforidentity FeatureFlag = "ExternalDataSourceSyncForIdentity"
-	// Use the new query coordination partition logic.
-	// Stability: Preview
-	FeatureFlagUsenewquerycoordinationpartitions FeatureFlag = "UseNewQueryCoordinationPartitions"
-	// Use the new sort, head, tail, and table datastructure
-	// Stability: Preview
-	FeatureFlagSortnewdatastructure FeatureFlag = "SortNewDatastructure"
 )
 
 // Asserts that a given field has an expected value after having been parsed.
@@ -3993,34 +3498,24 @@ func (v *FieldHasValueInput) GetExpectedValue() string { return v.ExpectedValue 
 // A filter alert.
 type FilterAlertDetails struct {
 	// Id of the filter alert.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// Name of the filter alert.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// Description of the filter alert.
-	// Stability: Long-term
 	Description *string `json:"description"`
 	// LogScale query to execute.
-	// Stability: Long-term
 	QueryString string `json:"queryString"`
 	// Throttle time in seconds.
-	// Stability: Long-term
 	ThrottleTimeSeconds *int64 `json:"throttleTimeSeconds"`
 	// A field to throttle on. Can only be set if throttleTimeSeconds is set.
-	// Stability: Long-term
 	ThrottleField *string `json:"throttleField"`
 	// List of ids for actions to fire on query result.
-	// Stability: Long-term
 	Actions []FilterAlertDetailsActionsAction `json:"-"`
 	// Labels attached to the filter alert.
-	// Stability: Long-term
 	Labels []string `json:"labels"`
 	// Flag indicating whether the filter alert is enabled.
-	// Stability: Long-term
 	Enabled bool `json:"enabled"`
 	// Ownership of the query run by this alert
-	// Stability: Long-term
 	QueryOwnership SharedQueryOwnershipType `json:"-"`
 }
 
@@ -4506,7 +4001,6 @@ func (v *FilterAlertDetailsActionsWebhookAction) GetName() string { return v.Nam
 
 // GetActionByIDResponse is returned by GetActionByID on success.
 type GetActionByIDResponse struct {
-	// Stability: Long-term
 	SearchDomain GetActionByIDSearchDomain `json:"-"`
 }
 
@@ -5916,7 +5410,6 @@ func (v *GetActionByIDSearchDomainView) __premarshalJSON() (*__premarshalGetActi
 
 // GetAggregateAlertByIDResponse is returned by GetAggregateAlertByID on success.
 type GetAggregateAlertByIDResponse struct {
-	// Stability: Long-term
 	SearchDomain GetAggregateAlertByIDSearchDomain `json:"-"`
 }
 
@@ -6291,27 +5784,17 @@ func (v *GetAggregateAlertByIDSearchDomainView) GetAggregateAlert() GetAggregate
 //
 // Information about the LogScale cluster.
 type GetClusterCluster struct {
-	ClusterNode `json:"-"`
-	// Stability: Long-term
-	ClusterInfoAgeSeconds float64 `json:"clusterInfoAgeSeconds"`
-	// Stability: Long-term
-	UnderReplicatedSegmentSize float64 `json:"underReplicatedSegmentSize"`
-	// Stability: Long-term
-	OverReplicatedSegmentSize float64 `json:"overReplicatedSegmentSize"`
-	// Stability: Long-term
-	MissingSegmentSize float64 `json:"missingSegmentSize"`
-	// Stability: Long-term
-	ProperlyReplicatedSegmentSize float64 `json:"properlyReplicatedSegmentSize"`
-	// Stability: Long-term
-	TargetUnderReplicatedSegmentSize float64 `json:"targetUnderReplicatedSegmentSize"`
-	// Stability: Long-term
-	TargetOverReplicatedSegmentSize float64 `json:"targetOverReplicatedSegmentSize"`
-	// Stability: Long-term
-	TargetMissingSegmentSize float64 `json:"targetMissingSegmentSize"`
-	// Stability: Long-term
-	TargetProperlyReplicatedSegmentSize float64 `json:"targetProperlyReplicatedSegmentSize"`
-	// Stability: Long-term
-	IngestPartitions []GetClusterClusterIngestPartitionsIngestPartition `json:"ingestPartitions"`
+	ClusterNode                         `json:"-"`
+	ClusterInfoAgeSeconds               float64                                            `json:"clusterInfoAgeSeconds"`
+	UnderReplicatedSegmentSize          float64                                            `json:"underReplicatedSegmentSize"`
+	OverReplicatedSegmentSize           float64                                            `json:"overReplicatedSegmentSize"`
+	MissingSegmentSize                  float64                                            `json:"missingSegmentSize"`
+	ProperlyReplicatedSegmentSize       float64                                            `json:"properlyReplicatedSegmentSize"`
+	TargetUnderReplicatedSegmentSize    float64                                            `json:"targetUnderReplicatedSegmentSize"`
+	TargetOverReplicatedSegmentSize     float64                                            `json:"targetOverReplicatedSegmentSize"`
+	TargetMissingSegmentSize            float64                                            `json:"targetMissingSegmentSize"`
+	TargetProperlyReplicatedSegmentSize float64                                            `json:"targetProperlyReplicatedSegmentSize"`
+	IngestPartitions                    []GetClusterClusterIngestPartitionsIngestPartition `json:"ingestPartitions"`
 }
 
 // GetClusterInfoAgeSeconds returns GetClusterCluster.ClusterInfoAgeSeconds, and is useful for accessing the field via an interface.
@@ -6440,10 +5923,8 @@ func (v *GetClusterCluster) __premarshalJSON() (*__premarshalGetClusterCluster, 
 //
 // A cluster ingest partition. It assigns cluster nodes with the responsibility of ingesting data.
 type GetClusterClusterIngestPartitionsIngestPartition struct {
-	// Stability: Long-term
 	Id int `json:"id"`
 	// The ids of the node responsible executing real-time queries for the partition and writing events to time series. The list is ordered so that the first node is the primary node and the rest are followers ready to take over if the primary fails.
-	// Stability: Long-term
 	NodeIds []int `json:"nodeIds"`
 }
 
@@ -6456,7 +5937,6 @@ func (v *GetClusterClusterIngestPartitionsIngestPartition) GetNodeIds() []int { 
 // GetClusterResponse is returned by GetCluster on success.
 type GetClusterResponse struct {
 	// This is used to retrieve information about a cluster.
-	// Stability: Long-term
 	Cluster GetClusterCluster `json:"cluster"`
 }
 
@@ -6465,7 +5945,6 @@ func (v *GetClusterResponse) GetCluster() GetClusterCluster { return v.Cluster }
 
 // GetFilterAlertByIDResponse is returned by GetFilterAlertByID on success.
 type GetFilterAlertByIDResponse struct {
-	// Stability: Long-term
 	SearchDomain GetFilterAlertByIDSearchDomain `json:"-"`
 }
 
@@ -6906,13 +6385,10 @@ type GetLicenseInstalledLicenseOnPremLicense struct {
 	// Represents information about the LogScale instance.
 	IssuedAt time.Time `json:"issuedAt"`
 	// license id.
-	// Stability: Long-term
 	Uid string `json:"uid"`
 	// The name of the entity the license was issued to.
-	// Stability: Long-term
 	Owner string `json:"owner"`
 	// The maximum number of user accounts allowed in LogScale. Unlimited if undefined.
-	// Stability: Long-term
 	MaxUsers *int `json:"maxUsers"`
 }
 
@@ -6958,7 +6434,6 @@ func (v *GetLicenseInstalledLicenseTrialLicense) GetIssuedAt() time.Time { retur
 // GetLicenseResponse is returned by GetLicense on success.
 type GetLicenseResponse struct {
 	// This returns information about the license for the LogScale instance, if any license installed.
-	// Stability: Long-term
 	InstalledLicense *GetLicenseInstalledLicense `json:"-"`
 }
 
@@ -7039,7 +6514,6 @@ func (v *GetLicenseResponse) __premarshalJSON() (*__premarshalGetLicenseResponse
 // A repository stores ingested data, configures parsers and data retention policies.
 type GetParserByIDRepository struct {
 	// A parser on the repository.
-	// Stability: Long-term
 	Parser *GetParserByIDRepositoryParser `json:"parser"`
 }
 
@@ -7156,7 +6630,6 @@ func (v *GetParserByIDRepositoryParser) __premarshalJSON() (*__premarshalGetPars
 // GetParserByIDResponse is returned by GetParserByID on success.
 type GetParserByIDResponse struct {
 	// Lookup a given repository by name.
-	// Stability: Long-term
 	Repository GetParserByIDRepository `json:"repository"`
 }
 
@@ -7169,7 +6642,6 @@ func (v *GetParserByIDResponse) GetRepository() GetParserByIDRepository { return
 // A repository stores ingested data, configures parsers and data retention policies.
 type GetParserYAMLByNameRepository struct {
 	// A parser on the repository.
-	// Stability: Long-term
 	Parser *GetParserYAMLByNameRepositoryParser `json:"parser"`
 }
 
@@ -7184,10 +6656,8 @@ func (v *GetParserYAMLByNameRepository) GetParser() *GetParserYAMLByNameReposito
 // A configured parser for incoming data.
 type GetParserYAMLByNameRepositoryParser struct {
 	// Name of the parser.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// A template that can be used to recreate the parser.
-	// Stability: Long-term
 	YamlTemplate string `json:"yamlTemplate"`
 }
 
@@ -7200,7 +6670,6 @@ func (v *GetParserYAMLByNameRepositoryParser) GetYamlTemplate() string { return 
 // GetParserYAMLByNameResponse is returned by GetParserYAMLByName on success.
 type GetParserYAMLByNameResponse struct {
 	// Lookup a given repository by name.
-	// Stability: Long-term
 	Repository GetParserYAMLByNameRepository `json:"repository"`
 }
 
@@ -7327,7 +6796,6 @@ func (v *GetRepositoryRepository) __premarshalJSON() (*__premarshalGetRepository
 // GetRepositoryResponse is returned by GetRepository on success.
 type GetRepositoryResponse struct {
 	// Lookup a given repository by name.
-	// Stability: Long-term
 	Repository GetRepositoryRepository `json:"repository"`
 }
 
@@ -7337,7 +6805,6 @@ func (v *GetRepositoryResponse) GetRepository() GetRepositoryRepository { return
 // GetRoleByIDResponse is returned by GetRoleByID on success.
 type GetRoleByIDResponse struct {
 	// A given role.
-	// Stability: Long-term
 	Role GetRoleByIDRole `json:"role"`
 }
 
@@ -7426,7 +6893,6 @@ func (v *GetRoleByIDRole) __premarshalJSON() (*__premarshalGetRoleByIDRole, erro
 
 // GetSearchDomainResponse is returned by GetSearchDomain on success.
 type GetSearchDomainResponse struct {
-	// Stability: Long-term
 	SearchDomain GetSearchDomainSearchDomain `json:"-"`
 }
 
@@ -7636,10 +7102,9 @@ type GetSearchDomainSearchDomainView struct {
 	// Common interface for Repositories and Views.
 	Description *string `json:"description"`
 	// Common interface for Repositories and Views.
-	AutomaticSearch bool `json:"automaticSearch"`
-	// Stability: Long-term
-	Connections []GetSearchDomainSearchDomainViewConnectionsViewConnection `json:"connections"`
-	Typename    *string                                                    `json:"__typename"`
+	AutomaticSearch bool                                                       `json:"automaticSearch"`
+	Connections     []GetSearchDomainSearchDomainViewConnectionsViewConnection `json:"connections"`
+	Typename        *string                                                    `json:"__typename"`
 }
 
 // GetId returns GetSearchDomainSearchDomainView.Id, and is useful for accessing the field via an interface.
@@ -7668,10 +7133,8 @@ func (v *GetSearchDomainSearchDomainView) GetTypename() *string { return v.Typen
 // Represents the connection between a view and an underlying repository.
 type GetSearchDomainSearchDomainViewConnectionsViewConnection struct {
 	// The underlying repository
-	// Stability: Long-term
 	Repository GetSearchDomainSearchDomainViewConnectionsViewConnectionRepository `json:"repository"`
 	// The filter applied to all results from the repository.
-	// Stability: Long-term
 	Filter string `json:"filter"`
 }
 
@@ -7690,7 +7153,6 @@ func (v *GetSearchDomainSearchDomainViewConnectionsViewConnection) GetFilter() s
 //
 // A repository stores ingested data, configures parsers and data retention policies.
 type GetSearchDomainSearchDomainViewConnectionsViewConnectionRepository struct {
-	// Stability: Long-term
 	Name string `json:"name"`
 }
 
@@ -7704,12 +7166,9 @@ func (v *GetSearchDomainSearchDomainViewConnectionsViewConnectionRepository) Get
 //
 // Feature flags with details
 type GetSupportedFeatureFlagsFeatureFlagsFeatureFlagV2 struct {
-	// Stability: Preview
-	Flag FeatureFlag `json:"flag"`
-	// Stability: Preview
-	Experimental bool `json:"experimental"`
-	// Stability: Preview
-	Description string `json:"description"`
+	Flag         FeatureFlag `json:"flag"`
+	Experimental bool        `json:"experimental"`
+	Description  string      `json:"description"`
 }
 
 // GetFlag returns GetSupportedFeatureFlagsFeatureFlagsFeatureFlagV2.Flag, and is useful for accessing the field via an interface.
@@ -7727,8 +7186,7 @@ func (v *GetSupportedFeatureFlagsFeatureFlagsFeatureFlagV2) GetDescription() str
 
 // GetSupportedFeatureFlagsResponse is returned by GetSupportedFeatureFlags on success.
 type GetSupportedFeatureFlagsResponse struct {
-	// List feature flags depending on filters and context
-	// Stability: Preview
+	// [PREVIEW: All flags should be considered as beta features. Enabling features that are marked as experimental is strongly discouraged and can lead to LogScale ending up in a bad state beyond repair.] List feature flags depending on filters and context
 	FeatureFlags []GetSupportedFeatureFlagsFeatureFlagsFeatureFlagV2 `json:"featureFlags"`
 }
 
@@ -7740,7 +7198,6 @@ func (v *GetSupportedFeatureFlagsResponse) GetFeatureFlags() []GetSupportedFeatu
 // GetUsernameResponse is returned by GetUsername on success.
 type GetUsernameResponse struct {
 	// The currently authenticated user's account.
-	// Stability: Long-term
 	Viewer GetUsernameViewerAccount `json:"viewer"`
 }
 
@@ -7752,7 +7209,6 @@ func (v *GetUsernameResponse) GetViewer() GetUsernameViewerAccount { return v.Vi
 //
 // A user account.
 type GetUsernameViewerAccount struct {
-	// Stability: Long-term
 	Username string `json:"username"`
 }
 
@@ -7762,7 +7218,6 @@ func (v *GetUsernameViewerAccount) GetUsername() string { return v.Username }
 // GetUsersByUsernameResponse is returned by GetUsersByUsername on success.
 type GetUsersByUsernameResponse struct {
 	// Requires manage cluster permission; Returns all users in the system.
-	// Stability: Long-term
 	Users []GetUsersByUsernameUsersUser `json:"users"`
 }
 
@@ -7891,11 +7346,8 @@ func (v *HttpHeaderEntryInput) GetValue() string { return v.Value }
 //
 // An API ingest token used for sending data to LogScale.
 type IngestTokenDetails struct {
-	// Stability: Long-term
-	Name string `json:"name"`
-	// Stability: Long-term
-	Token string `json:"token"`
-	// Stability: Long-term
+	Name   string                    `json:"name"`
+	Token  string                    `json:"token"`
 	Parser *IngestTokenDetailsParser `json:"parser"`
 }
 
@@ -7914,7 +7366,6 @@ func (v *IngestTokenDetails) GetParser() *IngestTokenDetailsParser { return v.Pa
 // A configured parser for incoming data.
 type IngestTokenDetailsParser struct {
 	// Name of the parser.
-	// Stability: Long-term
 	Name string `json:"name"`
 }
 
@@ -7934,7 +7385,6 @@ const (
 
 // LegacyCreateParserCreateParserCreateParserMutation includes the requested fields of the GraphQL type CreateParserMutation.
 type LegacyCreateParserCreateParserCreateParserMutation struct {
-	// Stability: Long-term
 	Parser LegacyCreateParserCreateParserCreateParserMutationParser `json:"parser"`
 }
 
@@ -8102,7 +7552,6 @@ func (v *LegacyDeleteParserByIDResponse) GetRemoveParser() LegacyDeleteParserByI
 // A repository stores ingested data, configures parsers and data retention policies.
 type LegacyGetParserRepository struct {
 	// A parser on the repository.
-	// Stability: Long-term
 	Parser *LegacyGetParserRepositoryParser `json:"parser"`
 }
 
@@ -8115,10 +7564,8 @@ func (v *LegacyGetParserRepository) GetParser() *LegacyGetParserRepositoryParser
 // A configured parser for incoming data.
 type LegacyGetParserRepositoryParser struct {
 	// The id of the parser.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// Name of the parser.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// The source code of the parser.
 	SourceCode string `json:"sourceCode"`
@@ -8146,7 +7593,6 @@ func (v *LegacyGetParserRepositoryParser) GetTagFields() []string { return v.Tag
 // LegacyGetParserResponse is returned by LegacyGetParser on success.
 type LegacyGetParserResponse struct {
 	// Lookup a given repository by name.
-	// Stability: Long-term
 	Repository LegacyGetParserRepository `json:"repository"`
 }
 
@@ -8155,7 +7601,6 @@ func (v *LegacyGetParserResponse) GetRepository() LegacyGetParserRepository { re
 
 // ListActionsResponse is returned by ListActions on success.
 type ListActionsResponse struct {
-	// Stability: Long-term
 	SearchDomain ListActionsSearchDomain `json:"-"`
 }
 
@@ -9591,7 +9036,6 @@ func (v *ListActionsSearchDomainView) __premarshalJSON() (*__premarshalListActio
 
 // ListAggregateAlertsResponse is returned by ListAggregateAlerts on success.
 type ListAggregateAlertsResponse struct {
-	// Stability: Long-term
 	SearchDomain ListAggregateAlertsSearchDomain `json:"-"`
 }
 
@@ -9963,7 +9407,6 @@ func (v *ListAggregateAlertsSearchDomainView) GetAggregateAlerts() []ListAggrega
 
 // ListAlertsResponse is returned by ListAlerts on success.
 type ListAlertsResponse struct {
-	// Stability: Long-term
 	SearchDomain ListAlertsSearchDomain `json:"-"`
 }
 
@@ -10362,7 +9805,6 @@ func (v *ListClusterNodesCluster) __premarshalJSON() (*__premarshalListClusterNo
 // ListClusterNodesResponse is returned by ListClusterNodes on success.
 type ListClusterNodesResponse struct {
 	// This is used to retrieve information about a cluster.
-	// Stability: Long-term
 	Cluster ListClusterNodesCluster `json:"cluster"`
 }
 
@@ -10371,7 +9813,6 @@ func (v *ListClusterNodesResponse) GetCluster() ListClusterNodesCluster { return
 
 // ListFilesResponse is returned by ListFiles on success.
 type ListFilesResponse struct {
-	// Stability: Long-term
 	SearchDomain ListFilesSearchDomain `json:"-"`
 }
 
@@ -10525,9 +9966,7 @@ func __marshalListFilesSearchDomain(v *ListFilesSearchDomain) ([]byte, error) {
 //
 // A file upload to LogScale for use with the `match` query function. You can see them under the Files page in the UI.
 type ListFilesSearchDomainFilesFile struct {
-	// Stability: Long-term
-	ContentHash string `json:"contentHash"`
-	// Stability: Long-term
+	ContentHash string                                    `json:"contentHash"`
 	NameAndPath ListFilesSearchDomainFilesFileNameAndPath `json:"nameAndPath"`
 }
 
@@ -10541,7 +9980,6 @@ func (v *ListFilesSearchDomainFilesFile) GetNameAndPath() ListFilesSearchDomainF
 
 // ListFilesSearchDomainFilesFileNameAndPath includes the requested fields of the GraphQL type FileNameAndPath.
 type ListFilesSearchDomainFilesFileNameAndPath struct {
-	// Stability: Long-term
 	Name string `json:"name"`
 }
 
@@ -10582,7 +10020,6 @@ func (v *ListFilesSearchDomainView) GetFiles() []ListFilesSearchDomainFilesFile 
 
 // ListFilterAlertsResponse is returned by ListFilterAlerts on success.
 type ListFilterAlertsResponse struct {
-	// Stability: Long-term
 	SearchDomain ListFilterAlertsSearchDomain `json:"-"`
 }
 
@@ -10932,7 +10369,6 @@ func (v *ListFilterAlertsSearchDomainView) GetFilterAlerts() []ListFilterAlertsS
 //
 // A page of groups in an organization.
 type ListGroupsGroupsPageGroupPage struct {
-	// Stability: Long-term
 	Page []ListGroupsGroupsPageGroupPagePageGroup `json:"page"`
 }
 
@@ -10946,9 +10382,7 @@ func (v *ListGroupsGroupsPageGroupPage) GetPage() []ListGroupsGroupsPageGroupPag
 //
 // A group.
 type ListGroupsGroupsPageGroupPagePageGroup struct {
-	// Stability: Long-term
-	Id string `json:"id"`
-	// Stability: Long-term
+	Id          string `json:"id"`
 	DisplayName string `json:"displayName"`
 }
 
@@ -10961,7 +10395,6 @@ func (v *ListGroupsGroupsPageGroupPagePageGroup) GetDisplayName() string { retur
 // ListGroupsResponse is returned by ListGroups on success.
 type ListGroupsResponse struct {
 	// All defined groups in an organization.
-	// Stability: Long-term
 	GroupsPage ListGroupsGroupsPageGroupPage `json:"groupsPage"`
 }
 
@@ -10973,7 +10406,6 @@ func (v *ListGroupsResponse) GetGroupsPage() ListGroupsGroupsPageGroupPage { ret
 //
 // A repository stores ingested data, configures parsers and data retention policies.
 type ListIngestTokensRepository struct {
-	// Stability: Long-term
 	IngestTokens []ListIngestTokensRepositoryIngestTokensIngestToken `json:"ingestTokens"`
 }
 
@@ -11058,7 +10490,6 @@ func (v *ListIngestTokensRepositoryIngestTokensIngestToken) __premarshalJSON() (
 // ListIngestTokensResponse is returned by ListIngestTokens on success.
 type ListIngestTokensResponse struct {
 	// Lookup a given repository by name.
-	// Stability: Long-term
 	Repository ListIngestTokensRepository `json:"repository"`
 }
 
@@ -11067,7 +10498,6 @@ func (v *ListIngestTokensResponse) GetRepository() ListIngestTokensRepository { 
 
 // ListInstalledPackagesResponse is returned by ListInstalledPackages on success.
 type ListInstalledPackagesResponse struct {
-	// Stability: Long-term
 	SearchDomain ListInstalledPackagesSearchDomain `json:"-"`
 }
 
@@ -11225,16 +10655,11 @@ func __marshalListInstalledPackagesSearchDomain(v *ListInstalledPackagesSearchDo
 //
 // A package installation.
 type ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallation struct {
-	// Stability: Long-term
-	Id string `json:"id"`
-	// Stability: Long-term
+	Id          string                                                                                           `json:"id"`
 	InstalledBy ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallationInstalledByUserAndTimestamp `json:"installedBy"`
-	// Stability: Long-term
-	UpdatedBy ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallationUpdatedByUserAndTimestamp `json:"updatedBy"`
-	// Stability: Long-term
-	Source PackageInstallationSourceType `json:"source"`
+	UpdatedBy   ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallationUpdatedByUserAndTimestamp   `json:"updatedBy"`
+	Source      PackageInstallationSourceType                                                                    `json:"source"`
 	// Finds updates on a package. It also looks for updates on packages that were installed manually, in case e.g. test versions of a package have been distributed prior to the full release.
-	// Stability: Long-term
 	AvailableUpdate *string `json:"availableUpdate"`
 }
 
@@ -11265,9 +10690,7 @@ func (v *ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallation) 
 
 // ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallationInstalledByUserAndTimestamp includes the requested fields of the GraphQL type UserAndTimestamp.
 type ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallationInstalledByUserAndTimestamp struct {
-	// Stability: Long-term
-	Username string `json:"username"`
-	// Stability: Long-term
+	Username  string    `json:"username"`
 	Timestamp time.Time `json:"timestamp"`
 }
 
@@ -11283,9 +10706,7 @@ func (v *ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallationIn
 
 // ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallationUpdatedByUserAndTimestamp includes the requested fields of the GraphQL type UserAndTimestamp.
 type ListInstalledPackagesSearchDomainInstalledPackagesPackageInstallationUpdatedByUserAndTimestamp struct {
-	// Stability: Long-term
-	Username string `json:"username"`
-	// Stability: Long-term
+	Username  string    `json:"username"`
 	Timestamp time.Time `json:"timestamp"`
 }
 
@@ -11341,7 +10762,6 @@ func (v *ListInstalledPackagesSearchDomainView) GetInstalledPackages() []ListIns
 // A repository stores ingested data, configures parsers and data retention policies.
 type ListParsersRepository struct {
 	// Saved parsers.
-	// Stability: Long-term
 	Parsers []ListParsersRepositoryParsersParser `json:"parsers"`
 }
 
@@ -11354,13 +10774,10 @@ func (v *ListParsersRepository) GetParsers() []ListParsersRepositoryParsersParse
 // A configured parser for incoming data.
 type ListParsersRepositoryParsersParser struct {
 	// The id of the parser.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// Name of the parser.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// True if the parser is one of LogScale's built-in parsers.
-	// Stability: Long-term
 	IsBuiltIn bool `json:"isBuiltIn"`
 }
 
@@ -11376,7 +10793,6 @@ func (v *ListParsersRepositoryParsersParser) GetIsBuiltIn() bool { return v.IsBu
 // ListParsersResponse is returned by ListParsers on success.
 type ListParsersResponse struct {
 	// Lookup a given repository by name.
-	// Stability: Long-term
 	Repository ListParsersRepository `json:"repository"`
 }
 
@@ -11388,12 +10804,9 @@ func (v *ListParsersResponse) GetRepository() ListParsersRepository { return v.R
 //
 // A repository stores ingested data, configures parsers and data retention policies.
 type ListRepositoriesRepositoriesRepository struct {
-	// Stability: Long-term
-	Id string `json:"id"`
-	// Stability: Long-term
+	Id   string `json:"id"`
 	Name string `json:"name"`
 	// Total size of data. Size is measured as the size after compression.
-	// Stability: Long-term
 	CompressedByteSize int64 `json:"compressedByteSize"`
 }
 
@@ -11410,7 +10823,6 @@ func (v *ListRepositoriesRepositoriesRepository) GetCompressedByteSize() int64 {
 
 // ListRepositoriesResponse is returned by ListRepositories on success.
 type ListRepositoriesResponse struct {
-	// Stability: Long-term
 	Repositories []ListRepositoriesRepositoriesRepository `json:"repositories"`
 }
 
@@ -11422,7 +10834,6 @@ func (v *ListRepositoriesResponse) GetRepositories() []ListRepositoriesRepositor
 // ListRolesResponse is returned by ListRoles on success.
 type ListRolesResponse struct {
 	// All defined roles.
-	// Stability: Long-term
 	Roles []ListRolesRolesRole `json:"roles"`
 }
 
@@ -11511,7 +10922,6 @@ func (v *ListRolesRolesRole) __premarshalJSON() (*__premarshalListRolesRolesRole
 
 // ListScheduledSearchesResponse is returned by ListScheduledSearches on success.
 type ListScheduledSearchesResponse struct {
-	// Stability: Long-term
 	SearchDomain ListScheduledSearchesSearchDomain `json:"-"`
 }
 
@@ -11881,397 +11291,8 @@ func (v *ListScheduledSearchesSearchDomainView) GetScheduledSearches() []ListSch
 	return v.ScheduledSearches
 }
 
-// ListScheduledSearchesV2Response is returned by ListScheduledSearchesV2 on success.
-type ListScheduledSearchesV2Response struct {
-	// Stability: Long-term
-	SearchDomain ListScheduledSearchesV2SearchDomain `json:"-"`
-}
-
-// GetSearchDomain returns ListScheduledSearchesV2Response.SearchDomain, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2Response) GetSearchDomain() ListScheduledSearchesV2SearchDomain {
-	return v.SearchDomain
-}
-
-func (v *ListScheduledSearchesV2Response) UnmarshalJSON(b []byte) error {
-
-	if string(b) == "null" {
-		return nil
-	}
-
-	var firstPass struct {
-		*ListScheduledSearchesV2Response
-		SearchDomain json.RawMessage `json:"searchDomain"`
-		graphql.NoUnmarshalJSON
-	}
-	firstPass.ListScheduledSearchesV2Response = v
-
-	err := json.Unmarshal(b, &firstPass)
-	if err != nil {
-		return err
-	}
-
-	{
-		dst := &v.SearchDomain
-		src := firstPass.SearchDomain
-		if len(src) != 0 && string(src) != "null" {
-			err = __unmarshalListScheduledSearchesV2SearchDomain(
-				src, dst)
-			if err != nil {
-				return fmt.Errorf(
-					"unable to unmarshal ListScheduledSearchesV2Response.SearchDomain: %w", err)
-			}
-		}
-	}
-	return nil
-}
-
-type __premarshalListScheduledSearchesV2Response struct {
-	SearchDomain json.RawMessage `json:"searchDomain"`
-}
-
-func (v *ListScheduledSearchesV2Response) MarshalJSON() ([]byte, error) {
-	premarshaled, err := v.__premarshalJSON()
-	if err != nil {
-		return nil, err
-	}
-	return json.Marshal(premarshaled)
-}
-
-func (v *ListScheduledSearchesV2Response) __premarshalJSON() (*__premarshalListScheduledSearchesV2Response, error) {
-	var retval __premarshalListScheduledSearchesV2Response
-
-	{
-
-		dst := &retval.SearchDomain
-		src := v.SearchDomain
-		var err error
-		*dst, err = __marshalListScheduledSearchesV2SearchDomain(
-			&src)
-		if err != nil {
-			return nil, fmt.Errorf(
-				"unable to marshal ListScheduledSearchesV2Response.SearchDomain: %w", err)
-		}
-	}
-	return &retval, nil
-}
-
-// ListScheduledSearchesV2SearchDomain includes the requested fields of the GraphQL interface SearchDomain.
-//
-// ListScheduledSearchesV2SearchDomain is implemented by the following types:
-// ListScheduledSearchesV2SearchDomainRepository
-// ListScheduledSearchesV2SearchDomainView
-// The GraphQL type's documentation follows.
-//
-// Common interface for Repositories and Views.
-type ListScheduledSearchesV2SearchDomain interface {
-	implementsGraphQLInterfaceListScheduledSearchesV2SearchDomain()
-	// GetTypename returns the receiver's concrete GraphQL type-name (see interface doc for possible values).
-	GetTypename() *string
-	// GetScheduledSearches returns the interface-field "scheduledSearches" from its implementation.
-	// The GraphQL interface field's documentation follows.
-	//
-	// Common interface for Repositories and Views.
-	GetScheduledSearches() []ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch
-}
-
-func (v *ListScheduledSearchesV2SearchDomainRepository) implementsGraphQLInterfaceListScheduledSearchesV2SearchDomain() {
-}
-func (v *ListScheduledSearchesV2SearchDomainView) implementsGraphQLInterfaceListScheduledSearchesV2SearchDomain() {
-}
-
-func __unmarshalListScheduledSearchesV2SearchDomain(b []byte, v *ListScheduledSearchesV2SearchDomain) error {
-	if string(b) == "null" {
-		return nil
-	}
-
-	var tn struct {
-		TypeName string `json:"__typename"`
-	}
-	err := json.Unmarshal(b, &tn)
-	if err != nil {
-		return err
-	}
-
-	switch tn.TypeName {
-	case "Repository":
-		*v = new(ListScheduledSearchesV2SearchDomainRepository)
-		return json.Unmarshal(b, *v)
-	case "View":
-		*v = new(ListScheduledSearchesV2SearchDomainView)
-		return json.Unmarshal(b, *v)
-	case "":
-		return fmt.Errorf(
-			"response was missing SearchDomain.__typename")
-	default:
-		return fmt.Errorf(
-			`unexpected concrete type for ListScheduledSearchesV2SearchDomain: "%v"`, tn.TypeName)
-	}
-}
-
-func __marshalListScheduledSearchesV2SearchDomain(v *ListScheduledSearchesV2SearchDomain) ([]byte, error) {
-
-	var typename string
-	switch v := (*v).(type) {
-	case *ListScheduledSearchesV2SearchDomainRepository:
-		typename = "Repository"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ListScheduledSearchesV2SearchDomainRepository
-		}{typename, v}
-		return json.Marshal(result)
-	case *ListScheduledSearchesV2SearchDomainView:
-		typename = "View"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ListScheduledSearchesV2SearchDomainView
-		}{typename, v}
-		return json.Marshal(result)
-	case nil:
-		return []byte("null"), nil
-	default:
-		return nil, fmt.Errorf(
-			`unexpected concrete type for ListScheduledSearchesV2SearchDomain: "%T"`, v)
-	}
-}
-
-// ListScheduledSearchesV2SearchDomainRepository includes the requested fields of the GraphQL type Repository.
-// The GraphQL type's documentation follows.
-//
-// A repository stores ingested data, configures parsers and data retention policies.
-type ListScheduledSearchesV2SearchDomainRepository struct {
-	Typename *string `json:"__typename"`
-	// Common interface for Repositories and Views.
-	ScheduledSearches []ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch `json:"scheduledSearches"`
-}
-
-// GetTypename returns ListScheduledSearchesV2SearchDomainRepository.Typename, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainRepository) GetTypename() *string { return v.Typename }
-
-// GetScheduledSearches returns ListScheduledSearchesV2SearchDomainRepository.ScheduledSearches, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainRepository) GetScheduledSearches() []ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch {
-	return v.ScheduledSearches
-}
-
-// ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch includes the requested fields of the GraphQL type ScheduledSearch.
-// The GraphQL type's documentation follows.
-//
-// Information about a scheduled search
-type ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch struct {
-	ScheduledSearchV2Details `json:"-"`
-}
-
-// GetId returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.Id, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetId() string {
-	return v.ScheduledSearchV2Details.Id
-}
-
-// GetName returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.Name, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetName() string {
-	return v.ScheduledSearchV2Details.Name
-}
-
-// GetDescription returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.Description, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetDescription() *string {
-	return v.ScheduledSearchV2Details.Description
-}
-
-// GetQueryString returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.QueryString, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetQueryString() string {
-	return v.ScheduledSearchV2Details.QueryString
-}
-
-// GetSearchIntervalSeconds returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.SearchIntervalSeconds, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetSearchIntervalSeconds() int64 {
-	return v.ScheduledSearchV2Details.SearchIntervalSeconds
-}
-
-// GetSearchIntervalOffsetSeconds returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.SearchIntervalOffsetSeconds, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetSearchIntervalOffsetSeconds() *int64 {
-	return v.ScheduledSearchV2Details.SearchIntervalOffsetSeconds
-}
-
-// GetMaxWaitTimeSeconds returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.MaxWaitTimeSeconds, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetMaxWaitTimeSeconds() *int64 {
-	return v.ScheduledSearchV2Details.MaxWaitTimeSeconds
-}
-
-// GetTimeZone returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.TimeZone, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetTimeZone() string {
-	return v.ScheduledSearchV2Details.TimeZone
-}
-
-// GetSchedule returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.Schedule, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetSchedule() string {
-	return v.ScheduledSearchV2Details.Schedule
-}
-
-// GetBackfillLimitV2 returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.BackfillLimitV2, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetBackfillLimitV2() *int {
-	return v.ScheduledSearchV2Details.BackfillLimitV2
-}
-
-// GetEnabled returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.Enabled, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetEnabled() bool {
-	return v.ScheduledSearchV2Details.Enabled
-}
-
-// GetActionsV2 returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.ActionsV2, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetActionsV2() []ScheduledSearchV2DetailsActionsV2Action {
-	return v.ScheduledSearchV2Details.ActionsV2
-}
-
-// GetLabels returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.Labels, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetLabels() []string {
-	return v.ScheduledSearchV2Details.Labels
-}
-
-// GetQueryTimestampType returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.QueryTimestampType, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetQueryTimestampType() QueryTimestampType {
-	return v.ScheduledSearchV2Details.QueryTimestampType
-}
-
-// GetQueryOwnership returns ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.QueryOwnership, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) GetQueryOwnership() SharedQueryOwnershipType {
-	return v.ScheduledSearchV2Details.QueryOwnership
-}
-
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) UnmarshalJSON(b []byte) error {
-
-	if string(b) == "null" {
-		return nil
-	}
-
-	var firstPass struct {
-		*ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch
-		graphql.NoUnmarshalJSON
-	}
-	firstPass.ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch = v
-
-	err := json.Unmarshal(b, &firstPass)
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(
-		b, &v.ScheduledSearchV2Details)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-type __premarshalListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch struct {
-	Id string `json:"id"`
-
-	Name string `json:"name"`
-
-	Description *string `json:"description"`
-
-	QueryString string `json:"queryString"`
-
-	SearchIntervalSeconds int64 `json:"searchIntervalSeconds"`
-
-	SearchIntervalOffsetSeconds *int64 `json:"searchIntervalOffsetSeconds"`
-
-	MaxWaitTimeSeconds *int64 `json:"maxWaitTimeSeconds"`
-
-	TimeZone string `json:"timeZone"`
-
-	Schedule string `json:"schedule"`
-
-	BackfillLimitV2 *int `json:"backfillLimitV2"`
-
-	Enabled bool `json:"enabled"`
-
-	ActionsV2 []json.RawMessage `json:"actionsV2"`
-
-	Labels []string `json:"labels"`
-
-	QueryTimestampType QueryTimestampType `json:"queryTimestampType"`
-
-	QueryOwnership json.RawMessage `json:"queryOwnership"`
-}
-
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) MarshalJSON() ([]byte, error) {
-	premarshaled, err := v.__premarshalJSON()
-	if err != nil {
-		return nil, err
-	}
-	return json.Marshal(premarshaled)
-}
-
-func (v *ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch) __premarshalJSON() (*__premarshalListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch, error) {
-	var retval __premarshalListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch
-
-	retval.Id = v.ScheduledSearchV2Details.Id
-	retval.Name = v.ScheduledSearchV2Details.Name
-	retval.Description = v.ScheduledSearchV2Details.Description
-	retval.QueryString = v.ScheduledSearchV2Details.QueryString
-	retval.SearchIntervalSeconds = v.ScheduledSearchV2Details.SearchIntervalSeconds
-	retval.SearchIntervalOffsetSeconds = v.ScheduledSearchV2Details.SearchIntervalOffsetSeconds
-	retval.MaxWaitTimeSeconds = v.ScheduledSearchV2Details.MaxWaitTimeSeconds
-	retval.TimeZone = v.ScheduledSearchV2Details.TimeZone
-	retval.Schedule = v.ScheduledSearchV2Details.Schedule
-	retval.BackfillLimitV2 = v.ScheduledSearchV2Details.BackfillLimitV2
-	retval.Enabled = v.ScheduledSearchV2Details.Enabled
-	{
-
-		dst := &retval.ActionsV2
-		src := v.ScheduledSearchV2Details.ActionsV2
-		*dst = make(
-			[]json.RawMessage,
-			len(src))
-		for i, src := range src {
-			dst := &(*dst)[i]
-			var err error
-			*dst, err = __marshalScheduledSearchV2DetailsActionsV2Action(
-				&src)
-			if err != nil {
-				return nil, fmt.Errorf(
-					"unable to marshal ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.ScheduledSearchV2Details.ActionsV2: %w", err)
-			}
-		}
-	}
-	retval.Labels = v.ScheduledSearchV2Details.Labels
-	retval.QueryTimestampType = v.ScheduledSearchV2Details.QueryTimestampType
-	{
-
-		dst := &retval.QueryOwnership
-		src := v.ScheduledSearchV2Details.QueryOwnership
-		var err error
-		*dst, err = __marshalSharedQueryOwnershipType(
-			&src)
-		if err != nil {
-			return nil, fmt.Errorf(
-				"unable to marshal ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch.ScheduledSearchV2Details.QueryOwnership: %w", err)
-		}
-	}
-	return &retval, nil
-}
-
-// ListScheduledSearchesV2SearchDomainView includes the requested fields of the GraphQL type View.
-// The GraphQL type's documentation follows.
-//
-// Represents information about a view, pulling data from one or several repositories.
-type ListScheduledSearchesV2SearchDomainView struct {
-	Typename *string `json:"__typename"`
-	// Common interface for Repositories and Views.
-	ScheduledSearches []ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch `json:"scheduledSearches"`
-}
-
-// GetTypename returns ListScheduledSearchesV2SearchDomainView.Typename, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainView) GetTypename() *string { return v.Typename }
-
-// GetScheduledSearches returns ListScheduledSearchesV2SearchDomainView.ScheduledSearches, and is useful for accessing the field via an interface.
-func (v *ListScheduledSearchesV2SearchDomainView) GetScheduledSearches() []ListScheduledSearchesV2SearchDomainScheduledSearchesScheduledSearch {
-	return v.ScheduledSearches
-}
-
 // ListSearchDomainsResponse is returned by ListSearchDomains on success.
 type ListSearchDomainsResponse struct {
-	// Stability: Long-term
 	SearchDomains []ListSearchDomainsSearchDomainsSearchDomain `json:"-"`
 }
 
@@ -12488,7 +11509,6 @@ func (v *ListSearchDomainsSearchDomainsView) GetAutomaticSearch() bool { return 
 // ListUsersResponse is returned by ListUsers on success.
 type ListUsersResponse struct {
 	// Requires manage cluster permission; Returns all users in the system.
-	// Stability: Long-term
 	Users []ListUsersUsersUser `json:"users"`
 }
 
@@ -12630,10 +11650,8 @@ const (
 type PackageInstallationSourceType string
 
 const (
-	// Stability: Long-term
 	PackageInstallationSourceTypeHumiohub PackageInstallationSourceType = "HumioHub"
-	// Stability: Long-term
-	PackageInstallationSourceTypeZipfile PackageInstallationSourceType = "ZipFile"
+	PackageInstallationSourceTypeZipfile  PackageInstallationSourceType = "ZipFile"
 )
 
 // ParserDetails includes the GraphQL fields of Parser requested by the fragment ParserDetails.
@@ -12642,31 +11660,22 @@ const (
 // A configured parser for incoming data.
 type ParserDetails struct {
 	// The id of the parser.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// Name of the parser.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// The full name of the parser including package information if part of an application.
-	// Stability: Long-term
 	DisplayName string `json:"displayName"`
 	// The description of the parser.
-	// Stability: Long-term
 	Description *string `json:"description"`
 	// True if the parser is one of LogScale's built-in parsers.
-	// Stability: Long-term
 	IsBuiltIn bool `json:"isBuiltIn"`
 	// The parser script that is executed for every incoming event.
-	// Stability: Long-term
 	Script string `json:"script"`
 	// Fields that are used as tags.
-	// Stability: Long-term
 	FieldsToTag []string `json:"fieldsToTag"`
 	// A list of fields that will be removed from the event before it's parsed. These fields will not be included when calculating usage.
-	// Stability: Long-term
 	FieldsToBeRemovedBeforeParsing []string `json:"fieldsToBeRemovedBeforeParsing"`
 	// Test cases that can be used to help verify that the parser works as expected.
-	// Stability: Long-term
 	TestCases []ParserDetailsTestCasesParserTestCase `json:"testCases"`
 }
 
@@ -12705,10 +11714,8 @@ func (v *ParserDetails) GetTestCases() []ParserDetailsTestCasesParserTestCase { 
 // A test case for a parser.
 type ParserDetailsTestCasesParserTestCase struct {
 	// The event to parse and test on.
-	// Stability: Long-term
 	Event ParserDetailsTestCasesParserTestCaseEventParserTestEvent `json:"event"`
 	// Assertions on the shape of the test case output events. The list consists of key-value pairs to be treated as a map-construct, where the index of the output event is the key, and the assertions are the value.
-	// Stability: Long-term
 	OutputAssertions []ParserDetailsTestCasesParserTestCaseOutputAssertionsParserTestCaseAssertionsForOutput `json:"outputAssertions"`
 }
 
@@ -12728,7 +11735,6 @@ func (v *ParserDetailsTestCasesParserTestCase) GetOutputAssertions() []ParserDet
 // An event for a parser to parse during testing.
 type ParserDetailsTestCasesParserTestCaseEventParserTestEvent struct {
 	// The contents of the `@rawstring` field when the event begins parsing.
-	// Stability: Long-term
 	RawString string `json:"rawString"`
 }
 
@@ -12743,10 +11749,8 @@ func (v *ParserDetailsTestCasesParserTestCaseEventParserTestEvent) GetRawString(
 // Assertions on the shape of the given output event. It is a key-value pair, where the index of the output event is the key, and the assertions are the value.
 type ParserDetailsTestCasesParserTestCaseOutputAssertionsParserTestCaseAssertionsForOutput struct {
 	// Assertions on the shape of a given test case output event.
-	// Stability: Long-term
 	Assertions ParserDetailsTestCasesParserTestCaseOutputAssertionsParserTestCaseAssertionsForOutputAssertionsParserTestCaseOutputAssertions `json:"assertions"`
 	// The index of the output event which the assertions should apply to.
-	// Stability: Long-term
 	OutputEventIndex int `json:"outputEventIndex"`
 }
 
@@ -12766,10 +11770,8 @@ func (v *ParserDetailsTestCasesParserTestCaseOutputAssertionsParserTestCaseAsser
 // Assertions on the shape of a given test case output event.
 type ParserDetailsTestCasesParserTestCaseOutputAssertionsParserTestCaseAssertionsForOutputAssertionsParserTestCaseOutputAssertions struct {
 	// Names of fields and their expected value on the output event. These are key-value pairs, and should be treated as a map-construct.
-	// Stability: Long-term
 	FieldsHaveValues []ParserDetailsTestCasesParserTestCaseOutputAssertionsParserTestCaseAssertionsForOutputAssertionsParserTestCaseOutputAssertionsFieldsHaveValuesFieldHasValue `json:"fieldsHaveValues"`
 	// Names of fields which should not be present on the output event.
-	// Stability: Long-term
 	FieldsNotPresent []string `json:"fieldsNotPresent"`
 }
 
@@ -12789,10 +11791,8 @@ func (v *ParserDetailsTestCasesParserTestCaseOutputAssertionsParserTestCaseAsser
 // An assertion that an event output from a parser test case has an expected value for a given field.
 type ParserDetailsTestCasesParserTestCaseOutputAssertionsParserTestCaseAssertionsForOutputAssertionsParserTestCaseOutputAssertionsFieldsHaveValuesFieldHasValue struct {
 	// Field to assert on.
-	// Stability: Long-term
 	FieldName string `json:"fieldName"`
 	// Value expected to be contained in the field.
-	// Stability: Long-term
 	ExpectedValue string `json:"expectedValue"`
 }
 
@@ -12874,29 +11874,14 @@ const (
 	PermissionChangetriggersandactions Permission = "ChangeTriggersAndActions"
 	// Permission to administer alerts and scheduled searches
 	PermissionChangetriggers Permission = "ChangeTriggers"
-	PermissionCreatetriggers Permission = "CreateTriggers"
-	PermissionUpdatetriggers Permission = "UpdateTriggers"
-	PermissionDeletetriggers Permission = "DeleteTriggers"
 	// Permission to administer actions
 	PermissionChangeactions                     Permission = "ChangeActions"
-	PermissionCreateactions                     Permission = "CreateActions"
-	PermissionUpdateactions                     Permission = "UpdateActions"
-	PermissionDeleteactions                     Permission = "DeleteActions"
 	PermissionChangedashboards                  Permission = "ChangeDashboards"
-	PermissionCreatedashboards                  Permission = "CreateDashboards"
-	PermissionUpdatedashboards                  Permission = "UpdateDashboards"
-	PermissionDeletedashboards                  Permission = "DeleteDashboards"
 	PermissionChangedashboardreadonlytoken      Permission = "ChangeDashboardReadonlyToken"
 	PermissionChangefiles                       Permission = "ChangeFiles"
-	PermissionCreatefiles                       Permission = "CreateFiles"
-	PermissionUpdatefiles                       Permission = "UpdateFiles"
-	PermissionDeletefiles                       Permission = "DeleteFiles"
 	PermissionChangeinteractions                Permission = "ChangeInteractions"
 	PermissionChangeparsers                     Permission = "ChangeParsers"
 	PermissionChangesavedqueries                Permission = "ChangeSavedQueries"
-	PermissionCreatesavedqueries                Permission = "CreateSavedQueries"
-	PermissionUpdatesavedqueries                Permission = "UpdateSavedQueries"
-	PermissionDeletesavedqueries                Permission = "DeleteSavedQueries"
 	PermissionConnectview                       Permission = "ConnectView"
 	PermissionChangedatadeletionpermissions     Permission = "ChangeDataDeletionPermissions"
 	PermissionChangeretention                   Permission = "ChangeRetention"
@@ -12919,9 +11904,6 @@ const (
 	PermissionReadexternalfunctions             Permission = "ReadExternalFunctions"
 	PermissionChangeingestfeeds                 Permission = "ChangeIngestFeeds"
 	PermissionChangescheduledreports            Permission = "ChangeScheduledReports"
-	PermissionCreatescheduledreports            Permission = "CreateScheduledReports"
-	PermissionUpdatescheduledreports            Permission = "UpdateScheduledReports"
-	PermissionDeletescheduledreports            Permission = "DeleteScheduledReports"
 )
 
 // QueryOwnership includes the GraphQL fields of QueryOwnership requested by the fragment QueryOwnership.
@@ -13056,7 +12038,6 @@ func (v *RemoveFileRemoveFileBooleanResultType) GetTypename() *string { return v
 // RemoveFileResponse is returned by RemoveFile on success.
 type RemoveFileResponse struct {
 	// Remove file
-	// Stability: Long-term
 	RemoveFile RemoveFileRemoveFileBooleanResultType `json:"removeFile"`
 }
 
@@ -13078,7 +12059,6 @@ func (v *RemoveIngestTokenRemoveIngestTokenBooleanResultType) GetTypename() *str
 // RemoveIngestTokenResponse is returned by RemoveIngestToken on success.
 type RemoveIngestTokenResponse struct {
 	// Remove an Ingest Token.
-	// Stability: Long-term
 	RemoveIngestToken RemoveIngestTokenRemoveIngestTokenBooleanResultType `json:"removeIngestToken"`
 }
 
@@ -13100,7 +12080,6 @@ func (v *RemoveUserFromGroupRemoveUsersFromGroupRemoveUsersFromGroupMutation) Ge
 // RemoveUserFromGroupResponse is returned by RemoveUserFromGroup on success.
 type RemoveUserFromGroupResponse struct {
 	// Removes users from an existing group.
-	// Stability: Long-term
 	RemoveUsersFromGroup RemoveUserFromGroupRemoveUsersFromGroupRemoveUsersFromGroupMutation `json:"removeUsersFromGroup"`
 }
 
@@ -13111,7 +12090,6 @@ func (v *RemoveUserFromGroupResponse) GetRemoveUsersFromGroup() RemoveUserFromGr
 
 // RemoveUserRemoveUserRemoveUserMutation includes the requested fields of the GraphQL type RemoveUserMutation.
 type RemoveUserRemoveUserRemoveUserMutation struct {
-	// Stability: Long-term
 	User RemoveUserRemoveUserRemoveUserMutationUser `json:"user"`
 }
 
@@ -13238,7 +12216,6 @@ func (v *RemoveUserRemoveUserRemoveUserMutationUser) __premarshalJSON() (*__prem
 // RemoveUserResponse is returned by RemoveUser on success.
 type RemoveUserResponse struct {
 	// Remove a user.
-	// Stability: Long-term
 	RemoveUser RemoveUserRemoveUserRemoveUserMutation `json:"removeUser"`
 }
 
@@ -13252,28 +12229,19 @@ func (v *RemoveUserResponse) GetRemoveUser() RemoveUserRemoveUserRemoveUserMutat
 //
 // A repository stores ingested data, configures parsers and data retention policies.
 type RepositoryDetails struct {
-	// Stability: Long-term
-	Id string `json:"id"`
-	// Stability: Long-term
-	Name string `json:"name"`
-	// Stability: Long-term
+	Id          string  `json:"id"`
+	Name        string  `json:"name"`
 	Description *string `json:"description"`
 	// The maximum time (in days) to keep data. Data old than this will be deleted.
-	// Stability: Long-term
 	TimeBasedRetention *float64 `json:"timeBasedRetention"`
 	// Retention (in Gigabytes) based on the size of data when it arrives to LogScale, that is before parsing and compression. LogScale will keep `at most` this amount of data.
-	// Stability: Long-term
 	IngestSizeBasedRetention *float64 `json:"ingestSizeBasedRetention"`
 	// Retention (in Gigabytes) based on the size of data when in storage, that is, after parsing and compression. LogScale will keep `at least` this amount of data, but as close to this number as possible.
-	// Stability: Long-term
 	StorageSizeBasedRetention *float64 `json:"storageSizeBasedRetention"`
 	// Total size of data. Size is measured as the size after compression.
-	// Stability: Long-term
 	CompressedByteSize int64 `json:"compressedByteSize"`
-	// Stability: Long-term
-	AutomaticSearch bool `json:"automaticSearch"`
+	AutomaticSearch    bool  `json:"automaticSearch"`
 	// Configuration for S3 archiving. E.g. bucket name and region.
-	// Stability: Long-term
 	S3ArchivingConfiguration *RepositoryDetailsS3ArchivingConfigurationS3Configuration `json:"s3ArchivingConfiguration"`
 }
 
@@ -13314,16 +12282,12 @@ func (v *RepositoryDetails) GetS3ArchivingConfiguration() *RepositoryDetailsS3Ar
 // Configuration for S3 archiving. E.g. bucket name and region.
 type RepositoryDetailsS3ArchivingConfigurationS3Configuration struct {
 	// S3 bucket name for storing archived data. Example: acme-bucket.
-	// Stability: Short-term
 	Bucket string `json:"bucket"`
 	// The region the S3 bucket belongs to. Example: eu-central-1.
-	// Stability: Short-term
 	Region string `json:"region"`
 	// Whether the archiving has been disabled.
-	// Stability: Short-term
 	Disabled *bool `json:"disabled"`
 	// The format to store the archived data in on S3.
-	// Stability: Short-term
 	Format *S3ArchivingFormat `json:"format"`
 }
 
@@ -13349,16 +12313,11 @@ func (v *RepositoryDetailsS3ArchivingConfigurationS3Configuration) GetFormat() *
 
 // RoleDetails includes the GraphQL fields of Role requested by the fragment RoleDetails.
 type RoleDetails struct {
-	// Stability: Long-term
-	Id string `json:"id"`
-	// Stability: Long-term
-	DisplayName string `json:"displayName"`
-	// Stability: Long-term
-	ViewPermissions []Permission `json:"viewPermissions"`
-	// Stability: Long-term
+	Id                      string                   `json:"id"`
+	DisplayName             string                   `json:"displayName"`
+	ViewPermissions         []Permission             `json:"viewPermissions"`
 	OrganizationPermissions []OrganizationPermission `json:"organizationPermissions"`
-	// Stability: Long-term
-	SystemPermissions []SystemPermission `json:"systemPermissions"`
+	SystemPermissions       []SystemPermission       `json:"systemPermissions"`
 }
 
 // GetId returns RoleDetails.Id, and is useful for accessing the field via an interface.
@@ -13381,14 +12340,13 @@ func (v *RoleDetails) GetSystemPermissions() []SystemPermission { return v.Syste
 // RotateTokenByIDResponse is returned by RotateTokenByID on success.
 type RotateTokenByIDResponse struct {
 	// Rotate a token
-	// Stability: Long-term
 	RotateToken string `json:"rotateToken"`
 }
 
 // GetRotateToken returns RotateTokenByIDResponse.RotateToken, and is useful for accessing the field via an interface.
 func (v *RotateTokenByIDResponse) GetRotateToken() string { return v.RotateToken }
 
-// The format to store archived segments in AWS S3.
+// The format to store archived segments in on AWS S3.
 type S3ArchivingFormat string
 
 const (
@@ -13402,40 +12360,30 @@ const (
 // Information about a scheduled search
 type ScheduledSearchDetails struct {
 	// Id of the scheduled search.
-	// Stability: Long-term
 	Id string `json:"id"`
 	// Name of the scheduled search.
-	// Stability: Long-term
 	Name string `json:"name"`
 	// Description of the scheduled search.
-	// Stability: Long-term
 	Description *string `json:"description"`
 	// LogScale query to execute.
-	// Stability: Long-term
 	QueryString string `json:"queryString"`
 	// Start of the relative time interval for the query.
 	Start string `json:"start"`
 	// End of the relative time interval for the query.
 	End string `json:"end"`
 	// Time zone of the schedule. Currently this field only supports UTC offsets like 'UTC', 'UTC-01' or 'UTC+12:45'.
-	// Stability: Long-term
 	TimeZone string `json:"timeZone"`
 	// Cron pattern describing the schedule to execute the query on.
-	// Stability: Long-term
 	Schedule string `json:"schedule"`
-	// User-defined limit, which caps the number of missed searches to backfill, e.g. in the event of a shutdown. If the 'queryTimestampType' is IngestTimestamp this field is not used, but due to backwards compatibility a value of 0 is returned.
+	// User-defined limit, which caps the number of missed searches to backfill, e.g. in the event of a shutdown.
 	BackfillLimit int `json:"backfillLimit"`
 	// Flag indicating whether the scheduled search is enabled.
-	// Stability: Long-term
 	Enabled bool `json:"enabled"`
 	// List of actions to fire on query result.
-	// Stability: Long-term
 	ActionsV2 []ScheduledSearchDetailsActionsV2Action `json:"-"`
 	// Labels added to the scheduled search.
-	// Stability: Long-term
 	Labels []string `json:"labels"`
 	// Ownership of the query run by this scheduled search
-	// Stability: Long-term
 	QueryOwnership SharedQueryOwnershipType `json:"-"`
 }
 
@@ -13943,582 +12891,9 @@ func (v *ScheduledSearchDetailsActionsV2WebhookAction) GetTypename() *string { r
 // GetName returns ScheduledSearchDetailsActionsV2WebhookAction.Name, and is useful for accessing the field via an interface.
 func (v *ScheduledSearchDetailsActionsV2WebhookAction) GetName() string { return v.Name }
 
-// ScheduledSearchV2Details includes the GraphQL fields of ScheduledSearch requested by the fragment ScheduledSearchV2Details.
-// The GraphQL type's documentation follows.
-//
-// Information about a scheduled search
-type ScheduledSearchV2Details struct {
-	// Id of the scheduled search.
-	// Stability: Long-term
-	Id string `json:"id"`
-	// Name of the scheduled search.
-	// Stability: Long-term
-	Name string `json:"name"`
-	// Description of the scheduled search.
-	// Stability: Long-term
-	Description *string `json:"description"`
-	// LogScale query to execute.
-	// Stability: Long-term
-	QueryString string `json:"queryString"`
-	// Search interval in seconds.
-	// Stability: Long-term
-	SearchIntervalSeconds int64 `json:"searchIntervalSeconds"`
-	// Offset of the search interval in seconds. Only present when 'queryTimestampType' is EventTimestamp.
-	// Stability: Long-term
-	SearchIntervalOffsetSeconds *int64 `json:"searchIntervalOffsetSeconds"`
-	// Maximum number of seconds to wait for ingest delay. Only present when 'queryTimestampType' is IngestTimestamp.
-	// Stability: Long-term
-	MaxWaitTimeSeconds *int64 `json:"maxWaitTimeSeconds"`
-	// Time zone of the schedule. Currently this field only supports UTC offsets like 'UTC', 'UTC-01' or 'UTC+12:45'.
-	// Stability: Long-term
-	TimeZone string `json:"timeZone"`
-	// Cron pattern describing the schedule to execute the query on.
-	// Stability: Long-term
-	Schedule string `json:"schedule"`
-	// User-defined limit, which caps the number of missed searches to backfill, e.g. in the event of a shutdown. Only present when 'queryTimestampType' is EventTimestamp.
-	// Stability: Long-term
-	BackfillLimitV2 *int `json:"backfillLimitV2"`
-	// Flag indicating whether the scheduled search is enabled.
-	// Stability: Long-term
-	Enabled bool `json:"enabled"`
-	// List of actions to fire on query result.
-	// Stability: Long-term
-	ActionsV2 []ScheduledSearchV2DetailsActionsV2Action `json:"-"`
-	// Labels added to the scheduled search.
-	// Stability: Long-term
-	Labels []string `json:"labels"`
-	// Timestamp type to use for the query.
-	// Stability: Long-term
-	QueryTimestampType QueryTimestampType `json:"queryTimestampType"`
-	// Ownership of the query run by this scheduled search
-	// Stability: Long-term
-	QueryOwnership SharedQueryOwnershipType `json:"-"`
-}
-
-// GetId returns ScheduledSearchV2Details.Id, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetId() string { return v.Id }
-
-// GetName returns ScheduledSearchV2Details.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetName() string { return v.Name }
-
-// GetDescription returns ScheduledSearchV2Details.Description, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetDescription() *string { return v.Description }
-
-// GetQueryString returns ScheduledSearchV2Details.QueryString, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetQueryString() string { return v.QueryString }
-
-// GetSearchIntervalSeconds returns ScheduledSearchV2Details.SearchIntervalSeconds, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetSearchIntervalSeconds() int64 { return v.SearchIntervalSeconds }
-
-// GetSearchIntervalOffsetSeconds returns ScheduledSearchV2Details.SearchIntervalOffsetSeconds, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetSearchIntervalOffsetSeconds() *int64 {
-	return v.SearchIntervalOffsetSeconds
-}
-
-// GetMaxWaitTimeSeconds returns ScheduledSearchV2Details.MaxWaitTimeSeconds, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetMaxWaitTimeSeconds() *int64 { return v.MaxWaitTimeSeconds }
-
-// GetTimeZone returns ScheduledSearchV2Details.TimeZone, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetTimeZone() string { return v.TimeZone }
-
-// GetSchedule returns ScheduledSearchV2Details.Schedule, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetSchedule() string { return v.Schedule }
-
-// GetBackfillLimitV2 returns ScheduledSearchV2Details.BackfillLimitV2, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetBackfillLimitV2() *int { return v.BackfillLimitV2 }
-
-// GetEnabled returns ScheduledSearchV2Details.Enabled, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetEnabled() bool { return v.Enabled }
-
-// GetActionsV2 returns ScheduledSearchV2Details.ActionsV2, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetActionsV2() []ScheduledSearchV2DetailsActionsV2Action {
-	return v.ActionsV2
-}
-
-// GetLabels returns ScheduledSearchV2Details.Labels, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetLabels() []string { return v.Labels }
-
-// GetQueryTimestampType returns ScheduledSearchV2Details.QueryTimestampType, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetQueryTimestampType() QueryTimestampType {
-	return v.QueryTimestampType
-}
-
-// GetQueryOwnership returns ScheduledSearchV2Details.QueryOwnership, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2Details) GetQueryOwnership() SharedQueryOwnershipType {
-	return v.QueryOwnership
-}
-
-func (v *ScheduledSearchV2Details) UnmarshalJSON(b []byte) error {
-
-	if string(b) == "null" {
-		return nil
-	}
-
-	var firstPass struct {
-		*ScheduledSearchV2Details
-		ActionsV2      []json.RawMessage `json:"actionsV2"`
-		QueryOwnership json.RawMessage   `json:"queryOwnership"`
-		graphql.NoUnmarshalJSON
-	}
-	firstPass.ScheduledSearchV2Details = v
-
-	err := json.Unmarshal(b, &firstPass)
-	if err != nil {
-		return err
-	}
-
-	{
-		dst := &v.ActionsV2
-		src := firstPass.ActionsV2
-		*dst = make(
-			[]ScheduledSearchV2DetailsActionsV2Action,
-			len(src))
-		for i, src := range src {
-			dst := &(*dst)[i]
-			if len(src) != 0 && string(src) != "null" {
-				err = __unmarshalScheduledSearchV2DetailsActionsV2Action(
-					src, dst)
-				if err != nil {
-					return fmt.Errorf(
-						"unable to unmarshal ScheduledSearchV2Details.ActionsV2: %w", err)
-				}
-			}
-		}
-	}
-
-	{
-		dst := &v.QueryOwnership
-		src := firstPass.QueryOwnership
-		if len(src) != 0 && string(src) != "null" {
-			err = __unmarshalSharedQueryOwnershipType(
-				src, dst)
-			if err != nil {
-				return fmt.Errorf(
-					"unable to unmarshal ScheduledSearchV2Details.QueryOwnership: %w", err)
-			}
-		}
-	}
-	return nil
-}
-
-type __premarshalScheduledSearchV2Details struct {
-	Id string `json:"id"`
-
-	Name string `json:"name"`
-
-	Description *string `json:"description"`
-
-	QueryString string `json:"queryString"`
-
-	SearchIntervalSeconds int64 `json:"searchIntervalSeconds"`
-
-	SearchIntervalOffsetSeconds *int64 `json:"searchIntervalOffsetSeconds"`
-
-	MaxWaitTimeSeconds *int64 `json:"maxWaitTimeSeconds"`
-
-	TimeZone string `json:"timeZone"`
-
-	Schedule string `json:"schedule"`
-
-	BackfillLimitV2 *int `json:"backfillLimitV2"`
-
-	Enabled bool `json:"enabled"`
-
-	ActionsV2 []json.RawMessage `json:"actionsV2"`
-
-	Labels []string `json:"labels"`
-
-	QueryTimestampType QueryTimestampType `json:"queryTimestampType"`
-
-	QueryOwnership json.RawMessage `json:"queryOwnership"`
-}
-
-func (v *ScheduledSearchV2Details) MarshalJSON() ([]byte, error) {
-	premarshaled, err := v.__premarshalJSON()
-	if err != nil {
-		return nil, err
-	}
-	return json.Marshal(premarshaled)
-}
-
-func (v *ScheduledSearchV2Details) __premarshalJSON() (*__premarshalScheduledSearchV2Details, error) {
-	var retval __premarshalScheduledSearchV2Details
-
-	retval.Id = v.Id
-	retval.Name = v.Name
-	retval.Description = v.Description
-	retval.QueryString = v.QueryString
-	retval.SearchIntervalSeconds = v.SearchIntervalSeconds
-	retval.SearchIntervalOffsetSeconds = v.SearchIntervalOffsetSeconds
-	retval.MaxWaitTimeSeconds = v.MaxWaitTimeSeconds
-	retval.TimeZone = v.TimeZone
-	retval.Schedule = v.Schedule
-	retval.BackfillLimitV2 = v.BackfillLimitV2
-	retval.Enabled = v.Enabled
-	{
-
-		dst := &retval.ActionsV2
-		src := v.ActionsV2
-		*dst = make(
-			[]json.RawMessage,
-			len(src))
-		for i, src := range src {
-			dst := &(*dst)[i]
-			var err error
-			*dst, err = __marshalScheduledSearchV2DetailsActionsV2Action(
-				&src)
-			if err != nil {
-				return nil, fmt.Errorf(
-					"unable to marshal ScheduledSearchV2Details.ActionsV2: %w", err)
-			}
-		}
-	}
-	retval.Labels = v.Labels
-	retval.QueryTimestampType = v.QueryTimestampType
-	{
-
-		dst := &retval.QueryOwnership
-		src := v.QueryOwnership
-		var err error
-		*dst, err = __marshalSharedQueryOwnershipType(
-			&src)
-		if err != nil {
-			return nil, fmt.Errorf(
-				"unable to marshal ScheduledSearchV2Details.QueryOwnership: %w", err)
-		}
-	}
-	return &retval, nil
-}
-
-// ScheduledSearchV2DetailsActionsV2Action includes the requested fields of the GraphQL interface Action.
-//
-// ScheduledSearchV2DetailsActionsV2Action is implemented by the following types:
-// ScheduledSearchV2DetailsActionsV2EmailAction
-// ScheduledSearchV2DetailsActionsV2HumioRepoAction
-// ScheduledSearchV2DetailsActionsV2OpsGenieAction
-// ScheduledSearchV2DetailsActionsV2PagerDutyAction
-// ScheduledSearchV2DetailsActionsV2SlackAction
-// ScheduledSearchV2DetailsActionsV2SlackPostMessageAction
-// ScheduledSearchV2DetailsActionsV2UploadFileAction
-// ScheduledSearchV2DetailsActionsV2VictorOpsAction
-// ScheduledSearchV2DetailsActionsV2WebhookAction
-// The GraphQL type's documentation follows.
-//
-// An action that can be invoked from a trigger.
-type ScheduledSearchV2DetailsActionsV2Action interface {
-	implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action()
-	// GetTypename returns the receiver's concrete GraphQL type-name (see interface doc for possible values).
-	GetTypename() *string
-	// GetName returns the interface-field "name" from its implementation.
-	// The GraphQL interface field's documentation follows.
-	//
-	// An action that can be invoked from a trigger.
-	GetName() string
-}
-
-func (v *ScheduledSearchV2DetailsActionsV2EmailAction) implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action() {
-}
-func (v *ScheduledSearchV2DetailsActionsV2HumioRepoAction) implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action() {
-}
-func (v *ScheduledSearchV2DetailsActionsV2OpsGenieAction) implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action() {
-}
-func (v *ScheduledSearchV2DetailsActionsV2PagerDutyAction) implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action() {
-}
-func (v *ScheduledSearchV2DetailsActionsV2SlackAction) implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action() {
-}
-func (v *ScheduledSearchV2DetailsActionsV2SlackPostMessageAction) implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action() {
-}
-func (v *ScheduledSearchV2DetailsActionsV2UploadFileAction) implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action() {
-}
-func (v *ScheduledSearchV2DetailsActionsV2VictorOpsAction) implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action() {
-}
-func (v *ScheduledSearchV2DetailsActionsV2WebhookAction) implementsGraphQLInterfaceScheduledSearchV2DetailsActionsV2Action() {
-}
-
-func __unmarshalScheduledSearchV2DetailsActionsV2Action(b []byte, v *ScheduledSearchV2DetailsActionsV2Action) error {
-	if string(b) == "null" {
-		return nil
-	}
-
-	var tn struct {
-		TypeName string `json:"__typename"`
-	}
-	err := json.Unmarshal(b, &tn)
-	if err != nil {
-		return err
-	}
-
-	switch tn.TypeName {
-	case "EmailAction":
-		*v = new(ScheduledSearchV2DetailsActionsV2EmailAction)
-		return json.Unmarshal(b, *v)
-	case "HumioRepoAction":
-		*v = new(ScheduledSearchV2DetailsActionsV2HumioRepoAction)
-		return json.Unmarshal(b, *v)
-	case "OpsGenieAction":
-		*v = new(ScheduledSearchV2DetailsActionsV2OpsGenieAction)
-		return json.Unmarshal(b, *v)
-	case "PagerDutyAction":
-		*v = new(ScheduledSearchV2DetailsActionsV2PagerDutyAction)
-		return json.Unmarshal(b, *v)
-	case "SlackAction":
-		*v = new(ScheduledSearchV2DetailsActionsV2SlackAction)
-		return json.Unmarshal(b, *v)
-	case "SlackPostMessageAction":
-		*v = new(ScheduledSearchV2DetailsActionsV2SlackPostMessageAction)
-		return json.Unmarshal(b, *v)
-	case "UploadFileAction":
-		*v = new(ScheduledSearchV2DetailsActionsV2UploadFileAction)
-		return json.Unmarshal(b, *v)
-	case "VictorOpsAction":
-		*v = new(ScheduledSearchV2DetailsActionsV2VictorOpsAction)
-		return json.Unmarshal(b, *v)
-	case "WebhookAction":
-		*v = new(ScheduledSearchV2DetailsActionsV2WebhookAction)
-		return json.Unmarshal(b, *v)
-	case "":
-		return fmt.Errorf(
-			"response was missing Action.__typename")
-	default:
-		return fmt.Errorf(
-			`unexpected concrete type for ScheduledSearchV2DetailsActionsV2Action: "%v"`, tn.TypeName)
-	}
-}
-
-func __marshalScheduledSearchV2DetailsActionsV2Action(v *ScheduledSearchV2DetailsActionsV2Action) ([]byte, error) {
-
-	var typename string
-	switch v := (*v).(type) {
-	case *ScheduledSearchV2DetailsActionsV2EmailAction:
-		typename = "EmailAction"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ScheduledSearchV2DetailsActionsV2EmailAction
-		}{typename, v}
-		return json.Marshal(result)
-	case *ScheduledSearchV2DetailsActionsV2HumioRepoAction:
-		typename = "HumioRepoAction"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ScheduledSearchV2DetailsActionsV2HumioRepoAction
-		}{typename, v}
-		return json.Marshal(result)
-	case *ScheduledSearchV2DetailsActionsV2OpsGenieAction:
-		typename = "OpsGenieAction"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ScheduledSearchV2DetailsActionsV2OpsGenieAction
-		}{typename, v}
-		return json.Marshal(result)
-	case *ScheduledSearchV2DetailsActionsV2PagerDutyAction:
-		typename = "PagerDutyAction"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ScheduledSearchV2DetailsActionsV2PagerDutyAction
-		}{typename, v}
-		return json.Marshal(result)
-	case *ScheduledSearchV2DetailsActionsV2SlackAction:
-		typename = "SlackAction"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ScheduledSearchV2DetailsActionsV2SlackAction
-		}{typename, v}
-		return json.Marshal(result)
-	case *ScheduledSearchV2DetailsActionsV2SlackPostMessageAction:
-		typename = "SlackPostMessageAction"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ScheduledSearchV2DetailsActionsV2SlackPostMessageAction
-		}{typename, v}
-		return json.Marshal(result)
-	case *ScheduledSearchV2DetailsActionsV2UploadFileAction:
-		typename = "UploadFileAction"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ScheduledSearchV2DetailsActionsV2UploadFileAction
-		}{typename, v}
-		return json.Marshal(result)
-	case *ScheduledSearchV2DetailsActionsV2VictorOpsAction:
-		typename = "VictorOpsAction"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ScheduledSearchV2DetailsActionsV2VictorOpsAction
-		}{typename, v}
-		return json.Marshal(result)
-	case *ScheduledSearchV2DetailsActionsV2WebhookAction:
-		typename = "WebhookAction"
-
-		result := struct {
-			TypeName string `json:"__typename"`
-			*ScheduledSearchV2DetailsActionsV2WebhookAction
-		}{typename, v}
-		return json.Marshal(result)
-	case nil:
-		return []byte("null"), nil
-	default:
-		return nil, fmt.Errorf(
-			`unexpected concrete type for ScheduledSearchV2DetailsActionsV2Action: "%T"`, v)
-	}
-}
-
-// ScheduledSearchV2DetailsActionsV2EmailAction includes the requested fields of the GraphQL type EmailAction.
-// The GraphQL type's documentation follows.
-//
-// An email action.
-type ScheduledSearchV2DetailsActionsV2EmailAction struct {
-	Typename *string `json:"__typename"`
-	// An action that can be invoked from a trigger.
-	Name string `json:"name"`
-}
-
-// GetTypename returns ScheduledSearchV2DetailsActionsV2EmailAction.Typename, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2EmailAction) GetTypename() *string { return v.Typename }
-
-// GetName returns ScheduledSearchV2DetailsActionsV2EmailAction.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2EmailAction) GetName() string { return v.Name }
-
-// ScheduledSearchV2DetailsActionsV2HumioRepoAction includes the requested fields of the GraphQL type HumioRepoAction.
-// The GraphQL type's documentation follows.
-//
-// A LogScale repository action.
-type ScheduledSearchV2DetailsActionsV2HumioRepoAction struct {
-	Typename *string `json:"__typename"`
-	// An action that can be invoked from a trigger.
-	Name string `json:"name"`
-}
-
-// GetTypename returns ScheduledSearchV2DetailsActionsV2HumioRepoAction.Typename, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2HumioRepoAction) GetTypename() *string { return v.Typename }
-
-// GetName returns ScheduledSearchV2DetailsActionsV2HumioRepoAction.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2HumioRepoAction) GetName() string { return v.Name }
-
-// ScheduledSearchV2DetailsActionsV2OpsGenieAction includes the requested fields of the GraphQL type OpsGenieAction.
-// The GraphQL type's documentation follows.
-//
-// An OpsGenie action
-type ScheduledSearchV2DetailsActionsV2OpsGenieAction struct {
-	Typename *string `json:"__typename"`
-	// An action that can be invoked from a trigger.
-	Name string `json:"name"`
-}
-
-// GetTypename returns ScheduledSearchV2DetailsActionsV2OpsGenieAction.Typename, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2OpsGenieAction) GetTypename() *string { return v.Typename }
-
-// GetName returns ScheduledSearchV2DetailsActionsV2OpsGenieAction.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2OpsGenieAction) GetName() string { return v.Name }
-
-// ScheduledSearchV2DetailsActionsV2PagerDutyAction includes the requested fields of the GraphQL type PagerDutyAction.
-// The GraphQL type's documentation follows.
-//
-// A PagerDuty action.
-type ScheduledSearchV2DetailsActionsV2PagerDutyAction struct {
-	Typename *string `json:"__typename"`
-	// An action that can be invoked from a trigger.
-	Name string `json:"name"`
-}
-
-// GetTypename returns ScheduledSearchV2DetailsActionsV2PagerDutyAction.Typename, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2PagerDutyAction) GetTypename() *string { return v.Typename }
-
-// GetName returns ScheduledSearchV2DetailsActionsV2PagerDutyAction.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2PagerDutyAction) GetName() string { return v.Name }
-
-// ScheduledSearchV2DetailsActionsV2SlackAction includes the requested fields of the GraphQL type SlackAction.
-// The GraphQL type's documentation follows.
-//
-// A Slack action
-type ScheduledSearchV2DetailsActionsV2SlackAction struct {
-	Typename *string `json:"__typename"`
-	// An action that can be invoked from a trigger.
-	Name string `json:"name"`
-}
-
-// GetTypename returns ScheduledSearchV2DetailsActionsV2SlackAction.Typename, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2SlackAction) GetTypename() *string { return v.Typename }
-
-// GetName returns ScheduledSearchV2DetailsActionsV2SlackAction.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2SlackAction) GetName() string { return v.Name }
-
-// ScheduledSearchV2DetailsActionsV2SlackPostMessageAction includes the requested fields of the GraphQL type SlackPostMessageAction.
-// The GraphQL type's documentation follows.
-//
-// A slack post-message action.
-type ScheduledSearchV2DetailsActionsV2SlackPostMessageAction struct {
-	Typename *string `json:"__typename"`
-	// An action that can be invoked from a trigger.
-	Name string `json:"name"`
-}
-
-// GetTypename returns ScheduledSearchV2DetailsActionsV2SlackPostMessageAction.Typename, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2SlackPostMessageAction) GetTypename() *string {
-	return v.Typename
-}
-
-// GetName returns ScheduledSearchV2DetailsActionsV2SlackPostMessageAction.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2SlackPostMessageAction) GetName() string { return v.Name }
-
-// ScheduledSearchV2DetailsActionsV2UploadFileAction includes the requested fields of the GraphQL type UploadFileAction.
-// The GraphQL type's documentation follows.
-//
-// An upload file action.
-type ScheduledSearchV2DetailsActionsV2UploadFileAction struct {
-	Typename *string `json:"__typename"`
-	// An action that can be invoked from a trigger.
-	Name string `json:"name"`
-}
-
-// GetTypename returns ScheduledSearchV2DetailsActionsV2UploadFileAction.Typename, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2UploadFileAction) GetTypename() *string { return v.Typename }
-
-// GetName returns ScheduledSearchV2DetailsActionsV2UploadFileAction.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2UploadFileAction) GetName() string { return v.Name }
-
-// ScheduledSearchV2DetailsActionsV2VictorOpsAction includes the requested fields of the GraphQL type VictorOpsAction.
-// The GraphQL type's documentation follows.
-//
-// A VictorOps action.
-type ScheduledSearchV2DetailsActionsV2VictorOpsAction struct {
-	Typename *string `json:"__typename"`
-	// An action that can be invoked from a trigger.
-	Name string `json:"name"`
-}
-
-// GetTypename returns ScheduledSearchV2DetailsActionsV2VictorOpsAction.Typename, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2VictorOpsAction) GetTypename() *string { return v.Typename }
-
-// GetName returns ScheduledSearchV2DetailsActionsV2VictorOpsAction.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2VictorOpsAction) GetName() string { return v.Name }
-
-// ScheduledSearchV2DetailsActionsV2WebhookAction includes the requested fields of the GraphQL type WebhookAction.
-// The GraphQL type's documentation follows.
-//
-// A webhook action
-type ScheduledSearchV2DetailsActionsV2WebhookAction struct {
-	Typename *string `json:"__typename"`
-	// An action that can be invoked from a trigger.
-	Name string `json:"name"`
-}
-
-// GetTypename returns ScheduledSearchV2DetailsActionsV2WebhookAction.Typename, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2WebhookAction) GetTypename() *string { return v.Typename }
-
-// GetName returns ScheduledSearchV2DetailsActionsV2WebhookAction.Name, and is useful for accessing the field via an interface.
-func (v *ScheduledSearchV2DetailsActionsV2WebhookAction) GetName() string { return v.Name }
-
 // SetAutomaticSearchingResponse is returned by SetAutomaticSearching on success.
 type SetAutomaticSearchingResponse struct {
 	// Automatically search when arriving at the search page
-	// Stability: Long-term
 	SetAutomaticSearching SetAutomaticSearchingSetAutomaticSearching `json:"setAutomaticSearching"`
 }
 
@@ -14797,7 +13172,6 @@ const (
 // UnassignParserToIngestTokenResponse is returned by UnassignParserToIngestToken on success.
 type UnassignParserToIngestTokenResponse struct {
 	// Un-associates a token with its currently assigned parser.
-	// Stability: Long-term
 	UnassignIngestToken UnassignParserToIngestTokenUnassignIngestTokenUnassignIngestTokenMutation `json:"unassignIngestToken"`
 }
 
@@ -14819,7 +13193,6 @@ func (v *UnassignParserToIngestTokenUnassignIngestTokenUnassignIngestTokenMutati
 // UninstallPackageResponse is returned by UninstallPackage on success.
 type UninstallPackageResponse struct {
 	// Uninstalls a package from a specific view.
-	// Stability: Long-term
 	UninstallPackage UninstallPackageUninstallPackageBooleanResultType `json:"uninstallPackage"`
 }
 
@@ -14849,7 +13222,6 @@ func (v *UnregisterClusterNodeClusterUnregisterNodeUnregisterNodeMutation) GetTy
 // UnregisterClusterNodeResponse is returned by UnregisterClusterNode on success.
 type UnregisterClusterNodeResponse struct {
 	// Unregisters a node from the cluster.
-	// Stability: Long-term
 	ClusterUnregisterNode UnregisterClusterNodeClusterUnregisterNodeUnregisterNodeMutation `json:"clusterUnregisterNode"`
 }
 
@@ -14860,7 +13232,6 @@ func (v *UnregisterClusterNodeResponse) GetClusterUnregisterNode() UnregisterClu
 
 // UpdateDescriptionForSearchDomainResponse is returned by UpdateDescriptionForSearchDomain on success.
 type UpdateDescriptionForSearchDomainResponse struct {
-	// Stability: Long-term
 	UpdateDescriptionForSearchDomain UpdateDescriptionForSearchDomainUpdateDescriptionForSearchDomainUpdateDescriptionMutation `json:"updateDescriptionForSearchDomain"`
 }
 
@@ -14882,7 +13253,6 @@ func (v *UpdateDescriptionForSearchDomainUpdateDescriptionForSearchDomainUpdateD
 // UpdateIngestBasedRetentionResponse is returned by UpdateIngestBasedRetention on success.
 type UpdateIngestBasedRetentionResponse struct {
 	// Update the retention policy of a repository.
-	// Stability: Long-term
 	UpdateRetention UpdateIngestBasedRetentionUpdateRetentionUpdateRetentionMutation `json:"updateRetention"`
 }
 
@@ -14904,7 +13274,6 @@ func (v *UpdateIngestBasedRetentionUpdateRetentionUpdateRetentionMutation) GetTy
 // UpdateLicenseKeyResponse is returned by UpdateLicenseKey on success.
 type UpdateLicenseKeyResponse struct {
 	// Update the license key for the LogScale cluster. If there is an existing license on this cluster this operation requires permission to manage cluster.
-	// Stability: Long-term
 	UpdateLicenseKey UpdateLicenseKeyUpdateLicenseKeyLicense `json:"-"`
 }
 
@@ -15077,7 +13446,6 @@ func (v *UpdateLicenseKeyUpdateLicenseKeyTrialLicense) GetTypename() *string { r
 // UpdateS3ArchivingConfigurationResponse is returned by UpdateS3ArchivingConfiguration on success.
 type UpdateS3ArchivingConfigurationResponse struct {
 	// Configures S3 archiving for a repository. E.g. bucket and region.
-	// Stability: Short-term
 	S3ConfigureArchiving UpdateS3ArchivingConfigurationS3ConfigureArchivingBooleanResultType `json:"s3ConfigureArchiving"`
 }
 
@@ -15099,7 +13467,6 @@ func (v *UpdateS3ArchivingConfigurationS3ConfigureArchivingBooleanResultType) Ge
 // UpdateStorageBasedRetentionResponse is returned by UpdateStorageBasedRetention on success.
 type UpdateStorageBasedRetentionResponse struct {
 	// Update the retention policy of a repository.
-	// Stability: Long-term
 	UpdateRetention UpdateStorageBasedRetentionUpdateRetentionUpdateRetentionMutation `json:"updateRetention"`
 }
 
@@ -15121,7 +13488,6 @@ func (v *UpdateStorageBasedRetentionUpdateRetentionUpdateRetentionMutation) GetT
 // UpdateTimeBasedRetentionResponse is returned by UpdateTimeBasedRetention on success.
 type UpdateTimeBasedRetentionResponse struct {
 	// Update the retention policy of a repository.
-	// Stability: Long-term
 	UpdateRetention UpdateTimeBasedRetentionUpdateRetentionUpdateRetentionMutation `json:"updateRetention"`
 }
 
@@ -15143,7 +13509,6 @@ func (v *UpdateTimeBasedRetentionUpdateRetentionUpdateRetentionMutation) GetType
 // UpdateUserResponse is returned by UpdateUser on success.
 type UpdateUserResponse struct {
 	// Updates a user. Requires Root Permission.
-	// Stability: Long-term
 	UpdateUser UpdateUserUpdateUserUpdateUserMutation `json:"updateUser"`
 }
 
@@ -15163,7 +13528,6 @@ func (v *UpdateUserUpdateUserUpdateUserMutation) GetTypename() *string { return 
 // UpdateViewConnectionsResponse is returned by UpdateViewConnections on success.
 type UpdateViewConnectionsResponse struct {
 	// Update a view.
-	// Stability: Long-term
 	UpdateView UpdateViewConnectionsUpdateView `json:"updateView"`
 }
 
@@ -15177,7 +13541,6 @@ func (v *UpdateViewConnectionsResponse) GetUpdateView() UpdateViewConnectionsUpd
 //
 // Represents information about a view, pulling data from one or several repositories.
 type UpdateViewConnectionsUpdateView struct {
-	// Stability: Long-term
 	Name string `json:"name"`
 }
 
@@ -15189,24 +13552,15 @@ func (v *UpdateViewConnectionsUpdateView) GetName() string { return v.Name }
 //
 // A user profile.
 type UserDetails struct {
-	// Stability: Long-term
-	Id string `json:"id"`
-	// Stability: Long-term
-	Username string `json:"username"`
-	// Stability: Long-term
-	FullName *string `json:"fullName"`
-	// Stability: Long-term
-	Email *string `json:"email"`
-	// Stability: Long-term
-	Company *string `json:"company"`
-	// Stability: Long-term
-	CountryCode *string `json:"countryCode"`
-	// Stability: Long-term
-	Picture *string `json:"picture"`
-	// Stability: Long-term
-	IsRoot bool `json:"isRoot"`
-	// Stability: Long-term
-	CreatedAt time.Time `json:"createdAt"`
+	Id          string    `json:"id"`
+	Username    string    `json:"username"`
+	FullName    *string   `json:"fullName"`
+	Email       *string   `json:"email"`
+	Company     *string   `json:"company"`
+	CountryCode *string   `json:"countryCode"`
+	Picture     *string   `json:"picture"`
+	IsRoot      bool      `json:"isRoot"`
+	CreatedAt   time.Time `json:"createdAt"`
 }
 
 // GetId returns UserDetails.Id, and is useful for accessing the field via an interface.
@@ -15697,82 +14051,6 @@ func (v *__CreateScheduledSearchInput) GetQueryOwnershipType() *QueryOwnershipTy
 	return v.QueryOwnershipType
 }
 
-// __CreateScheduledSearchV2Input is used internally by genqlient
-type __CreateScheduledSearchV2Input struct {
-	SearchDomainName            string             `json:"SearchDomainName"`
-	Name                        string             `json:"Name"`
-	Description                 *string            `json:"Description"`
-	QueryString                 string             `json:"QueryString"`
-	SearchIntervalSeconds       int64              `json:"SearchIntervalSeconds"`
-	SearchIntervalOffsetSeconds *int64             `json:"SearchIntervalOffsetSeconds"`
-	MaxWaitTimeSeconds          *int64             `json:"MaxWaitTimeSeconds"`
-	Schedule                    string             `json:"Schedule"`
-	TimeZone                    string             `json:"TimeZone"`
-	BackfillLimit               *int               `json:"BackfillLimit"`
-	Enabled                     bool               `json:"Enabled"`
-	ActionIdsOrNames            []string           `json:"ActionIdsOrNames"`
-	RunAsUserID                 *string            `json:"RunAsUserID"`
-	Labels                      []string           `json:"Labels"`
-	QueryTimestampType          QueryTimestampType `json:"QueryTimestampType"`
-	QueryOwnershipType          QueryOwnershipType `json:"QueryOwnershipType"`
-}
-
-// GetSearchDomainName returns __CreateScheduledSearchV2Input.SearchDomainName, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetSearchDomainName() string { return v.SearchDomainName }
-
-// GetName returns __CreateScheduledSearchV2Input.Name, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetName() string { return v.Name }
-
-// GetDescription returns __CreateScheduledSearchV2Input.Description, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetDescription() *string { return v.Description }
-
-// GetQueryString returns __CreateScheduledSearchV2Input.QueryString, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetQueryString() string { return v.QueryString }
-
-// GetSearchIntervalSeconds returns __CreateScheduledSearchV2Input.SearchIntervalSeconds, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetSearchIntervalSeconds() int64 {
-	return v.SearchIntervalSeconds
-}
-
-// GetSearchIntervalOffsetSeconds returns __CreateScheduledSearchV2Input.SearchIntervalOffsetSeconds, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetSearchIntervalOffsetSeconds() *int64 {
-	return v.SearchIntervalOffsetSeconds
-}
-
-// GetMaxWaitTimeSeconds returns __CreateScheduledSearchV2Input.MaxWaitTimeSeconds, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetMaxWaitTimeSeconds() *int64 { return v.MaxWaitTimeSeconds }
-
-// GetSchedule returns __CreateScheduledSearchV2Input.Schedule, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetSchedule() string { return v.Schedule }
-
-// GetTimeZone returns __CreateScheduledSearchV2Input.TimeZone, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetTimeZone() string { return v.TimeZone }
-
-// GetBackfillLimit returns __CreateScheduledSearchV2Input.BackfillLimit, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetBackfillLimit() *int { return v.BackfillLimit }
-
-// GetEnabled returns __CreateScheduledSearchV2Input.Enabled, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetEnabled() bool { return v.Enabled }
-
-// GetActionIdsOrNames returns __CreateScheduledSearchV2Input.ActionIdsOrNames, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetActionIdsOrNames() []string { return v.ActionIdsOrNames }
-
-// GetRunAsUserID returns __CreateScheduledSearchV2Input.RunAsUserID, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetRunAsUserID() *string { return v.RunAsUserID }
-
-// GetLabels returns __CreateScheduledSearchV2Input.Labels, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetLabels() []string { return v.Labels }
-
-// GetQueryTimestampType returns __CreateScheduledSearchV2Input.QueryTimestampType, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetQueryTimestampType() QueryTimestampType {
-	return v.QueryTimestampType
-}
-
-// GetQueryOwnershipType returns __CreateScheduledSearchV2Input.QueryOwnershipType, and is useful for accessing the field via an interface.
-func (v *__CreateScheduledSearchV2Input) GetQueryOwnershipType() QueryOwnershipType {
-	return v.QueryOwnershipType
-}
-
 // __CreateSlackActionInput is used internally by genqlient
 type __CreateSlackActionInput struct {
 	SearchDomainName string                 `json:"SearchDomainName"`
@@ -15988,20 +14266,6 @@ func (v *__DeleteScheduledSearchByIDInput) GetSearchDomainName() string { return
 
 // GetScheduledSearchID returns __DeleteScheduledSearchByIDInput.ScheduledSearchID, and is useful for accessing the field via an interface.
 func (v *__DeleteScheduledSearchByIDInput) GetScheduledSearchID() string { return v.ScheduledSearchID }
-
-// __DeleteScheduledSearchV2ByIDInput is used internally by genqlient
-type __DeleteScheduledSearchV2ByIDInput struct {
-	SearchDomainName  string `json:"SearchDomainName"`
-	ScheduledSearchID string `json:"ScheduledSearchID"`
-}
-
-// GetSearchDomainName returns __DeleteScheduledSearchV2ByIDInput.SearchDomainName, and is useful for accessing the field via an interface.
-func (v *__DeleteScheduledSearchV2ByIDInput) GetSearchDomainName() string { return v.SearchDomainName }
-
-// GetScheduledSearchID returns __DeleteScheduledSearchV2ByIDInput.ScheduledSearchID, and is useful for accessing the field via an interface.
-func (v *__DeleteScheduledSearchV2ByIDInput) GetScheduledSearchID() string {
-	return v.ScheduledSearchID
-}
 
 // __DeleteSearchDomainInput is used internally by genqlient
 type __DeleteSearchDomainInput struct {
@@ -16312,14 +14576,6 @@ type __ListScheduledSearchesInput struct {
 
 // GetSearchDomainName returns __ListScheduledSearchesInput.SearchDomainName, and is useful for accessing the field via an interface.
 func (v *__ListScheduledSearchesInput) GetSearchDomainName() string { return v.SearchDomainName }
-
-// __ListScheduledSearchesV2Input is used internally by genqlient
-type __ListScheduledSearchesV2Input struct {
-	SearchDomainName string `json:"SearchDomainName"`
-}
-
-// GetSearchDomainName returns __ListScheduledSearchesV2Input.SearchDomainName, and is useful for accessing the field via an interface.
-func (v *__ListScheduledSearchesV2Input) GetSearchDomainName() string { return v.SearchDomainName }
 
 // __RemoveFileInput is used internally by genqlient
 type __RemoveFileInput struct {
@@ -17361,97 +15617,6 @@ func CreateScheduledSearch(
 	return &data_, err_
 }
 
-// The query or mutation executed by CreateScheduledSearchV2.
-const CreateScheduledSearchV2_Operation = `
-mutation CreateScheduledSearchV2 ($SearchDomainName: String!, $Name: String!, $Description: String, $QueryString: String!, $SearchIntervalSeconds: Long!, $SearchIntervalOffsetSeconds: Long, $MaxWaitTimeSeconds: Long, $Schedule: String!, $TimeZone: String!, $BackfillLimit: Int, $Enabled: Boolean!, $ActionIdsOrNames: [String!]!, $RunAsUserID: String, $Labels: [String!]!, $QueryTimestampType: QueryTimestampType!, $QueryOwnershipType: QueryOwnershipType!) {
-	createScheduledSearchV2(input: {viewName:$SearchDomainName,name:$Name,description:$Description,queryString:$QueryString,searchIntervalSeconds:$SearchIntervalSeconds,searchIntervalOffsetSeconds:$SearchIntervalOffsetSeconds,maxWaitTimeSeconds:$MaxWaitTimeSeconds,schedule:$Schedule,timeZone:$TimeZone,backfillLimit:$BackfillLimit,enabled:$Enabled,actionIdsOrNames:$ActionIdsOrNames,runAsUserId:$RunAsUserID,labels:$Labels,queryTimestampType:$QueryTimestampType,queryOwnershipType:$QueryOwnershipType}) {
-		... ScheduledSearchV2Details
-	}
-}
-fragment ScheduledSearchV2Details on ScheduledSearch {
-	id
-	name
-	description
-	queryString
-	searchIntervalSeconds
-	searchIntervalOffsetSeconds
-	maxWaitTimeSeconds
-	timeZone
-	schedule
-	backfillLimitV2
-	enabled
-	actionsV2 {
-		__typename
-		name
-	}
-	labels
-	queryTimestampType
-	queryOwnership {
-		__typename
-		... QueryOwnership
-	}
-}
-fragment QueryOwnership on QueryOwnership {
-	id
-}
-`
-
-func CreateScheduledSearchV2(
-	ctx_ context.Context,
-	client_ graphql.Client,
-	SearchDomainName string,
-	Name string,
-	Description *string,
-	QueryString string,
-	SearchIntervalSeconds int64,
-	SearchIntervalOffsetSeconds *int64,
-	MaxWaitTimeSeconds *int64,
-	Schedule string,
-	TimeZone string,
-	BackfillLimit *int,
-	Enabled bool,
-	ActionIdsOrNames []string,
-	RunAsUserID *string,
-	Labels []string,
-	QueryTimestampType QueryTimestampType,
-	QueryOwnershipType QueryOwnershipType,
-) (*CreateScheduledSearchV2Response, error) {
-	req_ := &graphql.Request{
-		OpName: "CreateScheduledSearchV2",
-		Query:  CreateScheduledSearchV2_Operation,
-		Variables: &__CreateScheduledSearchV2Input{
-			SearchDomainName:            SearchDomainName,
-			Name:                        Name,
-			Description:                 Description,
-			QueryString:                 QueryString,
-			SearchIntervalSeconds:       SearchIntervalSeconds,
-			SearchIntervalOffsetSeconds: SearchIntervalOffsetSeconds,
-			MaxWaitTimeSeconds:          MaxWaitTimeSeconds,
-			Schedule:                    Schedule,
-			TimeZone:                    TimeZone,
-			BackfillLimit:               BackfillLimit,
-			Enabled:                     Enabled,
-			ActionIdsOrNames:            ActionIdsOrNames,
-			RunAsUserID:                 RunAsUserID,
-			Labels:                      Labels,
-			QueryTimestampType:          QueryTimestampType,
-			QueryOwnershipType:          QueryOwnershipType,
-		},
-	}
-	var err_ error
-
-	var data_ CreateScheduledSearchV2Response
-	resp_ := &graphql.Response{Data: &data_}
-
-	err_ = client_.MakeRequest(
-		ctx_,
-		req_,
-		resp_,
-	)
-
-	return &data_, err_
-}
-
 // The query or mutation executed by CreateSlackAction.
 const CreateSlackAction_Operation = `
 mutation CreateSlackAction ($SearchDomainName: String!, $ActionName: String!, $Fields: [SlackFieldEntryInput!]!, $Url: String!, $UseProxy: Boolean!) {
@@ -17942,41 +16107,6 @@ func DeleteScheduledSearchByID(
 	var err_ error
 
 	var data_ DeleteScheduledSearchByIDResponse
-	resp_ := &graphql.Response{Data: &data_}
-
-	err_ = client_.MakeRequest(
-		ctx_,
-		req_,
-		resp_,
-	)
-
-	return &data_, err_
-}
-
-// The query or mutation executed by DeleteScheduledSearchV2ByID.
-const DeleteScheduledSearchV2ByID_Operation = `
-mutation DeleteScheduledSearchV2ByID ($SearchDomainName: String!, $ScheduledSearchID: String!) {
-	deleteScheduledSearch(input: {viewName:$SearchDomainName,id:$ScheduledSearchID})
-}
-`
-
-func DeleteScheduledSearchV2ByID(
-	ctx_ context.Context,
-	client_ graphql.Client,
-	SearchDomainName string,
-	ScheduledSearchID string,
-) (*DeleteScheduledSearchV2ByIDResponse, error) {
-	req_ := &graphql.Request{
-		OpName: "DeleteScheduledSearchV2ByID",
-		Query:  DeleteScheduledSearchV2ByID_Operation,
-		Variables: &__DeleteScheduledSearchV2ByIDInput{
-			SearchDomainName:  SearchDomainName,
-			ScheduledSearchID: ScheduledSearchID,
-		},
-	}
-	var err_ error
-
-	var data_ DeleteScheduledSearchV2ByIDResponse
 	resp_ := &graphql.Response{Data: &data_}
 
 	err_ = client_.MakeRequest(
@@ -19802,70 +17932,6 @@ func ListScheduledSearches(
 	var err_ error
 
 	var data_ ListScheduledSearchesResponse
-	resp_ := &graphql.Response{Data: &data_}
-
-	err_ = client_.MakeRequest(
-		ctx_,
-		req_,
-		resp_,
-	)
-
-	return &data_, err_
-}
-
-// The query or mutation executed by ListScheduledSearchesV2.
-const ListScheduledSearchesV2_Operation = `
-query ListScheduledSearchesV2 ($SearchDomainName: String!) {
-	searchDomain(name: $SearchDomainName) {
-		__typename
-		scheduledSearches {
-			... ScheduledSearchV2Details
-		}
-	}
-}
-fragment ScheduledSearchV2Details on ScheduledSearch {
-	id
-	name
-	description
-	queryString
-	searchIntervalSeconds
-	searchIntervalOffsetSeconds
-	maxWaitTimeSeconds
-	timeZone
-	schedule
-	backfillLimitV2
-	enabled
-	actionsV2 {
-		__typename
-		name
-	}
-	labels
-	queryTimestampType
-	queryOwnership {
-		__typename
-		... QueryOwnership
-	}
-}
-fragment QueryOwnership on QueryOwnership {
-	id
-}
-`
-
-func ListScheduledSearchesV2(
-	ctx_ context.Context,
-	client_ graphql.Client,
-	SearchDomainName string,
-) (*ListScheduledSearchesV2Response, error) {
-	req_ := &graphql.Request{
-		OpName: "ListScheduledSearchesV2",
-		Query:  ListScheduledSearchesV2_Operation,
-		Variables: &__ListScheduledSearchesV2Input{
-			SearchDomainName: SearchDomainName,
-		},
-	}
-	var err_ error
-
-	var data_ ListScheduledSearchesV2Response
 	resp_ := &graphql.Response{Data: &data_}
 
 	err_ = client_.MakeRequest(

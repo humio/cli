@@ -55,7 +55,7 @@ func newScheduledSearchesShowCmd() *cobra.Command {
 				{format.String("Query End"), format.String(scheduledSearch.QueryEnd)},
 				{format.String("Time Zone"), format.String(scheduledSearch.TimeZone)},
 				{format.String("Schedule"), format.String(scheduledSearch.Schedule)},
-				{format.String("Backfill Limit"), format.Int64(scheduledSearch.BackfillLimit)},
+				{format.String("Backfill Limit"), format.Int(scheduledSearch.BackfillLimit)},
 				{format.String("Enabled"), format.Bool(scheduledSearch.Enabled)},
 				{format.String("Actions"), format.String(strings.Join(scheduledSearch.ActionNames, ", "))},
 				{format.String("Run As User ID"), format.String(scheduledSearch.OwnershipRunAsID)},

@@ -76,7 +76,7 @@ The install command allows you to install scheduled searches from a URL or from 
 
 	cmd.Flags().StringVar(&filePath, "file", "", "The local file path to the scheduled search to install.")
 	cmd.Flags().StringVar(&url, "url", "", "A URL to fetch the scheduled search file from.")
-	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the scheduled search under a specific name, ignoring the `name` attribute in the scheduled search file.")
+	cmd.Flags().StringVarP(&name, "name", "n", "", "Install the alert under a specific name, ignoring the `name` attribute in the alert file.")
 	cmd.MarkFlagsMutuallyExclusive("file", "url")
 	return &cmd
 }
