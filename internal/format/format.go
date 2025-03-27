@@ -75,18 +75,18 @@ func StringPtr(s *string) Value {
 	return String(*s)
 }
 
-func IntPtr(i *int64) Value {
+func Int64Ptr(i *int64) Value {
 	if i == nil {
 		return Int(0)
 	}
 	return Int(*i)
 }
 
-func Float64Ptr(f *float64) Value {
-	if f == nil {
-		return Float(0)
+func IntPtr(i *int) Value {
+	if i == nil {
+		return Int(0)
 	}
-	return Float(*f)
+	return Int(*i)
 }
 
 func (m MultiValue) String() string {

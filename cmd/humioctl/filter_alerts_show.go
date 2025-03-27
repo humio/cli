@@ -54,7 +54,7 @@ func newFilterAlertsShowCmd() *cobra.Command {
 				{format.String("Query String"), format.String(filterAlert.QueryString)},
 				{format.String("Labels"), format.String(strings.Join(filterAlert.Labels, ", "))},
 				{format.String("Actions"), format.String(strings.Join(filterAlert.ActionNames, ", "))},
-				{format.String("Throttle Time Seconds"), format.IntPtr(filterAlert.ThrottleTimeSeconds)},
+				{format.String("Throttle Time Seconds"), format.Int64Ptr(filterAlert.ThrottleTimeSeconds)},
 				{format.String("Throttle Field"), format.StringPtr(filterAlert.ThrottleField)},
 				{format.String("Run As User ID"), format.String(filterAlert.OwnershipRunAsID)},
 				{format.String("Query Ownership Type"), format.String(filterAlert.QueryOwnershipType)},
