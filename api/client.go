@@ -13,7 +13,7 @@ import (
 	graphql "github.com/cli/shurcooL-graphql"
 )
 
-const defaultUserAgent = "Humio-go-client/unknown"
+const defaultUserAgent = "Deprecated-Humio-go-client/unknown"
 
 // Deprecated: Should no longer be used. https://github.com/CrowdStrike/logscale-go-api-client-example
 type Client struct {
