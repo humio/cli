@@ -18,7 +18,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
-const defaultUserAgent = "Humio-go-client/unknown"
+const defaultUserAgent = "humioctl/unknown"
 
 type Client struct {
 	config        Config
