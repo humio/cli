@@ -21,7 +21,8 @@ import (
 )
 
 func newIngestTokensAddCmd() *cobra.Command {
-	var parserName string
+	var parserName  string
+	var customToken string
 
 	cmd := &cobra.Command{
 		Use:   "add [flags] <repo> <token-name>",
@@ -30,14 +31,17 @@ func newIngestTokensAddCmd() *cobra.Command {
 
 You can associate a parser with the ingest token using the --parser flag.
 Assigning a parser will make all data sent to Humio using this ingest token
-use the assigned parser at ingest time.`,
+use the assigned parser at ingest time.
+
+You can specify a custom token value using the --custom-token flag.
+This requires special permissions and root privileges`,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			repo := args[0]
 			name := args[1]
 			client := NewApiClient(cmd)
 
-			ingestToken, err := client.IngestTokens().Add(repo, name, parserName)
+			ingestToken, err := client.IngestTokens().Add(repo, name, parserName, customToken)
 			exitOnError(cmd, err, "Error adding ingest token")
 
 			fmt.Fprintf(cmd.OutOrStdout(), "Added ingest token %q with parser %q: %s\n", ingestToken.Name, valueOrEmpty(ingestToken.AssignedParser), ingestToken.Token)
@@ -45,6 +49,7 @@ use the assigned parser at ingest time.`,
 	}
 
 	cmd.Flags().StringVarP(&parserName, "parser", "p", "", "Assigns the a parser to the ingest token.")
+	cmd.Flags().StringVarP(&customToken, "custom-token", "", "", "Specifies a custom value for the ingest token.")
 
 	return cmd
 }
