@@ -39,7 +39,7 @@ mutation CreateFilterAlert(
     $Enabled: Boolean!
     $RunAsUserID: String
     $ThrottleField: String
-    $ThrottleTimeSeconds: Long!
+    $ThrottleTimeSeconds: Long
     $QueryOwnershipType: QueryOwnershipType!
 ) {
     createFilterAlert(input: {

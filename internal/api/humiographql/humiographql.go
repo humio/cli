@@ -15488,7 +15488,7 @@ type __CreateFilterAlertInput struct {
 	Enabled             bool               `json:"Enabled"`
 	RunAsUserID         *string            `json:"RunAsUserID"`
 	ThrottleField       *string            `json:"ThrottleField"`
-	ThrottleTimeSeconds int64              `json:"ThrottleTimeSeconds"`
+	ThrottleTimeSeconds *int64             `json:"ThrottleTimeSeconds"`
 	QueryOwnershipType  QueryOwnershipType `json:"QueryOwnershipType"`
 }
 
@@ -15520,7 +15520,7 @@ func (v *__CreateFilterAlertInput) GetRunAsUserID() *string { return v.RunAsUser
 func (v *__CreateFilterAlertInput) GetThrottleField() *string { return v.ThrottleField }
 
 // GetThrottleTimeSeconds returns __CreateFilterAlertInput.ThrottleTimeSeconds, and is useful for accessing the field via an interface.
-func (v *__CreateFilterAlertInput) GetThrottleTimeSeconds() int64 { return v.ThrottleTimeSeconds }
+func (v *__CreateFilterAlertInput) GetThrottleTimeSeconds() *int64 { return v.ThrottleTimeSeconds }
 
 // GetQueryOwnershipType returns __CreateFilterAlertInput.QueryOwnershipType, and is useful for accessing the field via an interface.
 func (v *__CreateFilterAlertInput) GetQueryOwnershipType() QueryOwnershipType {
@@ -16942,7 +16942,7 @@ func CreateEmailAction(
 
 // The query or mutation executed by CreateFilterAlert.
 const CreateFilterAlert_Operation = `
-mutation CreateFilterAlert ($SearchDomainName: RepoOrViewName!, $Name: String!, $Description: String, $QueryString: String!, $ActionIdsOrNames: [String!]!, $Labels: [String!]!, $Enabled: Boolean!, $RunAsUserID: String, $ThrottleField: String, $ThrottleTimeSeconds: Long!, $QueryOwnershipType: QueryOwnershipType!) {
+mutation CreateFilterAlert ($SearchDomainName: RepoOrViewName!, $Name: String!, $Description: String, $QueryString: String!, $ActionIdsOrNames: [String!]!, $Labels: [String!]!, $Enabled: Boolean!, $RunAsUserID: String, $ThrottleField: String, $ThrottleTimeSeconds: Long, $QueryOwnershipType: QueryOwnershipType!) {
 	createFilterAlert(input: {viewName:$SearchDomainName,name:$Name,description:$Description,queryString:$QueryString,actionIdsOrNames:$ActionIdsOrNames,labels:$Labels,enabled:$Enabled,runAsUserId:$RunAsUserID,throttleField:$ThrottleField,throttleTimeSeconds:$ThrottleTimeSeconds,queryOwnershipType:$QueryOwnershipType}) {
 		... FilterAlertDetails
 	}
@@ -16982,7 +16982,7 @@ func CreateFilterAlert(
 	Enabled bool,
 	RunAsUserID *string,
 	ThrottleField *string,
-	ThrottleTimeSeconds int64,
+	ThrottleTimeSeconds *int64,
 	QueryOwnershipType QueryOwnershipType,
 ) (*CreateFilterAlertResponse, error) {
 	req_ := &graphql.Request{
