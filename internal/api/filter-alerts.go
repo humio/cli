@@ -87,7 +87,7 @@ func (fa *FilterAlerts) Create(searchDomainName string, newFilterAlert *FilterAl
 		newFilterAlert.Enabled,
 		ownershipRunAsID,
 		newFilterAlert.ThrottleField,
-		*newFilterAlert.ThrottleTimeSeconds,
+		newFilterAlert.ThrottleTimeSeconds,
 		humiographql.QueryOwnershipType(newFilterAlert.QueryOwnershipType),
 	)
 	if err != nil {
