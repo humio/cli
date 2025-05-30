@@ -19,6 +19,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/humio/cli/internal/api"
 	"github.com/humio/cli/internal/viperkey"
@@ -186,8 +187,9 @@ func initConfig() {
 	if tokenFile != "" {
 		// #nosec G304
 		tokenFileContent, err := os.ReadFile(tokenFile)
+		tokenFileContentStr := strings.TrimSpace(string(tokenFileContent))
 		exitOnError(rootCmd, err, "Error loading token file")
-		viper.Set(viperkey.Token, string(tokenFileContent))
+		viper.Set(viperkey.Token, tokenFileContentStr)
 	}
 
 	if caCertificateFile != "" {
