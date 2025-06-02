@@ -7,7 +7,6 @@ toolchain go1.22.6
 require (
 	github.com/Khan/genqlient v0.7.0
 	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/cli/shurcooL-graphql v0.0.4
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/hpcloud/tail v1.0.0
 	github.com/mitchellh/go-homedir v1.1.0
