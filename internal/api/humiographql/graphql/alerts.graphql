@@ -5,7 +5,6 @@ fragment AlertDetails on Alert {
     queryStart
     throttleField
     timeOfLastTrigger
-    isStarred
     description
     throttleTimeMillis
     enabled

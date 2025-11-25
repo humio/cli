@@ -1495,8 +1495,6 @@ type AlertDetails struct {
 	// Unix timestamp for when the alert was last triggered.
 	// Stability: Long-term
 	TimeOfLastTrigger *int64 `json:"timeOfLastTrigger"`
-	// Flag indicating whether the calling user has 'starred' the alert.
-	IsStarred bool `json:"isStarred"`
 	// Name of the alert.
 	// Stability: Long-term
 	Description *string `json:"description"`
@@ -1537,9 +1535,6 @@ func (v *AlertDetails) GetThrottleField() *string { return v.ThrottleField }
 
 // GetTimeOfLastTrigger returns AlertDetails.TimeOfLastTrigger, and is useful for accessing the field via an interface.
 func (v *AlertDetails) GetTimeOfLastTrigger() *int64 { return v.TimeOfLastTrigger }
-
-// GetIsStarred returns AlertDetails.IsStarred, and is useful for accessing the field via an interface.
-func (v *AlertDetails) GetIsStarred() bool { return v.IsStarred }
 
 // GetDescription returns AlertDetails.Description, and is useful for accessing the field via an interface.
 func (v *AlertDetails) GetDescription() *string { return v.Description }
@@ -1608,8 +1603,6 @@ type __premarshalAlertDetails struct {
 
 	TimeOfLastTrigger *int64 `json:"timeOfLastTrigger"`
 
-	IsStarred bool `json:"isStarred"`
-
 	Description *string `json:"description"`
 
 	ThrottleTimeMillis int64 `json:"throttleTimeMillis"`
@@ -1642,7 +1635,6 @@ func (v *AlertDetails) __premarshalJSON() (*__premarshalAlertDetails, error) {
 	retval.QueryStart = v.QueryStart
 	retval.ThrottleField = v.ThrottleField
 	retval.TimeOfLastTrigger = v.TimeOfLastTrigger
-	retval.IsStarred = v.IsStarred
 	retval.Description = v.Description
 	retval.ThrottleTimeMillis = v.ThrottleTimeMillis
 	retval.Enabled = v.Enabled
@@ -2052,9 +2044,6 @@ func (v *CreateAlertCreateAlert) GetTimeOfLastTrigger() *int64 {
 	return v.AlertDetails.TimeOfLastTrigger
 }
 
-// GetIsStarred returns CreateAlertCreateAlert.IsStarred, and is useful for accessing the field via an interface.
-func (v *CreateAlertCreateAlert) GetIsStarred() bool { return v.AlertDetails.IsStarred }
-
 // GetDescription returns CreateAlertCreateAlert.Description, and is useful for accessing the field via an interface.
 func (v *CreateAlertCreateAlert) GetDescription() *string { return v.AlertDetails.Description }
 
@@ -2118,8 +2107,6 @@ type __premarshalCreateAlertCreateAlert struct {
 
 	TimeOfLastTrigger *int64 `json:"timeOfLastTrigger"`
 
-	IsStarred bool `json:"isStarred"`
-
 	Description *string `json:"description"`
 
 	ThrottleTimeMillis int64 `json:"throttleTimeMillis"`
@@ -2152,7 +2139,6 @@ func (v *CreateAlertCreateAlert) __premarshalJSON() (*__premarshalCreateAlertCre
 	retval.QueryStart = v.AlertDetails.QueryStart
 	retval.ThrottleField = v.AlertDetails.ThrottleField
 	retval.TimeOfLastTrigger = v.AlertDetails.TimeOfLastTrigger
-	retval.IsStarred = v.AlertDetails.IsStarred
 	retval.Description = v.AlertDetails.Description
 	retval.ThrottleTimeMillis = v.AlertDetails.ThrottleTimeMillis
 	retval.Enabled = v.AlertDetails.Enabled
@@ -10144,9 +10130,6 @@ func (v *ListAlertsSearchDomainAlertsAlert) GetTimeOfLastTrigger() *int64 {
 	return v.AlertDetails.TimeOfLastTrigger
 }
 
-// GetIsStarred returns ListAlertsSearchDomainAlertsAlert.IsStarred, and is useful for accessing the field via an interface.
-func (v *ListAlertsSearchDomainAlertsAlert) GetIsStarred() bool { return v.AlertDetails.IsStarred }
-
 // GetDescription returns ListAlertsSearchDomainAlertsAlert.Description, and is useful for accessing the field via an interface.
 func (v *ListAlertsSearchDomainAlertsAlert) GetDescription() *string {
 	return v.AlertDetails.Description
@@ -10212,8 +10195,6 @@ type __premarshalListAlertsSearchDomainAlertsAlert struct {
 
 	TimeOfLastTrigger *int64 `json:"timeOfLastTrigger"`
 
-	IsStarred bool `json:"isStarred"`
-
 	Description *string `json:"description"`
 
 	ThrottleTimeMillis int64 `json:"throttleTimeMillis"`
@@ -10246,7 +10227,6 @@ func (v *ListAlertsSearchDomainAlertsAlert) __premarshalJSON() (*__premarshalLis
 	retval.QueryStart = v.AlertDetails.QueryStart
 	retval.ThrottleField = v.AlertDetails.ThrottleField
 	retval.TimeOfLastTrigger = v.AlertDetails.TimeOfLastTrigger
-	retval.IsStarred = v.AlertDetails.IsStarred
 	retval.Description = v.AlertDetails.Description
 	retval.ThrottleTimeMillis = v.AlertDetails.ThrottleTimeMillis
 	retval.Enabled = v.AlertDetails.Enabled
@@ -16825,7 +16805,6 @@ fragment AlertDetails on Alert {
 	queryStart
 	throttleField
 	timeOfLastTrigger
-	isStarred
 	description
 	throttleTimeMillis
 	enabled
@@ -19316,7 +19295,6 @@ fragment AlertDetails on Alert {
 	queryStart
 	throttleField
 	timeOfLastTrigger
-	isStarred
 	description
 	throttleTimeMillis
 	enabled
