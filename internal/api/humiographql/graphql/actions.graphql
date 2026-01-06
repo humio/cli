@@ -66,6 +66,16 @@ fragment ActionDetails on Action{
         ignoreSSL
         useProxy
     }
+
+    ... on S3Action {
+        roleArn
+        awsRegion
+        bucketName
+        fileName
+        outputFormat
+        outputMetadata
+        useProxy
+    }
 }
 
 query ListActions(
@@ -311,6 +321,40 @@ mutation CreateWebhookAction(
         }
         bodyTemplate
         ignoreSSL
+        useProxy
+    }
+}
+
+mutation CreateS3Action(
+    $SearchDomainName: RepoOrViewName!
+    $ActionName: String!
+    $RoleArn: String!
+    $AwsRegion: String!
+    $BucketName: String!
+    $FileName: String!
+    $OutputFormat: S3ActionEventOutputFormat!
+    $OutputMetadata: Boolean!
+    $UseProxy: Boolean!
+) {
+    createS3Action(input: {
+        viewName: $SearchDomainName
+        name: $ActionName
+        roleArn: $RoleArn
+        awsRegion: $AwsRegion
+        bucketName: $BucketName
+        fileName: $FileName
+        outputFormat: $OutputFormat
+        outputMetadata: $OutputMetadata
+        useProxy: $UseProxy
+    }) {
+        id
+        name
+        roleArn
+        awsRegion
+        bucketName
+        fileName
+        outputFormat
+        outputMetadata
         useProxy
     }
 }

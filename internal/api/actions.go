@@ -77,6 +77,16 @@ type WebhookAction struct {
 	UseProxy     bool
 }
 
+type S3Action struct {
+	RoleArn        string
+	AwsRegion      string
+	BucketName     string
+	FileName       string
+	OutputFormat   string
+	OutputMetadata bool
+	UseProxy       bool
+}
+
 type Action struct {
 	Type string
 	ID   string `yaml:"-"`
@@ -91,6 +101,7 @@ type Action struct {
 	VictorOpsAction        VictorOpsAction        `yaml:"victorOpsAction,omitempty"`
 	UploadFileAction       UploadFileAction       `yaml:"uploadFileAction,omitempty"`
 	WebhookAction          WebhookAction          `yaml:"webhookAction,omitempty"`
+	S3Action               S3Action               `yaml:"s3Action,omitempty"`
 }
 
 func (c *Client) Actions() *Actions { return &Actions{client: c} }
@@ -224,6 +235,21 @@ func (n *Actions) List(searchDomainName string) ([]Action, error) {
 					BodyTemplate: v.GetWebhookBodyTemplate(),
 					IgnoreSSL:    v.GetIgnoreSSL(),
 					UseProxy:     v.GetUseProxy(),
+				},
+			}
+		case *humiographql.ListActionsSearchDomainActionsS3Action:
+			actions[idx] = Action{
+				Type: *v.GetTypename(),
+				ID:   v.GetId(),
+				Name: v.GetName(),
+				S3Action: S3Action{
+					RoleArn:        v.GetRoleArn(),
+					AwsRegion:      v.GetAwsRegion(),
+					BucketName:     v.GetBucketName(),
+					FileName:       v.GetFileName(),
+					OutputFormat:   string(v.GetOutputFormat()),
+					OutputMetadata: v.GetOutputMetadata(),
+					UseProxy:       v.GetUseProxy(),
 				},
 			}
 		default:
@@ -520,6 +546,40 @@ func (n *Actions) Add(searchDomainName string, newAction *Action) (*Action, erro
 				BodyTemplate: respUpdate.GetBodyTemplate(),
 				IgnoreSSL:    respUpdate.GetIgnoreSSL(),
 				UseProxy:     respUpdate.GetUseProxy(),
+			},
+		}, nil
+	}
+
+	if !reflect.ValueOf(newAction.S3Action).IsZero() {
+		resp, err := humiographql.CreateS3Action(
+			context.Background(),
+			n.client,
+			searchDomainName,
+			newAction.Name,
+			newAction.S3Action.RoleArn,
+			newAction.S3Action.AwsRegion,
+			newAction.S3Action.BucketName,
+			newAction.S3Action.FileName,
+			humiographql.S3ActionEventOutputFormat(newAction.S3Action.OutputFormat),
+			newAction.S3Action.OutputMetadata,
+			newAction.S3Action.UseProxy,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		respUpdate := resp.GetCreateS3Action()
+		return &Action{
+			ID:   respUpdate.GetId(),
+			Name: respUpdate.GetName(),
+			S3Action: S3Action{
+				RoleArn:        respUpdate.GetRoleArn(),
+				AwsRegion:      respUpdate.GetAwsRegion(),
+				BucketName:     respUpdate.GetBucketName(),
+				FileName:       respUpdate.GetFileName(),
+				OutputFormat:   string(respUpdate.GetOutputFormat()),
+				OutputMetadata: respUpdate.GetOutputMetadata(),
+				UseProxy:       respUpdate.GetUseProxy(),
 			},
 		}, nil
 	}

@@ -38,18 +38,6 @@ query ListParsers(
     }
 }
 
-mutation LegacyDeleteParserByID(
-    $RepositoryName: String!
-    $ParserID: String!
-) {
-    removeParser(input: {
-        repositoryName: $RepositoryName
-        id: $ParserID
-    }) {
-        __typename
-    }
-}
-
 mutation DeleteParserByID(
     $RepositoryName: RepoOrViewName!
     $ParserID: String!
@@ -61,28 +49,6 @@ mutation DeleteParserByID(
         __typename
     }
 }
-mutation LegacyCreateParser(
-    $RepositoryName: String!
-    $Name: String!
-    $TestData: [String!]!
-    $TagFields: [String!]!
-    $SourceCode: String!
-    $Force: Boolean!
-) {
-    createParser(input: {
-        name: $Name
-        repositoryName: $RepositoryName
-        testData: $TestData
-        tagFields: $TagFields
-        sourceCode: $SourceCode
-        force: $Force
-    }) {
-        parser {
-            ...ParserDetails
-        }
-    }
-}
-
 
 mutation CreateParser(
     $RepositoryName: RepoOrViewName!
@@ -103,25 +69,6 @@ mutation CreateParser(
         allowOverwritingExistingParser: $AllowOverridingExistingParser
     }) {
         ...ParserDetails
-    }
-}
-
-query LegacyGetParser(
-    $RepositoryName: String!
-    $ParserName: String!
-) {
-    repository(
-        name: $RepositoryName
-    ) {
-        parser(
-            name: $ParserName
-        ) {
-            id
-            name
-            sourceCode
-            testData
-            tagFields
-        }
     }
 }
 

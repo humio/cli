@@ -65,21 +65,8 @@ func (p *Parsers) List(repositoryName string) ([]ParserListItem, error) {
 }
 
 func (p *Parsers) Delete(repositoryName string, parserName string) error {
-	status, getStatusErr := p.client.Status()
-	if getStatusErr != nil {
-		return getStatusErr
-	}
-
-	atLeast, versionParseErr := status.AtLeast(LogScaleVersionWithParserAPIv2)
-	if versionParseErr != nil {
-		return versionParseErr
-	}
 	parser, err := p.client.Parsers().Get(repositoryName, parserName)
 	if err != nil {
-		return err
-	}
-	if !atLeast {
-		_, err = humiographql.LegacyDeleteParserByID(context.Background(), p.client, repositoryName, parser.ID)
 		return err
 	}
 
@@ -90,56 +77,6 @@ func (p *Parsers) Delete(repositoryName string, parserName string) error {
 func (p *Parsers) Add(repositoryName string, newParser *Parser, allowOverwritingExistingParser bool) (*Parser, error) {
 	if newParser == nil {
 		return nil, fmt.Errorf("newFilterAlert must not be nil")
-	}
-	status, getStatusErr := p.client.Status()
-	if getStatusErr != nil {
-		return nil, getStatusErr
-	}
-	atLeast, versionParseErr := status.AtLeast(LogScaleVersionWithParserAPIv2)
-	if versionParseErr != nil {
-		return nil, versionParseErr
-	}
-
-	if !atLeast {
-		testData := make([]string, len(newParser.TestCases))
-		for i, testCase := range newParser.TestCases {
-			testData[i] = testCase.Event.RawString
-		}
-		resp, err := humiographql.LegacyCreateParser(
-			context.Background(),
-			p.client,
-			repositoryName,
-			newParser.Name,
-			testData,
-			newParser.FieldsToTag,
-			newParser.Script,
-			allowOverwritingExistingParser,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		respCreateParser := resp.GetCreateParser()
-		respParser := respCreateParser.GetParser()
-		respTestCases := respParser.GetTestCases()
-		testCases := make([]ParserTestCase, len(respTestCases))
-		for idx, testCase := range respTestCases {
-			event := testCase.GetEvent()
-			testCases[idx] = ParserTestCase{
-				Event: ParserTestEvent{
-					RawString: event.GetRawString(),
-				},
-				Assertions: nil,
-			}
-		}
-		return &Parser{
-			ID:                             respParser.GetId(),
-			Name:                           respParser.GetName(),
-			Script:                         respParser.GetScript(),
-			TestCases:                      testCases,
-			FieldsToTag:                    respParser.GetFieldsToTag(),
-			FieldsToBeRemovedBeforeParsing: respParser.GetFieldsToBeRemovedBeforeParsing(),
-		}, nil
 	}
 
 	testCasesInput := make([]humiographql.ParserTestCaseInput, len(newParser.TestCases))
@@ -220,45 +157,6 @@ func (p *Parsers) Add(repositoryName string, newParser *Parser, allowOverwriting
 }
 
 func (p *Parsers) Get(repositoryName string, parserName string) (*Parser, error) {
-	status, err := p.client.Status()
-	if err != nil {
-		return nil, err
-	}
-	atLeast, err := status.AtLeast(LogScaleVersionWithParserAPIv2)
-	if err != nil {
-		return nil, err
-	}
-	if !atLeast {
-		resp, err := humiographql.LegacyGetParser(
-			context.Background(),
-			p.client,
-			repositoryName,
-			parserName,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		respRepository := resp.GetRepository()
-		respParser := respRepository.GetParser()
-		respTestCases := respParser.GetTestData()
-		testCases := make([]ParserTestCase, len(respTestCases))
-		for idx, testCase := range respTestCases {
-			testCases[idx] = ParserTestCase{
-				Event: ParserTestEvent{
-					RawString: testCase,
-				},
-			}
-		}
-		return &Parser{
-			ID:          respParser.GetId(),
-			Name:        respParser.GetName(),
-			Script:      respParser.GetSourceCode(),
-			TestCases:   testCases,
-			FieldsToTag: respParser.GetTagFields(),
-		}, nil
-	}
-
 	parserList, err := p.List(repositoryName)
 	if err != nil {
 		return nil, err
