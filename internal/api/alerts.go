@@ -14,7 +14,6 @@ type Alert struct {
 	QueryStart         string  `yaml:"queryStart"`
 	ThrottleField      *string `yaml:"throttleField"`
 	TimeOfLastTrigger  *int64  `yaml:"timeOfLastTrigger"`
-	IsStarred          bool    `yaml:"isStarred"`
 	Description        *string
 	ThrottleTimeMillis int64 `yaml:"throttleTimeMillis"`
 	Enabled            bool
@@ -52,7 +51,6 @@ func (a *Alerts) List(searchDomainName string) ([]Alert, error) {
 			QueryStart:         alert.GetQueryStart(),
 			ThrottleField:      alert.GetThrottleField(),
 			TimeOfLastTrigger:  alert.GetTimeOfLastTrigger(),
-			IsStarred:          alert.GetIsStarred(),
 			Description:        alert.GetDescription(),
 			ThrottleTimeMillis: alert.GetThrottleTimeMillis(),
 			Enabled:            alert.GetEnabled(),
@@ -116,7 +114,6 @@ func (a *Alerts) Add(searchDomainName string, newAlert *Alert) (*Alert, error) {
 		QueryStart:         respUpdate.GetQueryStart(),
 		ThrottleField:      respUpdate.GetThrottleField(),
 		TimeOfLastTrigger:  respUpdate.GetTimeOfLastTrigger(),
-		IsStarred:          respUpdate.GetIsStarred(),
 		Description:        respUpdate.GetDescription(),
 		ThrottleTimeMillis: respUpdate.GetThrottleTimeMillis(),
 		Enabled:            respUpdate.GetEnabled(),
