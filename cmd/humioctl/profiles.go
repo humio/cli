@@ -10,11 +10,12 @@ import (
 )
 
 type login struct {
-	address       string
-	token         string
-	username      string
-	caCertificate string
-	insecure      bool
+	address         string
+	token           string
+	username        string
+	caCertificate   string
+	insecure        bool
+	unixSocketProxy string
 }
 
 // usersCmd represents the users command

@@ -10,4 +10,5 @@ const (
 	Username          = "username"
 	Profiles          = "profiles"
 	ProxyOrganization = "proxy-organization"
+	UnixSocketProxy   = "unix-socket-proxy"
 )

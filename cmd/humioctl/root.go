@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile, tokenFile, token, address, caCertificateFile, profileFlag, proxyOrganization string
+var cfgFile, tokenFile, token, address, caCertificateFile, profileFlag, proxyOrganization, unixSocketProxy string
 var insecure bool
 
 var printVersion bool
@@ -96,6 +96,7 @@ Common Management Commands:
 	rootCmd.PersistentFlags().StringVar(&caCertificateFile, "ca-certificate-file", "", "File path to a file containing the CA certificate in PEM format. Overrides the value in your config file.")
 	rootCmd.PersistentFlags().BoolVar(&insecure, "insecure", false, "By default, all encrypted connections will verify that the hostname in the TLS certificate matches the name from the URL. Set this to true to ignore hostname validation.")
 	rootCmd.PersistentFlags().StringVar(&proxyOrganization, "proxy-organization", "", "Commands are executed in the specified organization.")
+	rootCmd.PersistentFlags().StringVar(&unixSocketProxy, "unix-socket-proxy", "", "Path to a unix socket to use as an HTTP proxy.")
 	rootCmd.PersistentFlags().String("format", "", "Change output format of commands, if supported. Valid formats: json")
 
 	_ = viper.BindPFlag(viperkey.Address, rootCmd.PersistentFlags().Lookup("address"))
@@ -104,6 +105,7 @@ Common Management Commands:
 	_ = viper.BindPFlag(viperkey.CACertificateFile, rootCmd.PersistentFlags().Lookup("ca-certificate-file"))
 	_ = viper.BindPFlag(viperkey.Insecure, rootCmd.PersistentFlags().Lookup("insecure"))
 	_ = viper.BindPFlag(viperkey.ProxyOrganization, rootCmd.PersistentFlags().Lookup("proxy-organization"))
+	_ = viper.BindPFlag(viperkey.UnixSocketProxy, rootCmd.PersistentFlags().Lookup("unix-socket-proxy"))
 
 	rootCmd.Flags().BoolVarP(&printVersion, "version", "v", false, "Print the client version")
 
@@ -182,6 +184,9 @@ func initConfig() {
 		if !insecure {
 			viper.Set(viperkey.Insecure, profile.insecure)
 		}
+		if unixSocketProxy == "" {
+			viper.Set(viperkey.UnixSocketProxy, profile.unixSocketProxy)
+		}
 	}
 
 	if tokenFile != "" {
@@ -223,6 +228,7 @@ func newApiClientE(opts ...func(config *api.Config)) (*api.Client, error) {
 	config.CACertificatePEM = viper.GetString(viperkey.CACertificate)
 	config.Insecure = viper.GetBool(viperkey.Insecure)
 	config.ProxyOrganization = viper.GetString(viperkey.ProxyOrganization)
+	config.UnixSocketProxy = viper.GetString(viperkey.UnixSocketProxy)
 	config.UserAgent = fmt.Sprintf("humioctl/%s (%s on %s)", version, commit, date)
 
 	for _, opt := range opts {

@@ -1,8 +1,10 @@
 package api
 
 import (
+	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"fmt"
 	"net"
 	"net/http"
 	"time"
@@ -16,6 +18,20 @@ type headerTransport struct {
 	headers map[string]string
 }
 
+// newUnixSocketProxyDialer creates a dialer that connects through a unix socket proxy
+func newUnixSocketProxyDialer(socketPath string, fallbackDialer func(ctx context.Context, network, addr string) (net.Conn, error)) func(ctx context.Context, network, addr string) (net.Conn, error) {
+	return func(ctx context.Context, network, addr string) (net.Conn, error) {
+		// Connect directly to the unix socket
+		// The proxy is expected to handle the connection transparently
+		conn, err := net.Dial("unix", socketPath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to connect to unix socket proxy: %w", err)
+		}
+
+		return conn, nil
+	}
+}
+
 func NewHttpTransport(config Config) *http.Transport {
 	dialContext := config.DialContext
 	if dialContext == nil {
@@ -24,6 +40,11 @@ func NewHttpTransport(config Config) *http.Transport {
 			KeepAlive: 30 * time.Second,
 			DualStack: true,
 		}).DialContext
+	}
+
+	// If a unix socket proxy is specified, wrap the dialer to use it
+	if config.UnixSocketProxy != "" {
+		dialContext = newUnixSocketProxyDialer(config.UnixSocketProxy, dialContext)
 	}
 
 	if config.Insecure {

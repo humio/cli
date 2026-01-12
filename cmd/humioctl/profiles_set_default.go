@@ -22,6 +22,7 @@ func newProfilesSetDefaultCmd() *cobra.Command {
 			viper.Set(viperkey.Token, profile.token)
 			viper.Set(viperkey.CACertificateFile, profile.caCertificate)
 			viper.Set(viperkey.Insecure, profile.insecure)
+			viper.Set(viperkey.UnixSocketProxy, profile.unixSocketProxy)
 
 			err = saveConfig()
 			exitOnError(cmd, err, "Error saving config")
@@ -44,10 +45,11 @@ func loadProfile(profileName string) (*login, error) {
 	insecureFromProfileData, _ := profileData[viperkey.Insecure].(bool) // false if not found in map, or type isn't bool
 
 	profile := login{
-		address:       getMapKeyString(profileData, viperkey.Address),
-		token:         getMapKeyString(profileData, viperkey.Token),
-		caCertificate: getMapKeyString(profileData, viperkey.CACertificate),
-		insecure:      insecureFromProfileData,
+		address:         getMapKeyString(profileData, viperkey.Address),
+		token:           getMapKeyString(profileData, viperkey.Token),
+		caCertificate:   getMapKeyString(profileData, viperkey.CACertificate),
+		insecure:        insecureFromProfileData,
+		unixSocketProxy: getMapKeyString(profileData, viperkey.UnixSocketProxy),
 	}
 
 	return &profile, nil
