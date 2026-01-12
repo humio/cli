@@ -67,11 +67,12 @@ func addAccount(newName string, profile *login) {
 	}
 
 	profiles[newName] = map[string]interface{}{
-		viperkey.Address:       profile.address,
-		viperkey.Token:         profile.token,
-		viperkey.Username:      profile.username,
-		viperkey.CACertificate: profile.caCertificate,
-		viperkey.Insecure:      profile.insecure,
+		viperkey.Address:         profile.address,
+		viperkey.Token:           profile.token,
+		viperkey.Username:        profile.username,
+		viperkey.CACertificate:   profile.caCertificate,
+		viperkey.Insecure:        profile.insecure,
+		viperkey.UnixSocketProxy: profile.unixSocketProxy,
 	}
 
 	viper.Set(viperkey.Profiles, profiles)
@@ -79,11 +80,12 @@ func addAccount(newName string, profile *login) {
 
 func mapToLogin(data interface{}) *login {
 	return &login{
-		address:       getMapKeyString(data, viperkey.Address),
-		username:      getMapKeyString(data, viperkey.Username),
-		token:         getMapKeyString(data, viperkey.Token),
-		caCertificate: getMapKeyString(data, viperkey.CACertificate),
-		insecure:      getMapKeyBool(data, viperkey.Insecure),
+		address:         getMapKeyString(data, viperkey.Address),
+		username:        getMapKeyString(data, viperkey.Username),
+		token:           getMapKeyString(data, viperkey.Token),
+		caCertificate:   getMapKeyString(data, viperkey.CACertificate),
+		insecure:        getMapKeyBool(data, viperkey.Insecure),
+		unixSocketProxy: getMapKeyString(data, viperkey.UnixSocketProxy),
 	}
 }
 

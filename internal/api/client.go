@@ -174,6 +174,7 @@ type Config struct {
 	CACertificatePEM  string
 	Insecure          bool
 	ProxyOrganization string
+	UnixSocketProxy   string
 	DialContext       func(ctx context.Context, network, addr string) (net.Conn, error)
 }
 
