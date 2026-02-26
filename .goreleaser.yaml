@@ -25,11 +25,18 @@ release:
     name: cli
 
 brews:
-  -
-    repository:
+  - repository:
       owner: humio
       name: homebrew-humio
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+      branch: "release-{{.Version}}" 
+      pull_request:
+        enabled: true
+        base:
+          branch: master
+          owner: humio
+          name: homebrew-humio
+
     url_template: "https://github.com/humio/cli/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     directory: Formula
     homepage:  https://humio.com/
