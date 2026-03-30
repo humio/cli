@@ -2,7 +2,7 @@ name: slack-test-1
 
 type: slack
 
-slackURL: https://hooks.slack.com/services/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
+slackURL: <your-slack-hook-url>
 
 fields:
   - name: Query
