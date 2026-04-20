@@ -18,6 +18,14 @@ query GetUsersByUsername(
     }
 }
 
+query GetUserById(
+    $UserId: String!
+) {
+    user(id: $UserId) {
+        ...UserDetails
+    }
+}
+
 query ListUsers {
     users {
         ...UserDetails
@@ -65,6 +73,18 @@ mutation UpdateUser(
         picture: $Picture
         email: $Email
         countryCode: $CountryCode
+    }) {
+        __typename
+    }
+}
+
+mutation UpdateUserUsername(
+    $UserId: String!
+    $Username: String!
+) {
+    updateUserById(input: {
+        userId: $UserId
+        username: $Username
     }) {
         __typename
     }

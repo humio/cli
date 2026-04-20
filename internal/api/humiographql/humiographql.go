@@ -7737,6 +7737,119 @@ func (v *GetSupportedFeatureFlagsResponse) GetFeatureFlags() []GetSupportedFeatu
 	return v.FeatureFlags
 }
 
+// GetUserByIdResponse is returned by GetUserById on success.
+type GetUserByIdResponse struct {
+	// A user in the system.
+	// Stability: Long-term
+	User *GetUserByIdUser `json:"user"`
+}
+
+// GetUser returns GetUserByIdResponse.User, and is useful for accessing the field via an interface.
+func (v *GetUserByIdResponse) GetUser() *GetUserByIdUser { return v.User }
+
+// GetUserByIdUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user profile.
+type GetUserByIdUser struct {
+	UserDetails `json:"-"`
+}
+
+// GetId returns GetUserByIdUser.Id, and is useful for accessing the field via an interface.
+func (v *GetUserByIdUser) GetId() string { return v.UserDetails.Id }
+
+// GetUsername returns GetUserByIdUser.Username, and is useful for accessing the field via an interface.
+func (v *GetUserByIdUser) GetUsername() string { return v.UserDetails.Username }
+
+// GetFullName returns GetUserByIdUser.FullName, and is useful for accessing the field via an interface.
+func (v *GetUserByIdUser) GetFullName() *string { return v.UserDetails.FullName }
+
+// GetEmail returns GetUserByIdUser.Email, and is useful for accessing the field via an interface.
+func (v *GetUserByIdUser) GetEmail() *string { return v.UserDetails.Email }
+
+// GetCompany returns GetUserByIdUser.Company, and is useful for accessing the field via an interface.
+func (v *GetUserByIdUser) GetCompany() *string { return v.UserDetails.Company }
+
+// GetCountryCode returns GetUserByIdUser.CountryCode, and is useful for accessing the field via an interface.
+func (v *GetUserByIdUser) GetCountryCode() *string { return v.UserDetails.CountryCode }
+
+// GetPicture returns GetUserByIdUser.Picture, and is useful for accessing the field via an interface.
+func (v *GetUserByIdUser) GetPicture() *string { return v.UserDetails.Picture }
+
+// GetIsRoot returns GetUserByIdUser.IsRoot, and is useful for accessing the field via an interface.
+func (v *GetUserByIdUser) GetIsRoot() bool { return v.UserDetails.IsRoot }
+
+// GetCreatedAt returns GetUserByIdUser.CreatedAt, and is useful for accessing the field via an interface.
+func (v *GetUserByIdUser) GetCreatedAt() time.Time { return v.UserDetails.CreatedAt }
+
+func (v *GetUserByIdUser) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*GetUserByIdUser
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.GetUserByIdUser = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.UserDetails)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalGetUserByIdUser struct {
+	Id string `json:"id"`
+
+	Username string `json:"username"`
+
+	FullName *string `json:"fullName"`
+
+	Email *string `json:"email"`
+
+	Company *string `json:"company"`
+
+	CountryCode *string `json:"countryCode"`
+
+	Picture *string `json:"picture"`
+
+	IsRoot bool `json:"isRoot"`
+
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+func (v *GetUserByIdUser) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *GetUserByIdUser) __premarshalJSON() (*__premarshalGetUserByIdUser, error) {
+	var retval __premarshalGetUserByIdUser
+
+	retval.Id = v.UserDetails.Id
+	retval.Username = v.UserDetails.Username
+	retval.FullName = v.UserDetails.FullName
+	retval.Email = v.UserDetails.Email
+	retval.Company = v.UserDetails.Company
+	retval.CountryCode = v.UserDetails.CountryCode
+	retval.Picture = v.UserDetails.Picture
+	retval.IsRoot = v.UserDetails.IsRoot
+	retval.CreatedAt = v.UserDetails.CreatedAt
+	return &retval, nil
+}
+
 // GetUsernameResponse is returned by GetUsername on success.
 type GetUsernameResponse struct {
 	// The currently authenticated user's account.
@@ -15160,6 +15273,28 @@ type UpdateUserUpdateUserUpdateUserMutation struct {
 // GetTypename returns UpdateUserUpdateUserUpdateUserMutation.Typename, and is useful for accessing the field via an interface.
 func (v *UpdateUserUpdateUserUpdateUserMutation) GetTypename() *string { return v.Typename }
 
+// UpdateUserUsernameResponse is returned by UpdateUserUsername on success.
+type UpdateUserUsernameResponse struct {
+	// Updates a user.
+	// Stability: Long-term
+	UpdateUserById UpdateUserUsernameUpdateUserByIdUpdateUserByIdMutation `json:"updateUserById"`
+}
+
+// GetUpdateUserById returns UpdateUserUsernameResponse.UpdateUserById, and is useful for accessing the field via an interface.
+func (v *UpdateUserUsernameResponse) GetUpdateUserById() UpdateUserUsernameUpdateUserByIdUpdateUserByIdMutation {
+	return v.UpdateUserById
+}
+
+// UpdateUserUsernameUpdateUserByIdUpdateUserByIdMutation includes the requested fields of the GraphQL type UpdateUserByIdMutation.
+type UpdateUserUsernameUpdateUserByIdUpdateUserByIdMutation struct {
+	Typename *string `json:"__typename"`
+}
+
+// GetTypename returns UpdateUserUsernameUpdateUserByIdUpdateUserByIdMutation.Typename, and is useful for accessing the field via an interface.
+func (v *UpdateUserUsernameUpdateUserByIdUpdateUserByIdMutation) GetTypename() *string {
+	return v.Typename
+}
+
 // UpdateViewConnectionsResponse is returned by UpdateViewConnections on success.
 type UpdateViewConnectionsResponse struct {
 	// Update a view.
@@ -16181,6 +16316,14 @@ type __GetSearchDomainInput struct {
 // GetSearchDomainName returns __GetSearchDomainInput.SearchDomainName, and is useful for accessing the field via an interface.
 func (v *__GetSearchDomainInput) GetSearchDomainName() string { return v.SearchDomainName }
 
+// __GetUserByIdInput is used internally by genqlient
+type __GetUserByIdInput struct {
+	UserId string `json:"UserId"`
+}
+
+// GetUserId returns __GetUserByIdInput.UserId, and is useful for accessing the field via an interface.
+func (v *__GetUserByIdInput) GetUserId() string { return v.UserId }
+
 // __GetUsersByUsernameInput is used internally by genqlient
 type __GetUsersByUsernameInput struct {
 	Username string `json:"Username"`
@@ -16530,6 +16673,18 @@ func (v *__UpdateUserInput) GetEmail() *string { return v.Email }
 
 // GetCountryCode returns __UpdateUserInput.CountryCode, and is useful for accessing the field via an interface.
 func (v *__UpdateUserInput) GetCountryCode() *string { return v.CountryCode }
+
+// __UpdateUserUsernameInput is used internally by genqlient
+type __UpdateUserUsernameInput struct {
+	UserId   string `json:"UserId"`
+	Username string `json:"Username"`
+}
+
+// GetUserId returns __UpdateUserUsernameInput.UserId, and is useful for accessing the field via an interface.
+func (v *__UpdateUserUsernameInput) GetUserId() string { return v.UserId }
+
+// GetUsername returns __UpdateUserUsernameInput.Username, and is useful for accessing the field via an interface.
+func (v *__UpdateUserUsernameInput) GetUsername() string { return v.Username }
 
 // __UpdateViewConnectionsInput is used internally by genqlient
 type __UpdateViewConnectionsInput struct {
@@ -18910,6 +19065,52 @@ func GetSupportedFeatureFlags(
 	return &data_, err_
 }
 
+// The query or mutation executed by GetUserById.
+const GetUserById_Operation = `
+query GetUserById ($UserId: String!) {
+	user(id: $UserId) {
+		... UserDetails
+	}
+}
+fragment UserDetails on User {
+	id
+	username
+	fullName
+	email
+	company
+	countryCode
+	picture
+	isRoot
+	createdAt
+}
+`
+
+func GetUserById(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	UserId string,
+) (*GetUserByIdResponse, error) {
+	req_ := &graphql.Request{
+		OpName: "GetUserById",
+		Query:  GetUserById_Operation,
+		Variables: &__GetUserByIdInput{
+			UserId: UserId,
+		},
+	}
+	var err_ error
+
+	var data_ GetUserByIdResponse
+	resp_ := &graphql.Response{Data: &data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return &data_, err_
+}
+
 // The query or mutation executed by GetUsername.
 const GetUsername_Operation = `
 query GetUsername {
@@ -20552,6 +20753,43 @@ func UpdateUser(
 	var err_ error
 
 	var data_ UpdateUserResponse
+	resp_ := &graphql.Response{Data: &data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return &data_, err_
+}
+
+// The query or mutation executed by UpdateUserUsername.
+const UpdateUserUsername_Operation = `
+mutation UpdateUserUsername ($UserId: String!, $Username: String!) {
+	updateUserById(input: {userId:$UserId,username:$Username}) {
+		__typename
+	}
+}
+`
+
+func UpdateUserUsername(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	UserId string,
+	Username string,
+) (*UpdateUserUsernameResponse, error) {
+	req_ := &graphql.Request{
+		OpName: "UpdateUserUsername",
+		Query:  UpdateUserUsername_Operation,
+		Variables: &__UpdateUserUsernameInput{
+			UserId:   UserId,
+			Username: Username,
+		},
+	}
+	var err_ error
+
+	var data_ UpdateUserUsernameResponse
 	resp_ := &graphql.Response{Data: &data_}
 
 	err_ = client_.MakeRequest(

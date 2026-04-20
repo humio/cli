@@ -85,6 +85,20 @@ func (u *Users) Update(username string, isRoot *bool, fullName, company, country
 
 }
 
+func (u *Users) UpdateUsername(username, newUsername string) (User, error) {
+	user, err := u.Get(username)
+	if err != nil {
+		return User{}, err
+	}
+
+	_, err = humiographql.UpdateUserUsername(context.Background(), u.client, user.ID, newUsername)
+	if err != nil {
+		return User{}, err
+	}
+
+	return u.Get(newUsername)
+}
+
 func (u *Users) Add(username string, isRoot *bool, fullName, company, countryCode, email, picture *string) (User, error) {
 	resp, err := humiographql.AddUser(context.Background(), u.client, username, company, isRoot, fullName, picture, email, countryCode)
 	if err != nil {

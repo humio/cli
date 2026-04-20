@@ -31,6 +31,7 @@ func newUsersCmd() *cobra.Command {
 	cmd.AddCommand(newUsersUpdateCmd())
 	cmd.AddCommand(newUsersListCmd())
 	cmd.AddCommand(newUsersShowCmd())
+	cmd.AddCommand(newUsersUpdateUsernameCmd())
 
 	return cmd
 }
