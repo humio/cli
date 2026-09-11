@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"sort"
 
 	"github.com/humio/cli/internal/api/humiographql"
 )
@@ -146,11 +147,19 @@ func (p *Parsers) Add(repositoryName string, newParser *Parser, allowOverwriting
 	for j, pa := range newParser.TestCases {
 		parserTestCaseAssertionsForOutputInput := make([]humiographql.ParserTestCaseAssertionsForOutputInput, len(pa.Assertions))
 		for i := range pa.Assertions {
-			fieldsHaveValuesInput := make([]humiographql.FieldHasValueInput, len(pa.Assertions[i].FieldsHaveValues))
-			for field, value := range pa.Assertions[i].FieldsHaveValues {
-				fieldsHaveValuesInput[i] = humiographql.FieldHasValueInput{
+			// Sort the field names so the generated input is stable across runs;
+			// map iteration order would otherwise reorder assertions arbitrarily.
+			fieldNames := make([]string, 0, len(pa.Assertions[i].FieldsHaveValues))
+			for field := range pa.Assertions[i].FieldsHaveValues {
+				fieldNames = append(fieldNames, field)
+			}
+			sort.Strings(fieldNames)
+
+			fieldsHaveValuesInput := make([]humiographql.FieldHasValueInput, len(fieldNames))
+			for k, field := range fieldNames {
+				fieldsHaveValuesInput[k] = humiographql.FieldHasValueInput{
 					FieldName:     field,
-					ExpectedValue: value,
+					ExpectedValue: pa.Assertions[i].FieldsHaveValues[field],
 				}
 			}
 			parserTestCaseAssertionsForOutputInput[i] = humiographql.ParserTestCaseAssertionsForOutputInput{
